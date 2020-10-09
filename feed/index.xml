@@ -8,7 +8,7 @@
 	>
 
 <channel>
-	<title>pgscom</title>
+	<title>PGSCOM</title>
 	<atom:link href="https://pgscom.github.io/feed" rel="self" type="application/rss+xml" />
 	<link>https://pgscom.github.io/</link>
 	<description></description>
@@ -22,7 +22,7 @@
 
 <image>
 	<url>https://pgscom.github.io/wp-content/uploads/2020/09/cropped-logo-perfil-sin-fondo-1-32x32.png</url>
-	<title>pgscom</title>
+	<title>PGSCOM</title>
 	<link>https://pgscom.github.io/</link>
 	<width>32</width>
 	<height>32</height>
