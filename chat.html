@@ -128,6 +128,30 @@ img.emoji {
 								<div class="elementor-element elementor-element-4611d8fc elementor-widget elementor-widget-text-editor" data-id="4611d8fc" data-element_type="widget" data-widget_type="text-editor.default">
 				<div class="elementor-widget-container">
 					<div class="elementor-text-editor elementor-clearfix"><!-- /wp:heading --><!-- wp:html -->
+<!-- Messenger plugin del chat Code -->
+    <div id="fb-root"></div>
+      <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            xfbml            : true,
+            version          : 'v10.0'
+          });
+        };
+
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = 'https://connect.facebook.net/es_ES/sdk/xfbml.customerchat.js';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+      </script>
+
+      <!-- Your plugin del chat code -->
+      <div class="fb-customerchat"
+        attribution="page_inbox"
+        page_id="108878391339816">
+      </div>
 <p><iframe src="https://pgscom.github.io/3d-card-effect/" width="100%" height="600" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
 <h1>Redes sociales oficiales:</h1>
 <!-- /wp:html --><!-- wp:html -->
