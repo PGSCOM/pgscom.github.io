@@ -101,11 +101,12 @@ height: 335.983px;
   overflow: hidden;
 }
 
-/*Fin pantalla de carga*/
 
 .invisible{
   visibility: hidden;
 }
+
+/*Fin pantalla de carga*/
 
 .iframe-de-1h {
   margin: 1.25rem 0 1.5rem;
