@@ -3,3 +3,39 @@
     height: 100%;
     border-bottom: 2px solid black;
 }
+
+.logo-text {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #2952ff;
+    text-align: center;
+    transition: font-family 0.1s ease;
+    margin: 0;
+    letter-spacing: 0.2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo-text.loading {
+    opacity: 0.7;
+    filter: blur(1px);
+}
+
+.logo-text.loaded {
+    opacity: 1;
+    filter: blur(0);
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .logo-text {
+        font-size: 3rem;
+        letter-spacing: 0.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 2rem;
+        letter-spacing: 0.05rem;
+    }
+}

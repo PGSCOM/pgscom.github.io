@@ -1,7 +1,6 @@
 ---
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-import { animate } from 'animejs';
 import './styles.css';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
@@ -9,10 +8,154 @@ import './styles.css';
 ---
 
 <Layout>
-	<div class="max">
-		
+	<div class="max" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+		<h1 id="animated-text" class="logo-text">PGSCOM</h1>
 	</div>
 	<div class="max">
+		<!-- ...existing code... -->
+	</div>
+	<div class="max">
+		<!-- ...existing code... -->
+	</div>
+	<!-- Script optimizado para precarga de fuentes -->
+	<script is:inline defer>
+		document.addEventListener('DOMContentLoaded', async () => {
+			const animatedText = document.getElementById('animated-text');
+			
+			// Array de fuentes disponibles
+			const fonts = [
+				'Allerta Stencil',
+				'Bungee Inline',
+				'Chakra Petch',
+				'Kranky',
+				'Limelight',
+				'Meow Script',
+				'Modak',
+				'Monoton',
+				'Neonderthaw',
+				'Offside',
+				'Pacifico',
+				'Permanent Marker',
+				'Rampart One',
+				'Solway',
+				'Tapestry',
+				'Tiny5',
+				'VT323',
+				'Vast Shadow'
+			];
+			
+			let currentFontIndex = 0;
+			let fontsLoaded = false;
 
-	</div>
+			// Función para precargar todas las fuentes
+			async function preloadFonts() {
+				console.log('Precargando fuentes...');
+				
+				try {
+					// Usar Font Loading API si está disponible
+					if ('fonts' in document) {
+						const fontPromises = fonts.map(fontName => {
+							// Usar peso Medium (500) para Solway y Chakra Petch
+							// Usar peso Regular (400) para Modak, Monoton, Neonderthaw
+							// Bold para el resto
+							let fontWeight = 'bold';
+							if (fontName === 'Solway' || fontName === 'Chakra Petch') {
+								fontWeight = '500';
+							} else if (fontName === 'Modak' || fontName === 'Monoton' || fontName === 'Neonderthaw') {
+								fontWeight = '400';
+							}
+							return document.fonts.load(`${fontWeight} 5rem "${fontName}"`);
+						});
+						
+						await Promise.all(fontPromises);
+						console.log('Todas las fuentes cargadas via Font Loading API');
+					} else {
+						// Fallback: crear elementos invisibles para forzar la carga
+						const testContainer = document.createElement('div');
+						testContainer.style.position = 'absolute';
+						testContainer.style.visibility = 'hidden';
+						testContainer.style.fontSize = '5rem';
+						testContainer.style.fontWeight = 'bold';
+						document.body.appendChild(testContainer);
+						
+						const loadPromises = fonts.map(fontName => {
+							return new Promise((resolve) => {
+								const testElement = document.createElement('span');
+								testElement.textContent = 'PGSCOM';
+								testElement.style.fontFamily = `"${fontName}", cursive`;
+								// Aplicar peso específico para cada fuente
+								if (fontName === 'Solway' || fontName === 'Chakra Petch') {
+									testElement.style.fontWeight = '500';
+								} else if (fontName === 'Modak' || fontName === 'Monoton' || fontName === 'Neonderthaw') {
+									testElement.style.fontWeight = '400';
+								} else {
+									testElement.style.fontWeight = 'bold';
+								}
+								testContainer.appendChild(testElement);
+								
+								// Esperar un poco para asegurar la carga
+								setTimeout(() => {
+									testContainer.removeChild(testElement);
+									resolve();
+								}, 100);
+							});
+						});
+						
+						await Promise.all(loadPromises);
+						document.body.removeChild(testContainer);
+						console.log('Todas las fuentes cargadas via fallback');
+					}
+					
+					fontsLoaded = true;
+				} catch (error) {
+					console.log('Error cargando fuentes:', error);
+					fontsLoaded = true; // Continuar de todos modos
+				}
+			}
+
+			function changeFontFamily() {
+				if (!fontsLoaded) return;
+				
+				// Cambiar a la siguiente fuente
+				currentFontIndex = (currentFontIndex + 1) % fonts.length;
+				const currentFont = fonts[currentFontIndex];
+				
+				// Aplicar la nueva fuente con el peso correcto
+				animatedText.style.fontFamily = `"${currentFont}", cursive`;
+				
+				// Aplicar peso específico para cada tipo de fuente
+				if (currentFont === 'Solway' || currentFont === 'Chakra Petch') {
+					animatedText.style.fontWeight = '500';
+				} else if (currentFont === 'Modak' || currentFont === 'Monoton' || currentFont === 'Neonderthaw') {
+					animatedText.style.fontWeight = '400';
+				} else {
+					animatedText.style.fontWeight = 'bold';
+				}
+				
+				console.log(`Font changed to: ${currentFont} (weight: ${animatedText.style.fontWeight})`);
+			}
+
+			// Inicializar con la primera fuente y estado de carga
+			animatedText.style.fontFamily = `"${fonts[0]}", cursive`;
+			if (fonts[0] === 'Solway' || fonts[0] === 'Chakra Petch') {
+				animatedText.style.fontWeight = '500';
+			} else if (fonts[0] === 'Modak' || fonts[0] === 'Monoton' || fonts[0] === 'Neonderthaw') {
+				animatedText.style.fontWeight = '400';
+			} else {
+				animatedText.style.fontWeight = 'bold';
+			}
+			animatedText.classList.add('loading');
+			
+			// Precargar todas las fuentes
+			await preloadFonts();
+			
+			// Remover estado de carga y comenzar animación
+			animatedText.classList.remove('loading');
+			animatedText.classList.add('loaded');
+			
+			// Comenzar la animación solo después de cargar las fuentes
+			console.log('Iniciando animación de fuentes...');
+			setInterval(changeFontFamily, 1000);
+		});
+	</script>
 </Layout>
