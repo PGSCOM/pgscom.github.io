@@ -1,41 +1,343 @@
-.max{
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Contenedor principal */
+.main-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    padding: 4rem;
+}
+
+/* Eliminamos el overlay global */
+
+/* Contenido principal - lado izquierdo */
+.content {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+    color: #4169E1;
+    padding: 0;
+    background: transparent; /* Sin fondo para seguir el boceto */
+    animation: fadeInLeft 1s ease-out;
+    max-width: 60%;
+    margin-right: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Contenedor de la imagen */
+.image-container {
+    position: absolute;
+    right: 153px;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    max-width: 40%;
+    height: 100%;
+}
+
+/* Wrapper ocupa todo el contenedor y centra la imagen */
+.image-wrapper {
+    /* Contener imagen y limitar tamaño */
+    display: inline-block;
+    max-height: 80vh;
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Overlay de gradiente para fundido */
+.image-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    border-bottom: 2px solid black;
+    background: linear-gradient(to bottom, transparent 60%, rgba(255,255,255,0.5) 80%, white 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
+/* Estilo para la imagen de personaje */
+.fotopgs {
+    display: block;
+    max-height: 80vh;
+    max-width: 100%;
+    object-fit: contain;
+    /*filter: drop-shadow(2px 2px 10px rgba(0, 0, 0, 0.1));*/
+    /* máscara aplicada por .image-wrapper::after */
+}
+
+/* Partículas flotantes */
+.content::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(65, 105, 225, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: float 4s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(-50%, -60%) scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+/* Texto principal del logo */
 .logo-text {
-    font-size: 5rem;
+    font-size: 7cqw;
     font-weight: bold;
-    color: #2952ff;
-    text-align: center;
+    color: #4169E1;
+    text-align: left;
     transition: font-family 0.1s ease;
     margin: 0;
-    letter-spacing: 0.2rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.3rem;
+    line-height: 1.2;
+    position: relative;
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 0.5rem;
 }
 
-.logo-text.loading {
-    opacity: 0.7;
-    filter: blur(1px);
+/*.logo-text::before {
+    content: 'PGSCOM';
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: rgba(255, 255, 255, 0.1);
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    text-shadow: none;
+    z-index: -1;
+    transform: translate(3px, 3px);
+    animation: shimmer 2s ease-in-out infinite;
+}*/
+
+/* Subtítulo */
+.subtitle {
+    font-size: 1.4rem;
+    color: rgba(0, 0, 0, 0.7);
+    margin-top: 0.2rem;
+    font-weight: 300;
+    letter-spacing: 0.1rem;
+    margin-left: 0.5rem;
 }
 
-.logo-text.loaded {
-    opacity: 1;
-    filter: blur(0);
-    transition: opacity 0.3s ease, filter 0.3s ease;
+/* Tagline adicional */
+.tagline {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.7);
+    margin-top: 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.15rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    opacity: 0.9;
 }
 
+/* Sistema de partículas - ajustado al lado izquierdo */
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particles::before,
+.particles::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(65, 105, 225, 0.6);
+    border-radius: 50%;
+    animation: floatParticle 8s linear infinite;
+}
+
+.particles::before {
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+    animation-duration: 6s;
+}
+
+.particles::after {
+    top: 60%;
+    left: 30%;
+    animation-delay: 3s;
+    animation-duration: 8s;
+    background: rgba(0, 206, 209, 0.6);
+}
+
+@keyframes floatParticle {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes shimmer {
+    0%, 100% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* Efectos hover */
+/*.content:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}*/
+
+/*.logo-text:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}*/
+
+/* Responsive design */
 @media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        padding: 1rem;
+        justify-content: center;
+    }
+    
+    .content {
+        max-width: 100%;
+        margin-right: 0;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .image-container {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .fotopgs {
+        max-height: 40vh;
+    }
+    
     .logo-text {
-        font-size: 3rem;
+        font-size: 3.5rem;
+        letter-spacing: 0.2rem;
+        text-align: center;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .tagline {
+        font-size: 0.8rem;
         letter-spacing: 0.1rem;
     }
 }
 
 @media (max-width: 480px) {
     .logo-text {
-        font-size: 2rem;
+        font-size: 2.5rem;
+        letter-spacing: 0.1rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .tagline {
+        font-size: 0.7rem;
         letter-spacing: 0.05rem;
+    }
+    
+    .content {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+    
+    .fotopgs {
+        max-height: 30vh;
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 320px) {
+    .logo-text {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .tagline {
+        font-size: 0.6rem;
+    }
+    
+    .fotopgs {
+        max-height: 25vh;
     }
 }

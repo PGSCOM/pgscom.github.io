@@ -1,23 +1,22 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 import './styles.css';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { Image } from 'astro:assets';
 ---
 
 <Layout>
-	<div class="max" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
-		<h1 id="animated-text" class="logo-text">PGSCOM</h1>
-	</div>
-	<div class="max">
-		<!-- ...existing code... -->
-	</div>
-	<div class="max">
-		<!-- ...existing code... -->
-	</div>
-	<!-- Script optimizado para precarga de fuentes -->
+	<main class="main-container">
+		<div class="particles"></div>
+		<div class="content">
+			<h1 id="animated-text" class="logo-text">PGSCOM</h1>
+		</div>
+		<div class="image-container">
+			<div class="image-wrapper">
+			<Image src="/pgscom.png" alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
+			</div>
+		</div>
+	</main>
+
 	<script is:inline defer>
 		document.addEventListener('DOMContentLoaded', async () => {
 			const animatedText = document.getElementById('animated-text');
