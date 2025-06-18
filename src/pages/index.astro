@@ -177,7 +177,11 @@ import minimal3 from '../assets/minimal3.svg';
 					
 					// Ajustar el tamaño según el factor de la fuente
 					const factor = fontSizeFactors[currentFont] || 1.0;
-					const newSize = baseFontSize * factor;
+					let newSize = baseFontSize * factor;
+					// Duplicar tamaño en móvil
+					if (window.matchMedia('(max-width: 768px)').matches) {
+						newSize *= 2;
+					}
 					currentEl.style.fontSize = `${newSize}cqw`;
 					
 					console.log(`Font changed to: ${currentFont} (weight: ${currentEl.style.fontWeight}, factor: ${factor}, size: ${newSize}cqw)`);
@@ -207,7 +211,12 @@ import minimal3 from '../assets/minimal3.svg';
 			
 			// Aplicar el factor de escala inicial
 			const initialFactor = fontSizeFactors[initialFont] || 1.0;
-			animatedText.style.fontSize = `${baseFontSize * initialFactor}cqw`;
+			// Ajustar tamaño según resolución: duplicar en móvil
+			let initSize = baseFontSize * initialFactor;
+			if (window.matchMedia('(max-width: 768px)').matches) {
+				  initSize *= 2;
+			}
+			animatedText.style.fontSize = `${initSize}cqw`;
 			
 			animatedText.classList.add('loading');
 			
