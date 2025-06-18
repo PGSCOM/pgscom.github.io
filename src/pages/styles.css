@@ -15,25 +15,26 @@
     align-items: center;
     justify-content: flex-start;
     overflow: hidden;
-    padding: 4rem;
 }
 
 /* Eliminamos el overlay global */
 
 /* Contenido principal - lado izquierdo */
 .content {
-    position: relative;
+    position: absolute;
     z-index: 2;
-    text-align: left;
-    color: #4169E1;
+    text-align: center;
+    color: #367e78;
     padding: 0;
     background: transparent; /* Sin fondo para seguir el boceto */
     animation: fadeInLeft 1s ease-out;
     max-width: 60%;
-    margin-right: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    height: 100%;
+    width: 100%;
+    align-items: center;
 }
 
 /* Contenedor de la imagen */
@@ -66,8 +67,6 @@
 .content::after {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
     width: 100px;
     height: 100px;
     background: radial-gradient(circle, rgba(65, 105, 225, 0.1) 0%, transparent 70%);
@@ -91,18 +90,15 @@
 
 /* Texto principal del logo */
 .logo-text {
-    font-size: 7cqw;
+    font-size: 7cqw; /*Tamaño base*/
     font-weight: bold;
-    color: #4169E1;
-    text-align: left;
-    /* Eliminamos la transición para que el cambio sea instantáneo */
-    margin: 0;
+    color: #367e78;
+    text-align: center;
     letter-spacing: 0.3rem;
     line-height: 1.2;
     position: relative;
     display: inline-block;
     font-family: 'Montserrat', sans-serif;
-    margin-bottom: 0.5rem;
     /* Propiedades para mantener tamaño consistente */
     width: 100%;
     min-height: 1.5em; /* Altura mínima consistente */
@@ -151,7 +147,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 50%;
+    width: 100%;
     height: 100%;
     pointer-events: none;
     z-index: 1;
@@ -161,8 +157,8 @@
 .particles::after {
     content: '';
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 40px;
+    height: 40px;
     background: rgba(65, 105, 225, 0.6);
     border-radius: 50%;
     animation: floatParticle 8s linear infinite;
@@ -233,10 +229,14 @@
 /* Estilos para el contenedor del logo */
 .logo-container {
     display: inline-block;
-    position: relative;
+    position: absolute;
     min-height: 120px; /* Altura mínima fija para evitar saltos */
     min-width: 300px; /* Ancho mínimo para evitar redimensionamientos bruscos */
     overflow: hidden; /* Evita que el contenido se salga durante las transiciones */
+    width: 100vh;
+    height: 100%;
+    right: 50%;
+    left: 50%;
 }
 
 /* Estados de animación del logo */
