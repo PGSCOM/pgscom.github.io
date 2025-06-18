@@ -1,50 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="40"
-   height="40"
-   viewBox="0 0 200 160"
-   version="1.1"
-   id="svg1"
-   sodipodi:docname="custom-shape.svg"
-   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1" />
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="14.6625"
-     inkscape:cx="10.161978"
-     inkscape:cy="21.040068"
-     inkscape:window-width="2560"
-     inkscape:window-height="1369"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" />
+<svg width="40" height="40" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
   <!-- Forma personalizada -->
-  <g
-     transform="matrix(1.2151749,0,0,1.2151749,-19.190215,-48.362069)"
-     id="g1">
-    <path
+  <path 
        d="m 98.084821,64.993006 h 34.395829 v -3.57187 c 0,0 0.56697,-1.7009 12.28423,-1.51191 11.71726,0.18899 22.86756,26.26935 25.89137,54.995534 3.02381,28.72619 -9.82738,35.90774 -9.82738,35.90774 0,0 -7.9375,3.96875 -17.38691,-9.26042 -9.4494,-13.22916 -12.99293,-22.31591 -12.99293,-22.31591 0,0 -11.12002,8.05516 -19.63114,0.004 -0.1192,-0.11277 -12.730909,-0.0445 -12.730909,-0.0445 m -0.0022,-54.202664 H 63.688988 v -3.571875 c 0,0 -0.566965,-1.700893 -12.284228,-1.511906 -11.71726,0.188989 -22.867559,26.269346 -25.891367,54.995535 -3.02381,28.72619 9.827381,35.90774 9.827381,35.90774 0,0 7.9375,3.96875 17.386905,-9.26042 9.449404,-13.22916 12.992932,-22.31591 12.992932,-22.31591 0,0 11.120017,8.05516 19.631138,0.004 0.119202,-0.11277 12.730911,-0.0445 12.730911,-0.0445"
        fill="#367e78"
-       opacity="0.5"
-       id="path1">
-      <animate
-         attributeName="opacity"
-         values="0.4;0.6;0.4"
-         dur="4s"
-         repeatCount="indefinite" />
-    </path>
-  </g>
+       opacity="0.5">
+    <animate attributeName="opacity" values="0.4;0.6;0.4" dur="4s" repeatCount="indefinite"/>
+  </path>
 </svg>

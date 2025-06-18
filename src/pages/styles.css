@@ -33,14 +33,14 @@
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    width: 100%;
+    width: 48%;
     align-items: center;
 }
 
 /* Contenedor de la imagen */
 .image-container {
     position: absolute;
-    right: 153px;
+    right: 5%;
     z-index: 2;
     flex: 1;
     display: flex;
