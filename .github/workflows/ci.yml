@@ -1,0 +1,90 @@
+name: Node.js deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+  statuses: write
+  pull-requests: write
+
+jobs:
+  deployCloudflare:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.15.1]
+    name: Publish to Cloudflare Pages
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Cache Astro build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/node_modules/.cache
+          key: ${{ runner.os }}-astro-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.astro') }}
+          restore-keys: |
+            ${{ runner.os }}-astro-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-astro-
+
+      - run: npm ci
+      - run: npm run build --if-present
+
+      - name: Publish to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Ajusta el directorio de salida según tu configuración de build de Astro
+          command: pages deploy ./dist --project-name=pgscom --branch=${{ github.head_ref || github.ref_name }}
+
+      - name: Find Preview Comment
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: "🚀 **Preview Publicada:**"
+
+      - name: Add Pull Request Comment
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            🚀 **Preview Publicada:**
+            ${{ steps.deploy.outputs.url }}
+          edit-mode: replace
+
+      - name: Set Deploy Status
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // now works because GITHUB_TOKEN has 'statuses: write'
+            const res = await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              sha:   context.sha,
+              state: 'success',
+              context: 'Deploy',
+              description: 'Deployment correcto',
+              target_url: '${{ steps.deploy.outputs.url }}'
+            });
+            console.log(`✅ Created status id=${res.data.id}`);
