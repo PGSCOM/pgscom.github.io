@@ -5,6 +5,14 @@
     box-sizing: border-box;
 }
 
+/*Logo flotante*/
+.sky-image {
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  z-index: 9999;
+}
+
 /* Contenedor principal */
 .main-container {
     width: 100vw;
