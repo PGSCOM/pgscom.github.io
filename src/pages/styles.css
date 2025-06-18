@@ -142,7 +142,7 @@
     opacity: 0.9;
 }
 
-/* Sistema de partículas - ajustado al lado izquierdo */
+/* Sistema de partículas minimalistas SVG */
 .particles {
     position: absolute;
     top: 0;
@@ -151,47 +151,89 @@
     height: 100%;
     pointer-events: none;
     z-index: 1;
+    overflow: hidden;
 }
 
-.particles::before,
-.particles::after {
-    content: '';
+.particle {
     position: absolute;
-    width: 40px;
-    height: 40px;
-    background: rgba(65, 105, 225, 0.6);
-    border-radius: 50%;
-    animation: floatParticle 8s linear infinite;
+    opacity: 0;
+    animation: floatParticle 15s ease-in-out infinite;
+    filter: none;
+    box-shadow: none;
+    will-change: transform, opacity;
 }
 
-.particles::before {
+.particle-1 {
     top: 20%;
-    left: 20%;
+    left: 15%;
+    width: 50px;
+    height: 50px;
     animation-delay: 0s;
-    animation-duration: 6s;
+    animation-duration: 12s;
 }
 
-.particles::after {
+.particle-2 {
     top: 60%;
-    left: 30%;
+    left: 25%;
+    width: 80px;
+    height: 80px;
     animation-delay: 3s;
+    animation-duration: 15s;
+}
+
+.particle-3 {
+    top: 40%;
+    left: 10%;
+    width: 35px;
+    height: 35px;
+    animation-delay: 6s;
+    animation-duration: 10s;
+}
+
+.particle-4 {
+    top: 70%;
+    left: 35%;
+    width: 45px;
+    height: 45px;
+    animation-delay: 2s;
+    animation-duration: 14s;
+}
+
+.particle-5 {
+    top: 30%;
+    left: 28%;
+    width: 75px;
+    height: 75px;
+    animation-delay: 5s;
+    animation-duration: 16s;
+}
+
+.particle-6 {
+    top: 50%;
+    left: 20%;
+    width: 30px;
+    height: 30px;
+    animation-delay: 1s;
     animation-duration: 8s;
-    background: rgba(0, 206, 209, 0.6);
 }
 
 @keyframes floatParticle {
     0% {
-        transform: translateY(0) rotate(0deg);
+        transform: translateY(0) scale(0.8) rotate(0deg);
         opacity: 0;
     }
     10% {
-        opacity: 1;
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(-120px) scale(1) rotate(180deg);
     }
     90% {
-        opacity: 1;
+        opacity: 0.5;
     }
     100% {
-        transform: translateY(-100vh) rotate(360deg);
+        transform: translateY(-240px) scale(0.8) rotate(360deg);
         opacity: 0;
     }
 }
@@ -308,6 +350,37 @@
         font-size: 0.8rem;
         letter-spacing: 0.1rem;
     }
+    
+    /* Ajuste minimalista para móviles */
+    /* Mostrar solo 3 partículas */
+    .particle-4, .particle-5, .particle-6 {
+        display: none;
+    }
+    
+    /* Reposicionar las partículas visibles */
+    .particle-1 {
+        top: 15%;
+        right: 20%;
+        left: auto;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .particle-2 {
+        top: 35%;
+        right: 25%;
+        left: auto;
+        width: 60px;
+        height: 60px;
+    }
+    
+    .particle-3 {
+        top: 55%;
+        right: 15%;
+        left: auto;
+        width: 30px;
+        height: 30px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -333,6 +406,22 @@
     .fotopgs {
         max-height: 30vh;
     }
+    
+    /* Partículas aún más pequeñas */
+    /* Solo mostrar dos partículas */
+    .particle-3 {
+        display: none;
+    }
+    
+    .particle-1 {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .particle-2 {
+        width: 50px;
+        height: 50px;
+    }
 }
 
 @media (max-width: 320px) {
@@ -350,5 +439,16 @@
     
     .fotopgs {
         max-height: 25vh;
+    }
+    
+    /* Solo mostrar 1 partícula en pantallas muy pequeñas */
+    .particle-2 {
+        display: none;
+    }
+    
+    .particle-1 {
+        width: 30px;
+        height: 30px;
+        right: 25%;
     }
 }

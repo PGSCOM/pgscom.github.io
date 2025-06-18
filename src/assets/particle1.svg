@@ -1,0 +1,13 @@
+<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="particle1Gradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#367e78;stop-opacity:0.9" />
+      <stop offset="70%" style="stop-color:#2d6b66;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#1a4b47;stop-opacity:0.3" />
+    </radialGradient>
+  </defs>
+  <circle cx="20" cy="20" r="18" fill="url(#particle1Gradient)">
+    <animate attributeName="r" values="18;22;18" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8;0.5;0.8" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

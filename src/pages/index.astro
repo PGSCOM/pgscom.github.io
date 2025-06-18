@@ -3,11 +3,21 @@ import Layout from '../layouts/Layout.astro';
 import './styles.css';
 import { Image } from 'astro:assets';
 import pgscom from '../assets/pgscom.png';
+import minimal1 from '../assets/minimal1.svg';
+import customShape from '../assets/custom-shape.svg';
+import minimal3 from '../assets/minimal3.svg';
 ---
 
 <Layout>
 	<main class="main-container">
-		<div class="particles"></div>
+		<div class="particles">
+			<Image src={minimal1} alt="" class="particle particle-1" width={100} height={100} />
+			<Image src={customShape} alt="" class="particle particle-2" width={100} height={100} />
+			<Image src={minimal3} alt="" class="particle particle-3" width={100} height={100} />
+			<Image src={minimal1} alt="" class="particle particle-4" width={100} height={100} />
+			<Image src={customShape} alt="" class="particle particle-5" width={100} height={100} />
+			<Image src={minimal3} alt="" class="particle particle-6" width={100} height={100} />
+		</div>
 		<div class="content">
 			<h1 id="animated-text" class="logo-text">PGSCOM</h1>
 		</div>
