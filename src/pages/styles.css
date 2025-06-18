@@ -95,7 +95,7 @@
     font-weight: bold;
     color: #4169E1;
     text-align: left;
-    transition: font-family 0.1s ease;
+    /* Eliminamos la transición para que el cambio sea instantáneo */
     margin: 0;
     letter-spacing: 0.3rem;
     line-height: 1.2;
@@ -103,6 +103,10 @@
     display: inline-block;
     font-family: 'Montserrat', sans-serif;
     margin-bottom: 0.5rem;
+    /* Propiedades para mantener tamaño consistente */
+    width: 100%;
+    min-height: 1.5em; /* Altura mínima consistente */
+    height: auto;
 }
 
 /*.logo-text::before {
@@ -196,7 +200,7 @@
     }
 }
 
-/* Animaciones */
+/* Animaciones para el logo-text */
 @keyframes fadeInLeft {
     from {
         opacity: 0;
@@ -224,6 +228,24 @@
     50% {
         opacity: 0.3;
     }
+}
+
+/* Estilos para el contenedor del logo */
+.logo-container {
+    display: inline-block;
+    position: relative;
+    min-height: 120px; /* Altura mínima fija para evitar saltos */
+    min-width: 300px; /* Ancho mínimo para evitar redimensionamientos bruscos */
+    overflow: hidden; /* Evita que el contenido se salga durante las transiciones */
+}
+
+/* Estados de animación del logo */
+.logo-text.loading {
+    opacity: 0.7;
+}
+
+.logo-text.loaded {
+    opacity: 1;
 }
 
 /* Efectos hover */
@@ -265,8 +287,15 @@
         max-height: 40vh;
     }
     
+    .logo-container {
+        min-height: 80px;
+        min-width: 200px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
     .logo-text {
-        font-size: 3.5rem;
         letter-spacing: 0.2rem;
         text-align: center;
     }

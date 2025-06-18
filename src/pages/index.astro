@@ -8,7 +8,9 @@ import { Image } from 'astro:assets';
 	<main class="main-container">
 		<div class="particles"></div>
 		<div class="content">
-			<h1 id="animated-text" class="logo-text">PGSCOM</h1>
+			<div class="logo-container">
+				<h1 id="animated-text" class="logo-text">PGSCOM</h1>
+			</div>
 		</div>
 		<div class="image-container">
 			<Image src="/pgscom.png" alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
@@ -29,7 +31,6 @@ import { Image } from 'astro:assets';
 				'Meow Script',
 				'Modak',
 				'Monoton',
-				'Neonderthaw',
 				'Offside',
 				'Pacifico',
 				'Permanent Marker',
@@ -37,9 +38,30 @@ import { Image } from 'astro:assets';
 				'Solway',
 				'Tapestry',
 				'Tiny5',
-				'VT323',
-				'Vast Shadow'
 			];
+			
+			// Factor de escala para cada fuente para mantener tamaño visual consistente
+			const fontSizeFactors = {
+				'Allerta Stencil': 1.0,
+				'Bungee Inline': 0.9,
+				'Chakra Petch': 1,
+				'Kranky': 1.0,
+				'Limelight': 0.95,
+				'Meow Script': 0.85,
+				'Modak': 1.0,
+				'Monoton': 0.8,
+				'Offside': 1.1,
+				'Pacifico': 0.8,
+				'Permanent Marker': 1.0,
+				'Rampart One': 0.8,
+				'Solway': 1.15,
+				'Tapestry': 1.05,
+				'Tiny5': 1.2,
+			};
+			
+			// Base font size in viewport width units
+			const baseFontSize = 7; // corresponde al 7cqw en CSS
+			const delayfont = 1000;
 			
 			let currentFontIndex = 0;
 			let fontsLoaded = false;
@@ -53,12 +75,12 @@ import { Image } from 'astro:assets';
 					if ('fonts' in document) {
 						const fontPromises = fonts.map(fontName => {
 							// Usar peso Medium (500) para Solway y Chakra Petch
-							// Usar peso Regular (400) para Modak, Monoton, Neonderthaw
+							// Usar peso Regular (400) para Modak, Monoton
 							// Bold para el resto
 							let fontWeight = 'bold';
 							if (fontName === 'Solway' || fontName === 'Chakra Petch') {
 								fontWeight = '500';
-							} else if (fontName === 'Modak' || fontName === 'Monoton' || fontName === 'Neonderthaw') {
+							} else if (fontName === 'Modak' || fontName === 'Monoton') {
 								fontWeight = '400';
 							}
 							return document.fonts.load(`${fontWeight} 5rem "${fontName}"`);
@@ -83,7 +105,7 @@ import { Image } from 'astro:assets';
 								// Aplicar peso específico para cada fuente
 								if (fontName === 'Solway' || fontName === 'Chakra Petch') {
 									testElement.style.fontWeight = '500';
-								} else if (fontName === 'Modak' || fontName === 'Monoton' || fontName === 'Neonderthaw') {
+								} else if (fontName === 'Modak' || fontName === 'Monoton') {
 									testElement.style.fontWeight = '400';
 								} else {
 									testElement.style.fontWeight = 'bold';
@@ -113,34 +135,49 @@ import { Image } from 'astro:assets';
 			function changeFontFamily() {
 				if (!fontsLoaded) return;
 				
+				// Usamos la referencia global
+				const currentEl = window.animatedText;
+				
 				// Cambiar a la siguiente fuente
 				currentFontIndex = (currentFontIndex + 1) % fonts.length;
 				const currentFont = fonts[currentFontIndex];
 				
-				// Aplicar la nueva fuente con el peso correcto
-				animatedText.style.fontFamily = `"${currentFont}", cursive`;
+				// Cambiamos directamente las propiedades sin animación ni visibilidad
+				// Esto causa un cambio abrupto (corte) pero sin parpadeo
+				currentEl.style.fontFamily = `"${currentFont}", cursive`;
 				
 				// Aplicar peso específico para cada tipo de fuente
 				if (currentFont === 'Solway' || currentFont === 'Chakra Petch') {
-					animatedText.style.fontWeight = '500';
-				} else if (currentFont === 'Modak' || currentFont === 'Monoton' || currentFont === 'Neonderthaw') {
-					animatedText.style.fontWeight = '400';
+					currentEl.style.fontWeight = '500';
+				} else if (currentFont === 'Modak' || currentFont === 'Monoton') {
+					currentEl.style.fontWeight = '400';
 				} else {
-					animatedText.style.fontWeight = 'bold';
+					currentEl.style.fontWeight = 'bold';
 				}
 				
-				console.log(`Font changed to: ${currentFont} (weight: ${animatedText.style.fontWeight})`);
+				// Ajustar el tamaño según el factor de la fuente
+				const factor = fontSizeFactors[currentFont] || 1.0;
+				const newSize = baseFontSize * factor;
+				currentEl.style.fontSize = `${newSize}cqw`;
+				
+				console.log(`Font changed to: ${currentFont} (weight: ${currentEl.style.fontWeight}, factor: ${factor}, size: ${newSize}cqw)`);
 			}
 
 			// Inicializar con la primera fuente y estado de carga
-			animatedText.style.fontFamily = `"${fonts[0]}", cursive`;
-			if (fonts[0] === 'Solway' || fonts[0] === 'Chakra Petch') {
+			const initialFont = fonts[0];
+			animatedText.style.fontFamily = `"${initialFont}", cursive`;
+			if (initialFont === 'Solway' || initialFont === 'Chakra Petch') {
 				animatedText.style.fontWeight = '500';
-			} else if (fonts[0] === 'Modak' || fonts[0] === 'Monoton' || fonts[0] === 'Neonderthaw') {
+			} else if (initialFont === 'Modak' || initialFont === 'Monoton') {
 				animatedText.style.fontWeight = '400';
 			} else {
 				animatedText.style.fontWeight = 'bold';
 			}
+			
+			// Aplicar el factor de escala inicial
+			const initialFactor = fontSizeFactors[initialFont] || 1.0;
+			animatedText.style.fontSize = `${baseFontSize * initialFactor}cqw`;
+			
 			animatedText.classList.add('loading');
 			
 			// Precargar todas las fuentes
@@ -152,7 +189,11 @@ import { Image } from 'astro:assets';
 			
 			// Comenzar la animación solo después de cargar las fuentes
 			console.log('Iniciando animación de fuentes...');
-			setInterval(changeFontFamily, 1000);
+			
+			// Referencia al elemento para que pueda ser actualizado en changeFontFamily
+			window.animatedText = animatedText;
+			
+			setInterval(changeFontFamily, delayfont);
 		});
 	</script>
 </Layout>
