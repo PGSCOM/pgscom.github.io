@@ -70,7 +70,14 @@ import minimal3 from '../assets/minimal3.svg';
 			
 			// Base font size in viewport width units
 			const baseFontSize = 7; // corresponde al 7cqw en CSS
-			const delayfont = 1000;
+			const delayfont = 5000;
+			
+			// Variables de duración de transición
+			const transitionDuration = {
+				fadeOut: 600,    // Duración del fade-out en ms
+				fadeIn: 800,     // Duración del fade-in en ms
+				get total() { return this.fadeOut + this.fadeIn; } // Duración total
+			};
 			
 			let currentFontIndex = 0;
 			let fontsLoaded = false;
@@ -147,29 +154,44 @@ import minimal3 from '../assets/minimal3.svg';
 				// Usamos la referencia global
 				const currentEl = window.animatedText;
 				
-				// Cambiar a la siguiente fuente
-				currentFontIndex = (currentFontIndex + 1) % fonts.length;
-				const currentFont = fonts[currentFontIndex];
+				// Iniciar fade-out con blur
+				currentEl.classList.add('fade-out');
 				
-				// Cambiamos directamente las propiedades sin animación ni visibilidad
-				// Esto causa un cambio abrupto (corte) pero sin parpadeo
-				currentEl.style.fontFamily = `"${currentFont}", cursive`;
-				
-				// Aplicar peso específico para cada tipo de fuente
-				if (currentFont === 'Solway' || currentFont === 'Chakra Petch') {
-					currentEl.style.fontWeight = '500';
-				} else if (currentFont === 'Modak' || currentFont === 'Monoton') {
-					currentEl.style.fontWeight = '400';
-				} else {
-					currentEl.style.fontWeight = 'bold';
-				}
-				
-				// Ajustar el tamaño según el factor de la fuente
-				const factor = fontSizeFactors[currentFont] || 1.0;
-				const newSize = baseFontSize * factor;
-				currentEl.style.fontSize = `${newSize}cqw`;
-				
-				console.log(`Font changed to: ${currentFont} (weight: ${currentEl.style.fontWeight}, factor: ${factor}, size: ${newSize}cqw)`);
+				// Esperar a que se complete el fade-out antes de cambiar la fuente
+				setTimeout(() => {
+					// Cambiar a la siguiente fuente
+					currentFontIndex = (currentFontIndex + 1) % fonts.length;
+					const currentFont = fonts[currentFontIndex];
+					
+					// Cambiar la fuente mientras está invisible
+					currentEl.style.fontFamily = `"${currentFont}", cursive`;
+					
+					// Aplicar peso específico para cada tipo de fuente
+					if (currentFont === 'Solway' || currentFont === 'Chakra Petch') {
+						currentEl.style.fontWeight = '500';
+					} else if (currentFont === 'Modak' || currentFont === 'Monoton') {
+						currentEl.style.fontWeight = '400';
+					} else {
+						currentEl.style.fontWeight = 'bold';
+					}
+					
+					// Ajustar el tamaño según el factor de la fuente
+					const factor = fontSizeFactors[currentFont] || 1.0;
+					const newSize = baseFontSize * factor;
+					currentEl.style.fontSize = `${newSize}cqw`;
+					
+					console.log(`Font changed to: ${currentFont} (weight: ${currentEl.style.fontWeight}, factor: ${factor}, size: ${newSize}cqw)`);
+					
+					// Iniciar fade-in
+					currentEl.classList.remove('fade-out');
+					currentEl.classList.add('fade-in');
+					
+					// Remover la clase de fade-in después de completar la animación
+					setTimeout(() => {
+						currentEl.classList.remove('fade-in');
+					}, transitionDuration.fadeIn);
+					
+				}, transitionDuration.fadeOut);
 			}
 
 			// Inicializar con la primera fuente y estado de carga
