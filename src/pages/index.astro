@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import './styles.css';
 import { Image } from 'astro:assets';
+import pgscom from '../assets/pgscom.png';
 ---
 
 <Layout>
@@ -13,7 +14,7 @@ import { Image } from 'astro:assets';
 			</div>
 		</div>
 		<div class="image-container">
-			<Image src="/pgscom.png" alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
+			<Image src={pgscom} alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
 		</div>
 	</main>
 
