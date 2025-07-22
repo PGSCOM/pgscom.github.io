@@ -17,7 +17,6 @@
 .main-container {
     width: 100vw;
     height: 100vh;
-    position: absolute;
     /*background: white;*/
     display: flex;
     align-items: center;
@@ -30,7 +29,6 @@
 
 /* Contenido principal - lado izquierdo */
 .content {
-    position: absolute;
     z-index: 2;
     text-align: center;
     color: #367e78;
