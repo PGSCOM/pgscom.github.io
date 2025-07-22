@@ -17,12 +17,13 @@
 .main-container {
     width: 100vw;
     height: 100vh;
-    position: relative;
-    background: white;
+    position: absolute;
+    /*background: white;*/
     display: flex;
     align-items: center;
     justify-content: flex-start;
     overflow: hidden;
+    z-index: -2;
 }
 
 /* Eliminamos el overlay global */
@@ -48,14 +49,15 @@
 /* Contenedor de la imagen */
 .image-container {
     position: absolute;
+    top: 0;
     right: 5%;
-    z-index: 2;
+    z-index: -1;
     flex: 1;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    max-width: 40%;
-    height: 100%;
+    width: 40%;
+    height: 100vh;
     /* Elimina dependencias de .image-wrapper */
     /* Ajusta para que la imagen se centre y escale bien sin el wrapper */
     overflow: hidden;
