@@ -10,6 +10,6 @@
   },
   "dependencies": {
     "animejs": "^4.0.2",
-    "astro": "^5.9.2"
+    "astro": "^5.12.9"
   }
 }
