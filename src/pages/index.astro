@@ -255,10 +255,14 @@ import logo from '../assets/logo.png';
         const targetEl = document.querySelector('.image-container');
         if (!targetEl) return;
 
+        // Detectar si es móvil
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        
         // Creamos una sola animación con ambas propiedades
         const animation = anime({
             targets: targetEl,
-            translateX: [0, 300],
+            translateX: isMobile ? [0, 0] : [0, 300], // No mover horizontalmente en móvil
+            translateY: isMobile ? [0, 300] : [0, 0], // Mover verticalmente solo en móvil
             opacity: [1, 0],
             duration: 1000,
             autoplay: false,
