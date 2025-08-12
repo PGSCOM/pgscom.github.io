@@ -255,26 +255,23 @@ import logo from '../assets/logo.png';
         const targetEl = document.querySelector('.image-container');
         if (!targetEl) return;
 
-        // Creamos una timeline en lugar de una animación simple
-        const timeline = anime.timeline({
+        // Creamos una sola animación con ambas propiedades
+        const animation = anime({
+            targets: targetEl,
+            translateX: [0, 300],
+            opacity: [1, 0],
+            duration: 1000,
             autoplay: false,
             easing: 'easeInOutSine'
-        });
-
-        // Añadimos el movimiento a la timeline
-        timeline.add({
-            targets: targetEl,
-            translateX: [0, 240],
-            duration: 1000
         });
 
         function onScroll() {
             const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
             const maxScroll = 500;
             const progress = Math.min(scrollY / maxScroll, 1);
-            const seekTime = progress * timeline.duration;
+            const seekTime = progress * animation.duration;
 
-            timeline.seek(seekTime);
+            animation.seek(seekTime);
         }
 
         onScroll();
