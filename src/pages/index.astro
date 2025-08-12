@@ -33,9 +33,9 @@ import logo from '../assets/logo.png';
 		<Image src={pgscom} alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
 	</div>
 
-	<div style="height: 300vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); margin-top: 100vh;">
+	<div style="height: 100%; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); margin-top: 100vh;">
 		<!-- Espacio para scroll -->
-		<p style="text-align: center; padding-top: 50vh; color: #367e78;">Scroll para ver la animación</p>
+		<!--p style="text-align: center; padding-top: 50vh; color: #367e78;">Scroll para ver la animación</p-->
 	</div>
 
 	<script is:inline defer>
@@ -258,24 +258,31 @@ import logo from '../assets/logo.png';
         // Detectar si es móvil
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         
-        // Creamos una sola animación con ambas propiedades
-        const animation = anime({
-            targets: targetEl,
-            translateX: isMobile ? [0, 0] : [0, 300], // No mover horizontalmente en móvil
-            translateY: isMobile ? [0, 300] : [0, 0], // Mover verticalmente solo en móvil
-            opacity: [1, 0],
-            duration: 1000,
+        // Crear una timeline para mejor control de la animación
+        const timeline = anime.timeline({
             autoplay: false,
             easing: 'easeInOutSine'
         });
 
+        // Agregar animaciones a la timeline (simultaneas)
+        timeline
+            .add({
+                targets: targetEl,
+                translateX: isMobile ? 0 : 300, // No mover horizontalmente en móvil
+                translateY: isMobile ? 300 : 0, // Mover verticalmente solo en móvil
+                opacity: [1, 0], // Fade out simultáneo
+                duration: 500,
+                easing: 'easeInOutSine'
+            });
+
         function onScroll() {
             const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-            const maxScroll = 500;
-            const progress = Math.min(scrollY / maxScroll, 1);
-            const seekTime = progress * animation.duration;
+			const maxScroll = window.innerHeight;
+			console.log(window.innerHeight, scrollY);
+            const seekTime = scrollY; //progress * timeline.duration;
+			console.log('Timeline seekTime:', seekTime);
 
-            animation.seek(seekTime);
+            timeline.seek(seekTime);
         }
 
         onScroll();
