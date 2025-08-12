@@ -249,39 +249,42 @@ import logo from '../assets/logo.png';
 		});
 	</script>
 	<script type="module">
-		// Importamos animejs desde una CDN
-		import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.es.js';
+    import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.es.js';
 
-		function initScrollAnim() {
-			const targetEl = document.querySelector('.image-container');
+    function initScrollAnim() {
+        const targetEl = document.querySelector('.image-container');
+        if (!targetEl) return;
 
-			if (!targetEl) return;
+        // Creamos una timeline en lugar de una animación simple
+        const timeline = anime.timeline({
+            autoplay: false,
+            easing: 'easeInOutSine'
+        });
 
-			const animation = anime({
-				targets: targetEl,
-				translateX: [0, 240],
-				easing: 'easeInOutSine',
-				duration: 1000,
-				autoplay: false
-			});
+        // Añadimos el movimiento a la timeline
+        timeline.add({
+            targets: targetEl,
+            translateX: [0, 240],
+            duration: 1000
+        });
 
-			function onScroll() {
-				const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-				const maxScroll = 500;
-				const progress = Math.min(scrollY / maxScroll, 1);
-				const seekTime = progress * 1000;
-				
-				animation.seek(seekTime);
-			}
+        function onScroll() {
+            const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+            const maxScroll = 500;
+            const progress = Math.min(scrollY / maxScroll, 1);
+            const seekTime = progress * timeline.duration;
 
-			onScroll();
-			window.addEventListener('scroll', onScroll, { passive: true });
-		}
+            timeline.seek(seekTime);
+        }
 
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', initScrollAnim);
-		} else {
-			initScrollAnim();
-		}
-	</script>
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initScrollAnim);
+    } else {
+        initScrollAnim();
+    }
+</script>
 </Layout>
