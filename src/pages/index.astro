@@ -7,7 +7,6 @@ import minimal1 from '../assets/minimal1.svg';
 import customShape from '../assets/custom-shape.svg';
 import minimal3 from '../assets/minimal3.svg';
 import logo from '../assets/logo.png';
-import { animate, onScroll } from 'animejs';
 ---
 
 <Layout>
@@ -34,8 +33,9 @@ import { animate, onScroll } from 'animejs';
 		<Image src={pgscom} alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
 	</div>
 
-	<div style="height: 200vh;">
+	<div style="height: 300vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); margin-top: 100vh;">
 		<!-- Espacio para scroll -->
+		<p style="text-align: center; padding-top: 50vh; color: #367e78;">Scroll para ver la animación</p>
 	</div>
 
 	<script is:inline defer>
@@ -248,17 +248,40 @@ import { animate, onScroll } from 'animejs';
 			setInterval(changeFontFamily, delayfont);
 		});
 	</script>
-   <script type="ts">
-		animate('.animated-text', {
-			x: '15rem',
-			rotate: '1turn',
-			duration: 2000,
-			alternate: true,
-			loop: true,
-			ease: 'inOutQuad',
-			autoplay: onScroll({
-			container: 'body'
-			})
-		});
-   </script>
+	<script type="module">
+		// Importamos animejs desde una CDN
+		import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.es.js';
+
+		function initScrollAnim() {
+			const targetEl = document.querySelector('.image-container');
+
+			if (!targetEl) return;
+
+			const animation = anime({
+				targets: targetEl,
+				translateX: [0, 240],
+				easing: 'easeInOutSine',
+				duration: 1000,
+				autoplay: false
+			});
+
+			function onScroll() {
+				const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+				const maxScroll = 500;
+				const progress = Math.min(scrollY / maxScroll, 1);
+				const seekTime = progress * 1000;
+				
+				animation.seek(seekTime);
+			}
+
+			onScroll();
+			window.addEventListener('scroll', onScroll, { passive: true });
+		}
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initScrollAnim);
+		} else {
+			initScrollAnim();
+		}
+	</script>
 </Layout>
