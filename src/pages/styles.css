@@ -21,7 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    overflow: hidden;
+    overflow: visible; /* Cambiado de hidden a visible para permitir scroll */
     z-index: -2;
 }
 
@@ -46,7 +46,7 @@
 
 /* Contenedor de la imagen */
 .image-container {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 5%;
     z-index: -1;
