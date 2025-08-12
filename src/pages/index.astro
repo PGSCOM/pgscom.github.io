@@ -253,6 +253,7 @@ import logo from '../assets/logo.png';
 
     function initScrollAnim() {
         const targetEl = document.querySelector('.image-container');
+        const particlesEl = document.querySelector('.particles');
         if (!targetEl) return;
 
         // Detectar si es móvil
@@ -261,7 +262,8 @@ import logo from '../assets/logo.png';
         // Crear una timeline para mejor control de la animación
         const timeline = anime.timeline({
             autoplay: false,
-            easing: 'easeInOutSine'
+            easing: 'easeOutQuart',
+            duration: 1000 // Duración base más larga
         });
 
         // Agregar animaciones a la timeline (simultaneas)
@@ -269,18 +271,33 @@ import logo from '../assets/logo.png';
             .add({
                 targets: targetEl,
                 translateX: isMobile ? 0 : 300, // No mover horizontalmente en móvil
-                translateY: isMobile ? 300 : 0, // Mover verticalmente solo en móvil
+                translateY: isMobile ? 250 : 0, // Mover verticalmente solo en móvil
                 opacity: [1, 0], // Fade out simultáneo
-                duration: 500,
-                easing: 'easeInOutSine'
-            });
+                scale: [1, 0.8], // Reducir escala suavemente
+                duration: isMobile ? 600 : 800, // Duración más larga para suavidad
+                easing: 'easeOutQuart' // Easing más suave
+            })
+            .add({
+                targets: particlesEl,
+                translateY: isMobile ? -100 : -150, // Parallax sutil en partículas
+                opacity: [1, 0.3], // Fade parcial
+                scale: [1, 1.1], // Escala ligeramente mayor
+                duration: isMobile ? 800 : 1000,
+                easing: 'easeOutCubic'
+            }, 0); // Iniciar al mismo tiempo (offset 0)
 
         function onScroll() {
             const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-			const maxScroll = window.innerHeight;
-			console.log(window.innerHeight, scrollY);
-            const seekTime = scrollY; //progress * timeline.duration;
-			console.log('Timeline seekTime:', seekTime);
+            const maxScroll = window.innerHeight;
+            
+            // Crear una curva de progreso más suave
+            const rawProgress = Math.min(scrollY / maxScroll, 1);
+            const smoothProgress = rawProgress * rawProgress * (3 - 2 * rawProgress); // Smooth step function
+            
+            // Calcular el tiempo de seek basado en el progreso suave
+            const seekTime = smoothProgress * timeline.duration;
+            
+            console.log('Scroll progress:', rawProgress.toFixed(2), 'Smooth progress:', smoothProgress.toFixed(2));
 
             timeline.seek(seekTime);
         }

@@ -361,8 +361,8 @@
         right: auto;
         overflow: visible;
         justify-content: center;
-        bottom: 17%;
-        top: auto;
+        /*bottom: 17%;*/
+        top: 30%;
     }
     
     .fotopgs {
