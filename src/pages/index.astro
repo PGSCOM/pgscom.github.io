@@ -277,14 +277,14 @@ import logo from '../assets/logo.png';
                 duration: isMobile ? 600 : 800, // Duración más larga para suavidad
                 easing: 'easeOutQuart' // Easing más suave
             })
-            .add({
+            /*.add({
                 targets: particlesEl,
                 translateY: isMobile ? -100 : -150, // Parallax sutil en partículas
                 opacity: [1, 0.3], // Fade parcial
                 scale: [1, 1.1], // Escala ligeramente mayor
                 duration: isMobile ? 800 : 1000,
                 easing: 'easeOutCubic'
-            }, 0); // Iniciar al mismo tiempo (offset 0)
+            }, 0);*/ // Iniciar al mismo tiempo (offset 0)
 
         function onScroll() {
             const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
