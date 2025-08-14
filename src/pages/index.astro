@@ -7,6 +7,7 @@ import minimal1 from '../assets/minimal1.svg';
 import customShape from '../assets/custom-shape.svg';
 import minimal3 from '../assets/minimal3.svg';
 import logo from '../assets/logo.png';
+import logosvganim from '../assets/animlogo/logo.svg';
 ---
 
 <Layout>
@@ -33,9 +34,10 @@ import logo from '../assets/logo.png';
 		<Image src={pgscom} alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
 	</div>
 
-	<div style="height: 100%; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); margin-top: 100vh;">
-		<!-- Espacio para scroll -->
-		<!--p style="text-align: center; padding-top: 50vh; color: #367e78;">Scroll para ver la animación</p-->
+	<!-- Div que ocupa el 100% de la pantalla que contiene el logo en el centro -->
+	<div style="height: 100vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); display: flex; align-items: center; justify-content: center;">
+		<img style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
+		<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
 	</div>
 
 	<script is:inline defer>
@@ -277,14 +279,7 @@ import logo from '../assets/logo.png';
                 duration: isMobile ? 600 : 800, // Duración más larga para suavidad
                 easing: 'easeOutQuart' // Easing más suave
             })
-            /*.add({
-                targets: particlesEl,
-                translateY: isMobile ? -100 : -150, // Parallax sutil en partículas
-                opacity: [1, 0.3], // Fade parcial
-                scale: [1, 1.1], // Escala ligeramente mayor
-                duration: isMobile ? 800 : 1000,
-                easing: 'easeOutCubic'
-            }, 0);*/ // Iniciar al mismo tiempo (offset 0)
+            //Animación aparición logo
 
         function onScroll() {
             const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
