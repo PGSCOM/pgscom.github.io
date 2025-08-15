@@ -20,8 +20,8 @@
     pointer-events: none; /* No bloquear interacciones */
 
     /* Máscara */
-    -webkit-mask-image: url(mascaraminmin.svg);
-    mask-image: url(mascaraminmin.svg);
+    -webkit-mask-image: url(/mascaraminmin.svg);
+    mask-image: url(/mascaraminmin.svg);
     -webkit-mask-size: auto 32.2vh; /* Ancho automático para mantener la proporción, alto del 32.2% del viewport */
     mask-size: auto 32.2vh;
     -webkit-mask-position: center; /* Centrado horizontal y vertical */
