@@ -8,6 +8,11 @@ import customShape from '../assets/custom-shape.svg';
 import minimal3 from '../assets/minimal3.svg';
 import logo from '../assets/logo.png';
 import logosvganim from '../assets/animlogo/logo.svg';
+
+// Videos para la animación del logo
+import loop from '../assets/animlogo/vid/loop.mp4';
+import loopinv from '../assets/animlogo/vid/loopinversed.mp4';
+import videoin from '../assets/animlogo/vid/empezar.mp4';
 ---
 
 <Layout>
@@ -35,7 +40,14 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	</div>
 
 	<!-- Div que ocupa el 100% de la pantalla que contiene el logo en el centro -->
-	<div style="height: 100vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); display: flex; align-items: center; justify-content: center;">
+	<div class="parte2" style="height: 100vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); display: flex; align-items: center; justify-content: center;">
+		<div class="galaxiamask">
+			<!-- Video Galaxia bucle -->
+			<video autoplay loop muted playsinline class="video-galaxia">
+				<source src={loop} type="video/mp4" />
+				Your browser does not support the video tag.
+			</video>
+		</div>
 		<img style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
 		<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
 	</div>

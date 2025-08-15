@@ -5,6 +5,49 @@
     box-sizing: border-box;
 }
 
+.parte2 {
+    position: relative; /* Containing block para .galaxiamask */
+    overflow: hidden; /* Evitar que el video salga del área del div */
+}
+
+.galaxiamask {
+    /* Contenedor del video: ocupa todo el area de .parte2 */
+    position: absolute;
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none; /* No bloquear interacciones */
+
+    /* Máscara */
+    -webkit-mask-image: url(mascaraminmin.svg);
+    mask-image: url(mascaraminmin.svg);
+    -webkit-mask-size: auto 32.2vh; /* Ancho automático para mantener la proporción, alto del 32.2% del viewport */
+    mask-size: auto 32.2vh;
+    -webkit-mask-position: center; /* Centrado horizontal y vertical */
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat; /* Evitar que la máscara se repita */
+    mask-repeat: no-repeat;
+}
+
+.video-galaxia {
+    /* Llenar el contenedor .galaxiamask sin afectar al layout */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0; /* Queda dentro de .parte2; el logo tendrá z-index mayor */
+    pointer-events: none;
+}
+
+.parte2 > img {
+    /* Asegurar que el logo quede por encima del video y no cambie su posición */
+    position: relative;
+    z-index: 1;
+}
+
 /*Logo flotante*/
 .sky-image {
   position: fixed;
@@ -215,7 +258,7 @@
     width: 75px;
     height: 75px;
     animation-delay: 5s;
-    animation-duration: 16s;
+    animation-duration: 32.2s;
 }
 
 .particle-6 {
