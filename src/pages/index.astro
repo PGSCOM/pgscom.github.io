@@ -8,11 +8,6 @@ import customShape from '../assets/custom-shape.svg';
 import minimal3 from '../assets/minimal3.svg';
 import logo from '../assets/logo.png';
 import logosvganim from '../assets/animlogo/logo.svg';
-
-// Videos para la animación del logo
-import loop from '../assets/animlogo/vid/loop.mp4';
-import loopinv from '../assets/animlogo/vid/loopinversed.mp4';
-import videoin from '../assets/animlogo/vid/empezar.mp4';
 ---
 
 <Layout>
@@ -44,7 +39,7 @@ import videoin from '../assets/animlogo/vid/empezar.mp4';
 		<div class="galaxiamask">
 			<!-- Video Galaxia bucle -->
 			<video autoplay loop muted playsinline class="video-galaxia">
-				<source src={loop} type="video/mp4" />
+				<source src="/vid/loop.mp4" type="video/mp4" />
 			</video>
 		</div>
 		<img style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
