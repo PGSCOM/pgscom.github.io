@@ -38,7 +38,8 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	<div class="parte2" style="height: 100vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); display: flex; align-items: center; justify-content: center;">
 		<div class="galaxiamask">
 			<!-- Video Galaxia bucle -->
-			<video autoplay loop muted playsinline class="video-galaxia">
+			<video id="video-galaxia" autoplay loop muted playsinline preload="auto" class="video-galaxia">
+				<!-- Mantener source como fallback; la JS reemplazará la fuente por el blob descargado -->
 				<source src="/vid/loop.mp4" type="video/mp4" />
 			</video>
 		</div>
@@ -254,6 +255,42 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			window.animatedText = animatedText;
 			
 			setInterval(changeFontFamily, delayfont);
+
+			// Registrar un Service Worker para prefetch/cache del vídeo en background.
+			// El SW descargará y guardará /vid/loop.mp4 y responderá con la copia cacheada cuando el <video> pida la URL.
+			(async function registerSWAndPrefetch() {
+				if ('serviceWorker' in navigator) {
+					try {
+						const reg = await navigator.serviceWorker.register('/service-worker.js');
+						console.log('ServiceWorker registrado:', reg);
+						// Enviar mensaje para que el SW prefetch el vídeo
+						function postPrefetchMessage(swRegistration) {
+							if (!swRegistration) return;
+							const sw = swRegistration.active || swRegistration.waiting || swRegistration.installing;
+							if (sw) sw.postMessage({ type: 'PREFETCH_VIDEO', url: '/vid/loop.mp4' });
+						}
+						postPrefetchMessage(reg);
+						// Si se activa más tarde, esperar a que esté activo para pedir prefetch
+						if (reg.installing) {
+							reg.installing.addEventListener('statechange', () => {
+								if (reg.active) postPrefetchMessage(reg);
+							});
+						}
+					} catch (err) {
+						console.error('Registro del Service Worker falló:', err);
+					}
+				} else {
+					console.warn('Service Workers no soportados en este navegador: usando fallback normal');
+				}
+				// Dejar el <video> apuntando a /vid/loop.mp4 (el SW lo interceptará/servirá desde cache cuando esté disponible)
+				const videoEl = document.getElementById('video-galaxia');
+				if (videoEl) {
+					// Forzar reload del src para que el navegador solicite la URL (y el SW pueda interceptarla)
+					videoEl.src = '/vid/loop.mp4';
+					videoEl.load();
+					videoEl.play().catch(() => {/* autoplay bloqueado */});
+				}
+			})();
 		});
 	</script>
 	<script type="module">
