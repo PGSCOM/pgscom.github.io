@@ -38,7 +38,8 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	<div class="parte2">
 		<div class="galaxiamask">
 			<!-- Video Galaxia bucle -->
-			<video muted playsinline preload="auto" id="video-galaxia" class="video-galaxia"></video>
+			<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia"></video>
+			<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity:0;"></video>
 		</div>
 		<img id="logoanimar" style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
 		<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
@@ -332,15 +333,16 @@ import logosvganim from '../assets/animlogo/logo.svg';
         const targetEl = document.querySelector('.image-container');
         const logoEl = document.querySelector('#logoanimar');
         const galaxiaMaskEl = document.querySelector('.galaxiamask');
-		const videoEl = document.querySelector('#video-galaxia');
+		const videoA = document.querySelector('#video-galaxia-a');
+		const videoB = document.querySelector('#video-galaxia-b');
 
-	if (!targetEl || !logoEl || !galaxiaMaskEl || !videoEl) return;
+	if (!targetEl || !logoEl || !galaxiaMaskEl || !videoA || !videoB) return;
 
         // Detectar si es móvil
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         
 	// Crear una timeline para mejor control de la animación
-        const timeline = anime.timeline({
+	const timeline = anime.timeline({
             autoplay: false,
             easing: 'easeOutQuart',
             duration: 1000 // Duración base más larga
@@ -404,18 +406,22 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		// Al terminar el zoom, continuar reproduciendo empezar.mp4 hasta el final
 		// Luego alternar loopinversed.mp4 y loop.mp4 en bucle
 
-		const ZOOM_START_MS = 1000;
-		const ZOOM_END_MS = 2000;
-		const SCRUB_DURATION_S = 2; // primeros 2 segundos
+	const ZOOM_START_MS = 1000;
+	const ZOOM_END_MS = 2000;
+	const SCRUB_DURATION_S = 2; // primeros 2 segundos
 
 		// Usar nombres reales del repo
-		const VIDEO_INTRO = '/vid/empezar.mp4';
-		const PLAYLIST = ['/vid/loopinversed.mp4', '/vid/loop.mp4'];
-		let playlistIndex = 0;
-		let isScrollScrubActive = true;
-		let afterZoomPlaybackStarted = false;
-		let videoMetadataReady = false;
-		let playlistStarted = false;
+	const VIDEO_INTRO = '/vid/empezar.mp4';
+	const PLAYLIST = ['/vid/loopinversed.mp4', '/vid/loop.mp4'];
+	let playlistIndex = 0;
+	let isScrollScrubActive = true;
+	let afterZoomPlaybackStarted = false;
+	let activeMetadataReady = false;
+	let playlistStarted = false;
+
+	// Doble buffer de video
+	let activeVideo = videoA;
+	let bufferVideo = videoB;
 
 		function waitForMetadata(el) {
 			return new Promise((resolve) => {
@@ -431,52 +437,73 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			});
 		}
 
-		async function setVideoSource(src, startTime = 0, autoplay = false) {
+		async function setVideoSource(el, src, startTime = 0, autoplay = false) {
 			try {
-				videoEl.loop = false;
+				el.loop = false;
 				// Cambiar src directamente en el video
-				if (videoEl.src !== location.origin + src && videoEl.src !== src) {
-					videoEl.src = src;
+				if (el.src !== location.origin + src && el.src !== src) {
+					el.src = src;
 				}
 				// Forzar carga de metadatos
-				videoEl.load();
-				await waitForMetadata(videoEl);
-				videoMetadataReady = true;
+				el.load();
+				await waitForMetadata(el);
+				if (el === activeVideo) activeMetadataReady = true;
 				// Posicionar
-				const clampedStart = Math.max(0, Math.min(startTime, (videoEl.duration || Infinity)));
+				const clampedStart = Math.max(0, Math.min(startTime, (el.duration || Infinity)));
 				if (!Number.isNaN(clampedStart)) {
-					try { videoEl.currentTime = clampedStart; } catch {}
+					try { el.currentTime = clampedStart; } catch {}
 				}
 				if (autoplay) {
-					try { await videoEl.play(); } catch {}
+					try { await el.play(); } catch {}
 				} else {
-					videoEl.pause();
+					el.pause();
 				}
 			} catch (e) {
 				// Silencioso: si falla, no romper la animación
 			}
 		}
 
-		async function playNextInPlaylist() {
-			const nextSrc = PLAYLIST[playlistIndex % PLAYLIST.length];
-			playlistIndex++;
-			await setVideoSource(nextSrc, 0, true);
+		async function prepareNext(src) {
+			// Precargar en el buffer
+			await setVideoSource(bufferVideo, src, 0, false);
+			// Opcional: priming del decodificador
+			try { await bufferVideo.play(); bufferVideo.pause(); } catch {}
 		}
 
-		// Preparar el video inicial para scrubbing
-		setVideoSource(VIDEO_INTRO, 0, false);
+		function attachEndedHandler() {
+			activeVideo.onended = async () => {
+				// Primera vez: venimos del intro
+				if (!playlistStarted) {
+					playlistStarted = true;
+				}
+				// Swap al buffer ya precargado
+				await swapToPreloaded();
+				// Preparar el siguiente en la lista
+				playlistIndex = (playlistIndex + 1) % PLAYLIST.length;
+				prepareNext(PLAYLIST[playlistIndex]);
+			};
+			bufferVideo.onended = null;
+		}
 
-		// Cuando termine cualquier video:
-		videoEl.addEventListener('ended', async () => {
-			// Si terminó el intro, arrancar la playlist
-			if (!playlistStarted) {
-				playlistStarted = true;
-				await playNextInPlaylist();
-				return;
-			}
-			// Alternar entre los loops
-			await playNextInPlaylist();
-		});
+		async function swapToPreloaded() {
+			// Asegurar visible y reproduciendo el buffer antes del swap
+			try { bufferVideo.currentTime = 0; } catch {}
+			try { await bufferVideo.play(); } catch {}
+			bufferVideo.style.opacity = '1';
+			// Esperar 2 frames para asegurar un render antes de ocultar el activo
+			await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+			// Ocultar/pausar el activo
+			activeVideo.style.opacity = '0';
+			try { activeVideo.pause(); } catch {}
+			// Intercambiar referencias
+			const tmp = activeVideo; activeVideo = bufferVideo; bufferVideo = tmp;
+			attachEndedHandler();
+		}
+
+		// Preparar el video inicial para scrubbing en el activo y precargar el primero del playlist en el buffer
+		setVideoSource(activeVideo, VIDEO_INTRO, 0, false);
+		prepareNext(PLAYLIST[playlistIndex]); // playlistIndex === 0 al inicio
+		attachEndedHandler();
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
@@ -499,30 +526,30 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			if (isScrollScrubActive) {
 				if (seekTime <= ZOOM_START_MS) {
 					// Antes del zoom: pausar en 0
-					if (videoMetadataReady) {
-						try { if (!videoEl.paused) videoEl.pause(); } catch {}
-						try { if (Math.abs((videoEl.currentTime || 0) - 0) > 0.03) videoEl.currentTime = 0; } catch {}
+					if (activeMetadataReady) {
+						try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
+						try { if (Math.abs((activeVideo.currentTime || 0) - 0) > 0.03) activeVideo.currentTime = 0; } catch {}
 					}
 				} else if (seekTime < ZOOM_END_MS) {
 					// En el zoom: scrubbing 0-2s
-					if (videoMetadataReady) {
+					if (activeMetadataReady) {
 						const localP = (seekTime - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
 						const desiredT = Math.min(SCRUB_DURATION_S, Math.max(0, localP) * SCRUB_DURATION_S);
 						try {
-							if (!videoEl.paused) videoEl.pause();
-							if (Math.abs((videoEl.currentTime || 0) - desiredT) > 0.05) {
-								videoEl.currentTime = desiredT;
+							if (!activeVideo.paused) activeVideo.pause();
+							if (Math.abs((activeVideo.currentTime || 0) - desiredT) > 0.05) {
+								activeVideo.currentTime = desiredT;
 							}
 						} catch {}
 					}
 				} else {
 					// Después del zoom: continuar reproduciendo el intro
-					if (!afterZoomPlaybackStarted && videoMetadataReady) {
+					if (!afterZoomPlaybackStarted && activeMetadataReady) {
 						afterZoomPlaybackStarted = true;
 						isScrollScrubActive = false; // Dejar de scrubbear tras iniciar reproducción continua
 						// Asegurar que quedamos al final del tramo scrubbear
-						try { videoEl.currentTime = Math.min(SCRUB_DURATION_S, (videoEl.duration || SCRUB_DURATION_S)); } catch {}
-						try { videoEl.play(); } catch {}
+						try { activeVideo.currentTime = Math.min(SCRUB_DURATION_S, (activeVideo.duration || SCRUB_DURATION_S)); } catch {}
+						try { activeVideo.play(); } catch {}
 					}
 				}
 			}
