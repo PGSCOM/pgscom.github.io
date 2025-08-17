@@ -494,6 +494,8 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			const progress = maxScroll > 0 ? clamp(scrollY / maxScroll, 0, 1) : 0;
 			const seekTime = progress * timeline.duration;
 
+			console.log('Progress:', progress, 'Seek Time:', seekTime, 'Scroll:', scrollY, 'MaxScroll:', maxScroll);
+
 			// Opcional: optimizar con requestAnimationFrame (ver nota más abajo)
 			timeline.seek(seekTime);
 
