@@ -328,7 +328,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	<script type="module">
     import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.es.js';
 
-    function initScrollAnim() {
+	function initScrollAnim() {
         const targetEl = document.querySelector('.image-container');
         const logoEl = document.querySelector('#logoanimar');
         const galaxiaMaskEl = document.querySelector('.galaxiamask');
@@ -339,12 +339,92 @@ import logosvganim from '../assets/animlogo/logo.svg';
         // Detectar si es móvil
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         
+		// --- Config de vídeo y helpers previos a la timeline ---
+		const ZOOM_START_MS = 1000;
+		const ZOOM_END_MS = 2000;
+		const SCRUB_DURATION_S = 2;
+
+		const VIDEO_INTRO = '/vid/empezar.mp4';
+		const PLAYLIST = ['/vid/loopinversed.mp4', '/vid/loop.mp4'];
+		let playlistIndex = 0;
+		let afterZoomPlaybackStarted = false;
+		let introPrepared = false;
+		let videoMetadataReady = false;
+		let playlistStarted = false;
+
+		function waitForMetadata(el) {
+			return new Promise((resolve) => {
+				if (el.readyState >= 1 && !isNaN(el.duration)) { resolve(); return; }
+				const onLoaded = () => { el.removeEventListener('loadedmetadata', onLoaded); resolve(); };
+				el.addEventListener('loadedmetadata', onLoaded, { once: true });
+			});
+		}
+
+		async function setVideoSource(src, startTime = 0, autoplay = false) {
+			try {
+				videoEl.loop = false;
+				if (videoEl.src !== location.origin + src && videoEl.src !== src) {
+					videoEl.src = src;
+				}
+				videoEl.load();
+				await waitForMetadata(videoEl);
+				videoMetadataReady = true;
+				const clampedStart = Math.max(0, Math.min(startTime, (videoEl.duration || Infinity)));
+				try { videoEl.currentTime = clampedStart; } catch {}
+				if (autoplay) { try { await videoEl.play(); } catch {} } else { videoEl.pause(); }
+			} catch {}
+		}
+
+		async function playNextInPlaylist() {
+			const nextSrc = PLAYLIST[playlistIndex % PLAYLIST.length];
+			playlistIndex++;
+			await setVideoSource(nextSrc, 0, true);
+		}
+
+		// Preparar intro para scrubbing
+		setVideoSource(VIDEO_INTRO, 0, false).then(() => { introPrepared = true; });
+
+		// Encadenar playlist cuando termine el reproductor
+		videoEl.addEventListener('ended', async () => {
+			if (!playlistStarted) { playlistStarted = true; await playNextInPlaylist(); return; }
+			await playNextInPlaylist();
+		});
+
 	// Crear una timeline para mejor control de la animación
-        const timeline = anime.timeline({
-            autoplay: false,
-            easing: 'easeOutQuart',
-            duration: 1000 // Duración base más larga
-        });
+		const timeline = anime.timeline({
+			autoplay: false,
+			easing: 'easeOutQuart',
+			duration: 1000, // Duración base
+			update: (anim) => {
+				// Control del video sincronizado a la timeline
+				const t = anim.currentTime || 0;
+				if (!introPrepared || !videoMetadataReady) return;
+
+				if (t <= ZOOM_START_MS) {
+					// Antes del zoom: forzar pausa en 0
+					try { if (!videoEl.paused) videoEl.pause(); } catch {}
+					try { if (Math.abs((videoEl.currentTime || 0) - 0) > 0.03) videoEl.currentTime = 0; } catch {}
+					afterZoomPlaybackStarted = false; // permitir reinicio si se hace scroll hacia arriba
+				} else if (t < ZOOM_END_MS) {
+					// Durante el zoom: scrubbing 0->2s
+					const localP = (t - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
+					const desiredT = Math.min(SCRUB_DURATION_S, Math.max(0, localP) * SCRUB_DURATION_S);
+					try {
+						if (!videoEl.paused) videoEl.pause();
+						if (Math.abs((videoEl.currentTime || 0) - desiredT) > 0.05) {
+							videoEl.currentTime = desiredT;
+						}
+					} catch {}
+				} else {
+					// Tras el zoom: continuar reproduciendo el intro una sola vez
+					if (!afterZoomPlaybackStarted) {
+						afterZoomPlaybackStarted = true;
+						try { videoEl.currentTime = Math.min(SCRUB_DURATION_S, (videoEl.duration || SCRUB_DURATION_S)); } catch {}
+						try { videoEl.play(); } catch {}
+					}
+				}
+			}
+		});
 
         // Agregar animaciones a la timeline (simultaneas)
 		timeline
@@ -399,84 +479,6 @@ import logosvganim from '../assets/animlogo/logo.svg';
 				opacity: [{ value: 0, duration: 1 }]
 			}, 1800);
 
-		// --- Sincronización de video con la animación ---
-		// Durante el zoom del logo (t=1000->2000ms de la timeline) scrubbear 0-2s de empezar.mp4
-		// Al terminar el zoom, continuar reproduciendo empezar.mp4 hasta el final
-		// Luego alternar loopinversed.mp4 y loop.mp4 en bucle
-
-		const ZOOM_START_MS = 1000;
-		const ZOOM_END_MS = 2000;
-		const SCRUB_DURATION_S = 2; // primeros 2 segundos
-
-		// Usar nombres reales del repo
-		const VIDEO_INTRO = '/vid/empezar.mp4';
-		const PLAYLIST = ['/vid/loopinversed.mp4', '/vid/loop.mp4'];
-		let playlistIndex = 0;
-		let isScrollScrubActive = true;
-		let afterZoomPlaybackStarted = false;
-		let videoMetadataReady = false;
-		let playlistStarted = false;
-
-		function waitForMetadata(el) {
-			return new Promise((resolve) => {
-				if (el.readyState >= 1 && !isNaN(el.duration)) {
-					resolve();
-					return;
-				}
-				const onLoaded = () => {
-					el.removeEventListener('loadedmetadata', onLoaded);
-					resolve();
-				};
-				el.addEventListener('loadedmetadata', onLoaded, { once: true });
-			});
-		}
-
-		async function setVideoSource(src, startTime = 0, autoplay = false) {
-			try {
-				videoEl.loop = false;
-				// Cambiar src directamente en el video
-				if (videoEl.src !== location.origin + src && videoEl.src !== src) {
-					videoEl.src = src;
-				}
-				// Forzar carga de metadatos
-				videoEl.load();
-				await waitForMetadata(videoEl);
-				videoMetadataReady = true;
-				// Posicionar
-				const clampedStart = Math.max(0, Math.min(startTime, (videoEl.duration || Infinity)));
-				if (!Number.isNaN(clampedStart)) {
-					try { videoEl.currentTime = clampedStart; } catch {}
-				}
-				if (autoplay) {
-					try { await videoEl.play(); } catch {}
-				} else {
-					videoEl.pause();
-				}
-			} catch (e) {
-				// Silencioso: si falla, no romper la animación
-			}
-		}
-
-		async function playNextInPlaylist() {
-			const nextSrc = PLAYLIST[playlistIndex % PLAYLIST.length];
-			playlistIndex++;
-			await setVideoSource(nextSrc, 0, true);
-		}
-
-		// Preparar el video inicial para scrubbing
-		setVideoSource(VIDEO_INTRO, 0, false);
-
-		// Cuando termine cualquier video:
-		videoEl.addEventListener('ended', async () => {
-			// Si terminó el intro, arrancar la playlist
-			if (!playlistStarted) {
-				playlistStarted = true;
-				await playNextInPlaylist();
-				return;
-			}
-			// Alternar entre los loops
-			await playNextInPlaylist();
-		});
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
@@ -495,37 +497,6 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			// Opcional: optimizar con requestAnimationFrame (ver nota más abajo)
 			timeline.seek(seekTime);
 
-			// Sincronización del video con el tramo de zoom
-			if (isScrollScrubActive) {
-				if (seekTime <= ZOOM_START_MS) {
-					// Antes del zoom: pausar en 0
-					if (videoMetadataReady) {
-						try { if (!videoEl.paused) videoEl.pause(); } catch {}
-						try { if (Math.abs((videoEl.currentTime || 0) - 0) > 0.03) videoEl.currentTime = 0; } catch {}
-					}
-				} else if (seekTime < ZOOM_END_MS) {
-					// En el zoom: scrubbing 0-2s
-					if (videoMetadataReady) {
-						const localP = (seekTime - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
-						const desiredT = Math.min(SCRUB_DURATION_S, Math.max(0, localP) * SCRUB_DURATION_S);
-						try {
-							if (!videoEl.paused) videoEl.pause();
-							if (Math.abs((videoEl.currentTime || 0) - desiredT) > 0.05) {
-								videoEl.currentTime = desiredT;
-							}
-						} catch {}
-					}
-				} else {
-					// Después del zoom: continuar reproduciendo el intro
-					if (!afterZoomPlaybackStarted && videoMetadataReady) {
-						afterZoomPlaybackStarted = true;
-						isScrollScrubActive = false; // Dejar de scrubbear tras iniciar reproducción continua
-						// Asegurar que quedamos al final del tramo scrubbear
-						try { videoEl.currentTime = Math.min(SCRUB_DURATION_S, (videoEl.duration || SCRUB_DURATION_S)); } catch {}
-						try { videoEl.play(); } catch {}
-					}
-				}
-			}
 
 			// console.log('scrollY:', scrollY, 'scrollHeight:', scrollHeight, 'viewport:', viewportHeight, 'maxScroll:', maxScroll, 'progress:', progress, 'seekTime:', seekTime);
 		}
