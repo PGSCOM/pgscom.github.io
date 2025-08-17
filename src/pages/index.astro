@@ -42,7 +42,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 				<source src="/vid/loop.mp4" type="video/mp4" />
 			</video>
 		</div>
-		<img style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
+		<img id="logoanimar" style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
 		<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
 	</div>
 
@@ -77,26 +77,45 @@ import logosvganim from '../assets/animlogo/logo.svg';
 
 			const io = new IntersectionObserver((entries) => {
 				const entry = entries[0];
+				// Determinar posición real del sentinel respecto al viewport
+				const rect = sentinel.getBoundingClientRect();
+				const rootTop = entry.rootBounds ? entry.rootBounds.top : 0; // 0 = borde superior del viewport
+				const rootBottom = entry.rootBounds ? entry.rootBounds.bottom : window.innerHeight;
+
+				// Reglas:
+				// - Si el sentinel está visible (intersecting), quitar "stuck".
+				// - Si NO está visible y su top < rootTop (ha pasado por arriba), poner "stuck".
+				// - Si NO está visible y su top > rootBottom (está por debajo, aún no se ha llegado), quitar "stuck".
 				if (entry.isIntersecting) {
-					// El sentinel volvió a entrar: quitar estado fijo
 					if (parte.classList.contains('stuck')) {
 						parte.classList.remove('stuck');
 						placeholder.style.display = 'none';
 					}
-				} else {
-					// El sentinel salió por arriba: fijar el bloque
+				} else if (rect.top < rootTop) {
 					if (!parte.classList.contains('stuck')) {
 						parte.classList.add('stuck');
+						console.log('add stuck');
 						placeholder.style.display = 'block';
+					}
+				} else {
+					if (parte.classList.contains('stuck')) {
+						parte.classList.remove('stuck');
+						placeholder.style.display = 'none';
 					}
 				}
 			}, { root: null, threshold: 0 });
 
 			io.observe(sentinel);
+
+			// Asegurar estado inicial correcto en iOS cuando se carga arriba del todo
+			if ((window.scrollY ?? window.pageYOffset ?? document.documentElement.scrollTop ?? 0) <= 0) {
+				parte.classList.remove('stuck');
+				placeholder.style.display = 'none';
+			}
 		})();
 	</script>
 
-	<div style="height: 100vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); display: flex; align-items: center; justify-content: center;"></div>
+	<div style="height: 100vh; display: flex; align-items: center; justify-content: center;"></div>
 
 	<script is:inline defer>
 		document.addEventListener('DOMContentLoaded', async () => {
@@ -313,8 +332,10 @@ import logosvganim from '../assets/animlogo/logo.svg';
 
     function initScrollAnim() {
         const targetEl = document.querySelector('.image-container');
-        const particlesEl = document.querySelector('.particles');
-        if (!targetEl) return;
+        const logoEl = document.querySelector('#logoanimar');
+        const galaxiaMaskEl = document.querySelector('.galaxiamask');
+        
+	if (!targetEl || !logoEl || !galaxiaMaskEl) return;
 
         // Detectar si es móvil
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -327,33 +348,76 @@ import logosvganim from '../assets/animlogo/logo.svg';
         });
 
         // Agregar animaciones a la timeline (simultaneas)
-        timeline
+		timeline
+			// Ocultar el logo al inicio de la timeline
+			/*.add({
+				targets: logoEl,
+				opacity: [0, 0],
+				duration: 1
+			}, 0)*/
             .add({
                 targets: targetEl,
                 /*translateX: isMobile ? 0 : 300,*/ // No mover horizontalmente en móvil
                 /*translateY: isMobile ? 250 : 0,*/ // Mover verticalmente solo en móvil
                 opacity: [1, 0], // Fade out simultáneo
                 scale: [1, 0.8], // Reducir escala suavemente
-                duration: isMobile ? 600 : 800, // Duración más larga para suavidad
+                duration: isMobile ? 311 : 800, // Duración más larga para suavidad
                 easing: 'easeOutQuart' // Easing más suave
             })
-            //Animación aparición logo
+            .add({
+                targets: logoEl,
+				//opacity: [{ value: 1, duration: 1 }],
+                scale: [1, 25], // Ampliar el logo de 1x a 25x
+				translateY: [0, 45], // Desplazamiento hacia arriba
+                duration: 1000,
+                easing: 'easeInQuad'
+				
+            }, 1000) // Iniciar al mismo tiempo que la animación anterior
+            .add({
+                targets: galaxiaMaskEl,
+                update: function(anim) {
+                    // Interpolar el valor del mask-size desde 32.2vh hacia 50vh
+                    /*const progress = anim.progress / 100;
+                    const startSize = 32.2;
+                    const endSize = 172;
+                    const currentSize = startSize + (endSize - startSize) * progress;*/
 
-        function onScroll() {
-            const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-            const maxScroll = window.innerHeight;
-            
-            // Crear una curva de progreso más suave
-            const rawProgress = Math.min(scrollY / maxScroll, 1);
-            const smoothProgress = rawProgress * rawProgress * (3 - 2 * rawProgress); // Smooth step function
-            
-            // Calcular el tiempo de seek basado en el progreso suave
-            const seekTime = smoothProgress * timeline.duration;
-            
-            console.log('Scroll progress:', rawProgress.toFixed(2), 'Smooth progress:', smoothProgress.toFixed(2));
+					// Declarar el tamaño en vh a partir del tamaño visual actual (incluye transform: scale)
+					const rect = logoEl.getBoundingClientRect();
+					const currentSize = (rect.height / window.innerHeight) * 100 - 5;
 
-            timeline.seek(seekTime);
-        }
+                    galaxiaMaskEl.style.webkitMaskSize = `auto ${currentSize}vh`;
+                    galaxiaMaskEl.style.maskSize = `auto ${currentSize}vh`;
+                },
+                duration: 1000,
+                /*easing: 'easeInQuad'*/
+			}, 1000) // Iniciar al mismo tiempo que las otras animaciones
+			// Ocultar el logo al finalizar su segmento
+			.add({
+				targets: logoEl,
+				opacity: [{ value: 0, duration: 1 }]
+			}, 1800);
+
+        function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+		function onScroll() {
+			const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+			// Obtener el scrollHeight real del elemento de scroll
+			const scrollEl = document.scrollingElement || document.documentElement || document.body;
+			const scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, scrollEl.scrollHeight);
+			const viewportHeight = window.innerHeight; // o document.documentElement.clientHeight
+			const maxScroll = Math.max(0, scrollHeight - viewportHeight);
+
+			// Evitar división por cero
+			const progress = maxScroll > 0 ? clamp(scrollY / maxScroll, 0, 1) : 0;
+			const seekTime = progress * timeline.duration;
+
+			// Opcional: optimizar con requestAnimationFrame (ver nota más abajo)
+			timeline.seek(seekTime);
+
+			console.log('scrollY:', scrollY, 'scrollHeight:', scrollHeight, 'viewport:', viewportHeight, 'maxScroll:', maxScroll, 'progress:', progress, 'seekTime:', seekTime);
+		}
+
 
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
