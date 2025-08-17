@@ -6,8 +6,20 @@
 }
 
 .parte2 {
-    position: relative; /* Containing block para .galaxiamask */
-    overflow: hidden; /* Evitar que el video salga del área del div */
+    /* Sticky para mantener el bloque en la parte superior mientras se hace scroll */
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+
+    /* Containing block para .galaxiamask */
+    overflow: visible; /* permitir que el video y máscara se muestren correctamente */
+
+    /* Estilos de layout por defecto; si hay inline styles se pueden sobreescribir */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .galaxiamask {
@@ -582,4 +594,17 @@
         width: 25px;
         height: 25px;
     }
+}
+
+/* Estado cuando el bloque queda fijado vía JS (fallback a fixed para compatibilidad) */
+.parte2.stuck {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    z-index: 60 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

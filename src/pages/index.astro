@@ -35,7 +35,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	</div>
 
 	<!-- Div que ocupa el 100% de la pantalla que contiene el logo en el centro -->
-	<div class="parte2" style="height: 100vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); display: flex; align-items: center; justify-content: center;">
+	<div class="parte2">
 		<div class="galaxiamask">
 			<!-- Video Galaxia bucle -->
 			<video autoplay loop muted playsinline class="video-galaxia">
@@ -45,6 +45,58 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		<img style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
 		<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
 	</div>
+
+	<script is:inline>
+		// Optimizado con IntersectionObserver (sin listeners de scroll) + ResizeObserver.
+		(() => {
+			const parte = document.querySelector('.parte2');
+			if (!parte) return;
+
+			// Placeholder para evitar salto cuando .parte2 se fija
+			const placeholder = document.createElement('div');
+			placeholder.style.width = '100%';
+			placeholder.style.display = 'none';
+			parte.parentNode.insertBefore(placeholder, parte.nextSibling);
+
+			// Mantener altura del placeholder sincronizada con el elemento
+			const syncPlaceholder = () => {
+				placeholder.style.height = `${parte.getBoundingClientRect().height}px`;
+			};
+			syncPlaceholder();
+			const ro = new ResizeObserver(syncPlaceholder);
+			ro.observe(parte);
+			window.addEventListener('resize', syncPlaceholder);
+
+			// Sentinel antes de .parte2 para detectar cruce con el viewport
+			const sentinel = document.createElement('div');
+			sentinel.setAttribute('aria-hidden', 'true');
+			sentinel.style.height = '1px';
+			sentinel.style.width = '100%';
+			sentinel.style.pointerEvents = 'none';
+			parte.parentNode.insertBefore(sentinel, parte);
+
+			const io = new IntersectionObserver((entries) => {
+				const entry = entries[0];
+				if (entry.isIntersecting) {
+					// El sentinel volvió a entrar: quitar estado fijo
+					if (parte.classList.contains('stuck')) {
+						parte.classList.remove('stuck');
+						placeholder.style.display = 'none';
+					}
+				} else {
+					// El sentinel salió por arriba: fijar el bloque
+					if (!parte.classList.contains('stuck')) {
+						parte.classList.add('stuck');
+						placeholder.style.display = 'block';
+					}
+				}
+			}, { root: null, threshold: 0 });
+
+			io.observe(sentinel);
+		})();
+	</script>
+
+	<div style="height: 100vh; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1)); display: flex; align-items: center; justify-content: center;"></div>
 
 	<script is:inline defer>
 		document.addEventListener('DOMContentLoaded', async () => {
