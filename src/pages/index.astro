@@ -566,11 +566,11 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		showFrame(frameStartIndex);
 	});
 
-	// Scheduler de scrubbing para fluidez - optimizado
+	// Scheduler de scrubbing para fluidez
 	let pendingScrubT = null;
 	let scrubRafId = 0;
 	let lastScrubbedT = -1;
-	const SCRUB_EPS = 0.04; // segundos; evita micro-seeks <40ms (aumentado para mejor rendimiento)
+	const SCRUB_EPS = 0.02; // segundos; evita micro-seeks <20ms
 
 	function applyScrub() {
 		scrubRafId = 0;
@@ -679,14 +679,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
-		// Optimized scroll handler with requestAnimationFrame throttling
-		let lastSeekTime = -1;
-		let scrollRafId = 0;
-		let lastScrollTime = 0;
-		const SEEK_THRESHOLD_MS = 5; // Only seek if difference is > 5ms
-
-		function onScrollThrottled() {
-			const now = performance.now();
+		function onScroll() {
 			const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
 			// Obtener el scrollHeight real del elemento de scroll
 			const scrollEl = document.scrollingElement || document.documentElement || document.body;
@@ -698,58 +691,48 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			const progress = maxScroll > 0 ? clamp(scrollY / maxScroll, 0, 1) : 0;
 			const seekTime = progress * timeline.duration;
 
-			// Optimización: solo actualizar timeline si hay cambio significativo
-			if (Math.abs(seekTime - lastSeekTime) > SEEK_THRESHOLD_MS) {
-				timeline.seek(seekTime);
-				lastSeekTime = seekTime;
-			}
+			// Opcional: optimizar con requestAnimationFrame (ver nota más abajo)
+			timeline.seek(seekTime);
 
 			// Sincronización del video con el tramo de zoom
 			if (isScrollScrubActive) {
-				if (seekTime <= ZOOM_START_MS) {
+		if (seekTime <= ZOOM_START_MS) {
 					// Antes del zoom: pausar en 0 y mostrar primer frame
-					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
-					setSequenceVisible(true);
-					showFrame(frameStartIndex);
+		try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
+		setSequenceVisible(true);
+		showFrame(frameStartIndex);
 				} else if (seekTime < ZOOM_END_MS) {
 					// En el zoom: scrubbing 0-2s sobre la secuencia AVIF
 					const localP = (seekTime - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
 					const start = frameStartIndex;
 					const end = frameStartIndex + TOTAL_FRAMES - 1;
 					const frameIndex = Math.max(start, Math.min(end, Math.round(start + localP * (TOTAL_FRAMES - 1))));
-					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
-					setSequenceVisible(true);
-					showFrame(frameIndex);
+		try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
+		setSequenceVisible(true);
+		showFrame(frameIndex);
 				} else {
 					// Después del zoom: continuar reproduciendo el intro
 					if (!afterZoomPlaybackStarted && activeMetadataReady) {
 						afterZoomPlaybackStarted = true;
 						isScrollScrubActive = false; // Dejar de scrubbear tras iniciar reproducción continua
-						// La 2ª parte del video ya viene recortada: empezar desde 0
-						try { activeVideo.currentTime = 0; } catch {}
+			// La 2ª parte del video ya viene recortada: empezar desde 0
+			try { activeVideo.currentTime = 0; } catch {}
 						try { activeVideo.play(); } catch {}
-						activeVideo.style.opacity = '1';
-						setSequenceVisible(false);
-						// Limpiar scheduler de scrubbing
-						pendingScrubT = null;
-						if (scrubRafId) { cancelAnimationFrame(scrubRafId); scrubRafId = 0; }
-						lastScrubbedT = -1;
+			activeVideo.style.opacity = '1';
+			setSequenceVisible(false);
+			// Limpiar scheduler de scrubbing
+			pendingScrubT = null;
+			if (scrubRafId) { cancelAnimationFrame(scrubRafId); scrubRafId = 0; }
+			lastScrubbedT = -1;
 					}
 				}
 			}
 
-			lastScrollTime = now;
-			scrollRafId = 0;
+			// console.log('scrollY:', scrollY, 'scrollHeight:', scrollHeight, 'viewport:', viewportHeight, 'maxScroll:', maxScroll, 'progress:', progress, 'seekTime:', seekTime);
 		}
 
-		function onScroll() {
-			// Throttle scroll events with requestAnimationFrame for better performance
-			if (!scrollRafId) {
-				scrollRafId = requestAnimationFrame(onScrollThrottled);
-			}
-		}
 
-        onScrollThrottled(); // Initial call
+        onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
     }
 
