@@ -371,28 +371,18 @@ import logosvganim from '../assets/animlogo/logo.svg';
                 scale: [1, 25], // Ampliar el logo de 1x a 25x
 				translateY: [0, 45], // Desplazamiento hacia arriba
                 duration: 1000,
-                easing: 'easeInQuad'
-				
-            }, 1000) // Iniciar al mismo tiempo que la animación anterior
-            .add({
-                targets: galaxiaMaskEl,
+                easing: 'easeInQuad',
+                // Fusión: actualizar la máscara aquí para que esté sincronizada con el zoom del logo
                 update: function(anim) {
-                    // Interpolar el valor del mask-size desde 32.2vh hacia 50vh
-                    /*const progress = anim.progress / 100;
-                    const startSize = 32.2;
-                    const endSize = 172;
-                    const currentSize = startSize + (endSize - startSize) * progress;*/
-
-					// Declarar el tamaño en vh a partir del tamaño visual actual (incluye transform: scale)
-					const rect = logoEl.getBoundingClientRect();
-					const currentSize = (rect.height / window.innerHeight) * 100 - 5;
+                    // Declarar el tamaño en vh a partir del tamaño visual actual (incluye transform: scale)
+                    const rect = logoEl.getBoundingClientRect();
+                    const currentSize = (rect.height / window.innerHeight) * 100 - 5;
 
                     galaxiaMaskEl.style.webkitMaskSize = `auto ${currentSize}vh`;
                     galaxiaMaskEl.style.maskSize = `auto ${currentSize}vh`;
-                },
-                duration: 1000,
-                /*easing: 'easeInQuad'*/
-			}, 1000) // Iniciar al mismo tiempo que las otras animaciones
+                }
+				
+            }, 1000) // Iniciar al mismo tiempo que la animación anterior
 			// Animación del video para cambiar la reproducción
 
 			// Ocultar el logo al finalizar su segmento
