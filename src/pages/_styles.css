@@ -40,6 +40,12 @@
     mask-position: center;
     -webkit-mask-repeat: no-repeat; /* Evitar que la máscara se repita */
     mask-repeat: no-repeat;
+
+    /* Imagen inicial de fondo para evitar parpadeo o vacío antes de cargar la secuencia */
+    background-image: url(/vid/empezar/000.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .video-galaxia {
