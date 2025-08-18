@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import './styles.css';
+import './_styles.css';
 import { Image } from 'astro:assets';
 import pgscom from '../assets/pgscom.png';
 import minimal1 from '../assets/minimal1.svg';
@@ -38,6 +38,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	<div class="parte2">
 		<div class="galaxiamask">
 			<!-- Video Galaxia bucle -->
+			<canvas id="galaxia-seq" class="video-galaxia" style="opacity:0;"></canvas>
 			<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia"></video>
 			<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity:0;"></video>
 		</div>
@@ -332,11 +333,12 @@ import logosvganim from '../assets/animlogo/logo.svg';
     function initScrollAnim() {
         const targetEl = document.querySelector('.image-container');
         const logoEl = document.querySelector('#logoanimar');
-        const galaxiaMaskEl = document.querySelector('.galaxiamask');
+	const galaxiaMaskEl = document.querySelector('.galaxiamask');
 		const videoA = document.querySelector('#video-galaxia-a');
 		const videoB = document.querySelector('#video-galaxia-b');
+	const seqCanvas = document.querySelector('#galaxia-seq');
 
-	if (!targetEl || !logoEl || !galaxiaMaskEl || !videoA || !videoB) return;
+	if (!targetEl || !logoEl || !galaxiaMaskEl || !videoA || !videoB || !seqCanvas) return;
 
         // Detectar si es móvil
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -397,7 +399,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		// Luego alternar loopinversed.mp4 y loop.mp4 en bucle
 
 	const ZOOM_START_MS = 1000;
-	const ZOOM_END_MS = 1800;
+	const ZOOM_END_MS = 2000;
 	const SCRUB_DURATION_S = 2; // primeros 2 segundos
 
 		// Usar nombres reales del repo
@@ -412,6 +414,186 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	// Doble buffer de video
 	let activeVideo = videoA;
 	let bufferVideo = videoB;
+
+	// Secuencia de frames AVIF en canvas para el tramo de zoom (120fps, 2s)
+	const SEQ_FPS = 120;
+	const SEQ_DURATION_S = 2;
+	let TOTAL_FRAMES = Math.floor(SEQ_FPS * SEQ_DURATION_S); // normalmente 240, pero detectaremos si hay 241 (0..240)
+	const FRAME_BASE = '/vid/empezar/';
+	let FRAME_EXT = 'avif';
+	let frameStartIndex = 0; // detectaremos 0 o 1 según exportación
+	let padWidth = 0; // si los ficheros usan ceros a la izquierda (ej: 000.avif)
+	const imagesCache = [];
+	const ctx = seqCanvas.getContext('2d');
+	let lastDrawnIndex = -1;
+	let sequenceActive = false;
+
+	function padNum(i) {
+		if (!padWidth || padWidth <= 1) return String(i);
+		return String(i).padStart(padWidth, '0');
+	}
+
+	function frameSrc(i) { return `${FRAME_BASE}${padNum(i)}.${FRAME_EXT}`; }
+
+	function resizeCanvas() {
+		const rect = galaxiaMaskEl.getBoundingClientRect();
+		const ratio = window.devicePixelRatio || 1;
+		seqCanvas.width = Math.max(1, Math.floor(rect.width * ratio));
+		seqCanvas.height = Math.max(1, Math.floor(rect.height * ratio));
+		seqCanvas.style.width = '100%';
+		seqCanvas.style.height = '100%';
+	}
+
+	function drawImageCover(img) {
+		if (!img || !ctx) return;
+		const cw = seqCanvas.width;
+		const ch = seqCanvas.height;
+		const iw = img.naturalWidth;
+		const ih = img.naturalHeight;
+		if (!iw || !ih || !cw || !ch) return;
+		const scale = Math.max(cw / iw, ch / ih);
+		const nw = iw * scale;
+		const nh = ih * scale;
+		const dx = (cw - nw) / 2;
+		const dy = (ch - nh) / 2;
+		ctx.clearRect(0, 0, cw, ch);
+		ctx.drawImage(img, dx, dy, nw, nh);
+	}
+
+	function loadFrame(i) {
+		if (imagesCache[i]) return imagesCache[i];
+		const img = new Image();
+		img.decoding = 'async';
+		img.src = frameSrc(i);
+		imagesCache[i] = new Promise((resolve) => {
+			const done = () => resolve(img);
+			img.onload = done; img.onerror = done;
+			if (img.decode) { img.decode().then(done).catch(done); }
+		});
+		return imagesCache[i];
+	}
+
+	async function detectFrameRange() {
+		// Probar si la secuencia comienza en 0 o en 1
+		function test(src) {
+			return new Promise((resolve) => {
+				const img = new Image();
+				img.onload = () => resolve(true);
+				img.onerror = () => resolve(false);
+				img.src = src;
+			});
+		}
+		// Detectar extensión disponible: preferir avif → webp → png
+		const exts = ['avif', 'webp', 'png'];
+		for (const ext of exts) {
+			// Para cada extensión, averiguar si hay archivos con padding (3,2,1) o sin padding
+			let found = false;
+			for (const w of [3,2,1,0]) {
+				const candidate = FRAME_BASE + (w > 0 ? String(0).padStart(w,'0') : '0') + `.${ext}`;
+				if (await test(candidate)) { FRAME_EXT = ext; padWidth = w; found = true; break; }
+				// también probar el siguiente índice (1) por si empieza en 1
+				const candidate1 = FRAME_BASE + (w > 0 ? String(1).padStart(w,'0') : '1') + `.${ext}`;
+				if (await test(candidate1)) { FRAME_EXT = ext; padWidth = w; found = true; break; }
+			}
+			if (found) break;
+		}
+		// Ahora probar existencia real usando la función frameSrc (que ya usa padWidth)
+		const hasZero = await test(frameSrc(0));
+		if (hasZero) { frameStartIndex = 0; }
+		else {
+			const hasOne = await test(frameSrc(1));
+			if (hasOne) { frameStartIndex = 1; }
+			else { frameStartIndex = 0; }
+		}
+		// Detectar si hay 241 frames (0..240) o 240 (0..239)
+		const probe240 = frameStartIndex + 240;
+		if (await test(frameSrc(probe240))) {
+			TOTAL_FRAMES = probe240 - frameStartIndex + 1; // 241
+		} else {
+			const probe239 = frameStartIndex + 239;
+			if (await test(frameSrc(probe239))) {
+				TOTAL_FRAMES = probe239 - frameStartIndex + 1; // 240
+			} else {
+				// Fallback seguro
+				TOTAL_FRAMES = Math.max(1, TOTAL_FRAMES);
+			}
+		}
+	}
+
+	function primePreload() {
+		// Precargar primeros ~100 frames para fluidez inicial
+		const FIRST = frameStartIndex;
+		const LAST = Math.min(frameStartIndex + TOTAL_FRAMES - 1, frameStartIndex + 99);
+		for (let i = FIRST; i <= LAST; i++) loadFrame(i);
+		// Preload del resto en segundo plano
+		setTimeout(() => {
+			const end = frameStartIndex + TOTAL_FRAMES - 1;
+			for (let i = LAST + 1; i <= end; i++) loadFrame(i);
+		}, 500);
+	}
+
+	function setSequenceVisible(v) {
+		if (v) {
+			if (!sequenceActive) {
+				sequenceActive = true;
+				seqCanvas.style.opacity = '1';
+				activeVideo.style.opacity = '0';
+				bufferVideo.style.opacity = '0';
+			}
+		} else {
+			if (sequenceActive) {
+				sequenceActive = false;
+				seqCanvas.style.opacity = '0';
+			}
+		}
+	}
+
+	async function showFrame(index) {
+		if (index === lastDrawnIndex) return;
+		lastDrawnIndex = index;
+		const img = await loadFrame(index);
+		if (lastDrawnIndex !== index) return; // Evitar draw desfasado
+		drawImageCover(img);
+	}
+
+	// Inicializar canvas y precarga
+	resizeCanvas();
+	window.addEventListener('resize', resizeCanvas);
+	// Detectar rango de la secuencia (inicio y total), precargar y pintar primer frame
+	detectFrameRange().then(() => {
+		primePreload();
+		setSequenceVisible(true);
+		showFrame(frameStartIndex);
+	});
+
+	// Scheduler de scrubbing para fluidez
+	let pendingScrubT = null;
+	let scrubRafId = 0;
+	let lastScrubbedT = -1;
+	const SCRUB_EPS = 0.02; // segundos; evita micro-seeks <20ms
+
+	function applyScrub() {
+		scrubRafId = 0;
+		if (pendingScrubT == null || !activeMetadataReady) return;
+		const t = pendingScrubT;
+		pendingScrubT = null;
+		// Evitar mover si ya estamos muy cerca
+		try {
+			const cur = activeVideo.currentTime || 0;
+			if (Math.abs(cur - t) < SCRUB_EPS) return;
+			if (typeof activeVideo.fastSeek === 'function') {
+				activeVideo.fastSeek(t);
+			} else {
+				activeVideo.currentTime = t;
+			}
+			lastScrubbedT = t;
+		} catch {}
+	}
+
+	function scheduleScrub(t) {
+		pendingScrubT = t;
+		if (!scrubRafId) scrubRafId = requestAnimationFrame(applyScrub);
+	}
 
 		function waitForMetadata(el) {
 			return new Promise((resolve) => {
@@ -514,32 +696,34 @@ import logosvganim from '../assets/animlogo/logo.svg';
 
 			// Sincronización del video con el tramo de zoom
 			if (isScrollScrubActive) {
-				if (seekTime <= ZOOM_START_MS) {
-					// Antes del zoom: pausar en 0
-					if (activeMetadataReady) {
-						try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
-						try { if (Math.abs((activeVideo.currentTime || 0) - 0) > 0.03) activeVideo.currentTime = 0; } catch {}
-					}
+		if (seekTime <= ZOOM_START_MS) {
+					// Antes del zoom: pausar en 0 y mostrar primer frame
+		try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
+		setSequenceVisible(true);
+		showFrame(frameStartIndex);
 				} else if (seekTime < ZOOM_END_MS) {
-					// En el zoom: scrubbing 0-2s
-					if (activeMetadataReady) {
-						const localP = (seekTime - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
-						const desiredT = Math.min(SCRUB_DURATION_S, Math.max(0, localP) * SCRUB_DURATION_S);
-						try {
-							if (!activeVideo.paused) activeVideo.pause();
-							if (Math.abs((activeVideo.currentTime || 0) - desiredT) > 0.05) {
-								activeVideo.currentTime = desiredT;
-							}
-						} catch {}
-					}
+					// En el zoom: scrubbing 0-2s sobre la secuencia AVIF
+					const localP = (seekTime - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
+					const start = frameStartIndex;
+					const end = frameStartIndex + TOTAL_FRAMES - 1;
+					const frameIndex = Math.max(start, Math.min(end, Math.round(start + localP * (TOTAL_FRAMES - 1))));
+		try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
+		setSequenceVisible(true);
+		showFrame(frameIndex);
 				} else {
 					// Después del zoom: continuar reproduciendo el intro
 					if (!afterZoomPlaybackStarted && activeMetadataReady) {
 						afterZoomPlaybackStarted = true;
 						isScrollScrubActive = false; // Dejar de scrubbear tras iniciar reproducción continua
-						// Asegurar que quedamos al final del tramo scrubbear
-						try { activeVideo.currentTime = Math.min(SCRUB_DURATION_S, (activeVideo.duration || SCRUB_DURATION_S)); } catch {}
+			// La 2ª parte del video ya viene recortada: empezar desde 0
+			try { activeVideo.currentTime = 0; } catch {}
 						try { activeVideo.play(); } catch {}
+			activeVideo.style.opacity = '1';
+			setSequenceVisible(false);
+			// Limpiar scheduler de scrubbing
+			pendingScrubT = null;
+			if (scrubRafId) { cancelAnimationFrame(scrubRafId); scrubRafId = 0; }
+			lastScrubbedT = -1;
 					}
 				}
 			}
