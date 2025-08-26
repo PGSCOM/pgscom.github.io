@@ -415,10 +415,10 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	let activeVideo = videoA;
 	let bufferVideo = videoB;
 
-	// Secuencia de frames AVIF en canvas para el tramo de zoom (120fps, 2s)
-	const SEQ_FPS = 120;
+	// Secuencia de frames AVIF en canvas para el tramo de zoom (30fps, 2s)
+	const SEQ_FPS = 30;
 	const SEQ_DURATION_S = 2;
-	let TOTAL_FRAMES = Math.floor(SEQ_FPS * SEQ_DURATION_S); // normalmente 240, pero detectaremos si hay 241 (0..240)
+	let TOTAL_FRAMES = Math.floor(SEQ_FPS * SEQ_DURATION_S); // normalmente 60, pero detectaremos si hay 61 (0..60)
 	const FRAME_BASE = '/vid/empezar/';
 	let FRAME_EXT = 'avif';
 	let frameStartIndex = 0; // detectaremos 0 o 1 según exportación
@@ -433,7 +433,18 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		return String(i).padStart(padWidth, '0');
 	}
 
-	function frameSrc(i) { return `${FRAME_BASE}${padNum(i)}.${FRAME_EXT}`; }
+	// Mapeo de frames: con 30fps en lugar de 120fps, seleccionamos cada 4to frame
+	const FRAME_SKIP = 4; // 120fps / 30fps = 4
+	
+	function getActualFrameIndex(logicalIndex) {
+		// Mapear del índice lógico (0..59) al índice real en la secuencia (0..239)
+		return frameStartIndex + (logicalIndex * FRAME_SKIP);
+	}
+
+	function frameSrc(logicalIndex) { 
+		const actualIndex = getActualFrameIndex(logicalIndex);
+		return `${FRAME_BASE}${padNum(actualIndex)}.${FRAME_EXT}`; 
+	}
 
 	function resizeCanvas() {
 		const rect = galaxiaMaskEl.getBoundingClientRect();
@@ -483,6 +494,12 @@ import logosvganim from '../assets/animlogo/logo.svg';
 				img.src = src;
 			});
 		}
+		
+		function testActualFrame(actualIndex) {
+			const src = `${FRAME_BASE}${padNum(actualIndex)}.${FRAME_EXT}`;
+			return test(src);
+		}
+		
 		// Detectar extensión disponible: preferir avif → webp → png
 		const exts = ['avif', 'webp', 'png'];
 		for (const ext of exts) {
@@ -497,37 +514,48 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			}
 			if (found) break;
 		}
-		// Ahora probar existencia real usando la función frameSrc (que ya usa padWidth)
-		const hasZero = await test(frameSrc(0));
+		
+		// Ahora probar existencia real de los frames usando el mapeo
+		const hasZero = await testActualFrame(0);
 		if (hasZero) { frameStartIndex = 0; }
 		else {
-			const hasOne = await test(frameSrc(1));
+			const hasOne = await testActualFrame(1);
 			if (hasOne) { frameStartIndex = 1; }
 			else { frameStartIndex = 0; }
 		}
-		// Detectar si hay 241 frames (0..240) o 240 (0..239)
-		const probe240 = frameStartIndex + 240;
-		if (await test(frameSrc(probe240))) {
-			TOTAL_FRAMES = probe240 - frameStartIndex + 1; // 241
+		
+		// Con 30fps sobre 2s tenemos 60 frames lógicos (cada 4to frame de la secuencia original)
+		// Verificar si tenemos suficientes frames en la secuencia original
+		const lastLogicalFrame = TOTAL_FRAMES - 1; // 59 para 60 frames
+		const lastActualFrame = getActualFrameIndex(lastLogicalFrame);
+		
+		if (await testActualFrame(lastActualFrame)) {
+			// Tenemos todos los frames necesarios
+			console.log(`Detected ${TOTAL_FRAMES} logical frames (30fps) mapping to actual frames up to ${lastActualFrame}`);
 		} else {
-			const probe239 = frameStartIndex + 239;
-			if (await test(frameSrc(probe239))) {
-				TOTAL_FRAMES = probe239 - frameStartIndex + 1; // 240
-			} else {
-				// Fallback seguro
-				TOTAL_FRAMES = Math.max(1, TOTAL_FRAMES);
+			// Reducir el número de frames si no tenemos suficientes
+			let maxFrames = 0;
+			for (let i = 0; i < TOTAL_FRAMES; i++) {
+				const actualFrame = getActualFrameIndex(i);
+				if (await testActualFrame(actualFrame)) {
+					maxFrames = i + 1;
+				} else {
+					break;
+				}
 			}
+			TOTAL_FRAMES = Math.max(1, maxFrames);
+			console.log(`Adjusted to ${TOTAL_FRAMES} logical frames due to limited actual frames`);
 		}
 	}
 
 	function primePreload() {
-		// Precargar primeros ~100 frames para fluidez inicial
-		const FIRST = frameStartIndex;
-		const LAST = Math.min(frameStartIndex + TOTAL_FRAMES - 1, frameStartIndex + 99);
+		// Precargar primeros ~30 frames lógicos para fluidez inicial
+		const FIRST = 0; // Siempre empezamos en 0 lógico
+		const LAST = Math.min(TOTAL_FRAMES - 1, 29);
 		for (let i = FIRST; i <= LAST; i++) loadFrame(i);
 		// Preload del resto en segundo plano
 		setTimeout(() => {
-			const end = frameStartIndex + TOTAL_FRAMES - 1;
+			const end = TOTAL_FRAMES - 1;
 			for (let i = LAST + 1; i <= end; i++) loadFrame(i);
 		}, 500);
 	}
@@ -563,7 +591,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	detectFrameRange().then(() => {
 		primePreload();
 		setSequenceVisible(true);
-		showFrame(frameStartIndex);
+		showFrame(0); // Siempre empezamos en frame lógico 0
 	});
 
 	// Scheduler de scrubbing para fluidez
@@ -700,13 +728,11 @@ import logosvganim from '../assets/animlogo/logo.svg';
 					// Antes del zoom: pausar en 0 y mostrar primer frame
 		try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
 		setSequenceVisible(true);
-		showFrame(frameStartIndex);
+		showFrame(0);
 				} else if (seekTime < ZOOM_END_MS) {
 					// En el zoom: scrubbing 0-2s sobre la secuencia AVIF
 					const localP = (seekTime - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
-					const start = frameStartIndex;
-					const end = frameStartIndex + TOTAL_FRAMES - 1;
-					const frameIndex = Math.max(start, Math.min(end, Math.round(start + localP * (TOTAL_FRAMES - 1))));
+					const frameIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(localP * (TOTAL_FRAMES - 1))));
 		try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
 		setSequenceVisible(true);
 		showFrame(frameIndex);
