@@ -415,10 +415,13 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	let activeVideo = videoA;
 	let bufferVideo = videoB;
 
-	// Secuencia de frames AVIF en canvas para el tramo de zoom (30fps, 2s)
-	const SEQ_FPS = 30;
+	// Detectar si es dispositivo móvil
+	const isMobileDevice = window.matchMedia('(max-width: 768px)').matches;
+	
+	// Secuencia de frames AVIF en canvas para el tramo de zoom (30fps móvil, 60fps PC)
+	const SEQ_FPS = isMobileDevice ? 30 : 60;
 	const SEQ_DURATION_S = 2;
-	let TOTAL_FRAMES = Math.floor(SEQ_FPS * SEQ_DURATION_S); // normalmente 60, pero detectaremos si hay 61 (0..60)
+	let TOTAL_FRAMES = Math.floor(SEQ_FPS * SEQ_DURATION_S); // 60 frames (móvil) o 120 frames (PC)
 	const FRAME_BASE = '/vid/empezar/';
 	let FRAME_EXT = 'avif';
 	let frameStartIndex = 0; // detectaremos 0 o 1 según exportación
@@ -433,11 +436,12 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		return String(i).padStart(padWidth, '0');
 	}
 
-	// Mapeo de frames: con 30fps en lugar de 120fps, seleccionamos cada 4to frame
-	const FRAME_SKIP = 4; // 120fps / 30fps = 4
+	// Mapeo de frames: seleccionar cada 4to frame (móvil 30fps) o cada 2do frame (PC 60fps)
+	const FRAME_SKIP = isMobileDevice ? 4 : 2; // 120fps / 30fps = 4, 120fps / 60fps = 2
 	
 	function getActualFrameIndex(logicalIndex) {
-		// Mapear del índice lógico (0..59) al índice real en la secuencia (0..239)
+		// Mapear del índice lógico al índice real en la secuencia
+		// Móvil (30fps): 0..59 → 0..236, PC (60fps): 0..119 → 0..238
 		return frameStartIndex + (logicalIndex * FRAME_SKIP);
 	}
 
@@ -524,14 +528,15 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			else { frameStartIndex = 0; }
 		}
 		
-		// Con 30fps sobre 2s tenemos 60 frames lógicos (cada 4to frame de la secuencia original)
+		// Con framerate adaptativo tenemos frames lógicos variables según dispositivo
+		// Móvil (30fps): 60 frames lógicos, PC (60fps): 120 frames lógicos
 		// Verificar si tenemos suficientes frames en la secuencia original
-		const lastLogicalFrame = TOTAL_FRAMES - 1; // 59 para 60 frames
+		const lastLogicalFrame = TOTAL_FRAMES - 1;
 		const lastActualFrame = getActualFrameIndex(lastLogicalFrame);
 		
 		if (await testActualFrame(lastActualFrame)) {
 			// Tenemos todos los frames necesarios
-			console.log(`Detected ${TOTAL_FRAMES} logical frames (30fps) mapping to actual frames up to ${lastActualFrame}`);
+			console.log(`Detected ${TOTAL_FRAMES} logical frames (${SEQ_FPS}fps ${isMobileDevice ? 'mobile' : 'desktop'}) mapping to actual frames up to ${lastActualFrame}`);
 		} else {
 			// Reducir el número de frames si no tenemos suficientes
 			let maxFrames = 0;
@@ -549,9 +554,10 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	}
 
 	function primePreload() {
-		// Precargar primeros ~30 frames lógicos para fluidez inicial
+		// Precargar frames iniciales para fluidez (30 para móvil, 60 para PC)
 		const FIRST = 0; // Siempre empezamos en 0 lógico
-		const LAST = Math.min(TOTAL_FRAMES - 1, 29);
+		const PRELOAD_COUNT = isMobileDevice ? 29 : 59; // Móvil: ~30 frames, PC: ~60 frames
+		const LAST = Math.min(TOTAL_FRAMES - 1, PRELOAD_COUNT);
 		for (let i = FIRST; i <= LAST; i++) loadFrame(i);
 		// Preload del resto en segundo plano
 		setTimeout(() => {
