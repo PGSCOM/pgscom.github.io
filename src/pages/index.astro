@@ -1,4 +1,5 @@
 ---
+// #region 📦 IMPORTS Y CONFIGURACIÓN INICIAL
 import Layout from '../layouts/Layout.astro';
 import './_styles.css';
 import { Image } from 'astro:assets';
@@ -8,9 +9,11 @@ import customShape from '../assets/custom-shape.svg';
 import minimal3 from '../assets/minimal3.svg';
 import logo from '../assets/logo.png';
 import logosvganim from '../assets/animlogo/logo.svg';
+// #endregion
 ---
 
 <Layout>
+	<!-- #region 🎯 SECCIÓN PRINCIPAL - Partículas flotantes y texto animado -->
 	<!--div class="sky-image">
 		<a href="/">
 			<Image src={logo} height={70} alt="Logo PGSCOM" />
@@ -29,11 +32,15 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			<h1 id="animated-text" class="logo-text">PGSCOM</h1>
 		</div>
 	</main>
+	<!-- #endregion -->
 
+	<!-- #region 🧑‍💻 PERSONAJE PGSCOM - Imagen principal del personaje -->
 	<div class="image-container">
 		<Image src={pgscom} alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
 	</div>
+	<!-- #endregion -->
 
+	<!-- #region 🌌 SECCIÓN GALAXIA - Video con sticky scroll y logo animado -->
 	<!-- Div que ocupa el 100% de la pantalla que contiene el logo en el centro -->
 	<div class="parte2">
 		<div class="galaxiamask">
@@ -45,7 +52,9 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		<img id="logoanimar" style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
 		<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
 	</div>
+	<!-- #endregion -->
 
+	<!-- #region 📌 SCRIPT: STICKY SCROLL OPTIMIZADO - Control de posición fija con IntersectionObserver -->
 	<script is:inline>
 		// Optimizado con IntersectionObserver (sin listeners de scroll) + ResizeObserver.
 		(() => {
@@ -114,9 +123,17 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			}
 		})();
 	</script>
-
+	<!-- #endregion -->
+	<!-- #region 🚧 SECCIONES TEMPORALES - Placeholder para contenido futuro -->
 	<div style="height: 100vh; display: flex; align-items: center; justify-content: center;"></div>
 
+	<!-- Div de contenido de proyectos: -->
+	<!--div style="height: 100vh; display: flex; align-items: center; justify-content: center;">
+		<h1 style="z-index: 100; color: red; position: relative;">Test</h1>
+	</div-->
+	<!-- #endregion -->
+
+	<!-- #region 🎨 SCRIPT: ANIMACIÓN DE FUENTES - Rotación automática de tipografías -->
 	<script is:inline defer>
 		document.addEventListener('DOMContentLoaded', async () => {
 			const animatedText = document.getElementById('animated-text');
@@ -327,6 +344,8 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			setInterval(changeFontFamily, delayfont);
 		});
 	</script>
+	<!-- #endregion -->
+	<!-- #region 🎬 SCRIPT: ANIMACIONES SCROLL - Timeline principal con videos y secuencias -->
 	<script type="module">
     import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.es.js';
 
@@ -343,6 +362,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
         // Detectar si es móvil
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         
+	// #region 🎯 CONFIGURACIÓN TIMELINE - Definición de animaciones con AnimeJS
 	// Crear una timeline para mejor control de la animación
 	const timeline = anime.timeline({
             autoplay: false,
@@ -351,6 +371,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
         });
 
         // Agregar animaciones a la timeline (simultaneas)
+		// #region ✨ DEFINICIÓN DE ANIMACIONES
 		timeline
 			// Ocultar el logo al inicio de la timeline
 			/*.add({
@@ -392,7 +413,10 @@ import logosvganim from '../assets/animlogo/logo.svg';
 				targets: logoEl,
 				opacity: [{ value: 0, duration: 1 }]
 			}, 1800);
+		// #endregion
+		// #endregion
 
+		// #region 📹 CONFIGURACIÓN DE VIDEOS - Gestión de reproducción y secuencias
 		// --- Sincronización de video con la animación ---
 		// Durante el zoom del logo (t=1000->2000ms de la timeline) scrubbear 0-2s de empezar.mp4
 		// Al terminar el zoom, continuar reproduciendo empezar.mp4 hasta el final
@@ -418,6 +442,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	// Detectar si es dispositivo móvil
 	const isMobileDevice = window.matchMedia('(max-width: 768px)').matches;
 	
+	// #region 🎞️ SECUENCIAS AVIF - Configuración de frames para animación fluida
 	// Secuencia de frames AVIF en canvas para el tramo de zoom (30fps móvil, 60fps PC)
 	const SEQ_FPS = isMobileDevice ? 30 : 60;
 	const SEQ_DURATION_S = 2;
@@ -431,6 +456,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	let lastDrawnIndex = -1;
 	let sequenceActive = false;
 
+	// #region 🔧 UTILIDADES DE FRAMES
 	function padNum(i) {
 		if (!padWidth || padWidth <= 1) return String(i);
 		return String(i).padStart(padWidth, '0');
@@ -449,7 +475,9 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		const actualIndex = getActualFrameIndex(logicalIndex);
 		return `${FRAME_BASE}${padNum(actualIndex)}.${FRAME_EXT}`; 
 	}
+	// #endregion
 
+	// #region 🖼️ FUNCIONES DE CANVAS - Renderizado y gestión de imágenes
 	function resizeCanvas() {
 		const rect = galaxiaMaskEl.getBoundingClientRect();
 		const ratio = window.devicePixelRatio || 1;
@@ -487,7 +515,9 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		});
 		return imagesCache[i];
 	}
+	// #endregion
 
+	// #region 🔍 DETECCIÓN DE FRAMES - Auto-detección de formato y rango disponible
 	async function detectFrameRange() {
 		// Probar si la secuencia comienza en 0 o en 1
 		function test(src) {
@@ -599,7 +629,10 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		setSequenceVisible(true);
 		showFrame(0); // Siempre empezamos en frame lógico 0
 	});
+	// #endregion
+	// #endregion
 
+	// #region 🎮 CONTROL DE REPRODUCCIÓN - Scrubbing y gestión de videos
 	// Scheduler de scrubbing para fluidez
 	let pendingScrubT = null;
 	let scrubRafId = 0;
@@ -712,7 +745,9 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		attachEndedHandler();
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+		// #endregion
 
+		// #region 📜 MANEJO DE SCROLL - Sincronización de animaciones con scroll
 		function onScroll() {
 			const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
 			// Obtener el scrollHeight real del elemento de scroll
@@ -766,6 +801,7 @@ import logosvganim from '../assets/animlogo/logo.svg';
 
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
+		// #endregion
     }
 
     if (document.readyState === 'loading') {
@@ -774,4 +810,5 @@ import logosvganim from '../assets/animlogo/logo.svg';
         initScrollAnim();
     }
 </script>
+	<!-- #endregion -->
 </Layout>
