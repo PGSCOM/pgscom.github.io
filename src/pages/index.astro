@@ -1,15 +1,15 @@
 ---
-// #region 📦 IMPORTS Y CONFIGURACIÓN INICIAL
-import Layout from '../layouts/Layout.astro';
-import './_styles.css';
-import { Image } from 'astro:assets';
-import pgscom from '../assets/pgscom.png';
-import minimal1 from '../assets/minimal1.svg';
-import customShape from '../assets/custom-shape.svg';
-import minimal3 from '../assets/minimal3.svg';
-import logo from '../assets/logo.png';
-import logosvganim from '../assets/animlogo/logo.svg';
-// #endregion
+ // #region 📦 IMPORTS Y CONFIGURACIÓN INICIAL
+ import Layout from '../layouts/Layout.astro';
+ import './_styles.css';
+ import { Image } from 'astro:assets';
+ import pgscom from '../assets/pgscom.png';
+ import minimal1 from '../assets/minimal1.svg';
+ import customShape from '../assets/custom-shape.svg';
+ import minimal3 from '../assets/minimal3.svg';
+ import logo from '../assets/logo.png';
+ import logosvganim from '../assets/animlogo/logo.svg';
+ // #endregion
 ---
 
 <Layout>
@@ -99,17 +99,37 @@ import logosvganim from '../assets/animlogo/logo.svg';
 					if (parte.classList.contains('stuck')) {
 						parte.classList.remove('stuck');
 						placeholder.style.display = 'none';
+						// al quitar stuck:
+						window._parte2StickyStart = null;
 					}
 				} else if (rect.top < rootTop) {
+					// --- REPARACIÓN: calcular start que preserve el progreso actual ---
 					if (!parte.classList.contains('stuck')) {
 						parte.classList.add('stuck');
-						console.log('add stuck');
 						placeholder.style.display = 'block';
+
+						// Datos auxiliares
+						const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
+						const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+						// ANIMATION_VH debe ser la misma que uses en onScroll (por ejemplo 2)
+						const ANIMATION_VH = (window._ANIMATION_VH != null) ? window._ANIMATION_VH : 2;
+
+						// Calcular el "progress de fallback" que habría antes de sticky
+						const fallbackProgress = Math.max(0, Math.min(scrollY / (ANIMATION_VH * viewportHeight), 1));
+
+						// Sólo asignamos start si aún no existe (evita reinicios por jitter)
+						if (window._parte2StickyStart == null) {
+							// start tal que (scrollY - start) / (ANIMATION_VH * vh) === fallbackProgress
+							window._parte2StickyStart = scrollY - (fallbackProgress * ANIMATION_VH * viewportHeight);
+						}
 					}
 				} else {
 					if (parte.classList.contains('stuck')) {
 						parte.classList.remove('stuck');
 						placeholder.style.display = 'none';
+						// al quitar stuck:
+						window._parte2StickyStart = null;
 					}
 				}
 			}, { root: null, threshold: 0 });
@@ -120,6 +140,8 @@ import logosvganim from '../assets/animlogo/logo.svg';
 			if ((window.scrollY ?? window.pageYOffset ?? document.documentElement.scrollTop ?? 0) <= 0) {
 				parte.classList.remove('stuck');
 				placeholder.style.display = 'none';
+				// al quitar stuck:
+				window._parte2StickyStart = null;
 			}
 		})();
 	</script>
@@ -128,9 +150,9 @@ import logosvganim from '../assets/animlogo/logo.svg';
 	<div style="height: 100vh; display: flex; align-items: center; justify-content: center;"></div>
 
 	<!-- Div de contenido de proyectos: -->
-	<!--div style="height: 100vh; display: flex; align-items: center; justify-content: center;">
+	<div style="height: 100vh; display: flex; align-items: center; justify-content: center;">
 		<h1 style="z-index: 100; color: red; position: relative;">Test</h1>
-	</div-->
+	</div>
 	<!-- #endregion -->
 
 	<!-- #region 🎨 SCRIPT: ANIMACIÓN DE FUENTES - Rotación automática de tipografías -->
@@ -750,14 +772,19 @@ import logosvganim from '../assets/animlogo/logo.svg';
 		// #region 📜 MANEJO DE SCROLL - Sincronización de animaciones con scroll
 		function onScroll() {
 			const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-			// Obtener el scrollHeight real del elemento de scroll
-			const scrollEl = document.scrollingElement || document.documentElement || document.body;
-			const scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, scrollEl.scrollHeight);
-			const viewportHeight = window.innerHeight; // o document.documentElement.clientHeight
-			const maxScroll = Math.max(0, scrollHeight - viewportHeight);
+			
+			const ANIMATION_VH = 2; // configurable
+			const viewportHeight = window.innerHeight;
+			const start = window._parte2StickyStart;
+			let progress;
+			if (start != null && document.querySelector('.parte2')?.classList.contains('stuck')) {
+				const scrolled = Math.max(0, scrollY - start);
+				progress = clamp(scrolled / (ANIMATION_VH * viewportHeight), 0, 1);
+			} else {
+				// fallback: progreso relativo simple en vh
+				progress = clamp(scrollY / (ANIMATION_VH * viewportHeight), 0, 1);
+			}
 
-			// Evitar división por cero
-			const progress = maxScroll > 0 ? clamp(scrollY / maxScroll, 0, 1) : 0;
 			const seekTime = progress * timeline.duration;
 
 			// Opcional: optimizar con requestAnimationFrame (ver nota más abajo)
@@ -765,37 +792,37 @@ import logosvganim from '../assets/animlogo/logo.svg';
 
 			// Sincronización del video con el tramo de zoom
 			if (isScrollScrubActive) {
-		if (seekTime <= ZOOM_START_MS) {
+				if (seekTime <= ZOOM_START_MS) {
 					// Antes del zoom: pausar en 0 y mostrar primer frame
-		try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
-		setSequenceVisible(true);
-		showFrame(0);
+					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
+					setSequenceVisible(true);
+					showFrame(0);
 				} else if (seekTime < ZOOM_END_MS) {
 					// En el zoom: scrubbing 0-2s sobre la secuencia AVIF
 					const localP = (seekTime - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
 					const frameIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(localP * (TOTAL_FRAMES - 1))));
-		try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
-		setSequenceVisible(true);
-		showFrame(frameIndex);
+					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
+					setSequenceVisible(true);
+					showFrame(frameIndex);
 				} else {
 					// Después del zoom: continuar reproduciendo el intro
 					if (!afterZoomPlaybackStarted && activeMetadataReady) {
 						afterZoomPlaybackStarted = true;
 						isScrollScrubActive = false; // Dejar de scrubbear tras iniciar reproducción continua
-			// La 2ª parte del video ya viene recortada: empezar desde 0
-			try { activeVideo.currentTime = 0; } catch {}
+						// La 2ª parte del video ya viene recortada: empezar desde 0
+						try { activeVideo.currentTime = 0; } catch {}
 						try { activeVideo.play(); } catch {}
-			activeVideo.style.opacity = '1';
-			setSequenceVisible(false);
-			// Limpiar scheduler de scrubbing
-			pendingScrubT = null;
-			if (scrubRafId) { cancelAnimationFrame(scrubRafId); scrubRafId = 0; }
-			lastScrubbedT = -1;
+						activeVideo.style.opacity = '1';
+						setSequenceVisible(false);
+						// Limpiar scheduler de scrubbing
+						pendingScrubT = null;
+						if (scrubRafId) { cancelAnimationFrame(scrubRafId); scrubRafId = 0; }
+						lastScrubbedT = -1;
 					}
 				}
 			}
 
-			// console.log('scrollY:', scrollY, 'scrollHeight:', scrollHeight, 'viewport:', viewportHeight, 'maxScroll:', maxScroll, 'progress:', progress, 'seekTime:', seekTime);
+			// console.log('scrollY:', scrollY, 'pageRatio:', pageRatio, 'newRatio:', newRatio, 'scale:', scale, 'progress:', progress, 'seekTime:', seekTime);
 		}
 
 
