@@ -480,8 +480,10 @@
 
 	// #region 🔧 UTILIDADES DE FRAMES
 	function padNum(i) {
-		if (!padWidth || padWidth <= 1) return String(i);
-		return String(i).padStart(padWidth, '0');
+		// Si todavía no se ha detectado padWidth, asumimos por defecto 3 dígitos
+		const effectivePad = (padWidth && padWidth > 0) ? padWidth : 3;
+		if (!effectivePad || effectivePad <= 1) return String(i);
+		return String(i).padStart(effectivePad, '0');
 	}
 
 	// Mapeo de frames: seleccionar cada 4to frame (móvil 30fps) o cada 2do frame (PC 60fps)
