@@ -9,6 +9,7 @@
  import minimal3 from '../assets/minimal3.svg';
  import logo from '../assets/logo.png';
  import logosvganim from '../assets/animlogo/logo.svg';
+ import LiquidGlassComponent from '../components/liquidglasscomponent.jsx';
  // #endregion
 ---
 
@@ -152,6 +153,10 @@
 	<!-- Div de contenido de proyectos: -->
 	<div style="height: 100vh; display: flex; align-items: center; justify-content: center;">
 		<h1 style="z-index: 100; color: red; position: relative;">Test</h1>
+		<LiquidGlassComponent client:load>
+			<h2 style="margin: 0 0 10px 0; font-size: 1.5rem; color: white;">¡Funciona! 🚀</h2>
+			<p style="margin: 0; opacity: 0.9; color: white;">Este contenido se está renderizando dentro del efecto de cristal líquido con sticky.</p>
+		</LiquidGlassComponent>
 	</div>
 	<!-- #endregion -->
 

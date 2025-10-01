@@ -614,3 +614,8 @@
     align-items: center;
     justify-content: center;
 }
+
+.liquidglassstyle{
+    position: fixed;
+    right: 50%;
+}
