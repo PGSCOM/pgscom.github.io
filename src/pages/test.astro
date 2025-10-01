@@ -1,0 +1,36 @@
+---
+ // #region 📦 IMPORTS Y CONFIGURACIÓN INICIAL
+ import Layout from '../layouts/Layout.astro';
+ import LiquidGlassComponent from '../components/liquidglasscomponent.jsx';
+ import './_styles.css';
+ // #endregion
+---
+
+<Layout>
+    <div style="height: 300vh;"/>
+    <div style={{ height: '200vh',width:'100%' , position: 'fixed' }}>
+        <img 
+            src="https://picsum.photos/1920/1080" 
+            style={{ width: '100%', height: '400px', objectFit: 'cover' }} 
+            alt="Background"
+        />
+        <div style={{ padding: '40px' }}>
+            <h2 style={{ fontSize: '2rem', marginBottom: '20px' }}>Contenido de scroll</h2>
+            <p style={{ marginBottom: '20px' }}>Este contenido permite hacer scroll...</p>
+            <p style={{ marginBottom: '20px' }}>Sigue scrolleando para ver el efecto sticky del componente de cristal líquido.</p>
+        </div>
+        <img 
+            src="https://picsum.photos/1200/800" 
+            style={{ width: '100%', height: '300px', objectFit: 'cover', margin: '40px 0' }} 
+            alt="Content"
+        />
+        <div style={{ padding: '40px', height: '80vh' }}>
+            <p>Más contenido para hacer scroll...</p>
+        </div>
+    </div>
+
+    <LiquidGlassComponent client:load>
+        <h2 style="margin: 0 0 10px 0; font-size: 1.5rem;">¡Funciona! 🚀</h2>
+        <p style="margin: 0; opacity: 0.9;">Este contenido se está renderizando dentro del efecto de cristal líquido con sticky.</p>
+    </LiquidGlassComponent>
+</Layout>
