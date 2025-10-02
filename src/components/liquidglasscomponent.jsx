@@ -7,7 +7,7 @@ const LiquidGlass = (_pkg && (_pkg.LiquidGlass || _pkg.default || _pkg)) || null
 // Acepta `children` como una prop
 export default function LiquidGlassComponent({ children }) {
   const containerRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true); // Por defecto móvil para SSR
   const [isClient, setIsClient] = useState(false);
   
   // Detectar si estamos en el cliente y si es móvil
@@ -19,78 +19,55 @@ export default function LiquidGlassComponent({ children }) {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
       const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      const isSmallScreen = window.innerWidth <= 768;
+      const isSmallScreen = window.innerWidth <= 1024; // Aumentado para tablets también
       
       return isMobileUA || (isTouchDevice && isSmallScreen);
     };
     
     setIsMobile(checkMobile());
     
-    // Actualizar en cambio de tamaño de ventana
-    const handleResize = () => {
-      setIsMobile(checkMobile());
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    // NO actualizar en resize para evitar re-renders costosos
   }, []);
   
-  // Fallback optimizado para móviles con efecto glassmorphism CSS puro
+  // Fallback ULTRA-LIGERO para móviles - SIN backdrop-filter, SIN efectos pesados
   const MobileFallback = () => (
     <div style={{
-      width: '100%',
+      width: '90%',
       maxWidth: '400px',
-      padding: '24px 32px',
-      background: 'rgba(255, 255, 255, 0.08)',
-      backdropFilter: 'blur(10px)',
-      WebkitBackdropFilter: 'blur(10px)',
-      borderRadius: '32px',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+      padding: '20px 28px',
+      background: 'rgba(0, 0, 0, 0.5)', // Fondo semi-opaco simple
+      borderRadius: '24px',
+      border: '1px solid rgba(255, 255, 255, 0.15)',
       position: 'relative',
       zIndex: 100,
-      transform: 'translateX(-50%)',
-      left: '50%',
+      margin: '0 auto',
+      boxSizing: 'border-box',
     }}>
       {children}
     </div>
   );
   
-  // Si no se encontró el componente, renderizamos un fallback simple
+  // Si no se encontró el componente o estamos en el servidor, renderizamos fallback
   if (!LiquidGlass || !isClient) {
-    return (
-      <div style={{ 
-        width: '100%', 
-        maxWidth: '400px', 
-        padding: '24px 32px', 
-        background: 'rgba(255,255,255,0.1)', 
-        borderRadius: 32,
-        position: 'relative',
-        zIndex: 100,
-        transform: 'translateX(-50%)',
-        left: '50%',
-      }}>
-        {children}
-      </div>
-    );
+    return <MobileFallback />;
   }
   
-  // En móviles, usar fallback CSS puro (sin WebGL)
+  // En móviles, usar fallback CSS ultra-ligero (sin WebGL, sin backdrop-filter)
   if (isMobile) {
     return <MobileFallback />;
   }
 
-  // En desktop, usar el efecto completo pero optimizado
+  // En desktop, usar el efecto completo pero muy optimizado
   return (
       <LiquidGlass
-        displacementScale={60}
-        blurAmount={0.3}
-        saturation={120}
-        aberrationIntensity={1.5}
-        elasticity={0.05}
-        cornerRadius={32}
-        padding="24px 32px"
-        background="rgba(255, 255, 255, 0.1)"
+        displacementScale={40}
+        blurAmount={0.2}
+        saturation={110}
+        aberrationIntensity={1}
+        elasticity={0.08}
+        cornerRadius={24}
+        padding="20px 28px"
+        background="rgba(255, 255, 255, 0.08)"
         mode="standard"
         mouseContainer={containerRef}
         style={{
