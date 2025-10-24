@@ -1,0 +1,12 @@
+---
+ import Layout from '../layouts/Layout.astro';
+ import LiquidGlassComponent from '../components/liquidglasscomponent.jsx';
+ import './_styles.css';
+ ---
+
+<Layout>
+    <LiquidGlassComponent client:load>
+        <h2 style="margin: 0 0 10px 0; font-size: 1.5rem;">¡Funciona! 🚀</h2>
+        <p style="margin: 0; opacity: 0.9;">Este contenido se está renderizando dentro del efecto de cristal líquido con sticky.</p>
+    </LiquidGlassComponent>
+</Layout>

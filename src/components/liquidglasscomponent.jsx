@@ -61,22 +61,22 @@ export default function LiquidGlassComponent({ children }) {
   return (
       <LiquidGlass
         displacementScale={40}
-        blurAmount={0.2}
+        blurAmount={0.5}
         saturation={110}
         aberrationIntensity={1}
         elasticity={0.08}
-        cornerRadius={24}
-        padding="20px 28px"
+        cornerRadius={1000000}
+        padding="24px 32px"
         background="rgba(255, 255, 255, 0.08)"
         mode="standard"
         mouseContainer={containerRef}
         style={{
           position: 'auto',
-          top: '20%',
-          left: '50%',
+          top: '500px',
+          left: '500px',
           transform: 'translateX(-50%)',
           zIndex: 100,
-          maxWidth: '400px'
+          maxWidth: '550px'
         }}
       >
         {children}
