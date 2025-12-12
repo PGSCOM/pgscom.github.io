@@ -1,33 +1,44 @@
 /* Estilos para la sección de proyectos */
 .proyectos-section {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  background: /*linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)*/ transparent;
+  height: 400vh; /* Altura aumentada para permitir scroll animation y pausa final */
+  display: block; /* Evita empujar el contenedor al inicio y respeta su centrado propio */
+  padding: 0;
+  background: transparent;
   position: relative;
   z-index: 100;
-  overflow: hidden;
 }
 
 .proyectos-container {
-  max-width: 1400px;
+  max-width: 1400px; /* Da un ancho controlado y centrable */
   width: 100%;
-  height: 700px;
-  position: relative;
+  height: 100vh; /* Ocupar toda la pantalla */
+  position: relative; /* Cambiado de sticky a relative para control JS */
+  top: 0;
+  margin: 0 auto; /* Centrado horizontal en flujo normal */
   display: flex;
   align-items: center;
   justify-content: center;
   --orbit-radius: 290px;
-  touch-action: pan-y;
+  touch-action: none; /* Evitar scroll táctil accidental en elementos */
+  overflow: hidden;
+}
+
+.proyectos-container.stuck {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 1400px !important; /* mantener el mismo ancho que en flujo normal */
+  height: 100vh !important;
+  z-index: 100 !important;
 }
 
 .proyectos-logo {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   z-index: 10;
   width: 260px;
   height: 260px;
@@ -35,22 +46,14 @@
   justify-content: center;
   align-items: center;
   pointer-events: none;
+  /* Eliminamos transform para evitar conflictos con anime.js */
 }
 
 .proyectos-logo img {
   max-width: 100%;
   height: auto;
   filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.4));
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-20px) scale(1.05);
-  }
+  /* Eliminamos animación float para evitar conflictos de posición */
 }
 
 .proyectos-grid {
@@ -267,3 +270,49 @@
     height: 38px;
   }
 }
+
+/* Menu Styles */
+.proyectos-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.menu-item {
+  position: absolute;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 2rem;
+  color: white;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: auto;
+  cursor: pointer;
+  text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.menu-item.aptitud {
+  bottom: 25%;
+  left: 25%;
+}
+
+.menu-item.proyectos-link {
+  bottom: 25%;
+  right: 25%;
+}
+
+.menu-line {
+  position: absolute;
+  background: white;
+  height: 2px;
+  width: 0;
+  top: 50%;
+  left: 50%;
+  transform-origin: left; /* Adjust based on rotation */
+  opacity: 0;
+}
+
