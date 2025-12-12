@@ -2,6 +2,7 @@
  // #region 📦 IMPORTS Y CONFIGURACIÓN INICIAL
  import Layout from '../layouts/Layout.astro';
  import './_styles.css';
+ import '../styles/proyectos.css';
  import { Image } from 'astro:assets';
  import pgscom from '../assets/pgscom.png';
  import minimal1 from '../assets/minimal1.svg';
@@ -10,6 +11,9 @@
  import logo from '../assets/logo.png';
  import logosvganim from '../assets/animlogo/logo.svg';
  import LiquidGlassComponent from '../components/liquidglasscomponent.jsx';
+ 
+ // Importar datos de proyectos
+ import proyectosData from '../data/proyectos.json';
  // #endregion
 ---
 
@@ -148,15 +152,31 @@
 	</script>
 	<!-- #endregion -->
 	<!-- #region 🚧 SECCIONES TEMPORALES - Placeholder para contenido futuro -->
-	<div style="height: 100vh; display: flex; align-items: center; justify-content: center;"></div>
+	<div style="height: 120vh; display: flex; align-items: center; justify-content: center;"></div>
 
-	<!-- Div de contenido de proyectos: -->
-	<div style="height: 100vh; display: flex; align-items: center; justify-content: center;">
-		<h1 style="z-index: 100; color: red; position: relative;">Test</h1>
-		<LiquidGlassComponent client:visible>
-			<Image src={logo} alt="" class="" width={450} height={450} />
-		</LiquidGlassComponent>
+	<!-- #region 📂 SECCIÓN DE PROYECTOS - Grid dinámico con datos JSON -->
+	<section class="proyectos-section">
+		<div class="proyectos-container">
+			<!-- Logo a la izquierda -->
+			<div class="proyectos-logo">
+				<Image src={logo} alt="PGSCOM Logo" width={450} height={450} />
 	</div>
+
+			<!-- Grid de proyectos a la derecha -->
+			<div class="proyectos-grid">
+				{proyectosData.map((proyecto) => (
+					<div class="proyecto-card" data-proyecto-id={proyecto.id}>
+						<div class="proyecto-icon">
+							<img src={proyecto.logo} alt={proyecto.titulo} />
+						</div>
+						<h3 class="proyecto-titulo">{proyecto.titulo}</h3>
+						<p class="proyecto-descripcion">{proyecto.descripcion}</p>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+	<!-- #endregion -->
 	<!-- #endregion -->
 
 	<!-- #region 🎨 SCRIPT: ANIMACIÓN DE FUENTES - Rotación automática de tipografías -->
