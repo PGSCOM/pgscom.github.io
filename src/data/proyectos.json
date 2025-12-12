@@ -1,0 +1,38 @@
+[
+  {
+    "id": "diseño-grafico",
+    "titulo": "Diseño Gráfico",
+    "logo": "/icons/design.svg",
+    "descripcion": "Creación de identidad visual y diseño"
+  },
+  {
+    "id": "desarrollo-web",
+    "titulo": "Desarrollo Web",
+    "logo": "/icons/web.svg",
+    "descripcion": "Desarrollo de sitios y aplicaciones web"
+  },
+  {
+    "id": "animacion",
+    "titulo": "Animación",
+    "logo": "/icons/animation.svg",
+    "descripcion": "Motion graphics y animación 2D/3D"
+  },
+  {
+    "id": "video",
+    "titulo": "Edición de Video",
+    "logo": "/icons/video.svg",
+    "descripcion": "Producción y postproducción audiovisual"
+  },
+  {
+    "id": "fotografia",
+    "titulo": "Fotografía",
+    "logo": "/icons/photo.svg",
+    "descripcion": "Fotografía profesional y retoque"
+  },
+  {
+    "id": "ui-ux",
+    "titulo": "UI/UX Design",
+    "logo": "/icons/ux.svg",
+    "descripcion": "Diseño de interfaces y experiencia de usuario"
+  }
+]
