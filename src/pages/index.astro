@@ -4,7 +4,7 @@
  import './_styles.css';
  import '../styles/proyectos.css';
  import { Image } from 'astro:assets';
- import pgscom from '../assets/pgscom.png';
+ import pgscom from '../assets/logo.png';
  import minimal1 from '../assets/minimal1.svg';
  import customShape from '../assets/custom-shape.svg';
  import minimal3 from '../assets/minimal3.svg';
@@ -154,29 +154,128 @@
 	<!-- #region 🚧 SECCIONES TEMPORALES - Placeholder para contenido futuro -->
 	<div style="height: 120vh; display: flex; align-items: center; justify-content: center;"></div>
 
-	<!-- #region 📂 SECCIÓN DE PROYECTOS - Grid dinámico con datos JSON -->
+	<!-- #region 📂 SECCIÓN DE PROYECTOS - Diseño circular con logo central -->
 	<section class="proyectos-section">
 		<div class="proyectos-container">
-			<!-- Logo a la izquierda -->
-			<div class="proyectos-logo">
-				<Image src={logo} alt="PGSCOM Logo" width={450} height={450} />
-	</div>
-
-			<!-- Grid de proyectos a la derecha -->
+			<!-- Grid de proyectos girando alrededor -->
 			<div class="proyectos-grid">
 				{proyectosData.map((proyecto) => (
 					<div class="proyecto-card" data-proyecto-id={proyecto.id}>
-						<div class="proyecto-icon">
-							<img src={proyecto.logo} alt={proyecto.titulo} />
+						<div class="proyecto-card-inner">
+							<div class="proyecto-icon">
+								<img src={proyecto.logo} alt={proyecto.titulo} />
+							</div>
+							<h3 class="proyecto-titulo">{proyecto.titulo}</h3>
+							<p class="proyecto-descripcion">{proyecto.descripcion}</p>
 						</div>
-						<h3 class="proyecto-titulo">{proyecto.titulo}</h3>
-						<p class="proyecto-descripcion">{proyecto.descripcion}</p>
 					</div>
 				))}
+			</div>
+
+			<!-- Logo en el centro -->
+			<div class="proyectos-logo">
+				<Image src={logo} alt="PGSCOM Logo" width={720} height={720} />
 			</div>
 		</div>
 	</section>
 	<!-- #endregion -->
+	<!-- #endregion -->
+
+	<!-- #region 🌀 SCRIPT: Órbita con pausa suave -->
+	<script is:inline>
+		document.addEventListener('DOMContentLoaded', () => {
+			const container = document.querySelector('.proyectos-section .proyectos-container');
+			if (!container) return;
+
+			const cards = Array.from(container.querySelectorAll('.proyecto-card'));
+			if (cards.length === 0) return;
+
+			const TWO_PI = Math.PI * 2;
+
+			// Más lento: 1 vuelta cada 90s (ajusta aquí si quieres)
+			const REV_SECONDS = 90;
+			const DEFAULT_SPEED = TWO_PI / REV_SECONDS; // rad/s
+			const SMOOTH_TAU_STOP = 0.22; // s (frenada)
+			const SMOOTH_TAU_START = 0.35; // s (arranque)
+
+			let angle = 0;
+			let speed = DEFAULT_SPEED;
+			let targetSpeed = DEFAULT_SPEED;
+			let lastT = performance.now();
+
+			const baseAngles = cards.map((_, index) => (TWO_PI * index) / cards.length);
+
+			const readRadius = () => {
+				const raw = getComputedStyle(container).getPropertyValue('--orbit-radius').trim();
+				const radius = Number.parseFloat(raw);
+				return Number.isFinite(radius) ? radius : 350;
+			};
+
+			const setPaused = (paused) => {
+				targetSpeed = paused ? 0 : DEFAULT_SPEED;
+			};
+
+			// Pausa estable aunque las tarjetas estén moviéndose bajo el cursor:
+			// guardamos última posición del ratón y hacemos hit-test cada frame.
+			let pointerActive = false;
+			let pointerX = 0;
+			let pointerY = 0;
+			let hoverOffAt = 0;
+			const HOVER_RELEASE_DELAY_MS = 140;
+
+			container.addEventListener('pointerenter', (e) => {
+				pointerActive = true;
+				pointerX = e.clientX;
+				pointerY = e.clientY;
+			});
+			container.addEventListener('pointermove', (e) => {
+				pointerActive = true;
+				pointerX = e.clientX;
+				pointerY = e.clientY;
+			});
+			container.addEventListener('pointerleave', () => {
+				pointerActive = false;
+				hoverOffAt = 0;
+				setPaused(false);
+			});
+
+			const tick = (t) => {
+				const dt = Math.min(0.05, Math.max(0.001, (t - lastT) / 1000));
+				lastT = t;
+
+				// Hover real sobre tarjeta (sin depender de enter/leave de elementos en movimiento)
+				if (pointerActive) {
+					const el = document.elementFromPoint(pointerX, pointerY);
+					const isOnCard = !!(el && container.contains(el) && el.closest('.proyecto-card'));
+					if (isOnCard) {
+						hoverOffAt = 0;
+						setPaused(true);
+					} else {
+						if (!hoverOffAt) hoverOffAt = t;
+						if (t - hoverOffAt > HOVER_RELEASE_DELAY_MS) setPaused(false);
+					}
+				}
+
+				// Suavizar aceleración/frenada
+				const tau = (targetSpeed < speed) ? SMOOTH_TAU_STOP : SMOOTH_TAU_START;
+				const k = 1 - Math.exp(-dt / tau);
+				speed += (targetSpeed - speed) * k;
+				// Importante: no hacer modulo aquí para evitar micro-saltos al cruzar 0/360
+				angle += speed * dt;
+
+				const r = readRadius();
+				for (let i = 0; i < cards.length; i += 1) {
+					const a = angle + baseAngles[i];
+					const deg = (a * 180) / Math.PI;
+					cards[i].style.transform = `translate(-50%, -50%) rotate(${deg}deg) translateX(${r}px) rotate(${-deg}deg)`;
+				}
+
+				requestAnimationFrame(tick);
+			};
+
+			requestAnimationFrame(tick);
+		});
+	</script>
 	<!-- #endregion -->
 
 	<!-- #region 🎨 SCRIPT: ANIMACIÓN DE FUENTES - Rotación automática de tipografías -->
