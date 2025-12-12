@@ -8,47 +8,70 @@
   background: /*linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)*/ transparent;
   position: relative;
   z-index: 100;
+  overflow: hidden;
 }
 
 .proyectos-container {
   max-width: 1400px;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 4rem;
+  height: 800px;
+  position: relative;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  --orbit-radius: 350px;
+  touch-action: pan-y;
 }
 
 .proyectos-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 300px;
+  height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
 }
 
 .proyectos-logo img {
   max-width: 100%;
   height: auto;
-  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.4));
   animation: float 6s ease-in-out infinite;
 }
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-20px) scale(1.05);
   }
 }
 
 .proyectos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .proyecto-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  position: absolute;
+  width: 220px;
+  top: 50%;
+  left: 50%;
+  will-change: transform;
+}
+
+.proyecto-card-inner {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 20px;
@@ -57,14 +80,13 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  transition: all 0.3s ease;
   border: 2px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
   position: relative;
   overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
 }
 
-.proyecto-card::before {
+.proyecto-card-inner::before {
   content: '';
   position: absolute;
   top: 0;
@@ -75,11 +97,11 @@
   transition: left 0.5s ease;
 }
 
-.proyecto-card:hover::before {
+.proyecto-card:hover .proyecto-card-inner::before {
   left: 100%;
 }
 
-.proyecto-card:hover {
+.proyecto-card:hover .proyecto-card-inner {
   transform: translateY(-10px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   border-color: rgba(255, 255, 255, 0.4);
@@ -124,15 +146,46 @@
   line-height: 1.5;
 }
 
+/* Nota: la órbita se controla por JS para poder frenar suave */
+
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .proyectos-container {
-    grid-template-columns: 1fr;
-    gap: 3rem;
+    height: 700px;
+    --orbit-radius: 300px;
   }
 
-  .proyectos-logo img {
-    max-width: 300px;
+  .proyectos-logo {
+    width: 250px;
+    height: 250px;
+  }
+
+  .proyecto-card {
+    width: 200px;
+  }
+
+  .proyecto-card-inner {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .proyectos-container {
+    height: 600px;
+    --orbit-radius: 250px;
+  }
+
+  .proyectos-logo {
+    width: 200px;
+    height: 200px;
+  }
+
+  .proyecto-card {
+    width: 180px;
+  }
+
+  .proyecto-card-inner {
+    padding: 1.2rem;
   }
 }
 
@@ -141,13 +194,22 @@
     padding: 2rem 1rem;
   }
 
-  .proyectos-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .proyectos-container {
+    height: 500px;
+    --orbit-radius: 180px;
+  }
+
+  .proyectos-logo {
+    width: 150px;
+    height: 150px;
   }
 
   .proyecto-card {
-    padding: 1.5rem;
+    width: 150px;
+  }
+
+  .proyecto-card-inner {
+    padding: 1rem;
   }
 
   .proyecto-icon {
@@ -163,4 +225,44 @@
   .proyecto-titulo {
     font-size: 1.25rem;
   }
+
+}
+
+@media (max-width: 480px) {
+  .proyectos-container {
+    height: 400px;
+    --orbit-radius: 140px;
+  }
+
+  .proyectos-logo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .proyecto-card {
+    width: 130px;
+  }
+
+  .proyecto-card-inner {
+    padding: 0.8rem;
+  }
+
+  .proyecto-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .proyecto-icon img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .proyecto-titulo {
+    font-size: 1rem;
+  }
+
+  .proyecto-descripcion {
+    font-size: 0.8rem;
+  }
+
 }
