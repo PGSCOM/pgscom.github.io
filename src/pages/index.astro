@@ -1388,6 +1388,7 @@
 					targets: logo,
 					translateX: [0, logoTranslation],
 					scale: [1, 0.85],
+					opacity: isMobile ? [1, 0] : [1, 1], // En móvil desaparece, en desktop se mantiene
 					duration: 500,
 					easing: 'easeOutQuad'
 				}, 500); // Empezar después de que termine la órbita
