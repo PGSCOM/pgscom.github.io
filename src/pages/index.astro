@@ -10,7 +10,6 @@
  import minimal3 from '../assets/minimal3.svg';
  import logo from '../assets/logo.png';
  import logosvganim from '../assets/animlogo/logo.svg';
- import LiquidGlassComponent from '../components/liquidglasscomponent.jsx';
  
  // Importar datos de proyectos
  import proyectosData from '../data/proyectos.json';
@@ -41,7 +40,16 @@
 
 	<!-- #region 🧑‍💻 PERSONAJE PGSCOM - Imagen principal del personaje -->
 	<div class="image-container">
-		<Image src={pgscom} alt="PGSCOM Character" class="fotopgs" width={2617} height={3490} loading="eager" />
+		<Image 
+			src={pgscom} 
+			alt="PGSCOM Character" 
+			class="fotopgs" 
+			width={2617} 
+			height={3490} 
+			loading="eager" 
+			widths={[320, 640, 1280, 2617]}
+			sizes="(max-width: 768px) 100vw, 50vw"
+		/>
 	</div>
 	<!-- #endregion -->
 
@@ -174,7 +182,14 @@
 
 			<!-- Logo en el centro (siempre visible) -->
 			<div class="proyectos-logo">
-				<Image src={logo} alt="PGSCOM Logo" width={720} height={720} />
+				<Image 
+					src={logo} 
+					alt="PGSCOM Logo" 
+					width={720} 
+					height={720} 
+					widths={[200, 400, 720]}
+					sizes="(max-width: 768px) 150px, 200px"
+				/>
 			</div>
 
 			<!-- Pantallas de detalle por aptitud (generadas proceduralmente) -->
@@ -768,17 +783,31 @@
 		}
 	}
 
+	// Gestión de memoria: mantener solo un buffer de frames alrededor del actual
+	const CACHE_BUFFER = isMobileDevice ? 15 : 40; // Frames a mantener en memoria
+
+	function manageCache(currentIndex) {
+		// Liberar frames lejanos para ahorrar memoria
+		imagesCache.forEach((_, i) => {
+			if (imagesCache[i] && Math.abs(i - currentIndex) > CACHE_BUFFER) {
+				imagesCache[i] = null;
+			}
+		});
+		
+		// Precargar frames futuros inmediatos (buffer deslizante)
+		const preloadEnd = Math.min(TOTAL_FRAMES - 1, currentIndex + (isMobileDevice ? 5 : 10));
+		for (let i = currentIndex + 1; i <= preloadEnd; i++) {
+			loadFrame(i);
+		}
+	}
+
 	function primePreload() {
-		// Precargar frames iniciales para fluidez (30 para móvil, 60 para PC)
-		const FIRST = 0; // Siempre empezamos en 0 lógico
-		const PRELOAD_COUNT = isMobileDevice ? 29 : 59; // Móvil: ~30 frames, PC: ~60 frames
+		// Precargar frames iniciales para fluidez (reducido para evitar picos de memoria)
+		const FIRST = 0; 
+		const PRELOAD_COUNT = isMobileDevice ? 15 : 30; 
 		const LAST = Math.min(TOTAL_FRAMES - 1, PRELOAD_COUNT);
 		for (let i = FIRST; i <= LAST; i++) loadFrame(i);
-		// Preload del resto en segundo plano
-		setTimeout(() => {
-			const end = TOTAL_FRAMES - 1;
-			for (let i = LAST + 1; i <= end; i++) loadFrame(i);
-		}, 500);
+		// ELIMINADO: Preload masivo en segundo plano
 	}
 
 	function setSequenceVisible(v) {
@@ -800,6 +829,10 @@
 	async function showFrame(index) {
 		if (index === lastDrawnIndex) return;
 		lastDrawnIndex = index;
+		
+		// Gestionar memoria antes de cargar
+		manageCache(index);
+
 		const img = await loadFrame(index);
 		if (lastDrawnIndex !== index) return; // Evitar draw desfasado
 		drawImageCover(img);
