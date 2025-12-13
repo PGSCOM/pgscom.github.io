@@ -1,6 +1,6 @@
 /* Estilos para la sección de proyectos */
 .proyectos-section {
-  height: 800vh; /* Altura muy aumentada para transiciones lentas entre aptitudes */
+  height: 400vh; /* Altura reducida para transiciones más rápidas entre aptitudes */
   display: block; /* Evita empujar el contenedor al inicio y respeta su centrado propio */
   padding: 0;
   background: transparent;
