@@ -145,7 +145,7 @@
 /* Responsive */
 @media (max-width: 1200px) {
   .proyectos-container {
-    height: 650px;
+    height: 100vh; /* Usar altura completa para centrado vertical correcto */
     --orbit-radius: 270px;
   }
 
@@ -173,7 +173,7 @@
 
 @media (max-width: 1024px) {
   .proyectos-container {
-    height: 600px;
+    height: 100vh; /* Usar altura completa para centrado vertical correcto */
     --orbit-radius: 240px;
   }
 
@@ -206,7 +206,7 @@
   }
 
   .proyectos-container {
-    height: 550px;
+    height: 100vh; /* Usar altura completa para centrado vertical correcto */
     --orbit-radius: 200px;
   }
 
@@ -238,7 +238,7 @@
   }
 
   .proyectos-container {
-    height: 450px;
+    height: 100vh; /* Usar altura completa para centrado vertical correcto */
     --orbit-radius: 155px;
   }
 
