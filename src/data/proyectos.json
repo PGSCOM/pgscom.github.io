@@ -3,36 +3,126 @@
     "id": "diseño-grafico",
     "titulo": "Diseño Gráfico",
     "logo": "/icons/design.svg",
-    "descripcion": "Creación de identidad visual y diseño"
+    "descripcion": "Creación de identidad visual y diseño",
+    "proyectos": [
+      {
+        "id": "branding-xyz",
+        "titulo": "Branding XYZ",
+        "imagen": "/proyectos/branding-xyz.jpg",
+        "descripcion": "Identidad visual completa para startup"
+      },
+      {
+        "id": "poster-evento",
+        "titulo": "Cartel Festival",
+        "imagen": "/proyectos/poster-festival.jpg",
+        "descripcion": "Diseño de cartelería para evento cultural"
+      },
+      {
+        "id": "poster-evento",
+        "titulo": "Cartel Festival",
+        "imagen": "/proyectos/poster-festival.jpg",
+        "descripcion": "Diseño de cartelería para evento cultural"
+      }
+    ]
   },
   {
     "id": "desarrollo-web",
     "titulo": "Desarrollo Web",
     "logo": "/icons/web.svg",
-    "descripcion": "Desarrollo de sitios y aplicaciones web"
+    "descripcion": "Desarrollo de sitios y aplicaciones web",
+    "proyectos": [
+      {
+        "id": "portfolio-personal",
+        "titulo": "Portfolio PGSCOM",
+        "imagen": "/proyectos/portfolio.jpg",
+        "descripcion": "Este mismo sitio web"
+      },
+      {
+        "id": "ecommerce-tienda",
+        "titulo": "E-commerce",
+        "imagen": "/proyectos/ecommerce.jpg",
+        "descripcion": "Tienda online con pasarela de pagos"
+      }
+    ]
   },
   {
     "id": "animacion",
     "titulo": "Animación",
     "logo": "/icons/animation.svg",
-    "descripcion": "Motion graphics y animación 2D/3D"
+    "descripcion": "Motion graphics y animación 2D/3D",
+    "proyectos": [
+      {
+        "id": "intro-youtube",
+        "titulo": "Intro Canal",
+        "imagen": "/proyectos/intro-youtube.jpg",
+        "descripcion": "Animación de intro para YouTube"
+      },
+      {
+        "id": "motion-logo",
+        "titulo": "Logo Animado",
+        "imagen": "/proyectos/motion-logo.jpg",
+        "descripcion": "Animación de logotipo corporativo"
+      }
+    ]
   },
   {
     "id": "video",
     "titulo": "Edición de Video",
     "logo": "/icons/video.svg",
-    "descripcion": "Producción y postproducción audiovisual"
+    "descripcion": "Producción y postproducción audiovisual",
+    "proyectos": [
+      {
+        "id": "documental-corto",
+        "titulo": "Mini Documental",
+        "imagen": "/proyectos/documental.jpg",
+        "descripcion": "Cortometraje documental"
+      },
+      {
+        "id": "videoclip-musica",
+        "titulo": "Videoclip Musical",
+        "imagen": "/proyectos/videoclip.jpg",
+        "descripcion": "Videoclip para artista local"
+      }
+    ]
   },
   {
     "id": "fotografia",
     "titulo": "Fotografía",
     "logo": "/icons/photo.svg",
-    "descripcion": "Fotografía profesional y retoque"
+    "descripcion": "Fotografía profesional y retoque",
+    "proyectos": [
+      {
+        "id": "sesion-producto",
+        "titulo": "Foto Producto",
+        "imagen": "/proyectos/producto.jpg",
+        "descripcion": "Sesión fotográfica de producto"
+      },
+      {
+        "id": "retrato-estudio",
+        "titulo": "Retratos",
+        "imagen": "/proyectos/retratos.jpg",
+        "descripcion": "Fotografía de retrato en estudio"
+      }
+    ]
   },
   {
     "id": "ui-ux",
     "titulo": "UI/UX Design",
     "logo": "/icons/ux.svg",
-    "descripcion": "Diseño de interfaces y experiencia de usuario"
+    "descripcion": "Diseño de interfaces y experiencia de usuario",
+    "proyectos": [
+      {
+        "id": "app-movil",
+        "titulo": "App Móvil",
+        "imagen": "/proyectos/app-movil.jpg",
+        "descripcion": "Diseño de aplicación iOS/Android"
+      },
+      {
+        "id": "dashboard-admin",
+        "titulo": "Dashboard",
+        "imagen": "/proyectos/dashboard.jpg",
+        "descripcion": "Panel de administración web"
+      }
+    ]
   }
 ]
