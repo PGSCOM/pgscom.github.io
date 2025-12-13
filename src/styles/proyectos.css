@@ -1,6 +1,10 @@
 /* Estilos para la sección de proyectos */
 
-/* Animaciones personalizadas */
+/* ============================================
+   ANIMACIONES PERSONALIZADAS
+   ============================================ */
+
+/* Brillo pulsante suave */
 @keyframes subtle-glow {
   0%, 100% {
     box-shadow: 
@@ -16,6 +20,7 @@
   }
 }
 
+/* Entrada de tarjetas desde la derecha */
 @keyframes card-appear {
   from {
     opacity: 0;
@@ -24,6 +29,133 @@
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
+  }
+}
+
+/* Rotación de brillo alrededor del círculo */
+@keyframes rotating-glow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pulso de expansión */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Efecto de onda desde el centro */
+@keyframes ripple-out {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Flotación suave */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Parpadeo de estrellas */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Línea de neón animada */
+@keyframes neon-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* Entrada con rebote */
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: translateX(60px) scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-10px) scale(1.02);
+  }
+  80% {
+    transform: translateX(5px) scale(0.98);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Brillo deslizante */
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+/* Giro 3D sutil */
+@keyframes subtle-3d-rotate {
+  0%, 100% {
+    transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+  }
+  25% {
+    transform: perspective(1000px) rotateY(2deg) rotateX(1deg);
+  }
+  75% {
+    transform: perspective(1000px) rotateY(-2deg) rotateX(-1deg);
+  }
+}
+
+/* Gradiente animado */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Partículas orbitando */
+@keyframes orbit-particle {
+  0% {
+    transform: rotate(0deg) translateX(70px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(70px) rotate(-360deg);
   }
 }
 
@@ -98,8 +230,12 @@
 }
 
 .proyecto-card-inner {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(147, 197, 253, 0.08),
+    rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: 50%;
   padding: 0;
   width: 95px;
@@ -112,30 +248,70 @@
   border: 2px solid rgba(255, 255, 255, 0.25);
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(147, 197, 253, 0.1);
 }
 
+/* Anillo de brillo para tarjetas orbitales */
 .proyecto-card-inner::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(147, 197, 253, 0.4),
+    transparent,
+    rgba(196, 181, 253, 0.3),
+    transparent
+  );
+  opacity: 0;
+  animation: rotating-glow 6s linear infinite paused;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+/* Efecto shimmer */
+.proyecto-card-inner::after {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
-  width: 100%;
+  width: 50%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.25),
+    transparent);
+  transform: skewX(-20deg);
 }
 
 .proyecto-card:hover .proyecto-card-inner::before {
-  left: 100%;
+  opacity: 1;
+  animation-play-state: running;
+}
+
+.proyecto-card:hover .proyecto-card-inner::after {
+  animation: shimmer 0.8s ease forwards;
 }
 
 .proyecto-card:hover .proyecto-card-inner {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-12px) scale(1.05);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.35),
+    0 0 40px rgba(147, 197, 253, 0.3),
+    0 0 60px rgba(147, 197, 253, 0.15);
+  border-color: rgba(147, 197, 253, 0.5);
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(147, 197, 253, 0.12),
+    rgba(255, 255, 255, 0.08));
 }
 
 .proyecto-icon {
@@ -146,11 +322,11 @@
   justify-content: center;
   background: transparent;
   border-radius: 50%;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .proyecto-card:hover .proyecto-icon {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.15) rotate(8deg);
 }
 
 .proyecto-icon img {
@@ -158,6 +334,13 @@
   height: 52px;
   object-fit: contain;
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.4));
+  transition: filter 0.3s ease;
+}
+
+.proyecto-card:hover .proyecto-icon img {
+  filter: 
+    drop-shadow(0 4px 15px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 15px rgba(147, 197, 253, 0.4));
 }
 
 .proyecto-titulo {
@@ -364,25 +547,51 @@
   pointer-events: auto;
 }
 
-/* Línea que conecta Logo con Aptitud - Mejorada */
+/* Línea que conecta Logo con Aptitud - Con efecto neón */
 .line-logo-aptitud {
   position: absolute;
   top: 50%;
   left: calc(50% - 150px);
   width: 0;
-  height: 2px;
+  height: 3px;
   background: linear-gradient(90deg, 
     rgba(255,255,255,0.9), 
-    rgba(147,197,253,0.7),
-    rgba(255,255,255,0.4));
+    rgba(147,197,253,0.8),
+    rgba(196,181,253,0.6),
+    rgba(147,197,253,0.4));
+  background-size: 200% 100%;
   transform: translateY(-50%);
   transform-origin: left center;
   opacity: 0;
-  box-shadow: 0 0 12px rgba(147,197,253,0.5),
-              0 0 4px rgba(255,255,255,0.8);
+  box-shadow: 
+    0 0 15px rgba(147,197,253,0.6),
+    0 0 30px rgba(147,197,253,0.3),
+    0 0 5px rgba(255,255,255,0.9);
+  border-radius: 2px;
 }
 
-/* Círculo de aptitud (centro del diagrama) - Mejorado */
+.aptitud-detail-screen.active .line-logo-aptitud {
+  animation: neon-flow 2s linear infinite;
+}
+
+/* Punto brillante al inicio de la línea */
+.line-logo-aptitud::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(147, 197, 253, 0.6);
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+/* Círculo de aptitud (centro del diagrama) - Mejorado con animaciones */
 .aptitud-circle {
   position: absolute;
   top: 50%;
@@ -414,33 +623,63 @@
               box-shadow 0.4s ease;
 }
 
+/* Anillo de brillo rotatorio */
 .aptitud-circle::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
   border-radius: 50%;
-  background: linear-gradient(135deg, 
-    rgba(147, 197, 253, 0.4), 
-    transparent 50%,
-    rgba(196, 181, 253, 0.3));
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(147, 197, 253, 0.6) 60deg,
+    rgba(196, 181, 253, 0.4) 120deg,
+    transparent 180deg,
+    rgba(147, 197, 253, 0.3) 240deg,
+    transparent 360deg
+  );
   z-index: -1;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  animation: rotating-glow 8s linear infinite;
+  transition: opacity 0.5s ease;
+}
+
+/* Anillo de pulso */
+.aptitud-circle::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  border: 2px solid rgba(147, 197, 253, 0.3);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.aptitud-detail-screen.active .aptitud-circle::before {
+  opacity: 1;
+}
+
+.aptitud-detail-screen.active .aptitud-circle::after {
+  animation: pulse-ring 2.5s ease-out infinite;
+}
+
+.aptitud-circle:hover {
+  transform: scale(1.08);
+  box-shadow: 
+    0 0 70px rgba(147, 197, 253, 0.5),
+    0 15px 50px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .aptitud-circle:hover::before {
   opacity: 1;
-}
-
-.aptitud-circle:hover {
-  transform: scale(1.05);
-  box-shadow: 
-    0 0 60px rgba(147, 197, 253, 0.4),
-    0 12px 40px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  animation: rotating-glow 4s linear infinite;
 }
 
 .aptitud-circle img {
@@ -449,13 +688,17 @@
   object-fit: contain;
   filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.4))
           drop-shadow(0 0 8px rgba(147, 197, 253, 0.3));
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+}
+
+.aptitud-detail-screen.active .aptitud-circle img {
+  animation: float-gentle 4s ease-in-out infinite;
 }
 
 .aptitud-circle:hover img {
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(5deg);
   filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5))
-          drop-shadow(0 0 16px rgba(147, 197, 253, 0.5));
+          drop-shadow(0 0 20px rgba(147, 197, 253, 0.6));
 }
 
 .aptitud-circle .aptitud-title {
@@ -484,6 +727,7 @@
   height: 0;
 }
 
+/* Líneas con efecto neón animado */
 .line-aptitud-proyecto {
   position: absolute;
   top: 0;
@@ -491,12 +735,38 @@
   width: 0;
   height: 2px;
   background: linear-gradient(90deg, 
-    rgba(147, 197, 253, 0.7), 
-    rgba(196, 181, 253, 0.5),
-    rgba(255,255,255,0.2));
+    rgba(147, 197, 253, 0.9), 
+    rgba(196, 181, 253, 0.7),
+    rgba(147, 197, 253, 0.5),
+    rgba(255, 255, 255, 0.3));
+  background-size: 200% 100%;
   transform-origin: left center;
   opacity: 0;
-  box-shadow: 0 0 8px rgba(147, 197, 253, 0.4);
+  box-shadow: 
+    0 0 10px rgba(147, 197, 253, 0.5),
+    0 0 20px rgba(147, 197, 253, 0.3),
+    0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.aptitud-detail-screen.active .line-aptitud-proyecto {
+  animation: neon-flow 3s linear infinite;
+}
+
+/* Partículas en las líneas */
+.line-aptitud-proyecto::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(147, 197, 253, 0.9);
+  box-shadow: 
+    0 0 10px rgba(147, 197, 253, 0.8),
+    0 0 20px rgba(147, 197, 253, 0.5);
+  animation: twinkle 1.5s ease-in-out infinite;
 }
 
 /* Lista de proyectos - Mejorada */
@@ -520,7 +790,7 @@
   display: none;
 }
 
-/* Tarjeta de proyecto individual - Completamente rediseñada */
+/* Tarjeta de proyecto individual - Con animaciones avanzadas */
 .proyecto-detail-card {
   display: flex;
   align-items: center;
@@ -529,6 +799,7 @@
     rgba(255, 255, 255, 0.12), 
     rgba(147, 197, 253, 0.08),
     rgba(255, 255, 255, 0.05));
+  background-size: 200% 200%;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 16px;
@@ -537,28 +808,42 @@
   opacity: 0;
   transform: translateX(30px);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   min-width: 280px;
   max-width: 340px;
   position: relative;
   overflow: hidden;
 }
 
-/* Efecto de brillo en hover */
+/* Animación de entrada escalonada */
+.aptitud-detail-screen.active .proyecto-detail-card {
+  animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(1) { animation-delay: 0.1s; }
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(2) { animation-delay: 0.2s; }
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(3) { animation-delay: 0.3s; }
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(4) { animation-delay: 0.4s; }
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(5) { animation-delay: 0.5s; }
+
+/* Efecto de brillo deslizante continuo */
 .proyecto-detail-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
-  width: 100%;
+  width: 50%;
   height: 100%;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(255, 255, 255, 0.15), 
+    rgba(255, 255, 255, 0.2),
+    rgba(147, 197, 253, 0.15),
     transparent);
-  transition: left 0.6s ease;
+  transform: skewX(-20deg);
+  transition: none;
 }
 
+/* Efecto de resplandor radial */
 .proyecto-detail-card::after {
   content: '';
   position: absolute;
@@ -566,36 +851,44 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, 
-    rgba(147, 197, 253, 0.1) 0%, 
-    transparent 70%);
+  background: radial-gradient(circle at 30% 50%, 
+    rgba(147, 197, 253, 0.15) 0%, 
+    transparent 50%);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
   pointer-events: none;
 }
 
 .proyecto-detail-card:hover::before {
-  left: 100%;
+  animation: shimmer 1s ease forwards;
 }
 
 .proyecto-detail-card:hover::after {
   opacity: 1;
+  transform: scale(1.2);
 }
 
 .proyecto-detail-card:hover {
-  transform: translateX(8px) scale(1.02);
+  transform: translateX(12px) scale(1.03);
   background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.18), 
-    rgba(147, 197, 253, 0.12),
-    rgba(196, 181, 253, 0.08));
+    rgba(255, 255, 255, 0.2), 
+    rgba(147, 197, 253, 0.15),
+    rgba(196, 181, 253, 0.1));
   box-shadow: 
-    0 15px 40px rgba(0, 0, 0, 0.35),
-    0 0 30px rgba(147, 197, 253, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border-color: rgba(147, 197, 253, 0.35);
+    0 20px 50px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(147, 197, 253, 0.25),
+    0 0 80px rgba(147, 197, 253, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border-color: rgba(147, 197, 253, 0.4);
 }
 
-/* Contenedor de imagen del proyecto - Mejorado */
+/* Efecto 3D sutil en hover */
+.proyecto-detail-card:active {
+  transform: translateX(8px) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Contenedor de imagen del proyecto - Con animaciones */
 .proyecto-image-container {
   width: 75px;
   height: 75px;
@@ -609,7 +902,22 @@
   box-shadow: 
     0 4px 16px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Borde animado en el contenedor de imagen */
+.proyecto-image-container::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: linear-gradient(45deg, 
+    rgba(147, 197, 253, 0) 0%,
+    rgba(147, 197, 253, 0.5) 50%,
+    rgba(196, 181, 253, 0) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
 }
 
 .proyecto-image-container::after {
@@ -619,24 +927,35 @@
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   pointer-events: none;
+  transition: border-color 0.3s ease;
+}
+
+.proyecto-detail-card:hover .proyecto-image-container::before {
+  opacity: 1;
+  animation: rotating-glow 3s linear infinite;
+}
+
+.proyecto-detail-card:hover .proyecto-image-container::after {
+  border-color: rgba(147, 197, 253, 0.3);
 }
 
 .proyecto-detail-card:hover .proyecto-image-container {
-  transform: scale(1.05);
+  transform: scale(1.08) rotate(2deg);
   box-shadow: 
-    0 6px 20px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(147, 197, 253, 0.15);
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    0 0 25px rgba(147, 197, 253, 0.2);
 }
 
 .proyecto-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
 }
 
 .proyecto-detail-card:hover .proyecto-image {
-  transform: scale(1.1);
+  transform: scale(1.15);
+  filter: brightness(1.1) saturate(1.1);
 }
 
 /* Información del proyecto - Mejorada */
@@ -678,22 +997,27 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* Indicador de flecha en tarjetas */
+/* Indicador de flecha en tarjetas - Animado */
 .proyecto-detail-card .card-arrow {
   position: absolute;
   right: 16px;
   top: 50%;
-  transform: translateY(-50%) translateX(-5px);
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-50%) translateX(-10px);
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   opacity: 0;
+  text-shadow: 0 0 10px rgba(147, 197, 253, 0);
 }
 
 .proyecto-detail-card:hover .card-arrow {
   opacity: 1;
   transform: translateY(-50%) translateX(0);
-  color: rgba(147, 197, 253, 0.8);
+  color: rgba(147, 197, 253, 1);
+  text-shadow: 
+    0 0 10px rgba(147, 197, 253, 0.6),
+    0 0 20px rgba(147, 197, 253, 0.4);
+  animation: float-gentle 2s ease-in-out infinite;
 }
 
 /* ============================================
