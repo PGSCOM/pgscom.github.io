@@ -1,0 +1,27 @@
+{
+  "informacion": {
+    "email": "contacto@pgscom.dev"
+  },
+  "redes": [
+    {
+      "nombre": "GitHub",
+      "icono": "/icons/github.svg",
+      "url": "https://github.com/PGSCOM"
+    },
+    {
+      "nombre": "LinkedIn",
+      "icono": "/icons/linkedin.svg",
+      "url": "https://linkedin.com/in/pgscom"
+    },
+    {
+      "nombre": "Twitter",
+      "icono": "/icons/twitter.svg",
+      "url": "https://twitter.com/pgscom"
+    },
+    {
+      "nombre": "Instagram",
+      "icono": "/icons/instagram.svg",
+      "url": "https://instagram.com/pgscom"
+    }
+  ]
+}
