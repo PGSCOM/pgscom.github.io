@@ -1,4 +1,32 @@
 /* Estilos para la sección de proyectos */
+
+/* Animaciones personalizadas */
+@keyframes subtle-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 40px rgba(147, 197, 253, 0.25),
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 0 55px rgba(147, 197, 253, 0.35),
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+}
+
+@keyframes card-appear {
+  from {
+    opacity: 0;
+    transform: translateX(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
 .proyectos-section {
   height: 400vh; /* Altura reducida para transiciones más rápidas entre aptitudes */
   display: block; /* Evita empujar el contenedor al inicio y respeta su centrado propio */
@@ -336,65 +364,122 @@
   pointer-events: auto;
 }
 
-/* Línea que conecta Logo con Aptitud */
+/* Línea que conecta Logo con Aptitud - Mejorada */
 .line-logo-aptitud {
   position: absolute;
   top: 50%;
-  left: calc(50% - 150px); /* Ajustado para conectar con el logo desplazado */
+  left: calc(50% - 150px);
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0.9), 
+    rgba(147,197,253,0.7),
+    rgba(255,255,255,0.4));
   transform: translateY(-50%);
   transform-origin: left center;
   opacity: 0;
+  box-shadow: 0 0 12px rgba(147,197,253,0.5),
+              0 0 4px rgba(255,255,255,0.8);
 }
 
-/* Círculo de aptitud (centro del diagrama) */
+/* Círculo de aptitud (centro del diagrama) - Mejorado */
 .aptitud-circle {
   position: absolute;
   top: 50%;
-  left: 50%; /* Centrado en la pantalla */
-  /* Usamos margin negativo en lugar de transform para evitar conflictos con anime.js */
-  margin-left: -45px;
-  margin-top: -45px;
-  /* transform: translate(-50%, -50%); REMOVED */
-  width: 90px;
-  height: 90px;
+  left: 50%;
+  margin-left: -55px;
+  margin-top: -55px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.18), 
+    rgba(147, 197, 253, 0.12),
+    rgba(255, 255, 255, 0.08));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid rgba(255, 255, 255, 0.35);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   opacity: 0;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 0 40px rgba(147, 197, 253, 0.25),
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.4s ease;
+}
+
+.aptitud-circle::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, 
+    rgba(147, 197, 253, 0.4), 
+    transparent 50%,
+    rgba(196, 181, 253, 0.3));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.aptitud-circle:hover::before {
+  opacity: 1;
+}
+
+.aptitud-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 0 60px rgba(147, 197, 253, 0.4),
+    0 12px 40px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .aptitud-circle img {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.4))
+          drop-shadow(0 0 8px rgba(147, 197, 253, 0.3));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.aptitud-circle:hover img {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5))
+          drop-shadow(0 0 16px rgba(147, 197, 253, 0.5));
 }
 
 .aptitud-circle .aptitud-title {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 500;
   color: white;
   text-align: center;
-  max-width: 90px;
-  line-height: 1.1;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  max-width: 100px;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  letter-spacing: 0.02em;
+}
+
+/* Estado activo del círculo de aptitud */
+.aptitud-detail-screen.active .aptitud-circle {
+  animation: subtle-glow 3s ease-in-out infinite;
 }
 
 /* Contenedor de líneas hacia proyectos */
 .lines-to-projects {
   position: absolute;
   top: 50%;
-  left: 50%; /* Desde el centro del círculo de aptitud */
+  left: 50%;
   width: 0;
   height: 0;
 }
@@ -405,94 +490,210 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
+  background: linear-gradient(90deg, 
+    rgba(147, 197, 253, 0.7), 
+    rgba(196, 181, 253, 0.5),
+    rgba(255,255,255,0.2));
   transform-origin: left center;
   opacity: 0;
-  /* Los ángulos y longitudes se calculan dinámicamente en JS */
+  box-shadow: 0 0 8px rgba(147, 197, 253, 0.4);
 }
 
-/* Lista de proyectos */
+/* Lista de proyectos - Mejorada */
 .proyectos-list {
   position: absolute;
   top: 50%;
-  left: calc(50% + 160px); /* A la derecha del círculo central */
+  left: calc(50% + 180px);
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-height: 70vh;
+  gap: 18px;
+  max-height: 75vh;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 10px 15px 10px 10px;
-  /* Ocultar scrollbar pero mantener funcionalidad */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  padding: 20px 20px 20px 15px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .proyectos-list::-webkit-scrollbar {
-  display: none; /* Chrome/Safari/Opera */
+  display: none;
 }
 
-/* Tarjeta de proyecto individual */
+/* Tarjeta de proyecto individual - Completamente rediseñada */
 .proyecto-detail-card {
   display: flex;
   align-items: center;
-  gap: 15px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  gap: 16px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.12), 
+    rgba(147, 197, 253, 0.08),
+    rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   opacity: 0;
   transform: translateX(30px);
   cursor: pointer;
-  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  min-width: 250px;
-  max-width: 320px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 280px;
+  max-width: 340px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de brillo en hover */
+.proyecto-detail-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.15), 
+    transparent);
+  transition: left 0.6s ease;
+}
+
+.proyecto-detail-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, 
+    rgba(147, 197, 253, 0.1) 0%, 
+    transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.proyecto-detail-card:hover::before {
+  left: 100%;
+}
+
+.proyecto-detail-card:hover::after {
+  opacity: 1;
 }
 
 .proyecto-detail-card:hover {
-  transform: translateX(0) scale(1.02);
-  background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transform: translateX(8px) scale(1.02);
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.18), 
+    rgba(147, 197, 253, 0.12),
+    rgba(196, 181, 253, 0.08));
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.35),
+    0 0 30px rgba(147, 197, 253, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(147, 197, 253, 0.35);
 }
 
+/* Contenedor de imagen del proyecto - Mejorado */
 .proyecto-image-container {
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
+  width: 75px;
+  height: 75px;
+  border-radius: 12px;
   overflow: hidden;
   flex-shrink: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.4), 
+    rgba(30, 30, 50, 0.6));
+  position: relative;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.proyecto-image-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.proyecto-detail-card:hover .proyecto-image-container {
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(147, 197, 253, 0.15);
 }
 
 .proyecto-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s ease;
 }
 
+.proyecto-detail-card:hover .proyecto-image {
+  transform: scale(1.1);
+}
+
+/* Información del proyecto - Mejorada */
 .proyecto-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
 }
 
 .proyecto-detail-titulo {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: white;
   margin: 0;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.proyecto-detail-card:hover .proyecto-detail-titulo {
+  color: rgba(200, 220, 255, 1);
+  text-shadow: 0 2px 12px rgba(147, 197, 253, 0.4);
 }
 
 .proyecto-detail-desc {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.proyecto-detail-card:hover .proyecto-detail-desc {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Indicador de flecha en tarjetas */
+.proyecto-detail-card .card-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-5px);
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+
+.proyecto-detail-card:hover .card-arrow {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+  color: rgba(147, 197, 253, 0.8);
 }
 
 /* ============================================
@@ -501,15 +702,20 @@
 
 @media (max-width: 1200px) {
   .line-logo-aptitud {
-    left: calc(50% - 120px);
+    left: calc(50% - 130px);
   }
 
   .aptitud-circle {
     left: 50%;
-    width: 85px;
-    height: 85px;
-    margin-left: -42.5px;
-    margin-top: -42.5px;
+    width: 100px;
+    height: 100px;
+    margin-left: -50px;
+    margin-top: -50px;
+  }
+  
+  .aptitud-circle img {
+    width: 40px;
+    height: 40px;
   }
   
   .lines-to-projects {
@@ -517,35 +723,46 @@
   }
 
   .line-aptitud-proyecto {
-    left: 42.5px; /* Radio 85px/2 */
+    left: 50px;
   }
   
   .proyectos-list {
-    left: calc(50% + 140px);
+    left: calc(50% + 160px);
+    gap: 16px;
   }
   
   .proyecto-detail-card {
-    min-width: 220px;
-    max-width: 280px;
+    min-width: 250px;
+    max-width: 300px;
+    padding: 14px;
+  }
+  
+  .proyecto-image-container {
+    width: 68px;
+    height: 68px;
   }
 }
 
 @media (max-width: 1024px) {
   .line-logo-aptitud {
-    left: calc(50% - 100px);
+    left: calc(50% - 110px);
   }
 
   .aptitud-circle {
     left: 50%;
-    width: 75px;
-    height: 75px;
-    margin-left: -37.5px;
-    margin-top: -37.5px;
+    width: 90px;
+    height: 90px;
+    margin-left: -45px;
+    margin-top: -45px;
   }
   
   .aptitud-circle img {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .aptitud-circle .aptitud-title {
+    font-size: 0.7rem;
   }
   
   .lines-to-projects {
@@ -553,23 +770,33 @@
   }
 
   .line-aptitud-proyecto {
-    left: 37.5px; /* Radio 75px/2 */
+    left: 45px;
   }
   
   .proyectos-list {
-    left: calc(50% + 120px);
-    gap: 12px;
+    left: calc(50% + 140px);
+    gap: 14px;
   }
   
   .proyecto-detail-card {
-    min-width: 180px;
-    max-width: 230px;
-    padding: 10px;
+    min-width: 220px;
+    max-width: 270px;
+    padding: 12px;
+    gap: 14px;
   }
   
   .proyecto-image-container {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+  }
+  
+  .proyecto-detail-titulo {
+    font-size: 0.95rem;
+  }
+  
+  .proyecto-detail-desc {
+    font-size: 0.75rem;
   }
 }
 
@@ -580,7 +807,7 @@
     align-items: center;
     justify-content: flex-start;
     padding: 15px;
-    padding-top: 120px; /* Espacio para el logo desplazado arriba */
+    padding-top: 120px;
   }
   
   /* Ocultar líneas en móvil - diseño más limpio */
@@ -595,13 +822,17 @@
     top: auto;
     left: auto;
     margin: 0 auto 20px auto;
-    width: 80px;
-    height: 80px;
+    width: 95px;
+    height: 95px;
   }
   
   .aptitud-circle img {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .aptitud-circle .aptitud-title {
+    font-size: 0.7rem;
   }
   
   .proyectos-list {
@@ -615,57 +846,65 @@
     overflow-y: auto;
     width: 100%;
     padding: 10px;
+    gap: 16px;
   }
   
   .proyecto-detail-card {
-    min-width: 280px;
+    min-width: 300px;
     max-width: 100%;
     width: 100%;
     flex-direction: row;
     text-align: left;
+    padding: 14px;
   }
   
   .proyecto-image-container {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     flex-shrink: 0;
+    border-radius: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .aptitud-detail-screen {
     padding-top: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   
   .aptitud-circle {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 15px;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 18px;
   }
   
   .aptitud-circle img {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
   
   .aptitud-circle .aptitud-title {
-    font-size: 0.55rem;
+    font-size: 0.6rem;
   }
   
   .proyectos-list {
     max-height: 55vh;
-    gap: 10px;
+    gap: 12px;
+    padding: 8px;
   }
   
   .proyecto-detail-card {
-    min-width: 260px;
-    padding: 10px;
-    gap: 10px;
+    min-width: 280px;
+    padding: 12px;
+    gap: 12px;
+    border-radius: 14px;
   }
   
   .proyecto-image-container {
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
+    border-radius: 8px;
   }
   
   .proyecto-detail-titulo {
@@ -673,7 +912,7 @@
   }
   
   .proyecto-detail-desc {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
   }
 }
 
