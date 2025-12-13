@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   --orbit-radius: 290px;
-  touch-action: none; /* Evitar scroll táctil accidental en elementos */
+  touch-action: pan-y; /* Permitir scroll vertical, evitar horizontal */
   overflow: hidden;
   z-index: 100;
 }
@@ -202,11 +202,11 @@
 @media (max-width: 768px) {
   .proyectos-section {
     padding: 2rem 1rem;
-    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .proyectos-container {
-    height: 100vh; /* Usar altura completa para centrado vertical correcto */
+    height: 100dvh; /* Usar altura completa para centrado vertical correcto */
     --orbit-radius: 200px;
   }
 
