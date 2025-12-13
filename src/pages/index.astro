@@ -54,113 +54,22 @@
 	<!-- #endregion -->
 
 	<!-- #region 🌌 SECCIÓN GALAXIA - Video con sticky scroll y logo animado -->
-	<!-- Div que ocupa el 100% de la pantalla que contiene el logo en el centro -->
-	<div class="parte2">
-		<div class="galaxiamask">
-			<!-- Video Galaxia bucle -->
-			<canvas id="galaxia-seq" class="video-galaxia" style="opacity:0;"></canvas>
-			<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia"></video>
-			<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity:0;"></video>
+	<!-- Wrapper alto para dar contexto de scroll y permitir que el sticky funcione -->
+	<section class="parte2-wrapper">
+		<div class="parte2">
+			<div class="galaxiamask">
+				<!-- Video Galaxia bucle -->
+				<canvas id="galaxia-seq" class="video-galaxia" style="opacity:0;"></canvas>
+				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia"></video>
+				<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity:0;"></video>
+			</div>
+			<img id="logoanimar" style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
+			<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
 		</div>
-		<img id="logoanimar" style="width: auto; height: 32.3%;" src={logosvganim.src} alt="" />
-		<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
-	</div>
 	<!-- #endregion -->
 
-	<!-- #region 📌 SCRIPT: STICKY SCROLL OPTIMIZADO - Control de posición fija con IntersectionObserver -->
-	<script is:inline>
-		// Optimizado con IntersectionObserver (sin listeners de scroll) + ResizeObserver.
-		(() => {
-			const parte = document.querySelector('.parte2');
-			if (!parte) return;
-
-			// Placeholder para evitar salto cuando .parte2 se fija
-			const placeholder = document.createElement('div');
-			placeholder.style.width = '100%';
-			placeholder.style.display = 'none';
-			parte.parentNode.insertBefore(placeholder, parte.nextSibling);
-
-			// Mantener altura del placeholder sincronizada con el elemento
-			const syncPlaceholder = () => {
-				placeholder.style.height = `${parte.getBoundingClientRect().height}px`;
-			};
-			syncPlaceholder();
-			const ro = new ResizeObserver(syncPlaceholder);
-			ro.observe(parte);
-			window.addEventListener('resize', syncPlaceholder);
-
-			// Sentinel antes de .parte2 para detectar cruce con el viewport
-			const sentinel = document.createElement('div');
-			sentinel.setAttribute('aria-hidden', 'true');
-			sentinel.style.height = '1px';
-			sentinel.style.width = '100%';
-			sentinel.style.pointerEvents = 'none';
-			parte.parentNode.insertBefore(sentinel, parte);
-
-			const io = new IntersectionObserver((entries) => {
-				const entry = entries[0];
-				// Determinar posición real del sentinel respecto al viewport
-				const rect = sentinel.getBoundingClientRect();
-				const rootTop = entry.rootBounds ? entry.rootBounds.top : 0; // 0 = borde superior del viewport
-				const rootBottom = entry.rootBounds ? entry.rootBounds.bottom : window.innerHeight;
-
-				// Reglas:
-				// - Si el sentinel está visible (intersecting), quitar "stuck".
-				// - Si NO está visible y su top < rootTop (ha pasado por arriba), poner "stuck".
-				// - Si NO está visible y su top > rootBottom (está por debajo, aún no se ha llegado), quitar "stuck".
-				if (entry.isIntersecting) {
-					if (parte.classList.contains('stuck')) {
-						parte.classList.remove('stuck');
-						placeholder.style.display = 'none';
-						// al quitar stuck:
-						window._parte2StickyStart = null;
-					}
-				} else if (rect.top < rootTop) {
-					// --- REPARACIÓN: calcular start que preserve el progreso actual ---
-					if (!parte.classList.contains('stuck')) {
-						parte.classList.add('stuck');
-						placeholder.style.display = 'block';
-
-						// Datos auxiliares
-						const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
-						const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-						// ANIMATION_VH debe ser la misma que uses en onScroll (por ejemplo 2)
-						const ANIMATION_VH = (window._ANIMATION_VH != null) ? window._ANIMATION_VH : 2;
-
-						// Calcular el "progress de fallback" que habría antes de sticky
-						const fallbackProgress = Math.max(0, Math.min(scrollY / (ANIMATION_VH * viewportHeight), 1));
-
-						// Sólo asignamos start si aún no existe (evita reinicios por jitter)
-						if (window._parte2StickyStart == null) {
-							// start tal que (scrollY - start) / (ANIMATION_VH * vh) === fallbackProgress
-							window._parte2StickyStart = scrollY - (fallbackProgress * ANIMATION_VH * viewportHeight);
-						}
-					}
-				} else {
-					if (parte.classList.contains('stuck')) {
-						parte.classList.remove('stuck');
-						placeholder.style.display = 'none';
-						// al quitar stuck:
-						window._parte2StickyStart = null;
-					}
-				}
-			}, { root: null, threshold: 0 });
-
-			io.observe(sentinel);
-
-			// Asegurar estado inicial correcto en iOS cuando se carga arriba del todo
-			if ((window.scrollY ?? window.pageYOffset ?? document.documentElement.scrollTop ?? 0) <= 0) {
-				parte.classList.remove('stuck');
-				placeholder.style.display = 'none';
-				// al quitar stuck:
-				window._parte2StickyStart = null;
-			}
-		})();
-	</script>
-	<!-- #endregion -->
 	<!-- #region 🚧 SECCIONES TEMPORALES - Placeholder para contenido futuro -->
-	<div style="height: 120vh; display: flex; align-items: center; justify-content: center;"></div>
+	<div style="height: 120vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 60;"></div>
 
 	<!-- #region 📂 SECCIÓN DE PROYECTOS - Diseño circular con logo central -->
 	<section class="proyectos-section">
@@ -233,6 +142,7 @@
 	</section>
 	<!-- #endregion -->
 	<!-- #endregion -->
+	</section>
 
 	<!-- #region 🌀 SCRIPT: Órbita con pausa suave -->
 	<script is:inline>
@@ -971,15 +881,11 @@
 			
 			const ANIMATION_VH = 2; // configurable
 			const viewportHeight = window.innerHeight;
-			const start = window._parte2StickyStart;
-			let progress;
-			if (start != null && document.querySelector('.parte2')?.classList.contains('stuck')) {
-				const scrolled = Math.max(0, scrollY - start);
-				progress = clamp(scrolled / (ANIMATION_VH * viewportHeight), 0, 1);
-			} else {
-				// fallback: progreso relativo simple en vh
-				progress = clamp(scrollY / (ANIMATION_VH * viewportHeight), 0, 1);
-			}
+			
+			// Restaurar comportamiento original: la animación comienza desde el principio de la página
+			// para que el personaje se desvanezca MIENTRAS bajamos hacia la galaxia.
+			// Esto asegura que al llegar a la sección sticky, la primera fase (fade out) ya esté avanzada o completa.
+			const progress = clamp(scrollY / (ANIMATION_VH * viewportHeight), 0, 1);
 
 			const seekTime = progress * timeline.duration;
 
@@ -1034,67 +940,7 @@
     }
 </script>
 	<!-- #endregion -->
-	<!-- #region 📌 SCRIPT: STICKY PROYECTOS - Control manual de posición fija -->
-	<script is:inline>
-		(() => {
-			const container = document.querySelector('.proyectos-container');
-			if (!container) return;
-
-			// Placeholder para evitar salto de layout
-			const placeholder = document.createElement('div');
-			placeholder.style.width = '100%';
-			placeholder.style.display = 'none';
-			container.parentNode.insertBefore(placeholder, container.nextSibling);
-
-			const syncPlaceholder = () => {
-				placeholder.style.height = `${container.getBoundingClientRect().height}px`;
-			};
-			syncPlaceholder();
-			const ro = new ResizeObserver(syncPlaceholder);
-			ro.observe(container);
-			window.addEventListener('resize', syncPlaceholder);
-
-			// Sentinel
-			const sentinel = document.createElement('div');
-			sentinel.setAttribute('aria-hidden', 'true');
-			sentinel.style.height = '1px';
-			sentinel.style.width = '100%';
-			sentinel.style.pointerEvents = 'none';
-			container.parentNode.insertBefore(sentinel, container);
-
-			const io = new IntersectionObserver((entries) => {
-				const entry = entries[0];
-				const rect = sentinel.getBoundingClientRect();
-				const rootTop = entry.rootBounds ? entry.rootBounds.top : 0;
-
-				if (entry.isIntersecting) {
-					if (container.classList.contains('stuck')) {
-						container.classList.remove('stuck');
-						placeholder.style.display = 'none';
-					}
-				} else if (rect.top < rootTop) {
-					if (!container.classList.contains('stuck')) {
-						container.classList.add('stuck');
-						placeholder.style.display = 'block';
-					}
-				} else {
-					if (container.classList.contains('stuck')) {
-						container.classList.remove('stuck');
-						placeholder.style.display = 'none';
-					}
-				}
-			}, { root: null, threshold: 0 });
-
-			io.observe(sentinel);
-
-			// Check inicial
-			if ((window.scrollY ?? window.pageYOffset ?? document.documentElement.scrollTop ?? 0) <= 0) {
-				container.classList.remove('stuck');
-				placeholder.style.display = 'none';
-			}
-		})();
-	</script>
-	<!-- #endregion -->
+	<!-- Sticky de .proyectos-container manejado con CSS puro (position: sticky) -->
 
 	<!-- #region 🎬 SCRIPT: ANIMACIONES PROYECTOS -->
 	<script type="module">

@@ -41,9 +41,9 @@
 		margin: 0;
 		padding: 0;
 		width: 100%;
-		min-height: 100%; /* Cambiado de height: 100% a min-height: 100% */
+		min-height: 100%;
 		font-family: 'Montserrat', sans-serif;
-		overflow-x: hidden;
+		overflow-x: clip; /* Usar clip en lugar de hidden para evitar conflictos con sticky */
 		/* overflow-y: auto; - Se permite por defecto */
 	}
 </style>
