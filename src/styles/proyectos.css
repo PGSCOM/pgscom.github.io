@@ -1,6 +1,6 @@
 /* Estilos para la sección de proyectos */
 .proyectos-section {
-  height: 400vh; /* Altura aumentada para permitir scroll animation y pausa final */
+  height: 800vh; /* Altura muy aumentada para transiciones lentas entre aptitudes */
   display: block; /* Evita empujar el contenedor al inicio y respeta su centrado propio */
   padding: 0;
   background: transparent;
@@ -283,36 +283,404 @@
   z-index: 20;
 }
 
-.menu-item {
+.nodes-cluster {
   position: absolute;
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 2rem;
-  color: white;
-  opacity: 0;
-  transform: scale(0.8);
-  pointer-events: auto;
-  cursor: pointer;
-  text-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-.menu-item.aptitud {
-  bottom: 25%;
-  left: 25%;
-}
-
-.menu-item.proyectos-link {
-  bottom: 25%;
-  right: 25%;
-}
-
-.menu-line {
-  position: absolute;
-  background: white;
-  height: 2px;
-  width: 0;
   top: 50%;
   left: 50%;
-  transform-origin: left; /* Adjust based on rotation */
+  width: 0;
+  height: 0;
+}
+
+.node-circle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
   opacity: 0;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Positions relative to center (Logo) */
+.node-1 { top: -50px; left: 200px; }
+.node-2 { top: 10px; left: 240px; }
+.node-3 { top: 70px; left: 190px; }
+
+.node-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  height: 1px;
+  top: 0;
+  left: 0;
+  transform-origin: left center;
+  width: 0;
+  opacity: 0;
+}
+
+/* ============================================
+   PANTALLAS DE DETALLE POR APTITUD
+   Layout: Logo (izq) -- Aptitud (centro) -- Proyectos (der)
+   ============================================ */
+
+.aptitud-detail-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.aptitud-detail-screen.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Línea que conecta Logo con Aptitud */
+.line-logo-aptitud {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 150px); /* Ajustado para conectar con el logo desplazado */
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+  transform: translateY(-50%);
+  transform-origin: left center;
+  opacity: 0;
+}
+
+/* Círculo de aptitud (centro del diagrama) */
+.aptitud-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%; /* Centrado en la pantalla */
+  /* Usamos margin negativo en lugar de transform para evitar conflictos con anime.js */
+  margin-left: -45px;
+  margin-top: -45px;
+  /* transform: translate(-50%, -50%); REMOVED */
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  opacity: 0;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+.aptitud-circle img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.aptitud-circle .aptitud-title {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.7rem;
+  color: white;
+  text-align: center;
+  max-width: 90px;
+  line-height: 1.1;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* Contenedor de líneas hacia proyectos */
+.lines-to-projects {
+  position: absolute;
+  top: 50%;
+  left: 50%; /* Desde el centro del círculo de aptitud */
+  width: 0;
+  height: 0;
+}
+
+.line-aptitud-proyecto {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
+  transform-origin: left center;
+  opacity: 0;
+  /* Los ángulos y longitudes se calculan dinámicamente en JS */
+}
+
+/* Lista de proyectos */
+.proyectos-list {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 160px); /* A la derecha del círculo central */
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 15px 10px 10px;
+  /* Ocultar scrollbar pero mantener funcionalidad */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.proyectos-list::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera */
+}
+
+/* Tarjeta de proyecto individual */
+.proyecto-detail-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transform: translateX(30px);
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  min-width: 250px;
+  max-width: 320px;
+}
+
+.proyecto-detail-card:hover {
+  transform: translateX(0) scale(1.02);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.proyecto-image-container {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.proyecto-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.proyecto-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.proyecto-detail-titulo {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.proyecto-detail-desc {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* ============================================
+   RESPONSIVE PARA PANTALLAS DE DETALLE
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .line-logo-aptitud {
+    left: calc(50% - 120px);
+  }
+
+  .aptitud-circle {
+    left: 50%;
+    width: 85px;
+    height: 85px;
+    margin-left: -42.5px;
+    margin-top: -42.5px;
+  }
+  
+  .lines-to-projects {
+    left: 50%;
+  }
+
+  .line-aptitud-proyecto {
+    left: 42.5px; /* Radio 85px/2 */
+  }
+  
+  .proyectos-list {
+    left: calc(50% + 140px);
+  }
+  
+  .proyecto-detail-card {
+    min-width: 220px;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .line-logo-aptitud {
+    left: calc(50% - 100px);
+  }
+
+  .aptitud-circle {
+    left: 50%;
+    width: 75px;
+    height: 75px;
+    margin-left: -37.5px;
+    margin-top: -37.5px;
+  }
+  
+  .aptitud-circle img {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .lines-to-projects {
+    left: 50%;
+  }
+
+  .line-aptitud-proyecto {
+    left: 37.5px; /* Radio 75px/2 */
+  }
+  
+  .proyectos-list {
+    left: calc(50% + 120px);
+    gap: 12px;
+  }
+  
+  .proyecto-detail-card {
+    min-width: 180px;
+    max-width: 230px;
+    padding: 10px;
+  }
+  
+  .proyecto-image-container {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* En móvil, layout vertical centrado */
+  .aptitud-detail-screen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px;
+    padding-top: 120px; /* Espacio para el logo desplazado arriba */
+  }
+  
+  /* Ocultar líneas en móvil - diseño más limpio */
+  .line-logo-aptitud,
+  .lines-to-projects,
+  .line-aptitud-proyecto {
+    display: none !important;
+  }
+  
+  .aptitud-circle {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 0 auto 20px auto;
+    width: 80px;
+    height: 80px;
+  }
+  
+  .aptitud-circle img {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .proyectos-list {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    flex-direction: column;
+    align-items: center;
+    max-height: 60vh;
+    overflow-y: auto;
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .proyecto-detail-card {
+    min-width: 280px;
+    max-width: 100%;
+    width: 100%;
+    flex-direction: row;
+    text-align: left;
+  }
+  
+  .proyecto-image-container {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .aptitud-detail-screen {
+    padding-top: 100px;
+  }
+  
+  .aptitud-circle {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 15px;
+  }
+  
+  .aptitud-circle img {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .aptitud-circle .aptitud-title {
+    font-size: 0.55rem;
+  }
+  
+  .proyectos-list {
+    max-height: 55vh;
+    gap: 10px;
+  }
+  
+  .proyecto-detail-card {
+    min-width: 260px;
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .proyecto-image-container {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .proyecto-detail-titulo {
+    font-size: 0.9rem;
+  }
+  
+  .proyecto-detail-desc {
+    font-size: 0.7rem;
+  }
 }
 
