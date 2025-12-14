@@ -1576,6 +1576,13 @@
 					return;
 				}
 
+				// Validación de Turnstile (Cliente)
+				const turnstileResponse = data['cf-turnstile-response'];
+				if (!turnstileResponse) {
+					showStatus('⚠️ Verificación de seguridad fallida. Por favor, recarga la página.', 'error');
+					return;
+				}
+
 				// Deshabilitar botón mientras se envía
 				const submitBtn = form.querySelector('.submit-btn');
 				const originalText = submitBtn.querySelector('.btn-text').textContent;
