@@ -1,6 +1,6 @@
 {
   "informacion": {
-    "email": "contacto@pgscom.dev"
+    "email": "contacto@pgscom.es"
   },
   "redes": [
     {
@@ -9,19 +9,29 @@
       "url": "https://github.com/PGSCOM"
     },
     {
-      "nombre": "LinkedIn",
-      "icono": "/icons/linkedin.svg",
-      "url": "https://linkedin.com/in/pgscom"
+      "nombre": "Blog",
+      "icono": "/icons/blog.svg",
+      "url": "https://blog.pgscom.es/"
     },
     {
       "nombre": "Twitter",
       "icono": "/icons/twitter.svg",
-      "url": "https://twitter.com/pgscom"
+      "url": "https://twitter.com/pgscom_54"
     },
     {
       "nombre": "Instagram",
       "icono": "/icons/instagram.svg",
       "url": "https://instagram.com/pgscom"
+    },
+    {
+      "nombre": "Discord",
+      "icono": "/icons/discord.svg",
+      "url": "https://discord.com/invite/U5jP9uHkEC"
+    },
+    {
+      "nombre": "YouTube",
+      "icono": "/icons/youtube.svg",
+      "url": "https://www.youtube.com/@pgscom_54"
     }
   ]
 }
