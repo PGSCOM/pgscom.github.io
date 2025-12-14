@@ -18,6 +18,9 @@
  // #endregion
 ---
 
+<!-- Cloudflare Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <Layout>
 	<!-- #region 🎯 SECCIÓN PRINCIPAL - Partículas flotantes y texto animado -->
 	<!--div class="sky-image">
@@ -279,6 +282,9 @@
 								></textarea>
 								<span class="input-border"></span>
 							</div>
+
+							<!-- Cloudflare Turnstile Widget (Invisible) -->
+							<div class="cf-turnstile" data-sitekey="0x4AAAAAACGiv6Et8KLomzvb" data-theme="dark"></div>
 
 							<button type="submit" class="submit-btn">
 								<span class="btn-text">Enviar mensaje</span>
@@ -1587,6 +1593,7 @@
 							email: data.email,
 							asunto: data.asunto,
 							mensaje: data.mensaje,
+							'cf-turnstile-response': data['cf-turnstile-response']
 						}),
 					});
 

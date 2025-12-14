@@ -42,6 +42,37 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       });
     }
 
+    // Validar Turnstile
+    const turnstileToken = data['cf-turnstile-response'];
+    if (!turnstileToken) {
+        console.error('❌ Token de Turnstile faltante');
+        return new Response(JSON.stringify({ ok: false, error: 'Turnstile token missing' }), {
+            status: 400,
+            headers: { 'content-type': 'application/json' },
+        });
+    }
+
+    const ip = request.headers.get('CF-Connecting-IP');
+    const formData = new FormData();
+    formData.append('secret', env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA');
+    formData.append('response', turnstileToken);
+    formData.append('remoteip', ip || '');
+
+    const turnstileUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+    const turnstileResult = await fetch(turnstileUrl, {
+      body: formData,
+      method: 'POST',
+    });
+
+    const turnstileOutcome: any = await turnstileResult.json();
+    if (!turnstileOutcome.success) {
+       console.error('❌ Validación de Turnstile fallida:', turnstileOutcome);
+       return new Response(JSON.stringify({ ok: false, error: 'Invalid Turnstile token' }), {
+        status: 403,
+        headers: { 'content-type': 'application/json' },
+      });
+    }
+
     // Enviar mensaje via Telegram Bot
     console.log('🔍 Verificando variables de Telegram...');
     console.log('TELEGRAM_BOT_TOKEN presente:', !!env.TELEGRAM_BOT_TOKEN);
