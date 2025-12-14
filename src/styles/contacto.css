@@ -238,10 +238,16 @@
   transition: all 0.3s ease;
 }
 
+.social-icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
 .social-icon:hover {
   background: linear-gradient(135deg, #0096c7, #00b4d8);
   border-color: transparent;
-  color: white;
   transform: translateY(-5px) scale(1.1);
   box-shadow: 0 10px 25px rgba(0, 180, 216, 0.4);
 }
