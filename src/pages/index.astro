@@ -128,39 +128,91 @@
 					<!-- Proyectos de esta aptitud -->
 					<div class="proyectos-list">
 						{aptitud.proyectos && aptitud.proyectos.map((proyecto, pIndex) => (
-							proyecto.link ? (
-								<a href={proyecto.link} target="_blank" rel="noopener noreferrer" class="proyecto-detail-card" data-project-index={pIndex} style="text-decoration: none; color: inherit;">
-									<div class="proyecto-image-container">
-										<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
-									</div>
-									<div class="proyecto-info">
-										<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
-										{proyecto.descripcion && (
-											<p class="proyecto-detail-desc">{proyecto.descripcion}</p>
-										)}
-									</div>
-									<span class="card-arrow">→</span>
-								</a>
-							) : (
-								<div class="proyecto-detail-card" data-project-index={pIndex}>
-									<div class="proyecto-image-container">
-										<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
-									</div>
-									<div class="proyecto-info">
-										<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
-										{proyecto.descripcion && (
-											<p class="proyecto-detail-desc">{proyecto.descripcion}</p>
-										)}
-									</div>
-									<span class="card-arrow">→</span>
+							<div 
+								class="proyecto-detail-card" 
+								data-project-index={pIndex}
+								data-proyecto-id={proyecto.id}
+								data-tiene-contenido={proyecto.contenido ? "true" : "false"}
+							>
+								<div class="proyecto-image-container">
+									<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
 								</div>
-							)
+								<div class="proyecto-info">
+									<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
+									{proyecto.descripcion && (
+										<p class="proyecto-detail-desc">{proyecto.descripcion}</p>
+									)}
+									{proyecto.tecnologias && (
+										<div class="proyecto-tecnologias">
+											{proyecto.tecnologias.slice(0, 3).map((tech) => (
+												<span class="tech-tag">{tech}</span>
+											))}
+											{proyecto.tecnologias.length > 3 && (
+												<span class="tech-tag tech-more">+{proyecto.tecnologias.length - 3}</span>
+											)}
+										</div>
+									)}
+								</div>
+								<div class="card-actions">
+									{proyecto.contenido && (
+										<span class="card-btn card-btn-info" title="Ver más información">
+											<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<circle cx="12" cy="12" r="10"></circle>
+												<line x1="12" y1="16" x2="12" y2="12"></line>
+												<line x1="12" y1="8" x2="12.01" y2="8"></line>
+											</svg>
+										</span>
+									)}
+									{proyecto.link && (
+										<a href={proyecto.link} target="_blank" rel="noopener noreferrer" class="card-btn card-btn-link" title="Visitar proyecto" onclick="event.stopPropagation();">
+											<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+												<polyline points="15 3 21 3 21 9"></polyline>
+												<line x1="10" y1="14" x2="21" y2="3"></line>
+											</svg>
+										</a>
+									)}
+								</div>
+							</div>
 						))}
 					</div>
 				</div>
 			))}
 		</div>
 	</section>
+	<!-- #endregion -->
+
+	<!-- #region 🪟 MODAL DE PROYECTO -->
+	<div class="proyecto-modal-overlay" id="proyectoModal">
+		<div class="proyecto-modal">
+			<button class="modal-close" id="modalClose" aria-label="Cerrar modal">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="18" y1="6" x2="6" y2="18"></line>
+					<line x1="6" y1="6" x2="18" y2="18"></line>
+				</svg>
+			</button>
+			<div class="modal-header">
+				<img class="modal-imagen" id="modalImagen" src="" alt="" />
+				<div class="modal-header-info">
+					<h2 class="modal-titulo" id="modalTitulo"></h2>
+					<div class="modal-tecnologias" id="modalTecnologias"></div>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="modal-contenido" id="modalContenido"></div>
+			</div>
+			<div class="modal-footer">
+				<a href="#" target="_blank" rel="noopener noreferrer" class="modal-link-btn" id="modalLink" style="display: none;">
+					<span>Visitar proyecto</span>
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+						<polyline points="15 3 21 3 21 9"></polyline>
+						<line x1="10" y1="14" x2="21" y2="3"></line>
+					</svg>
+				</a>
+			</div>
+		</div>
+	</div>
 	<!-- #endregion -->
 	<!-- #endregion -->
 	</section>
@@ -1677,6 +1729,90 @@
 
 				setTimeout(() => sparkle.remove(), 1100);
 			}
+		});
+	</script>
+	<!-- #endregion -->
+
+	<!-- #region 🪟 SCRIPT MODAL DE PROYECTOS -->
+	<script define:vars={{ proyectosData }}>
+		document.addEventListener('DOMContentLoaded', () => {
+			const modal = document.getElementById('proyectoModal');
+			const modalClose = document.getElementById('modalClose');
+			const modalTitulo = document.getElementById('modalTitulo');
+			const modalImagen = document.getElementById('modalImagen');
+			const modalTecnologias = document.getElementById('modalTecnologias');
+			const modalContenido = document.getElementById('modalContenido');
+			const modalLink = document.getElementById('modalLink');
+
+			// Función para encontrar proyecto por ID
+			function findProyecto(proyectoId) {
+				for (const aptitud of proyectosData) {
+					const proyecto = aptitud.proyectos.find(p => p.id === proyectoId);
+					if (proyecto) return proyecto;
+				}
+				return null;
+			}
+
+			// Abrir modal
+			function openModal(proyectoId) {
+				const proyecto = findProyecto(proyectoId);
+				if (!proyecto || !proyecto.contenido) return;
+
+				modalTitulo.textContent = proyecto.titulo;
+				modalImagen.src = proyecto.imagen;
+				modalImagen.alt = proyecto.titulo;
+				
+				// Tecnologías
+				modalTecnologias.innerHTML = proyecto.tecnologias 
+					? proyecto.tecnologias.map(t => `<span class="modal-tech-tag">${t}</span>`).join('')
+					: '';
+				
+				// Contenido HTML
+				modalContenido.innerHTML = proyecto.contenido;
+				
+				// Link externo
+				if (proyecto.link) {
+					modalLink.href = proyecto.link;
+					modalLink.style.display = 'flex';
+				} else {
+					modalLink.style.display = 'none';
+				}
+
+				modal.classList.add('active');
+				document.body.style.overflow = 'hidden';
+			}
+
+			// Cerrar modal
+			function closeModal() {
+				modal.classList.remove('active');
+				document.body.style.overflow = '';
+			}
+
+			// Event listeners para tarjetas de proyecto
+			document.querySelectorAll('.proyecto-detail-card[data-tiene-contenido="true"]').forEach(card => {
+				card.addEventListener('click', (e) => {
+					// No abrir modal si se clickea en el link externo
+					if (e.target.closest('.card-btn-link')) return;
+					
+					const proyectoId = card.dataset.proyectoId;
+					openModal(proyectoId);
+				});
+			});
+
+			// Cerrar con botón X
+			modalClose?.addEventListener('click', closeModal);
+
+			// Cerrar al clickear overlay
+			modal?.addEventListener('click', (e) => {
+				if (e.target === modal) closeModal();
+			});
+
+			// Cerrar con Escape
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && modal.classList.contains('active')) {
+					closeModal();
+				}
+			});
 		});
 	</script>
 	<!-- #endregion -->
