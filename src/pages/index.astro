@@ -128,18 +128,33 @@
 					<!-- Proyectos de esta aptitud -->
 					<div class="proyectos-list">
 						{aptitud.proyectos && aptitud.proyectos.map((proyecto, pIndex) => (
-							<div class="proyecto-detail-card" data-project-index={pIndex}>
-								<div class="proyecto-image-container">
-									<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
+							proyecto.link ? (
+								<a href={proyecto.link} target="_blank" rel="noopener noreferrer" class="proyecto-detail-card" data-project-index={pIndex} style="text-decoration: none; color: inherit;">
+									<div class="proyecto-image-container">
+										<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
+									</div>
+									<div class="proyecto-info">
+										<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
+										{proyecto.descripcion && (
+											<p class="proyecto-detail-desc">{proyecto.descripcion}</p>
+										)}
+									</div>
+									<span class="card-arrow">→</span>
+								</a>
+							) : (
+								<div class="proyecto-detail-card" data-project-index={pIndex}>
+									<div class="proyecto-image-container">
+										<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
+									</div>
+									<div class="proyecto-info">
+										<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
+										{proyecto.descripcion && (
+											<p class="proyecto-detail-desc">{proyecto.descripcion}</p>
+										)}
+									</div>
+									<span class="card-arrow">→</span>
 								</div>
-								<div class="proyecto-info">
-									<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
-									{proyecto.descripcion && (
-										<p class="proyecto-detail-desc">{proyecto.descripcion}</p>
-									)}
-								</div>
-								<span class="card-arrow">→</span>
-							</div>
+							)
 						))}
 					</div>
 				</div>
