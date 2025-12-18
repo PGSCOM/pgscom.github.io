@@ -1247,8 +1247,8 @@
   display: flex;
   align-items: flex-end;
   gap: 30px;
-  padding: 45vh 48px 32px 48px;
-  min-height: 60vh;
+  padding: 40vh 48px 28px 48px;
+  min-height: 55vh;
 }
 
 /* Poster del proyecto - Cuadrado */
@@ -1413,14 +1413,19 @@
 /* Cuerpo del modal con detalles */
 .modal-body {
   flex: 1;
-  padding: 0 48px 48px 48px;
+  padding: 0 48px 40px 48px;
   background: rgba(10, 10, 20, 1);
 }
 
 /* Descripción del proyecto */
 .modal-description {
   max-width: 800px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+}
+
+.modal-description:empty {
+  display: none;
+  margin-bottom: 0;
 }
 
 .modal-description-title {
@@ -1446,7 +1451,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 20px;
+}
+
+.modal-tecnologias:empty {
+  display: none;
+  margin-top: 0;
 }
 
 .modal-tech-tag {
@@ -1514,9 +1524,16 @@
   font-family: 'Chakra Petch', sans-serif;
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.7;
-  margin-top: 32px;
-  padding-top: 32px;
+  margin-top: 28px;
+  padding-top: 28px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-contenido:empty {
+  display: none;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 .modal-contenido h3 {
@@ -1612,9 +1629,14 @@
 
 /* Responsive del modal */
 @media (max-width: 1024px) {
+  .modal-backdrop {
+    height: 58%;
+  }
+  
   .modal-hero {
-    padding: 35vh 32px 28px 32px;
+    padding: 30vh 32px 24px 32px;
     gap: 24px;
+    min-height: 50vh;
   }
   
   .modal-poster-container {
@@ -1629,31 +1651,33 @@
 
 @media (max-width: 768px) {
   .proyecto-modal-overlay {
-    padding: 16px;
+    padding: 12px;
+    align-items: flex-start;
+    padding-top: 40px;
   }
   
   .proyecto-modal {
-    max-height: 92vh;
+    max-height: 88vh;
     border-radius: 16px;
   }
   
   .modal-backdrop {
     border-radius: 16px 16px 0 0;
-    height: 50%;
+    height: 40%;
   }
   
   .modal-hero {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 30vh 20px 24px 20px;
-    gap: 20px;
+    padding: 8vh 20px 14px 20px;
+    gap: 16px;
     min-height: auto;
   }
   
   .modal-poster-container {
-    width: 180px;
-    height: 180px;
+    width: 160px;
+    height: 160px;
   }
   
   .modal-hero-info {
@@ -1663,71 +1687,32 @@
   }
   
   .modal-titulo {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     text-align: center;
+    line-height: 1.2;
+    margin-bottom: 12px;
   }
   
   .modal-meta {
     justify-content: center;
+    font-size: 0.85rem;
+    gap: 12px;
+  }
+  
+  .modal-meta-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
   }
   
   .modal-tagline {
     text-align: center;
+    font-size: 0.95rem;
+    line-height: 1.4;
   }
   
   .modal-actions {
     justify-content: center;
-  }
-  
-  .modal-body {
-    padding: 0 20px 32px 20px;
-  }
-  
-  .modal-description {
-    text-align: center;
-  }
-  
-  .modal-tecnologias {
-    justify-content: center;
-  }
-  
-  .modal-close {
-    top: 12px;
-    right: 12px;
-    width: 42px;
-    height: 42px;
-  }
-}
-
-@media (max-width: 480px) {
-  .proyecto-modal-overlay {
-    padding: 12px;
-  }
-  
-  .proyecto-modal {
-    max-height: 94vh;
-    border-radius: 12px;
-  }
-  
-  .modal-backdrop {
-    border-radius: 12px 12px 0 0;
-  }
-  
-  .modal-hero {
-    padding: 25vh 16px 20px 16px;
-  }
-  
-  .modal-poster-container {
-    width: 150px;
-    height: 150px;
-  }
-  
-  .modal-titulo {
-    font-size: 1.5rem;
-  }
-  
-  .modal-tagline {
-    font-size: 0.95rem;
+    margin-top: 16px;
   }
   
   .modal-btn-primary {
@@ -1736,21 +1721,141 @@
   }
   
   .modal-btn-secondary {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
   }
   
   .modal-body {
-    padding: 0 16px 24px 16px;
+    padding: 0 20px 24px 20px;
+  }
+  
+  .modal-description {
+    text-align: left;
+  }
+  
+  .modal-description-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  .modal-tecnologias {
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .modal-tech-tag {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+  
+  .modal-contenido {
+    font-size: 0.9rem;
+  }
+  
+  .modal-close {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .proyecto-modal-overlay {
+    padding: 8px;
+    padding-top: 30px;
+  }
+  
+  .proyecto-modal {
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+  
+  .modal-backdrop {
+    border-radius: 12px 12px 0 0;
+    height: 40%;
+  }
+  
+  .modal-hero {
+    padding: 15vh 16px 16px 16px;
+    gap: 12px;
+  }
+  
+  .modal-poster-container {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .modal-titulo {
+    font-size: 1.35rem;
+    margin-bottom: 8px;
+  }
+  
+  .modal-meta {
+    font-size: 0.8rem;
+    gap: 10px;
+  }
+  
+  .modal-meta-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+  
+  .modal-tagline {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  
+  .modal-actions {
+    margin-top: 12px;
+    gap: 10px;
+  }
+  
+  .modal-btn-primary {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+  
+  .modal-btn-secondary {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .modal-body {
+    padding: 0 16px 20px 16px;
+  }
+  
+  .modal-description-text {
+    font-size: 0.85rem;
+  }
+  
+  .modal-tech-tag {
+    font-size: 0.7rem;
+    padding: 5px 10px;
+  }
+  
+  .modal-contenido {
+    font-size: 0.85rem;
+  }
+  
+  .modal-contenido h3 {
+    font-size: 1.1rem;
+  }
+  
+  .modal-contenido h4 {
+    font-size: 0.95rem;
   }
   
   .modal-info-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
   
   .modal-close {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
+    top: 8px;
+    right: 8px;
   }
 }
 
