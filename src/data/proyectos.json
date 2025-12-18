@@ -1,87 +1,167 @@
 [
   {
-    "id": "diseño-grafico",
-    "titulo": "Diseño Gráfico",
-    "logo": "/icons/design.svg",
-    "descripcion": "Creación de identidad visual y diseño",
-    "proyectos": [
-      {
-        "id": "branding-xyz",
-        "titulo": "Branding XYZ",
-        "imagen": "/proyectos/branding-xyz.jpg",
-        "descripcion": "Identidad visual completa para startup"
-      },
-      {
-        "id": "poster-evento",
-        "titulo": "Cartel Festival",
-        "imagen": "/proyectos/poster-festival.jpg",
-        "descripcion": "Diseño de cartelería para evento cultural"
-      },
-      {
-        "id": "poster-evento",
-        "titulo": "Cartel Festival",
-        "imagen": "/proyectos/poster-festival.jpg",
-        "descripcion": "Diseño de cartelería para evento cultural"
-      }
-    ]
-  },
-  {
     "id": "desarrollo-web",
     "titulo": "Desarrollo Web",
     "logo": "/icons/web.svg",
-    "descripcion": "Desarrollo de sitios y aplicaciones web",
+    "descripcion": "Desarrollo de sitios y aplicaciones web con tecnologías modernas",
     "proyectos": [
       {
-        "id": "portfolio-personal",
+        "id": "portfolio-pgscom",
         "titulo": "Portfolio PGSCOM",
-        "imagen": "/proyectos/portfolio.jpg",
-        "descripcion": "Este mismo sitio web"
+        "imagen": "/assets/proyectos/portfolio.png",
+        "descripcion": "Sitio web personal desarrollado con Astro, React y animaciones con AnimeJS.",
+        "tecnologias": ["Astro", "React", "TypeScript", "AnimeJS", "CSS3"],
+        "link": "https://pgscom.es",
+        "contenido": "<h3> Portfolio Personal PGSCOM</h3><p>Este proyecto representa mi <strong>carta de presentación digital</strong>, desarrollado completamente desde cero con las tecnologías más modernas.</p><h4>Características principales:</h4><ul><li> <strong>Astro 4.0</strong> - Framework ultra-rápido</li><li> <strong>React</strong> - Componentes interactivos</li><li> <strong>AnimeJS</strong> - Animaciones fluidas</li><li> <strong>Diseño Responsivo</strong></li></ul>"
       },
       {
-        "id": "ecommerce-tienda",
-        "titulo": "E-commerce",
-        "imagen": "/proyectos/ecommerce.jpg",
-        "descripcion": "Tienda online con pasarela de pagos"
+        "id": "blog-personal",
+        "titulo": "Blog Personal",
+        "imagen": "/assets/proyectos/Blog.png",
+        "descripcion": "Blog técnico sobre audiovisual, tecnología y programación.",
+        "tecnologias": ["HTML", "CSS", "JavaScript"],
+        "link": "https://blog.pgscom.es",
+        "contenido": "<h3> Blog Técnico Personal</h3><p>Espacio dedicado a compartir conocimientos sobre <strong>producción audiovisual</strong> y <strong>programación</strong>.</p><h4>Temáticas:</h4><ul><li> Tutoriales de edición</li><li> Guías de programación</li><li> Consejos de diseño</li></ul>"
+      },
+      {
+        "id": "portafolio-cine",
+        "titulo": "Portafolio Cinematográfico",
+        "imagen": "/assets/proyectos/PortfolioCortos.png",
+        "descripcion": "Galería de proyectos audiovisuales con reproductor de video integrado.",
+        "tecnologias": ["HTML5", "CSS3", "JavaScript", "Video.js"],
+        "link": "https://cine.pgscom.es",
+        "contenido": "<h3> Portafolio Cinematográfico</h3><p>Galería especializada para mostrar mis <strong>proyectos audiovisuales</strong>.</p><h4>Funcionalidades:</h4><ul><li> Reproductor personalizado</li><li> Sistema de categorías</li><li> Galería de stills</li></ul>"
       }
     ]
   },
   {
-    "id": "animacion",
-    "titulo": "Animación",
-    "logo": "/icons/animation.svg",
-    "descripcion": "Motion graphics y animación 2D/3D",
-    "proyectos": [
-      {
-        "id": "intro-youtube",
-        "titulo": "Intro Canal",
-        "imagen": "/proyectos/intro-youtube.jpg",
-        "descripcion": "Animación de intro para YouTube"
-      },
-      {
-        "id": "motion-logo",
-        "titulo": "Logo Animado",
-        "imagen": "/proyectos/motion-logo.jpg",
-        "descripcion": "Animación de logotipo corporativo"
-      }
-    ]
-  },
-  {
-    "id": "video",
-    "titulo": "Edición de Video",
+    "id": "video-produccion",
+    "titulo": "Producción Audiovisual",
     "logo": "/icons/video.svg",
-    "descripcion": "Producción y postproducción audiovisual",
+    "descripcion": "Cortometrajes, documentales y proyectos cinematográficos",
     "proyectos": [
       {
-        "id": "documental-corto",
-        "titulo": "Mini Documental",
-        "imagen": "/proyectos/documental.jpg",
-        "descripcion": "Cortometraje documental"
+        "id": "premio-macula-2024",
+        "titulo": "Premio Mácula 2024 ",
+        "imagen": "/assets/proyectos/Macula.png",
+        "descripcion": "Segundo Premio Mácula 2024 - Cortometraje documental galardonado.",
+        "tecnologias": ["DaVinci Resolve", "Premiere Pro", "After Effects"],
+        "premio": "2º Premio Mácula 2024",
+        "contenido": "<h3> Segundo Premio Mácula 2024</h3><p>Cortometraje documental galardonado con el <strong>Segundo Premio</strong>.</p><h4>Ficha técnica:</h4><ul><li> <strong>Formato:</strong> Documental</li><li> <strong>Duración:</strong> 12 minutos</li><li> <strong>Postproducción:</strong> DaVinci Resolve</li></ul><blockquote>\"Trabajo excepcional\" - Jurado Festival Mácula</blockquote>"
       },
       {
-        "id": "videoclip-musica",
-        "titulo": "Videoclip Musical",
-        "imagen": "/proyectos/videoclip.jpg",
-        "descripcion": "Videoclip para artista local"
+        "id": "premio-macula-2023",
+        "titulo": "Premio Mácula 2023 ",
+        "imagen": "/assets/proyectos/Macula.png",
+        "descripcion": "Segundo Premio Mácula 2023 - Proyecto audiovisual experimental.",
+        "tecnologias": ["DaVinci Resolve", "Premiere Pro"],
+        "premio": "2º Premio Mácula 2023",
+        "contenido": "<h3> Segundo Premio Mácula 2023</h3><p>Proyecto audiovisual experimental con <strong>nuevas formas narrativas</strong>.</p><h4>Características:</h4><ul><li> Montaje experimental</li><li> Paleta expresionista</li><li> Banda sonora original</li></ul>"
+      },
+      {
+        "id": "cortometrajes",
+        "titulo": "Cortometrajes Varios",
+        "imagen": "/assets/proyectos/PortfolioCortos.png",
+        "descripcion": "Colección de cortometrajes de ficción y documental.",
+        "tecnologias": ["DaVinci Resolve", "After Effects", "Audition"],
+        "contenido": "<h3> Colección de Cortometrajes</h3><p>Recopilación de proyectos audiovisuales en <strong>ficción</strong> y <strong>documental</strong>.</p><h4>Roles:</h4><ul><li> Dirección de fotografía</li><li> Montaje</li><li> Corrección de color</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "animacion-3d",
+    "titulo": "Animación 3D",
+    "logo": "/icons/animation.svg",
+    "descripcion": "Modelado, animación y renders con Blender y Unreal Engine",
+    "proyectos": [
+      {
+        "id": "logo-animado-pgscom",
+        "titulo": "Logo Animado PGSCOM",
+        "imagen": "/assets/proyectos/logo-anim.jpg",
+        "descripcion": "Animación 3D del logo personal con partículas y efectos visuales.",
+        "tecnologias": ["Blender", "Cycles", "After Effects"],
+        "contenido": "<h3> Logo Animado PGSCOM</h3><p>Animación 3D con <strong>sistema de partículas</strong>.</p><h4>Especificaciones:</h4><ul><li> <strong>Render:</strong> Cycles GPU</li><li> <strong>Resolución:</strong> 4K</li><li> <strong>Frames:</strong> 120+</li></ul>"
+      },
+      {
+        "id": "visuales-unreal",
+        "titulo": "Entornos Virtuales",
+        "imagen": "/assets/proyectos/unreal.jpg",
+        "descripcion": "Creación de entornos virtuales fotorrealistas en Unreal Engine.",
+        "tecnologias": ["Unreal Engine", "Blender", "Substance Painter"],
+        "contenido": "<h3> Entornos Virtuales</h3><p>Escenarios <strong>fotorrealistas</strong> en Unreal Engine 5.</p><h4>Tecnologías:</h4><ul><li> Lumen y Nanite</li><li> Texturizado PBR</li><li> Modelado en Blender</li></ul>"
+      },
+      {
+        "id": "motion-graphics",
+        "titulo": "Motion Graphics",
+        "imagen": "/assets/proyectos/motion.jpg",
+        "descripcion": "Piezas de motion graphics para redes sociales y proyectos comerciales.",
+        "tecnologias": ["Blender", "After Effects", "Illustrator"],
+        "contenido": "<h3> Motion Graphics</h3><p><strong>Piezas animadas</strong> para redes y publicidad.</p><h4>Servicios:</h4><ul><li> Contenido social</li><li> Intros/outros</li><li> Infografías animadas</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "programacion",
+    "titulo": "Proyectos de Programación",
+    "logo": "/icons/code.svg",
+    "descripcion": "Aplicaciones y scripts en Python, C++ y más",
+    "proyectos": [
+      {
+        "id": "github-contributions",
+        "titulo": "Contribuciones Open Source",
+        "imagen": "/assets/proyectos/github.jpg",
+        "descripcion": "Más de 4 años de experiencia con Git/GitHub.",
+        "tecnologias": ["Git", "GitHub", "Python", "JavaScript"],
+        "link": "https://github.com/PGSCOM",
+        "contenido": "<h3> Open Source</h3><p>Participación activa en <strong>código abierto</strong>.</p><h4>Estadísticas:</h4><ul><li> 20+ repositorios</li><li> 50+ estrellas</li><li> 30+ pull requests</li></ul>"
+      },
+      {
+        "id": "python-tools",
+        "titulo": "Herramientas Python",
+        "imagen": "/assets/proyectos/Herramientas.png",
+        "descripcion": "Scripts de automatización para proyectos audiovisuales. +6 años.",
+        "tecnologias": ["Python", "NumPy", "OpenCV", "FFmpeg"],
+        "contenido": "<h3> Herramientas Python</h3><p><strong>Scripts de automatización</strong> audiovisual.</p><h4>Proyectos:</h4><ul><li> Automatización FFmpeg</li><li> Procesamiento de metadatos</li><li> Batch de imágenes</li></ul>"
+      },
+      {
+        "id": "cpp-learning",
+        "titulo": "Aprendiendo C++",
+        "imagen": "/assets/proyectos/cpp.jpg",
+        "descripcion": "Proyectos académicos y personales en C++.",
+        "tecnologias": ["C++", "CMake", "Visual Studio"],
+        "contenido": "<h3> Aprendiendo C++</h3><p>Formación en <strong>C++ moderno</strong>.</p><h4>Áreas:</h4><ul><li> C++17/20</li><li> Algoritmos</li><li> Desarrollo de juegos</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "diseño-grafico",
+    "titulo": "Diseño Gráfico",
+    "logo": "/icons/design.svg",
+    "descripcion": "Identidad visual, carteles y diseño digital",
+    "proyectos": [
+      {
+        "id": "identidad-pgscom",
+        "titulo": "Identidad PGSCOM",
+        "imagen": "/assets/proyectos/branding.jpg",
+        "descripcion": "Diseño de identidad visual completa.",
+        "tecnologias": ["Illustrator", "Photoshop", "Figma"],
+        "contenido": "<h3> Identidad PGSCOM</h3><p><strong>Identidad de marca</strong> completa.</p><h4>Elementos:</h4><ul><li> Logo vectorial</li><li> Paleta de colores</li><li> Tipografía</li><li> Assets sociales</li></ul>"
+      },
+      {
+        "id": "carteleria",
+        "titulo": "Cartelería de Eventos",
+        "imagen": "/assets/proyectos/posters.jpg",
+        "descripcion": "Diseño de carteles para eventos culturales.",
+        "tecnologias": ["Photoshop", "Illustrator", "InDesign"],
+        "contenido": "<h3> Cartelería</h3><p><strong>Material gráfico</strong> promocional.</p><h4>Tipos:</h4><ul><li> Estrenos cinematográficos</li><li> Eventos musicales</li><li> Portadas</li></ul>"
+      },
+      {
+        "id": "diseño-web",
+        "titulo": "UI/UX Design",
+        "imagen": "/assets/proyectos/UI.png",
+        "descripcion": "Diseño de interfaces para aplicaciones web y móviles.",
+        "tecnologias": ["Figma", "Adobe XD", "Sketch"],
+        "contenido": "<h3> UI/UX Design</h3><p><strong>Interfaces</strong> centradas en experiencia.</p><h4>Proceso:</h4><ol><li> Investigación</li><li> Wireframing</li><li> Diseño visual</li><li> Testing</li></ol>"
       }
     ]
   },
@@ -89,39 +169,31 @@
     "id": "fotografia",
     "titulo": "Fotografía",
     "logo": "/icons/photo.svg",
-    "descripcion": "Fotografía profesional y retoque",
+    "descripcion": "Fotografía digital y retoque profesional",
     "proyectos": [
       {
-        "id": "sesion-producto",
-        "titulo": "Foto Producto",
-        "imagen": "/proyectos/producto.jpg",
-        "descripcion": "Sesión fotográfica de producto"
+        "id": "fotografia-eventos",
+        "titulo": "Fotografía de Eventos",
+        "imagen": "/assets/proyectos/eventos.jpg",
+        "descripcion": "Cobertura fotográfica de eventos culturales.",
+        "tecnologias": ["Lightroom", "Photoshop", "Capture One"],
+        "contenido": "<h3> Fotografía de Eventos</h3><p>Cobertura <strong>profesional</strong>.</p><h4>Servicios:</h4><ul><li> Eventos culturales</li><li> Corporativos</li><li> Premieres</li></ul>"
       },
       {
-        "id": "retrato-estudio",
+        "id": "retratos",
         "titulo": "Retratos",
-        "imagen": "/proyectos/retratos.jpg",
-        "descripcion": "Fotografía de retrato en estudio"
-      }
-    ]
-  },
-  {
-    "id": "ui-ux",
-    "titulo": "UI/UX Design",
-    "logo": "/icons/ux.svg",
-    "descripcion": "Diseño de interfaces y experiencia de usuario",
-    "proyectos": [
-      {
-        "id": "app-movil",
-        "titulo": "App Móvil",
-        "imagen": "/proyectos/app-movil.jpg",
-        "descripcion": "Diseño de aplicación iOS/Android"
+        "imagen": "/assets/proyectos/retratos.jpg",
+        "descripcion": "Sesiones de retrato profesional.",
+        "tecnologias": ["Lightroom", "Photoshop"],
+        "contenido": "<h3> Retratos</h3><p><strong>Retrato profesional</strong>.</p><h4>Tipos:</h4><ul><li> Corporativos</li><li> Headshots</li><li> Familiares</li></ul>"
       },
       {
-        "id": "dashboard-admin",
-        "titulo": "Dashboard",
-        "imagen": "/proyectos/dashboard.jpg",
-        "descripcion": "Panel de administración web"
+        "id": "fotografia-producto",
+        "titulo": "Fotografía de Producto",
+        "imagen": "/assets/proyectos/producto.jpg",
+        "descripcion": "Fotografía comercial de productos.",
+        "tecnologias": ["Photoshop", "Lightroom", "Capture One"],
+        "contenido": "<h3> Fotografía de Producto</h3><p><strong>Fotografía comercial</strong> para e-commerce.</p><h4>Servicios:</h4><ul><li> E-commerce</li><li> Catálogos</li><li> Gastronómica</li></ul>"
       }
     ]
   }
