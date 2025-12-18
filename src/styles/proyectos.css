@@ -1098,23 +1098,23 @@
 }
 
 /* ============================================
-   MODAL DE PROYECTO
+   MODAL DE PROYECTO - Estilo Cinematográfico
    ============================================ */
 
 .proyecto-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 10000;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  padding: 20px;
   opacity: 0;
   visibility: hidden;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
 }
 
 .proyecto-modal-overlay.active {
@@ -1123,145 +1123,405 @@
 }
 
 .proyecto-modal {
-  background: linear-gradient(145deg, 
-    rgba(20, 20, 35, 0.98),
-    rgba(30, 30, 50, 0.95));
-  border-radius: 24px;
-  border: 1px solid rgba(147, 197, 253, 0.2);
-  max-width: 700px;
   width: 100%;
-  max-height: 85vh;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
-  transform: scale(0.9) translateY(30px);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 
-    0 25px 80px rgba(0, 0, 0, 0.6),
-    0 0 100px rgba(147, 197, 253, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(180deg, 
+    transparent 0%,
+    rgba(10, 10, 20, 0.4) 30%,
+    rgba(10, 10, 20, 0.95) 70%,
+    rgba(10, 10, 20, 1) 100%);
 }
 
 .proyecto-modal-overlay.active .proyecto-modal {
-  transform: scale(1) translateY(0);
+  transform: scale(1);
 }
 
+/* Imagen de fondo hero */
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.modal-backdrop-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: brightness(0.6);
+  transition: transform 0.6s ease;
+}
+
+.proyecto-modal:hover .modal-backdrop-img {
+  transform: scale(1.02);
+}
+
+/* Gradiente sobre la imagen */
+.modal-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, 
+    transparent 0%,
+    transparent 20%,
+    rgba(10, 10, 20, 0.6) 50%,
+    rgba(10, 10, 20, 0.95) 80%,
+    rgba(10, 10, 20, 1) 100%);
+  pointer-events: none;
+}
+
+/* Botón cerrar */
 .modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
+  top: 20px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  z-index: 10;
+  z-index: 100;
 }
 
 .modal-close:hover {
-  background: rgba(239, 68, 68, 0.3);
-  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
   color: white;
-  transform: rotate(90deg);
+  transform: scale(1.1);
 }
 
-.modal-header {
+/* Contenido principal del modal */
+.modal-content-wrapper {
+  position: relative;
+  z-index: 10;
   display: flex;
-  gap: 20px;
-  padding: 24px 24px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  align-items: flex-start;
-}
-
-.modal-imagen {
-  width: 120px;
-  height: 120px;
-  border-radius: 16px;
-  object-fit: cover;
-  flex-shrink: 0;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  border: 2px solid rgba(147, 197, 253, 0.3);
-}
-
-.modal-header-info {
-  flex: 1;
-  min-width: 0;
-  padding-top: 8px;
-}
-
-.modal-titulo {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: white;
-  margin: 0 0 12px 0;
-  line-height: 1.2;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.modal-tecnologias {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.modal-tech-tag {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 5px 12px;
-  background: linear-gradient(135deg, rgba(147, 197, 253, 0.2), rgba(196, 181, 253, 0.15));
-  border: 1px solid rgba(147, 197, 253, 0.35);
-  border-radius: 20px;
-  color: rgba(200, 220, 255, 0.95);
-  letter-spacing: 0.02em;
-}
-
-.modal-body {
-  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
   overflow-y: auto;
-  padding: 24px;
   scrollbar-width: thin;
   scrollbar-color: rgba(147, 197, 253, 0.3) transparent;
 }
 
-.modal-body::-webkit-scrollbar {
+.modal-content-wrapper::-webkit-scrollbar {
   width: 6px;
 }
 
-.modal-body::-webkit-scrollbar-track {
+.modal-content-wrapper::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.modal-body::-webkit-scrollbar-thumb {
+.modal-content-wrapper::-webkit-scrollbar-thumb {
   background: rgba(147, 197, 253, 0.3);
   border-radius: 3px;
 }
 
+/* Sección hero con poster y título */
+.modal-hero {
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+  padding: 45vh 48px 32px 48px;
+  min-height: 60vh;
+}
+
+/* Poster del proyecto - Cuadrado */
+.modal-poster-container {
+  flex-shrink: 0;
+  width: 240px;
+  height: 240px;
+  position: relative;
+}
+
+.modal-poster {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.modal-poster:hover {
+  transform: scale(1.03);
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Info del héroe */
+.modal-hero-info {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 10px;
+}
+
+/* Título grande estilo película */
+.modal-titulo {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: white;
+  margin: 0 0 16px 0;
+  line-height: 1.1;
+  text-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.02em;
+}
+
+/* Metadatos estilo streaming */
+.modal-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.modal-meta-item {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-meta-badge {
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-meta-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-meta-rating svg {
+  color: #fbbf24;
+  fill: #fbbf24;
+}
+
+/* Descripción corta / tagline */
+.modal-tagline {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+/* Acciones principales */
+.modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.modal-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: white;
+  border: none;
+  border-radius: 8px;
+  color: #0a0a14;
+  font-family: 'Chakra Petch', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3);
+}
+
+.modal-btn-primary svg {
+  width: 20px;
+  height: 20px;
+}
+
+.modal-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.modal-btn-secondary svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Cuerpo del modal con detalles */
+.modal-body {
+  flex: 1;
+  padding: 0 48px 48px 48px;
+  background: rgba(10, 10, 20, 1);
+}
+
+/* Descripción del proyecto */
+.modal-description {
+  max-width: 800px;
+  margin-bottom: 32px;
+}
+
+.modal-description-title {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 12px 0;
+}
+
+.modal-description-text {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Tecnologías / Tags */
+.modal-tecnologias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.modal-tech-tag {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  background: rgba(147, 197, 253, 0.15);
+  border: 1px solid rgba(147, 197, 253, 0.3);
+  border-radius: 20px;
+  color: rgba(200, 220, 255, 0.95);
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+}
+
+.modal-tech-tag:hover {
+  background: rgba(147, 197, 253, 0.25);
+  border-color: rgba(147, 197, 253, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Grid de información adicional */
+.modal-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-info-label {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.modal-info-value {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.modal-info-value a {
+  color: rgba(147, 197, 253, 1);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.modal-info-value a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* Contenido HTML del proyecto (para el campo "contenido") */
 .modal-contenido {
   font-family: 'Chakra Petch', sans-serif;
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.7;
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-contenido h3 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: white;
   margin: 0 0 16px 0;
-  padding-bottom: 12px;
-  border-bottom: 2px solid rgba(147, 197, 253, 0.3);
 }
 
 .modal-contenido h4 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: rgba(200, 220, 255, 1);
   margin: 24px 0 12px 0;
@@ -1327,73 +1587,136 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
+/* Footer del modal - Oculto porque usamos los botones de acción en el hero */
 .modal-footer {
-  padding: 16px 24px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  justify-content: flex-end;
+  display: none;
 }
 
-.modal-link-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(16, 185, 129, 0.2));
-  border: 1px solid rgba(34, 197, 94, 0.4);
-  border-radius: 12px;
-  color: white;
-  font-family: 'Chakra Petch', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+.modal-header {
+  display: none;
 }
 
-.modal-link-btn:hover {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.5), rgba(16, 185, 129, 0.4));
-  border-color: rgba(34, 197, 94, 0.7);
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 25px rgba(34, 197, 94, 0.3),
-    0 0 40px rgba(34, 197, 94, 0.15);
+.modal-imagen {
+  display: none;
+}
+
+.modal-header-info {
+  display: none;
 }
 
 /* Responsive del modal */
-@media (max-width: 768px) {
-  .proyecto-modal {
-    max-height: 90vh;
-    border-radius: 20px 20px 0 0;
-    margin-top: auto;
+@media (max-width: 1024px) {
+  .modal-hero {
+    padding: 35vh 32px 28px 32px;
+    gap: 24px;
   }
   
-  .modal-header {
+  .modal-poster-container {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .modal-body {
+    padding: 0 32px 32px 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-hero {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 16px;
-    padding: 20px 20px 16px;
+    padding: 30vh 20px 24px 20px;
+    gap: 20px;
+    min-height: auto;
   }
   
-  .modal-imagen {
-    width: 100px;
-    height: 100px;
+  .modal-poster-container {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .modal-hero-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   .modal-titulo {
-    font-size: 1.3rem;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  
+  .modal-meta {
+    justify-content: center;
+  }
+  
+  .modal-tagline {
+    text-align: center;
+  }
+  
+  .modal-actions {
+    justify-content: center;
+  }
+  
+  .modal-body {
+    padding: 0 20px 32px 20px;
+  }
+  
+  .modal-description {
+    text-align: center;
   }
   
   .modal-tecnologias {
     justify-content: center;
   }
   
-  .modal-body {
-    padding: 20px;
+  .modal-close {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
   }
   
-  .modal-contenido h3 {
-    font-size: 1.2rem;
+  .modal-backdrop {
+    height: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-hero {
+    padding: 25vh 16px 20px 16px;
+  }
+  
+  .modal-poster-container {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .modal-titulo {
+    font-size: 1.5rem;
+  }
+  
+  .modal-tagline {
+    font-size: 0.95rem;
+  }
+  
+  .modal-btn-primary {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+  
+  .modal-btn-secondary {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .modal-body {
+    padding: 0 16px 24px 16px;
+  }
+  
+  .modal-info-grid {
+    grid-template-columns: 1fr;
   }
 }
 
