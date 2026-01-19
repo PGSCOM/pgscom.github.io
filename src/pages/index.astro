@@ -740,6 +740,11 @@
         // Crear una timeline para mejor control de la animación
         const timeline = gsap.timeline({ paused: true });
         
+        // Configurar GSAP para optimización móvil
+        gsap.config({
+            force3D: true // Forzar aceleración GPU para mejor rendimiento en móviles
+        });
+        
         // Duración total de la timeline en segundos (normalizada a 2 segundos para mapeo con scroll)
         const TIMELINE_DURATION = 2;
 
@@ -751,7 +756,8 @@
                 opacity: 0, 
                 scale: 0.8, 
                 duration: isMobile ? 0.311 : 0.8,
-                ease: 'power2.out'
+                ease: 'power2.out',
+                force3D: true
             }, 0)
         
         // Fase 2: Zoom del logo (1s-2s / 50%-100% del timeline)
@@ -762,6 +768,7 @@
                 y: 45,
                 duration: 1,
                 ease: 'power2.in',
+                force3D: true,
                 onUpdate: function() {
                     // Actualizar la máscara sincronizada con el zoom del logo
                     const rect = logoEl.getBoundingClientRect();
@@ -1218,6 +1225,11 @@
 			const detailScreens = document.querySelectorAll('.aptitud-detail-screen');
 			
 			if (!section || !container || !grid || !logo || detailScreens.length === 0) return;
+
+			// Configurar GSAP para optimización móvil
+			gsap.config({
+				force3D: true // Forzar aceleración GPU para mejor rendimiento en móviles
+			});
 
 			const totalAptitudes = detailScreens.length;
 			let currentAptitudIndex = -1; // -1 = vista órbita, 0+ = pantalla de aptitud
