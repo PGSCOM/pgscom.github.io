@@ -717,74 +717,68 @@
 	<!-- #endregion -->
 	<!-- #region 🎬 SCRIPT: ANIMACIONES SCROLL - Timeline principal con videos y secuencias -->
 	<script type="module">
-    import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.es.js';
+    import gsap from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm';
+    import ScrollTrigger from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger/+esm';
+    
+    // Registrar plugins de GSAP
+    gsap.registerPlugin(ScrollTrigger);
 
     function initScrollAnim() {
         const targetEl = document.querySelector('.image-container');
         const logoEl = document.querySelector('#logoanimar');
-	const galaxiaMaskEl = document.querySelector('.galaxiamask');
-		const videoA = document.querySelector('#video-galaxia-a');
-		const videoB = document.querySelector('#video-galaxia-b');
-	const seqCanvas = document.querySelector('#galaxia-seq');
+        const galaxiaMaskEl = document.querySelector('.galaxiamask');
+        const videoA = document.querySelector('#video-galaxia-a');
+        const videoB = document.querySelector('#video-galaxia-b');
+        const seqCanvas = document.querySelector('#galaxia-seq');
 
-	if (!targetEl || !logoEl || !galaxiaMaskEl || !videoA || !videoB || !seqCanvas) return;
+        if (!targetEl || !logoEl || !galaxiaMaskEl || !videoA || !videoB || !seqCanvas) return;
 
         // Detectar si es móvil
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         
-	// #region 🎯 CONFIGURACIÓN TIMELINE - Definición de animaciones con AnimeJS
-	// Crear una timeline para mejor control de la animación
-	const timeline = anime.timeline({
-            autoplay: false,
-            easing: 'easeOutQuart',
-            duration: 1000 // Duración base más larga
-        });
+        // #region 🎯 CONFIGURACIÓN TIMELINE - Definición de animaciones con GSAP
+        // Crear una timeline para mejor control de la animación
+        const timeline = gsap.timeline({ paused: true });
+        
+        // Duración total de la timeline en segundos (normalizada a 2 segundos para mapeo con scroll)
+        const TIMELINE_DURATION = 2;
 
-        // Agregar animaciones a la timeline (simultaneas)
-		// #region ✨ DEFINICIÓN DE ANIMACIONES
-		timeline
-			// Ocultar el logo al inicio de la timeline
-			/*.add({
-				targets: logoEl,
-				opacity: [0, 0],
-				duration: 1
-			}, 0)*/
-            .add({
-                targets: targetEl,
-                /*translateX: isMobile ? 0 : 300,*/ // No mover horizontalmente en móvil
-                /*translateY: isMobile ? 250 : 0,*/ // Mover verticalmente solo en móvil
-                opacity: [1, 0], // Fade out simultáneo
-                scale: [1, 0.8], // Reducir escala suavemente
-                duration: isMobile ? 311 : 800, // Duración más larga para suavidad
-                easing: 'easeOutQuart' // Easing más suave
-            })
-            .add({
-                targets: logoEl,
-				//opacity: [{ value: 1, duration: 1 }],
-                scale: [1, 25], // Ampliar el logo de 1x a 25x
-				translateY: [0, 45], // Desplazamiento hacia arriba
-                duration: 1000,
-                easing: 'easeInQuad',
-                // Fusión: actualizar la máscara aquí para que esté sincronizada con el zoom del logo
-                update: function(anim) {
-                    // Declarar el tamaño en vh a partir del tamaño visual actual (incluye transform: scale)
+        // #region ✨ DEFINICIÓN DE ANIMACIONES
+        // Fase 1: Fade out del personaje (0-0.8s / 0-40% del timeline)
+        timeline.fromTo(targetEl, 
+            { opacity: 1, scale: 1 },
+            { 
+                opacity: 0, 
+                scale: 0.8, 
+                duration: isMobile ? 0.311 : 0.8,
+                ease: 'power2.out'
+            }, 0)
+        
+        // Fase 2: Zoom del logo (1s-2s / 50%-100% del timeline)
+        .fromTo(logoEl,
+            { scale: 1, y: 0 },
+            {
+                scale: 25,
+                y: 45,
+                duration: 1,
+                ease: 'power2.in',
+                onUpdate: function() {
+                    // Actualizar la máscara sincronizada con el zoom del logo
                     const rect = logoEl.getBoundingClientRect();
                     const currentSize = (rect.height / window.innerHeight) * 100 - 5;
-
                     galaxiaMaskEl.style.webkitMaskSize = `auto ${currentSize}vh`;
                     galaxiaMaskEl.style.maskSize = `auto ${currentSize}vh`;
                 }
-				
-            }, 1000) // Iniciar al mismo tiempo que la animación anterior
-			// Animación del video para cambiar la reproducción
-
-			// Ocultar el logo al finalizar su segmento
-			.add({
-				targets: logoEl,
-				opacity: [{ value: 0, duration: 1 }]
-			}, 1800);
-		// #endregion
-		// #endregion
+            }, 1)
+        
+        // Fase 3: Ocultar el logo al finalizar (1.8s)
+        .to(logoEl, {
+            opacity: 0,
+            duration: 0.001,
+            ease: 'none'
+        }, 1.8);
+        // #endregion
+        // #endregion
 
 		// #region 📹 CONFIGURACIÓN DE VIDEOS - Gestión de reproducción y secuencias
 		// --- Sincronización de video con la animación ---
@@ -1138,6 +1132,10 @@
 		// #endregion
 
 		// #region 📜 MANEJO DE SCROLL - Sincronización de animaciones con scroll
+		// Convertir milisegundos a segundos para GSAP (timeline usa segundos)
+		const ZOOM_START_S = ZOOM_START_MS / 1000;
+		const ZOOM_END_S = ZOOM_END_MS / 1000;
+		
 		function onScroll() {
 			const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
 			
@@ -1149,21 +1147,23 @@
 			// Esto asegura que al llegar a la sección sticky, la primera fase (fade out) ya esté avanzada o completa.
 			const progress = clamp(scrollY / (ANIMATION_VH * viewportHeight), 0, 1);
 
-			const seekTime = progress * timeline.duration;
+			// GSAP usa progress (0-1) o time en segundos
+			const totalDuration = timeline.duration();
+			const seekTime = progress * totalDuration;
 
-			// Opcional: optimizar con requestAnimationFrame (ver nota más abajo)
-			timeline.seek(seekTime);
+			// Usar progress() para scrubbing más eficiente con GSAP
+			timeline.progress(progress);
 
-			// Sincronización del video con el tramo de zoom
+			// Sincronización del video con el tramo de zoom (convertido a segundos)
 			if (isScrollScrubActive) {
-				if (seekTime <= ZOOM_START_MS) {
+				if (seekTime <= ZOOM_START_S) {
 					// Antes del zoom: pausar en 0 y mostrar primer frame
 					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
 					setSequenceVisible(true);
 					showFrame(0);
-				} else if (seekTime < ZOOM_END_MS) {
+				} else if (seekTime < ZOOM_END_S) {
 					// En el zoom: scrubbing 0-2s sobre la secuencia AVIF
-					const localP = (seekTime - ZOOM_START_MS) / (ZOOM_END_MS - ZOOM_START_MS);
+					const localP = (seekTime - ZOOM_START_S) / (ZOOM_END_S - ZOOM_START_S);
 					const frameIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(localP * (TOTAL_FRAMES - 1))));
 					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
 					setSequenceVisible(true);
@@ -1185,8 +1185,6 @@
 					}
 				}
 			}
-
-			// console.log('scrollY:', scrollY, 'pageRatio:', pageRatio, 'newRatio:', newRatio, 'scale:', scale, 'progress:', progress, 'seekTime:', seekTime);
 		}
 
 
@@ -1206,7 +1204,11 @@
 
 	<!-- #region 🎬 SCRIPT: ANIMACIONES PROYECTOS -->
 	<script type="module">
-		import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.es.js';
+		import gsap from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm';
+		import ScrollTrigger from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger/+esm';
+		
+		// Registrar plugins de GSAP
+		gsap.registerPlugin(ScrollTrigger);
 
 		document.addEventListener('DOMContentLoaded', () => {
 			const section = document.querySelector('.proyectos-section');
@@ -1220,39 +1222,8 @@
 			const totalAptitudes = detailScreens.length;
 			let currentAptitudIndex = -1; // -1 = vista órbita, 0+ = pantalla de aptitud
 
-			// Función para calcular distancia y ángulo entre dos puntos
-			function getLineProps(fromX, fromY, toX, toY) {
-				const dx = toX - fromX;
-				const dy = toY - fromY;
-				const distance = Math.sqrt(dx * dx + dy * dy);
-				const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-				return { distance, angle };
-			}
-
 			// Detectar si es móvil para adaptar comportamiento
 			const isMobileView = window.matchMedia('(max-width: 768px)').matches;
-
-			// Función auxiliar para calcular posición y ángulo de líneas
-			function calculateLineToCard(circleRect, cardRect, circleRadius) {
-				// Centro del círculo
-				const circleCenterX = circleRect.left + circleRect.width / 2;
-				const circleCenterY = circleRect.top + circleRect.height / 2;
-				
-				// Punto de destino: borde izquierdo de la tarjeta, centrado verticalmente
-				const targetX = cardRect.left;
-				const targetY = cardRect.top + cardRect.height / 2;
-				
-				// Calcular ángulo y distancia
-				const dx = targetX - circleCenterX;
-				const dy = targetY - circleCenterY;
-				const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-				const totalDistance = Math.sqrt(dx * dx + dy * dy);
-				
-				// La línea empieza desde el borde del círculo
-				const lineLength = totalDistance - circleRadius;
-				
-				return { angle, lineLength, startOffset: circleRadius };
-			}
 
 			// Función para actualizar las líneas de una pantalla (usada en resize y show)
 			function updateAptitudLines(screen) {
@@ -1265,59 +1236,29 @@
 				
 				if (!aptitudCircle || !linesContainer) return;
 
-				// 1. Obtener dimensiones del círculo (sin transformaciones)
-				// Usamos offsetWidth para obtener el tamaño real del layout
 				const circleRadius = aptitudCircle.offsetWidth / 2;
-				
-				// 2. Obtener posición del círculo
-				// Para mayor precisión, reseteamos transformaciones temporalmente si es necesario,
-				// pero getBoundingClientRect suele ser suficiente si el layout es estable.
-				// Sin embargo, si hay animaciones activas (scale), el rect puede ser incorrecto.
-				// Como el círculo está centrado por CSS (top/left 50% + margin), su posición base es estable.
-				
-				// Truco: Clonar el círculo para medir su posición "ideal" sin transformaciones de animación
-				// O simplemente confiar en que el centro es el centro de la pantalla (si el diseño lo respeta)
-				// Vamos a medir el elemento real, pero intentando ignorar el scale si es posible.
-				// Si el elemento tiene scale(0.5), getBoundingClientRect devuelve la mitad.
-				// Solución: Calcular el centro basado en el offsetParent (screen)
-				
 				const screenRect = screen.getBoundingClientRect();
-				
-				// El círculo tiene margin-left/top negativos para centrarse.
-				// Su centro geométrico debería ser exactamente screenRect.left + screenRect.width/2
 				const circleCenterX = screenRect.left + screenRect.width / 2;
 				const circleCenterY = screenRect.top + screenRect.height / 2;
 				
-				// Posicionar el contenedor de líneas en el centro exacto
 				linesContainer.style.left = `${screenRect.width / 2}px`;
 				linesContainer.style.top = `${screenRect.height / 2}px`;
 				
-				// 3. Calcular líneas para cada tarjeta
 				linesToProjects.forEach((line, i) => {
 					const card = projectCards[i];
 					if (!card) return;
-					
-					// Las tarjetas tienen transform: translateX(30px) en CSS inicial o animado.
-					// Necesitamos su posición FINAL (translateX 0).
-					// Podemos calcularla restando la transformación actual o clonando.
-					// Dado que están en un flex container, su posición layout es estable.
-					// Vamos a medir su posición y compensar la transformación actual.
 					
 					const cardRect = card.getBoundingClientRect();
 					const style = window.getComputedStyle(card);
 					const matrix = new DOMMatrix(style.transform);
 					
-					// Posición "pura" sin transform (destino final de la animación)
 					const cardLeft = cardRect.left - matrix.m41;
 					const cardTop = cardRect.top - matrix.m42;
-					const cardWidth = cardRect.width; // Asumimos que scale es 1
 					const cardHeight = cardRect.height;
 					
-					// Recalcular target basado en posición limpia
 					const targetX = cardLeft;
 					const targetY = cardTop + cardHeight / 2;
 					
-					// Calcular vector desde el centro del círculo
 					const dx = targetX - circleCenterX;
 					const dy = targetY - circleCenterY;
 					
@@ -1325,123 +1266,107 @@
 					const totalDistance = Math.sqrt(dx * dx + dy * dy);
 					const lineLength = totalDistance - circleRadius;
 					
-					// Aplicar estilos
 					line.style.transform = `rotate(${angle}deg) translateX(${circleRadius}px)`;
 					
-					// Si la línea ya es visible (animación terminada), actualizamos el ancho
-					// Si se está animando, anime.js controla el ancho, pero actualizamos el objetivo si es posible?
-					// Anime.js usa valores relativos o absolutos. Si la animación terminó, el width es fijo.
-					// Actualizamos el width solo si no es 0 (para no romper la animación de entrada si se redimensiona durante ella)
 					if (line.style.width && line.style.width !== '0px') {
 						line.style.width = `${Math.max(0, lineLength)}px`;
 					}
 					
-					// Guardamos la longitud calculada en un atributo data para que la animación la use
 					line.dataset.targetWidth = Math.max(0, lineLength);
 				});
 			}
 
-			// Animación de entrada para una pantalla de aptitud
+			// Animación de entrada para una pantalla de aptitud con GSAP
 			function showAptitudScreen(index) {
 				const screen = detailScreens[index];
 				if (!screen) return;
 
-				// Marcar como activa
 				screen.classList.add('active');
 
 				const lineLogoAptitud = screen.querySelector('.line-logo-aptitud');
 				const aptitudCircle = screen.querySelector('.aptitud-circle');
-				const linesContainer = screen.querySelector('.lines-to-projects');
 				const linesToProjects = screen.querySelectorAll('.line-aptitud-proyecto');
 				const projectCards = screen.querySelectorAll('.proyecto-detail-card');
 
-				// Calcular posiciones iniciales
 				updateAptitudLines(screen);
 
-				// Timeline de entrada
-				const enterTl = anime.timeline({
-					easing: 'easeOutQuad'
-				});
+				// Timeline de entrada con GSAP
+				const enterTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
 				// 1. Fade in screen
-				enterTl.add({
-					targets: screen,
-					opacity: [0, 1],
-					duration: 300
-				});
+				enterTl.fromTo(screen, 
+					{ opacity: 0 },
+					{ opacity: 1, duration: 0.3 }
+				);
 
 				// 2. Línea desde logo hacia aptitud (solo en desktop)
-				if (!isMobileView) {
+				if (!isMobileView && lineLogoAptitud) {
 					const logoLineStart = lineLogoAptitud.getBoundingClientRect().left;
-					const circleLeft = aptitudCircle.getBoundingClientRect().left; // Esto puede variar con scale, pero para la línea izq está bien
-					// Mejor usar el centro calculado
 					const screenRect = screen.getBoundingClientRect();
 					const circleCenterX = screenRect.left + screenRect.width / 2;
 					const circleRadius = aptitudCircle.offsetWidth / 2;
 					const circleLeftEdge = circleCenterX - circleRadius;
-					
 					const logoLineWidth = Math.max(0, circleLeftEdge - logoLineStart);
 
-					enterTl.add({
-						targets: lineLogoAptitud,
-						width: ['0px', `${logoLineWidth}px`],
-						opacity: [0, 1],
-						duration: 400
-					}, 100);
+					enterTl.fromTo(lineLogoAptitud, 
+						{ width: '0px', opacity: 0 },
+						{ width: `${logoLineWidth}px`, opacity: 1, duration: 0.4 },
+						0.1
+					);
 				}
 
 				// 3. Círculo de aptitud aparece
-				enterTl.add({
-					targets: aptitudCircle,
-					opacity: [0, 1],
-					scale: [0.5, 1],
-					duration: 400,
-					easing: 'easeOutBack'
-				}, isMobileView ? 100 : 400);
+				enterTl.fromTo(aptitudCircle,
+					{ opacity: 0, scale: 0.5 },
+					{ opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.7)' },
+					isMobileView ? 0.1 : 0.4
+				);
 
-				// 4. Calcular y posicionar líneas hacia cada tarjeta (solo en desktop)
-				const linesDelay = isMobileView ? 300 : 650;
+				// 4. Líneas hacia tarjetas (solo en desktop)
+				const linesDelay = isMobileView ? 0.3 : 0.65;
 				
 				if (!isMobileView) {
 					linesToProjects.forEach((line, i) => {
-						// Usar el ancho calculado previamente
 						const targetWidth = line.dataset.targetWidth || 100;
-						
-						// Animar la línea
-						enterTl.add({
-							targets: line,
-							width: ['0px', `${targetWidth}px`],
-							opacity: [0, 1],
-							duration: 350,
-							easing: 'easeOutQuad'
-						}, linesDelay + (i * 80));
+						enterTl.fromTo(line,
+							{ width: '0px', opacity: 0 },
+							{ width: `${targetWidth}px`, opacity: 1, duration: 0.35, ease: 'power2.out' },
+							linesDelay + (i * 0.08)
+						);
 					});
 				}
 
-				// 5. Tarjetas de proyecto
-				const cardsStartDelay = isMobileView ? 400 : (650 + (linesToProjects.length * 80) + 100);
-				enterTl.add({
-					targets: projectCards,
-					opacity: [0, 1],
-					translateX: isMobileView ? [0, 0] : [30, 0],
-					translateY: isMobileView ? [20, 0] : [0, 0],
-					duration: 400,
-					delay: anime.stagger(80),
-					easing: 'easeOutQuad'
-				}, cardsStartDelay);
+				// 5. Tarjetas de proyecto con stagger
+				const cardsStartDelay = isMobileView ? 0.4 : (0.65 + (linesToProjects.length * 0.08) + 0.1);
+				enterTl.fromTo(projectCards,
+					{ 
+						opacity: 0, 
+						x: isMobileView ? 0 : 30,
+						y: isMobileView ? 20 : 0
+					},
+					{ 
+						opacity: 1, 
+						x: 0, 
+						y: 0, 
+						duration: 0.4,
+						stagger: 0.08,
+						ease: 'power2.out'
+					},
+					cardsStartDelay
+				);
 
 				return enterTl;
 			}
 
-			// Animación de salida para una pantalla de aptitud
+			// Animación de salida para una pantalla de aptitud con GSAP
 			function hideAptitudScreen(index) {
 				const screen = detailScreens[index];
 				if (!screen) return Promise.resolve();
 
 				return new Promise((resolve) => {
-					const exitTl = anime.timeline({
-						easing: 'easeInQuad',
-						complete: () => {
+					const exitTl = gsap.timeline({
+						defaults: { ease: 'power2.in' },
+						onComplete: () => {
 							screen.classList.remove('active');
 							resolve();
 						}
@@ -1452,93 +1377,78 @@
 					const aptitudCircle = screen.querySelector('.aptitud-circle');
 					const lineLogoAptitud = screen.querySelector('.line-logo-aptitud');
 
-					// Salida en orden inverso
-					exitTl.add({
-						targets: projectCards,
-						opacity: [1, 0],
-						translateX: isMobileView ? [0, 0] : [0, -30],
-						translateY: isMobileView ? [0, -20] : [0, 0],
-						duration: 300,
-						delay: anime.stagger(40, { direction: 'reverse' })
+					// Salida en orden inverso con stagger reverso
+					exitTl.to(projectCards, {
+						opacity: 0,
+						x: isMobileView ? 0 : -30,
+						y: isMobileView ? -20 : 0,
+						duration: 0.3,
+						stagger: { each: 0.04, from: 'end' }
 					});
 
-					// Animar cada línea individualmente (solo en desktop)
+					// Animar líneas (solo en desktop)
 					if (!isMobileView) {
 						linesToProjects.forEach((line, i) => {
 							const currentWidth = line.style.width || '0px';
-							exitTl.add({
-								targets: line,
-								width: [currentWidth, '0px'],
-								opacity: [1, 0],
-								duration: 250
-							}, 200 + (i * 30));
+							exitTl.fromTo(line,
+								{ width: currentWidth, opacity: 1 },
+								{ width: '0px', opacity: 0, duration: 0.25 },
+								0.2 + (i * 0.03)
+							);
 						});
 					}
 
-					exitTl.add({
-						targets: aptitudCircle,
-						opacity: [1, 0],
-						scale: [1, 0.5],
-						duration: 300
-					}, isMobileView ? 200 : 350);
+					exitTl.to(aptitudCircle, {
+						opacity: 0,
+						scale: 0.5,
+						duration: 0.3
+					}, isMobileView ? 0.2 : 0.35);
 
 					// Línea logo-aptitud solo en desktop
-					if (!isMobileView) {
+					if (!isMobileView && lineLogoAptitud) {
 						const logoLineStart = lineLogoAptitud.getBoundingClientRect().left;
 						const circleLeft = aptitudCircle.getBoundingClientRect().left;
 						const logoLineWidth = Math.max(0, circleLeft - logoLineStart);
 
-						exitTl.add({
-							targets: lineLogoAptitud,
-							width: [`${logoLineWidth}px`, '0px'],
-							opacity: [1, 0],
-							duration: 300
-						}, 450);
+						exitTl.fromTo(lineLogoAptitud,
+							{ width: `${logoLineWidth}px`, opacity: 1 },
+							{ width: '0px', opacity: 0, duration: 0.3 },
+							0.45
+						);
 					}
 
-					exitTl.add({
-						targets: screen,
-						opacity: [1, 0],
-						duration: 200
-					}, 600);
+					exitTl.to(screen, {
+						opacity: 0,
+						duration: 0.2
+					}, 0.6);
 				});
 			}
 
-			// Timeline principal para la transición órbita -> primera aptitud
-			const mainTimeline = anime.timeline({
-				autoplay: false,
-				easing: 'linear',
-				duration: 1000
-			});
+			// Timeline principal para la transición órbita -> primera aptitud con GSAP
+			const mainTimeline = gsap.timeline({ paused: true });
 
 			// Calcular desplazamiento del logo según pantalla
 			const isMobile = window.matchMedia('(max-width: 768px)').matches;
 			const logoTranslation = isMobile ? 0 : -280;
 
-			mainTimeline
-				// Ocultar órbita PRIMERO (el logo NO se mueve aún)
-				.add({
-					targets: grid,
-					opacity: [1, 0],
-					scale: [1, 0.5],
-					duration: 500,
-					easing: 'easeOutQuad'
-				})
-				// Mover logo hacia la izquierda DESPUÉS de que la órbita desaparezca
-				.add({
-					targets: logo,
-					translateX: [0, logoTranslation],
-					scale: [1, 0.85],
-					opacity: isMobile ? [1, 0] : [1, 1], // En móvil desaparece, en desktop se mantiene
-					duration: 500,
-					easing: 'easeOutQuad'
-				}, 500); // Empezar después de que termine la órbita
+			// Ocultar órbita PRIMERO (el logo NO se mueve aún) - 0s a 0.5s
+			mainTimeline.to(grid, {
+				opacity: 0,
+				scale: 0.5,
+				duration: 0.5,
+				ease: 'power2.out'
+			}, 0)
+			// Mover logo hacia la izquierda DESPUÉS de que la órbita desaparezca - 0.5s a 1s
+			.to(logo, {
+				x: logoTranslation,
+				scale: 0.85,
+				opacity: isMobile ? 0 : 1,
+				duration: 0.5,
+				ease: 'power2.out'
+			}, 0.5);
 
 			// Control de scroll con múltiples fases
-			// Fase 0: Transición órbita -> primera aptitud (10% del scroll)
-			// Fase 1-N: Cada aptitud ocupa un segmento igual del 90% restante
-
-			const ORBIT_PHASE_RATIO = 0.10; // 10% para la transición inicial (más rápido)
+			const ORBIT_PHASE_RATIO = 0.10;
 			const aptitudPhaseRatio = (1 - ORBIT_PHASE_RATIO) / totalAptitudes;
 
 			function onScroll() {
@@ -1555,31 +1465,25 @@
 				// Fase de transición órbita
 				if (progress <= ORBIT_PHASE_RATIO) {
 					const orbitProgress = progress / ORBIT_PHASE_RATIO;
-					mainTimeline.seek(orbitProgress * mainTimeline.duration);
+					mainTimeline.progress(orbitProgress);
 					
-					// Si estamos en una aptitud, ocultarla
 					if (currentAptitudIndex >= 0) {
 						hideAptitudScreen(currentAptitudIndex);
 						currentAptitudIndex = -1;
 					}
 				} else {
-					// Asegurar que la timeline principal esté completa
-					mainTimeline.seek(mainTimeline.duration);
+					mainTimeline.progress(1);
 					
-					// Calcular qué aptitud mostrar
 					const aptitudProgress = (progress - ORBIT_PHASE_RATIO) / (1 - ORBIT_PHASE_RATIO);
 					const newAptitudIndex = Math.min(
 						totalAptitudes - 1,
 						Math.floor(aptitudProgress * totalAptitudes)
 					);
 
-					// Cambiar de aptitud si es necesario
 					if (newAptitudIndex !== currentAptitudIndex) {
-						// Ocultar la actual
 						if (currentAptitudIndex >= 0) {
 							hideAptitudScreen(currentAptitudIndex);
 						}
-						// Mostrar la nueva
 						currentAptitudIndex = newAptitudIndex;
 						showAptitudScreen(currentAptitudIndex);
 					}
@@ -1588,7 +1492,6 @@
 
 			window.addEventListener('scroll', onScroll, { passive: true });
 			
-			// Listener para redimensionamiento
 			window.addEventListener('resize', () => {
 				if (currentAptitudIndex >= 0 && !isMobileView) {
 					const screen = detailScreens[currentAptitudIndex];

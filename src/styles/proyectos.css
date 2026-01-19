@@ -199,7 +199,7 @@
   justify-content: center;
   align-items: center;
   pointer-events: none;
-  /* Eliminamos transform para evitar conflictos con anime.js */
+  /* Eliminamos transform para evitar conflictos con GSAP */
 }
 
 .proyectos-logo img {
