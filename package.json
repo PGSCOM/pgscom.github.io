@@ -17,5 +17,8 @@
     "liquid-glass-react": "^1.1.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
+  },
+  "optionalDependencies": {
+    "@esbuild/linux-x64": "0.25.10"
   }
 }
