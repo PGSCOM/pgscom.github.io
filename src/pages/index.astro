@@ -464,12 +464,15 @@
 				setPaused(false);
 			});
 
+			let lastHoverCheck = 0;
+
 			const tick = (t) => {
 				const dt = Math.min(0.05, Math.max(0.001, (t - lastT) / 1000));
 				lastT = t;
 
 				// Hover real sobre tarjeta (sin depender de enter/leave de elementos en movimiento)
-				if (pointerActive) {
+				if (pointerActive && t - lastHoverCheck > 80) {
+					lastHoverCheck = t;
 					const el = document.elementFromPoint(pointerX, pointerY);
 					const isOnCard = !!(el && container.contains(el) && el.closest('.proyecto-card'));
 					if (isOnCard) {
@@ -1196,7 +1199,16 @@
 
 
         onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
+        let rafPending = false;
+        window.addEventListener('scroll', () => {
+          if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => {
+              onScroll();
+              rafPending = false;
+            });
+          }
+        }, { passive: true });
 		// #endregion
     }
 
@@ -1463,6 +1475,8 @@
 			const ORBIT_PHASE_RATIO = 0.10;
 			const aptitudPhaseRatio = (1 - ORBIT_PHASE_RATIO) / totalAptitudes;
 
+			let isAnimating = false;
+
 			function onScroll() {
 				const rect = section.getBoundingClientRect();
 				const viewportHeight = window.innerHeight;
@@ -1492,17 +1506,35 @@
 						Math.floor(aptitudProgress * totalAptitudes)
 					);
 
-					if (newAptitudIndex !== currentAptitudIndex) {
-						if (currentAptitudIndex >= 0) {
-							hideAptitudScreen(currentAptitudIndex);
-						}
+					if (newAptitudIndex !== currentAptitudIndex && !isAnimating) {
+						isAnimating = true;
+						const prevIndex = currentAptitudIndex;
 						currentAptitudIndex = newAptitudIndex;
-						showAptitudScreen(currentAptitudIndex);
+
+						const doShow = () => {
+							showAptitudScreen(currentAptitudIndex);
+							isAnimating = false;
+						};
+
+						if (prevIndex >= 0) {
+							hideAptitudScreen(prevIndex).then(doShow);
+						} else {
+							doShow();
+						}
 					}
 				}
 			}
 
-			window.addEventListener('scroll', onScroll, { passive: true });
+			let rafPending = false;
+			window.addEventListener('scroll', () => {
+				if (!rafPending) {
+					rafPending = true;
+					requestAnimationFrame(() => {
+						onScroll();
+						rafPending = false;
+					});
+				}
+			}, { passive: true });
 			
 			window.addEventListener('resize', () => {
 				if (currentAptitudIndex >= 0 && !isMobileView) {

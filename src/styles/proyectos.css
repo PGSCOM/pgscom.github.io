@@ -230,12 +230,7 @@
 }
 
 .proyecto-card-inner {
-  background: linear-gradient(145deg,
-    rgba(255, 255, 255, 0.15),
-    rgba(147, 197, 253, 0.08),
-    rgba(255, 255, 255, 0.05));
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(30, 35, 55, 0.75);
   border-radius: 50%;
   padding: 0;
   width: 95px;
@@ -570,10 +565,6 @@
   border-radius: 2px;
 }
 
-.aptitud-detail-screen.active .line-logo-aptitud {
-  animation: neon-flow 2s linear infinite;
-}
-
 /* Punto brillante al inicio de la línea */
 .line-logo-aptitud::before {
   content: '';
@@ -691,10 +682,6 @@
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
 }
 
-.aptitud-detail-screen.active .aptitud-circle img {
-  animation: float-gentle 4s ease-in-out infinite;
-}
-
 .aptitud-circle:hover img {
   transform: scale(1.15) rotate(5deg);
   filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5))
@@ -711,11 +698,6 @@
   line-height: 1.2;
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
   letter-spacing: 0.02em;
-}
-
-/* Estado activo del círculo de aptitud */
-.aptitud-detail-screen.active .aptitud-circle {
-  animation: subtle-glow 3s ease-in-out infinite;
 }
 
 /* Contenedor de líneas hacia proyectos */
@@ -746,10 +728,6 @@
     0 0 10px rgba(147, 197, 253, 0.5),
     0 0 20px rgba(147, 197, 253, 0.3),
     0 0 4px rgba(255, 255, 255, 0.8);
-}
-
-.aptitud-detail-screen.active .line-aptitud-proyecto {
-  animation: neon-flow 3s linear infinite;
 }
 
 /* Partículas en las líneas */
@@ -816,15 +794,7 @@
 }
 
 /* Animación de entrada escalonada */
-.aptitud-detail-screen.active .proyecto-detail-card {
-  animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
 
-.aptitud-detail-screen.active .proyecto-detail-card:nth-child(1) { animation-delay: 0.1s; }
-.aptitud-detail-screen.active .proyecto-detail-card:nth-child(2) { animation-delay: 0.2s; }
-.aptitud-detail-screen.active .proyecto-detail-card:nth-child(3) { animation-delay: 0.3s; }
-.aptitud-detail-screen.active .proyecto-detail-card:nth-child(4) { animation-delay: 0.4s; }
-.aptitud-detail-screen.active .proyecto-detail-card:nth-child(5) { animation-delay: 0.5s; }
 
 /* Efecto de brillo deslizante continuo */
 .proyecto-detail-card::before {
