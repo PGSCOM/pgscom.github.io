@@ -772,9 +772,9 @@
                 onUpdate: function() {
                     // Actualizar la máscara sincronizada con el zoom del logo
                     const rect = logoEl.getBoundingClientRect();
-                    const currentSize = (rect.height / window.innerHeight) * 100 - 5;
-                    galaxiaMaskEl.style.webkitMaskSize = `auto ${currentSize}vh`;
-                    galaxiaMaskEl.style.maskSize = `auto ${currentSize}vh`;
+                    const currentSize = (rect.height / window.innerHeight) * 100 - 1;
+                    galaxiaMaskEl.style.webkitMaskSize = `${currentSize}vh ${currentSize}vh`;
+                    galaxiaMaskEl.style.maskSize = `${currentSize}vh ${currentSize}vh`;
                 }
             }, 1)
         
