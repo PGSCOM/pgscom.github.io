@@ -1,4 +1,4 @@
-/* Estilos para la sección de proyectos */
+/* Estilos para la sección de proyectos - Layout legible y fluido */
 
 /* ============================================
    ANIMACIONES PERSONALIZADAS
@@ -20,212 +20,149 @@
   }
 }
 
-/* Entrada de tarjetas desde la derecha */
-@keyframes card-appear {
-  from {
-    opacity: 0;
-    transform: translateX(40px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
 /* Rotación de brillo alrededor del círculo */
 @keyframes rotating-glow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Pulso de expansión */
-@keyframes pulse-ring {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-
-/* Efecto de onda desde el centro */
-@keyframes ripple-out {
-  0% {
-    transform: scale(0.8);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(2);
-    opacity: 0;
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Flotación suave */
 @keyframes float-gentle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 /* Parpadeo de estrellas */
 @keyframes twinkle {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
 
 /* Línea de neón animada */
 @keyframes neon-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
-}
-
-/* Entrada con rebote */
-@keyframes bounce-in {
-  0% {
-    opacity: 0;
-    transform: translateX(60px) scale(0.8);
-  }
-  60% {
-    opacity: 1;
-    transform: translateX(-10px) scale(1.02);
-  }
-  80% {
-    transform: translateX(5px) scale(0.98);
-  }
-  100% {
-    transform: translateX(0) scale(1);
-  }
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
 }
 
 /* Brillo deslizante */
 @keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 200%;
-  }
+  0% { left: -100%; }
+  100% { left: 200%; }
 }
 
-/* Giro 3D sutil */
-@keyframes subtle-3d-rotate {
-  0%, 100% {
-    transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
-  }
-  25% {
-    transform: perspective(1000px) rotateY(2deg) rotateX(1deg);
-  }
-  75% {
-    transform: perspective(1000px) rotateY(-2deg) rotateX(-1deg);
-  }
+/* Pulse ring */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
 }
 
-/* Gradiente animado */
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-/* Partículas orbitando */
-@keyframes orbit-particle {
-  0% {
-    transform: rotate(0deg) translateX(70px) rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg) translateX(70px) rotate(-360deg);
-  }
-}
+/* ============================================
+   SECCIÓN DE PROYECTOS - Layout General
+   ============================================ */
 
 .proyectos-section {
-  height: 400vh; /* Altura reducida para transiciones más rápidas entre aptitudes */
-  display: block; /* Evita empujar el contenedor al inicio y respeta su centrado propio */
-  padding: 0;
-  background: transparent;
   position: relative;
   z-index: 100;
-  overflow: visible; /* Asegura que sticky use el scroll del viewport */
+  padding: 0;
+  background: transparent;
+  overflow: visible;
 }
 
-.proyectos-container {
-  max-width: 1400px; /* Da un ancho controlado y centrable */
-  width: 100%;
-  height: 100vh; /* Ocupar toda la pantalla */
-  position: -webkit-sticky; /* Para Safari */
-  position: sticky;
-  top: 0;
-  margin: 0 auto; /* Centrado horizontal en flujo normal */
+/* Header de la sección */
+.proyectos-header {
+  text-align: center;
+  padding: 8vh 20px 4vh;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.proyectos-titulo-seccion {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: white;
+  margin: 0 0 12px 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.01em;
+}
+
+.proyectos-subtitulo-seccion {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   HERO DECORATIVO - Órbita sin scroll-hijack
+   ============================================ */
+
+.proyectos-hero {
+  min-height: 40vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  --orbit-radius: 290px;
-  touch-action: pan-y; /* Permitir scroll vertical, evitar horizontal */
-  overflow: hidden;
-  z-index: 100;
+  position: relative;
+  padding: 20px;
+  margin-top: 5vh;
+  margin-bottom: 10vh;
+  --orbit-radius: 220px;
 }
 
-/* El sticky se maneja con CSS puro, no se necesita clase .stuck */
+.proyectos-hero-inner {
+  position: relative;
+  width: 100%;
+  /*max-width: 400px;*/
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Grid de aptitudes orbitando */
+.proyectos-grid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .proyectos-logo {
   position: absolute;
   inset: 0;
   margin: auto;
   z-index: 10;
-  width: 260px;
-  height: 260px;
+  width: 150px;
+  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
-  /* Eliminamos transform para evitar conflictos con GSAP */
 }
 
 .proyectos-logo img {
   max-width: 100%;
   height: auto;
   filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.4));
-  /* Eliminamos animación float para evitar conflictos de posición */
-}
-
-.proyectos-grid {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  transition: filter 0.3s ease;
 }
 
 .proyecto-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
   cursor: pointer;
   position: absolute;
-  width: 95px;
-  height: 95px;
+  width: 100px;
+  height: 100px;
   top: 50%;
   left: 50%;
+  text-decoration: none;
   will-change: transform;
 }
 
@@ -233,13 +170,13 @@
   background: rgba(30, 35, 55, 0.75);
   border-radius: 50%;
   padding: 0;
-  width: 95px;
-  height: 95px;
+  width: 100px;
+  height: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 4px;
   border: 2px solid rgba(255, 255, 255, 0.25);
   position: relative;
   overflow: hidden;
@@ -249,7 +186,6 @@
     0 0 20px rgba(147, 197, 253, 0.1);
 }
 
-/* Anillo de brillo para tarjetas orbitales */
 .proyecto-card-inner::before {
   content: '';
   position: absolute;
@@ -272,32 +208,13 @@
   z-index: -1;
 }
 
-/* Efecto shimmer */
-.proyecto-card-inner::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.25),
-    transparent);
-  transform: skewX(-20deg);
-}
-
 .proyecto-card:hover .proyecto-card-inner::before {
   opacity: 1;
   animation-play-state: running;
 }
 
-.proyecto-card:hover .proyecto-card-inner::after {
-  animation: shimmer 0.8s ease forwards;
-}
-
 .proyecto-card:hover .proyecto-card-inner {
-  transform: translateY(-12px) scale(1.05);
+  transform: translateY(-8px) scale(1.08);
   box-shadow: 
     0 25px 50px rgba(0, 0, 0, 0.35),
     0 0 40px rgba(147, 197, 253, 0.3),
@@ -311,760 +228,284 @@
 
 .proyecto-icon {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   background: transparent;
-  border-radius: 50%;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .proyecto-card:hover .proyecto-icon {
-  transform: scale(1.15) rotate(8deg);
+  transform: scale(1.15) rotate(6deg);
 }
 
 .proyecto-icon img {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.4));
   transition: filter 0.3s ease;
 }
 
 .proyecto-card:hover .proyecto-icon img {
-  filter: 
-    drop-shadow(0 4px 15px rgba(0, 0, 0, 0.5))
-    drop-shadow(0 0 15px rgba(147, 197, 253, 0.4));
+  filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 15px rgba(147, 197, 253, 0.4));
 }
 
 .proyecto-titulo {
-  display: none;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  max-width: 90px;
+  line-height: 1.2;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  letter-spacing: 0.01em;
+  transition: color 0.3s ease;
 }
 
-.proyecto-descripcion {
-  display: none;
-}
-
-/* Nota: la órbita se controla por JS para poder frenar suave */
-
-/* Responsive */
-@media (max-width: 1200px) {
-  .proyectos-container {
-    height: 100vh; /* Usar altura completa para centrado vertical correcto */
-    --orbit-radius: 270px;
-  }
-
-  .proyectos-logo {
-    width: 240px;
-    height: 240px;
-  }
-
-  .proyecto-card {
-    width: 90px;
-    height: 90px;
-  }
-
-  .proyecto-card-inner {
-    width: 90px;
-    height: 90px;
-    padding: 0;
-  }
-
-  .proyecto-icon img {
-    width: 50px;
-    height: 50px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .proyectos-container {
-    height: 100vh; /* Usar altura completa para centrado vertical correcto */
-    --orbit-radius: 240px;
-  }
-
-  .proyectos-logo {
-    width: 210px;
-    height: 210px;
-  }
-
-  .proyecto-card {
-    width: 85px;
-    height: 85px;
-  }
-
-  .proyecto-card-inner {
-    width: 85px;
-    height: 85px;
-    padding: 0;
-  }
-
-  .proyecto-icon img {
-    width: 47px;
-    height: 47px;
-  }
-}
-
-@media (max-width: 768px) {
-  .proyectos-section {
-    padding: 2rem 1rem;
-    min-height: 100dvh;
-  }
-
-  .proyectos-container {
-    height: 100dvh; /* Usar altura completa para centrado vertical correcto */
-    --orbit-radius: 200px;
-  }
-
-  .proyectos-logo {
-    width: 180px;
-    height: 180px;
-  }
-
-  .proyecto-card {
-    width: 80px;
-    height: 80px;
-  }
-
-  .proyecto-card-inner {
-    width: 80px;
-    height: 80px;
-    padding: 0;
-  }
-
-  .proyecto-icon img {
-    width: 45px;
-    height: 45px;
-  }
-}
-
-@media (max-width: 480px) {
-  .proyectos-section {
-    padding: 1.5rem 0.5rem;
-  }
-
-  .proyectos-container {
-    height: 100vh; /* Usar altura completa para centrado vertical correcto */
-    --orbit-radius: 155px;
-  }
-
-  .proyectos-logo {
-    width: 140px;
-    height: 140px;
-  }
-
-  .proyecto-card {
-    width: 70px;
-    height: 70px;
-  }
-
-  .proyecto-card-inner {
-    width: 70px;
-    height: 70px;
-    padding: 0;
-  }
-
-  .proyecto-icon img {
-    width: 38px;
-    height: 38px;
-  }
-}
-
-/* Menu Styles */
-.proyectos-menu {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 20;
-}
-
-.nodes-cluster {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-}
-
-.node-circle {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-}
-
-/* Positions relative to center (Logo) */
-.node-1 { top: -50px; left: 200px; }
-.node-2 { top: 10px; left: 240px; }
-.node-3 { top: 70px; left: 190px; }
-
-.node-line {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.6);
-  height: 1px;
-  top: 0;
-  left: 0;
-  transform-origin: left center;
-  width: 0;
-  opacity: 0;
+.proyecto-card:hover .proyecto-titulo {
+  color: white;
 }
 
 /* ============================================
-   PANTALLAS DE DETALLE POR APTITUD
-   Layout: Logo (izq) -- Aptitud (centro) -- Proyectos (der)
+   CONTENIDO DE PROYECTOS - Layout por Aptitud
    ============================================ */
 
-.aptitud-detail-screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.proyectos-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 8vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10vh;
+}
+
+.aptitud-bloque {
+  position: relative;
+}
+
+.aptitud-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 30;
-}
-
-.aptitud-detail-screen.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Línea que conecta Logo con Aptitud - Con efecto neón */
-.line-logo-aptitud {
-  position: absolute;
-  top: 50%;
-  left: calc(50% - 150px);
-  width: 0;
-  height: 3px;
-  background: linear-gradient(90deg, 
-    rgba(255,255,255,0.9), 
-    rgba(147,197,253,0.8),
-    rgba(196,181,253,0.6),
-    rgba(147,197,253,0.4));
-  background-size: 200% 100%;
-  transform: translateY(-50%);
-  transform-origin: left center;
-  opacity: 0;
-  box-shadow: 
-    0 0 15px rgba(147,197,253,0.6),
-    0 0 30px rgba(147,197,253,0.3),
-    0 0 5px rgba(255,255,255,0.9);
-  border-radius: 2px;
-}
-
-/* Punto brillante al inicio de la línea */
-.line-logo-aptitud::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 0 20px rgba(147, 197, 253, 0.6);
-  animation: twinkle 2s ease-in-out infinite;
-}
-
-/* Círculo de aptitud (centro del diagrama) - Mejorado con animaciones */
-.aptitud-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -55px;
-  margin-top: -55px;
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: linear-gradient(145deg, 
-    rgba(255, 255, 255, 0.18), 
-    rgba(147, 197, 253, 0.12),
-    rgba(255, 255, 255, 0.08));
+  gap: 20px;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.08), 
+    rgba(147, 197, 253, 0.05));
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s ease;
+}
+
+.aptitud-header:hover {
+  border-color: rgba(147, 197, 253, 0.25);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(147, 197, 253, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.aptitud-icono {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.15), 
+    rgba(147, 197, 253, 0.1));
+  border: 2px solid rgba(255, 255, 255, 0.2);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  opacity: 0;
-  box-shadow: 
-    0 0 40px rgba(147, 197, 253, 0.25),
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.4s ease;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Anillo de brillo rotatorio */
-.aptitud-circle::before {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    rgba(147, 197, 253, 0.6) 60deg,
-    rgba(196, 181, 253, 0.4) 120deg,
-    transparent 180deg,
-    rgba(147, 197, 253, 0.3) 240deg,
-    transparent 360deg
-  );
-  z-index: -1;
-  opacity: 0;
-  animation: rotating-glow 8s linear infinite;
-  transition: opacity 0.5s ease;
-}
-
-/* Anillo de pulso */
-.aptitud-circle::after {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  border-radius: 50%;
-  border: 2px solid rgba(147, 197, 253, 0.3);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.aptitud-detail-screen.active .aptitud-circle::before {
-  opacity: 1;
-}
-
-.aptitud-detail-screen.active .aptitud-circle::after {
-  animation: pulse-ring 2.5s ease-out infinite;
-}
-
-.aptitud-circle:hover {
-  transform: scale(1.08);
-  box-shadow: 
-    0 0 70px rgba(147, 197, 253, 0.5),
-    0 15px 50px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.aptitud-circle:hover::before {
-  opacity: 1;
-  animation: rotating-glow 4s linear infinite;
-}
-
-.aptitud-circle img {
-  width: 44px;
-  height: 44px;
+.aptitud-icono img {
+  width: 36px;
+  height: 36px;
   object-fit: contain;
-  filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.4))
-          drop-shadow(0 0 8px rgba(147, 197, 253, 0.3));
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
-.aptitud-circle:hover img {
-  transform: scale(1.15) rotate(5deg);
-  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5))
-          drop-shadow(0 0 20px rgba(147, 197, 253, 0.6));
+.aptitud-info {
+  flex: 1;
+  min-width: 0;
 }
 
-.aptitud-circle .aptitud-title {
+.aptitud-titulo {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: white;
-  text-align: center;
-  max-width: 100px;
+  margin: 0 0 8px 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
   line-height: 1.2;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-  letter-spacing: 0.02em;
 }
 
-/* Contenedor de líneas hacia proyectos */
-.lines-to-projects {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
+.aptitud-descripcion {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 700px;
 }
 
-/* Líneas con efecto neón animado */
-.line-aptitud-proyecto {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, 
-    rgba(147, 197, 253, 0.9), 
-    rgba(196, 181, 253, 0.7),
-    rgba(147, 197, 253, 0.5),
-    rgba(255, 255, 255, 0.3));
-  background-size: 200% 100%;
-  transform-origin: left center;
-  opacity: 0;
-  box-shadow: 
-    0 0 10px rgba(147, 197, 253, 0.5),
-    0 0 20px rgba(147, 197, 253, 0.3),
-    0 0 4px rgba(255, 255, 255, 0.8);
+/* Grid de proyectos - Más espacio para tarjetas grandes */
+.proyectos-grid-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
 }
 
-/* Partículas en las líneas */
-.line-aptitud-proyecto::after {
-  content: '';
-  position: absolute;
-  right: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(147, 197, 253, 0.9);
-  box-shadow: 
-    0 0 10px rgba(147, 197, 253, 0.8),
-    0 0 20px rgba(147, 197, 253, 0.5);
-  animation: twinkle 1.5s ease-in-out infinite;
-}
-
-/* Lista de proyectos - Mejorada */
-.proyectos-list {
-  position: absolute;
-  top: 50%;
-  left: calc(50% + 180px);
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  max-height: 75vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 20px 20px 20px 15px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.proyectos-list::-webkit-scrollbar {
-  display: none;
-}
-
-/* Tarjeta de proyecto individual - Con animaciones avanzadas */
+/* Tarjeta de proyecto individual - Formato Vertical */
 .proyecto-detail-card {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
   background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.12), 
-    rgba(147, 197, 253, 0.08),
-    rgba(255, 255, 255, 0.05));
-  background-size: 200% 200%;
+    rgba(30, 35, 55, 0.7), 
+    rgba(15, 20, 35, 0.8));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 18px 20px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  opacity: 0;
-  transform: translateX(30px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  min-width: 320px;
-  max-width: 380px;
   position: relative;
   overflow: hidden;
-}
-
-/* Animación de entrada escalonada */
-
-
-/* Efecto de brillo deslizante continuo */
-.proyecto-detail-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
   height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.2),
-    rgba(147, 197, 253, 0.15),
-    transparent);
-  transform: skewX(-20deg);
-  transition: none;
-}
-
-/* Efecto de resplandor radial */
-.proyecto-detail-card::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at 30% 50%, 
-    rgba(147, 197, 253, 0.15) 0%, 
-    transparent 50%);
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  pointer-events: none;
-}
-
-.proyecto-detail-card:hover::before {
-  animation: shimmer 1s ease forwards;
-}
-
-.proyecto-detail-card:hover::after {
-  opacity: 1;
-  transform: scale(1.2);
 }
 
 .proyecto-detail-card:hover {
-  transform: translateX(12px) scale(1.03);
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.2), 
-    rgba(147, 197, 253, 0.15),
-    rgba(196, 181, 253, 0.1));
+  transform: translateY(-8px);
+  border-color: rgba(147, 197, 253, 0.5);
   box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(147, 197, 253, 0.25),
-    0 0 80px rgba(147, 197, 253, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  border-color: rgba(147, 197, 253, 0.4);
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(147, 197, 253, 0.15);
 }
 
-/* Efecto 3D sutil en hover */
-.proyecto-detail-card:active {
-  transform: translateX(8px) scale(0.98);
-  transition: transform 0.1s ease;
-}
-
-/* Contenedor de imagen del proyecto - Con animaciones */
+/* Imagen del proyecto (Ahora ocupa el 50% superior) */
 .proyecto-image-container {
-  width: 75px;
-  height: 75px;
-  border-radius: 12px;
+  width: 100%;
+  height: 200px;
   overflow: hidden;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, 
-    rgba(0, 0, 0, 0.4), 
-    rgba(30, 30, 50, 0.6));
   position: relative;
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Borde animado en el contenedor de imagen */
-.proyecto-image-container::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 14px;
-  background: linear-gradient(45deg, 
-    rgba(147, 197, 253, 0) 0%,
-    rgba(147, 197, 253, 0.5) 50%,
-    rgba(196, 181, 253, 0) 100%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  z-index: -1;
-}
-
-.proyecto-image-container::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  pointer-events: none;
-  transition: border-color 0.3s ease;
-}
-
-.proyecto-detail-card:hover .proyecto-image-container::before {
-  opacity: 1;
-  animation: rotating-glow 3s linear infinite;
-}
-
-.proyecto-detail-card:hover .proyecto-image-container::after {
-  border-color: rgba(147, 197, 253, 0.3);
-}
-
-.proyecto-detail-card:hover .proyecto-image-container {
-  transform: scale(1.08) rotate(2deg);
-  box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.4),
-    0 0 25px rgba(147, 197, 253, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .proyecto-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .proyecto-detail-card:hover .proyecto-image {
-  transform: scale(1.15);
-  filter: brightness(1.1) saturate(1.1);
+  transform: scale(1.08);
 }
 
-/* Información del proyecto - Mejorada */
+/* Botón flotante para enlace externo */
+.card-btn-link-float {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  background: rgba(10, 10, 20, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.proyecto-detail-card:hover .card-btn-link-float {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-btn-link-float:hover {
+  background: rgba(34, 197, 94, 0.8);
+  border-color: #22c55e;
+  transform: scale(1.1) !important;
+}
+
+/* Contenedor de la info */
+.proyecto-info-wrapper {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
 .proyecto-info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  flex: 1;
-  min-width: 0;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .proyecto-detail-titulo {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: white;
   margin: 0;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-  letter-spacing: 0.01em;
-  line-height: 1.3;
-  transition: color 0.3s ease;
+  line-height: 1.2;
 }
 
 .proyecto-detail-card:hover .proyecto-detail-titulo {
-  color: rgba(200, 220, 255, 1);
-  text-shadow: 0 2px 12px rgba(147, 197, 253, 0.4);
+  color: #93c5fd;
 }
 
 .proyecto-detail-desc {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.65);
   margin: 0;
-  line-height: 1.4;
-  transition: color 0.3s ease;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.proyecto-detail-card:hover .proyecto-detail-desc {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* Indicador de flecha en tarjetas - Animado */
-.proyecto-detail-card .card-arrow {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%) translateX(-10px);
-  font-size: 1.3rem;
-  color: rgba(255, 255, 255, 0.2);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  opacity: 0;
-  text-shadow: 0 0 10px rgba(147, 197, 253, 0);
-}
-
-.proyecto-detail-card:hover .card-arrow {
-  opacity: 1;
-  transform: translateY(-50%) translateX(0);
-  color: rgba(147, 197, 253, 1);
-  text-shadow: 
-    0 0 10px rgba(147, 197, 253, 0.6),
-    0 0 20px rgba(147, 197, 253, 0.4);
-  animation: float-gentle 2s ease-in-out infinite;
-}
-
-/* Tags de tecnologías en tarjetas */
+/* Tags de tecnologías */
 .proyecto-tecnologias {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 8px;
 }
 
 .tech-tag {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 500;
-  padding: 3px 8px;
-  background: linear-gradient(135deg, rgba(147, 197, 253, 0.2), rgba(196, 181, 253, 0.15));
-  border: 1px solid rgba(147, 197, 253, 0.3);
-  border-radius: 20px;
-  color: rgba(200, 220, 255, 0.9);
-  letter-spacing: 0.02em;
-  transition: all 0.3s ease;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  background: rgba(147, 197, 253, 0.1);
+  border: 1px solid rgba(147, 197, 253, 0.2);
+  border-radius: 8px;
+  color: #bfdbfe;
 }
 
-.tech-tag.tech-more {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+.tech-tag-more {
+  background: transparent;
   border-color: rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.6);
-}
-
-.proyecto-detail-card:hover .tech-tag {
-  background: linear-gradient(135deg, rgba(147, 197, 253, 0.3), rgba(196, 181, 253, 0.25));
-  border-color: rgba(147, 197, 253, 0.5);
-  box-shadow: 0 0 10px rgba(147, 197, 253, 0.2);
-}
-
-/* Botones de acción en tarjeta */
-.card-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
-.card-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  text-decoration: none;
-}
-
-.card-btn:hover {
-  transform: scale(1.15);
-  background: linear-gradient(135deg, rgba(147, 197, 253, 0.3), rgba(196, 181, 253, 0.2));
-  border-color: rgba(147, 197, 253, 0.5);
-  color: white;
-  box-shadow: 
-    0 4px 20px rgba(147, 197, 253, 0.3),
-    0 0 30px rgba(147, 197, 253, 0.15);
-}
-
-.card-btn-info:hover {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(99, 102, 241, 0.3));
-  border-color: rgba(59, 130, 246, 0.6);
-}
-
-.card-btn-link:hover {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.4), rgba(16, 185, 129, 0.3));
-  border-color: rgba(34, 197, 94, 0.6);
 }
 
 /* ============================================
@@ -1074,8 +515,6 @@
 .proyecto-modal-overlay {
   position: fixed;
   inset: 0;
-  /* Más transparente para dejar ver el contenido detrás, combinado con blur */
-  /*background: rgba(6, 8, 10, 0.42);*/
   backdrop-filter: blur(5px) saturate(120%);
   -webkit-backdrop-filter: blur(5px) saturate(120%);
   z-index: 10000;
@@ -1104,7 +543,6 @@
   position: relative;
   transform: scale(0.95) translateY(20px);
   transition: transform 0.44s cubic-bezier(0.16, 1, 0.3, 1);
-  /* Fondo translúcido para efecto cristal sobre el overlay borroso */
   background: rgba(12, 14, 20, 0.48);
   backdrop-filter: blur(6px) saturate(120%);
   -webkit-backdrop-filter: blur(6px) saturate(120%);
@@ -1296,17 +734,6 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.modal-meta-rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.modal-meta-rating svg {
-  color: #fbbf24;
-  fill: #fbbf24;
-}
-
 /* Descripción corta / tagline */
 .modal-tagline {
   font-family: 'Chakra Petch', sans-serif;
@@ -1448,48 +875,7 @@
   transform: translateY(-2px);
 }
 
-/* Grid de información adicional */
-.modal-info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-  margin-top: 32px;
-  padding-top: 32px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.modal-info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.modal-info-label {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.modal-info-value {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.modal-info-value a {
-  color: rgba(147, 197, 253, 1);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.modal-info-value a:hover {
-  color: white;
-  text-decoration: underline;
-}
-
-/* Contenido HTML del proyecto (para el campo "contenido") */
+/* Contenido HTML del proyecto */
 .modal-contenido {
   font-family: 'Chakra Petch', sans-serif;
   color: rgba(255, 255, 255, 0.85);
@@ -1580,62 +966,217 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Footer del modal - Oculto porque usamos los botones de acción en el hero */
-.modal-footer {
-  display: none;
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .proyectos-hero-inner {
+    max-width: 450px;
+    height: 450px;
+  }
+
+  .proyectos-logo {
+    width: 190px;
+    height: 190px;
+  }
+
+  .proyecto-card {
+    width: 90px;
+    height: 90px;
+  }
+
+  .proyecto-card-inner {
+    width: 90px;
+    height: 90px;
+  }
+
+  .proyecto-icon img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .proyecto-titulo {
+    font-size: 0.65rem;
+  }
+
+  .proyectos-grid-list {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
 }
 
-.modal-header {
-  display: none;
-}
-
-.modal-imagen {
-  display: none;
-}
-
-.modal-header-info {
-  display: none;
-}
-
-/* Responsive del modal */
 @media (max-width: 1024px) {
+  .proyectos-hero-inner {
+    max-width: 340px;
+    height: 340px;
+  }
+
+  .proyectos-logo {
+    width: 130px;
+    height: 130px;
+  }
+
+  .proyecto-card {
+    width: 85px;
+    height: 85px;
+  }
+
+  .proyecto-card-inner {
+    width: 85px;
+    height: 85px;
+  }
+
+  .proyecto-icon img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .aptitud-header {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .aptitud-icono {
+    width: 60px;
+    height: 60px;
+  }
+
+  .aptitud-titulo {
+    font-size: 1.3rem;
+  }
+
+  .aptitud-descripcion {
+    font-size: 0.85rem;
+  }
+
   .modal-backdrop {
     height: 58%;
   }
-  
+
   .modal-hero {
     padding: 30vh 32px 24px 32px;
     gap: 24px;
     min-height: 50vh;
   }
-  
+
   .modal-poster-container {
     width: 200px;
     height: 200px;
   }
-  
+
   .modal-body {
     padding: 0 32px 32px 32px;
   }
 }
 
 @media (max-width: 768px) {
+  .proyectos-header {
+    padding: 6vh 16px 3vh;
+  }
+
+  .proyectos-hero {
+    min-height: 35vh;
+    padding: 10px;
+  }
+
+  .proyectos-hero-inner {
+    max-width: 340px;
+    height: 340px;
+  }
+
+  .proyectos-logo {
+    width: 130px;
+    height: 130px;
+  }
+
+  .proyecto-card {
+    width: 75px;
+    height: 75px;
+  }
+
+  .proyecto-card-inner {
+    width: 75px;
+    height: 75px;
+  }
+
+  .proyecto-icon img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .proyecto-titulo {
+    font-size: 0.6rem;
+    max-width: 70px;
+  }
+
+  .proyectos-content {
+    padding: 0 16px 6vh;
+    gap: 8vh;
+  }
+
+  .proyectos-grid-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .aptitud-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .aptitud-icono {
+    width: 55px;
+    height: 55px;
+  }
+
+  .aptitud-icono img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .aptitud-titulo {
+    font-size: 1.2rem;
+  }
+
+  .proyecto-detail-card {
+    flex-direction: column;
+  }
+
+  .proyecto-image-container {
+    height: 160px;
+  }
+
+  .proyecto-info-wrapper {
+    padding: 16px;
+  }
+
+  .proyecto-detail-titulo {
+    font-size: 1.1rem;
+  }
+
+  .proyecto-detail-desc {
+    font-size: 0.85rem;
+  }
+
+  /* Modal responsive */
   .proyecto-modal-overlay {
     padding: 12px;
     align-items: flex-start;
     padding-top: 40px;
   }
-  
+
   .proyecto-modal {
     max-height: 88vh;
     border-radius: 16px;
   }
-  
+
   .modal-backdrop {
     border-radius: 16px 16px 0 0;
     height: 54%;
   }
-  
+
   .modal-hero {
     flex-direction: column;
     align-items: center;
@@ -1644,84 +1185,84 @@
     gap: 16px;
     min-height: auto;
   }
-  
+
   .modal-poster-container {
     width: 160px;
     height: 160px;
   }
-  
+
   .modal-hero-info {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  
+
   .modal-titulo {
     font-size: 1.6rem;
     text-align: center;
     line-height: 1.2;
     margin-bottom: 12px;
   }
-  
+
   .modal-meta {
     justify-content: center;
     font-size: 0.85rem;
     gap: 12px;
   }
-  
+
   .modal-meta-badge {
     font-size: 0.75rem;
     padding: 3px 8px;
   }
-  
+
   .modal-tagline {
     text-align: center;
     font-size: 0.95rem;
     line-height: 1.4;
   }
-  
+
   .modal-actions {
     justify-content: center;
     margin-top: 16px;
   }
-  
+
   .modal-btn-primary {
     padding: 12px 24px;
     font-size: 0.9rem;
   }
-  
+
   .modal-btn-secondary {
     width: 44px;
     height: 44px;
   }
-  
+
   .modal-body {
     padding: 0 20px 24px 20px;
   }
-  
+
   .modal-description {
     text-align: left;
   }
-  
+
   .modal-description-text {
     font-size: 0.9rem;
     line-height: 1.6;
   }
-  
+
   .modal-tecnologias {
     justify-content: center;
     gap: 8px;
   }
-  
+
   .modal-tech-tag {
     font-size: 0.75rem;
     padding: 6px 12px;
   }
-  
+
   .modal-contenido {
     font-size: 0.9rem;
   }
-  
+
   .modal-close {
     top: 10px;
     right: 10px;
@@ -1731,96 +1272,178 @@
 }
 
 @media (max-width: 480px) {
+  .proyectos-header {
+    padding: 5vh 12px 2vh;
+  }
+
+  .proyectos-titulo-seccion {
+    font-size: 1.7rem;
+  }
+
+  .proyectos-hero-inner {
+    max-width: 280px;
+    height: 280px;
+  }
+
+  .proyectos-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .proyecto-card {
+    width: 65px;
+    height: 65px;
+  }
+
+  .proyecto-card-inner {
+    width: 65px;
+    height: 65px;
+  }
+
+  .proyecto-icon img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .proyecto-titulo {
+    display: none;
+  }
+
+  .proyectos-content {
+    padding: 0 12px 5vh;
+    gap: 6vh;
+  }
+
+  .aptitud-icono {
+    width: 48px;
+    height: 48px;
+  }
+
+  .aptitud-icono img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .aptitud-titulo {
+    font-size: 1.05rem;
+  }
+
+  .aptitud-descripcion {
+    font-size: 0.8rem;
+  }
+
+  .proyecto-detail-card {
+    flex-direction: column;
+    border-radius: 14px;
+  }
+
+  .proyecto-image-container {
+    height: 140px;
+  }
+
+  .proyecto-info-wrapper {
+    padding: 14px;
+  }
+
+  .proyecto-detail-titulo {
+    font-size: 0.95rem;
+  }
+
+  .proyecto-detail-desc {
+    font-size: 0.8rem;
+  }
+
+  /* Modal extra small */
   .proyecto-modal-overlay {
     padding: 8px;
     padding-top: 30px;
   }
-  
+
   .proyecto-modal {
     max-height: 90vh;
     border-radius: 12px;
   }
-  
+
   .modal-backdrop {
     border-radius: 12px 12px 0 0;
     height: 40%;
   }
-  
+
   .modal-hero {
     padding: 15vh 16px 16px 16px;
     gap: 12px;
   }
-  
+
   .modal-poster-container {
     width: 140px;
     height: 140px;
   }
-  
+
   .modal-titulo {
     font-size: 1.35rem;
     margin-bottom: 8px;
   }
-  
+
   .modal-meta {
     font-size: 0.8rem;
     gap: 10px;
   }
-  
+
   .modal-meta-badge {
     font-size: 0.7rem;
     padding: 2px 6px;
   }
-  
+
   .modal-tagline {
     font-size: 0.85rem;
     line-height: 1.4;
   }
-  
+
   .modal-actions {
     margin-top: 12px;
     gap: 10px;
   }
-  
+
   .modal-btn-primary {
     padding: 10px 20px;
     font-size: 0.85rem;
   }
-  
+
   .modal-btn-secondary {
     width: 40px;
     height: 40px;
   }
-  
+
   .modal-body {
     padding: 0 16px 20px 16px;
   }
-  
+
   .modal-description-text {
     font-size: 0.85rem;
   }
-  
+
   .modal-tech-tag {
     font-size: 0.7rem;
     padding: 5px 10px;
   }
-  
+
   .modal-contenido {
     font-size: 0.85rem;
   }
-  
+
   .modal-contenido h3 {
     font-size: 1.1rem;
   }
-  
+
   .modal-contenido h4 {
     font-size: 0.95rem;
   }
-  
+
   .modal-info-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .modal-close {
     width: 36px;
     height: 36px;
@@ -1828,262 +1451,3 @@
     right: 8px;
   }
 }
-
-/* ============================================
-   RESPONSIVE PARA PANTALLAS DE DETALLE
-   ============================================ */
-
-@media (max-width: 1200px) {
-  .line-logo-aptitud {
-    left: calc(50% - 130px);
-  }
-
-  .aptitud-circle {
-    left: 50%;
-    width: 100px;
-    height: 100px;
-    margin-left: -50px;
-    margin-top: -50px;
-  }
-  
-  .aptitud-circle img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .lines-to-projects {
-    left: 50%;
-  }
-
-  .line-aptitud-proyecto {
-    left: 50px;
-  }
-  
-  .proyectos-list {
-    left: calc(50% + 160px);
-    gap: 16px;
-  }
-  
-  .proyecto-detail-card {
-    min-width: 290px;
-    max-width: 340px;
-    padding: 16px;
-  }
-  
-  .proyecto-image-container {
-    width: 68px;
-    height: 68px;
-  }
-  
-  .card-btn {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .card-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .line-logo-aptitud {
-    left: calc(50% - 110px);
-  }
-
-  .aptitud-circle {
-    left: 50%;
-    width: 90px;
-    height: 90px;
-    margin-left: -45px;
-    margin-top: -45px;
-  }
-  
-  .aptitud-circle img {
-    width: 36px;
-    height: 36px;
-  }
-  
-  .aptitud-circle .aptitud-title {
-    font-size: 0.7rem;
-  }
-  
-  .lines-to-projects {
-    left: 50%;
-  }
-
-  .line-aptitud-proyecto {
-    left: 45px;
-  }
-  
-  .proyectos-list {
-    left: calc(50% + 140px);
-    gap: 14px;
-  }
-  
-  .proyecto-detail-card {
-    min-width: 260px;
-    max-width: 310px;
-    padding: 14px;
-    gap: 14px;
-  }
-  
-  .proyecto-image-container {
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-  }
-  
-  .proyecto-detail-titulo {
-    font-size: 0.95rem;
-  }
-  
-  .proyecto-detail-desc {
-    font-size: 0.75rem;
-  }
-  
-  .proyecto-tecnologias {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  /* En móvil, layout vertical centrado */
-  .aptitud-detail-screen {
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 15px;
-    padding-top: 120px;
-  }
-  
-  /* Ocultar líneas en móvil - diseño más limpio */
-  .line-logo-aptitud,
-  .lines-to-projects,
-  .line-aptitud-proyecto {
-    display: none !important;
-  }
-  
-  .aptitud-circle {
-    position: relative;
-    top: auto;
-    left: auto;
-    margin: 0 auto 20px auto;
-    width: 95px;
-    height: 95px;
-  }
-  
-  .aptitud-circle img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .aptitud-circle .aptitud-title {
-    font-size: 0.7rem;
-  }
-  
-  .proyectos-list {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-    flex-direction: column;
-    align-items: center;
-    max-height: 60vh;
-    overflow-y: auto;
-    width: 100%;
-    padding: 10px;
-    gap: 16px;
-  }
-  
-  .proyecto-detail-card {
-    min-width: 300px;
-    max-width: 100%;
-    width: 100%;
-    flex-direction: row;
-    text-align: left;
-    padding: 14px;
-  }
-  
-  .proyecto-image-container {
-    width: 65px;
-    height: 65px;
-    flex-shrink: 0;
-    border-radius: 10px;
-  }
-  
-  .proyecto-tecnologias {
-    display: none;
-  }
-  
-  .card-actions {
-    flex-direction: row;
-    gap: 8px;
-  }
-  
-  .card-btn {
-    width: 34px;
-    height: 34px;
-  }
-}
-
-@media (max-width: 480px) {
-  .aptitud-detail-screen {
-    padding-top: 100px;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-  
-  .aptitud-circle {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 18px;
-  }
-  
-  .aptitud-circle img {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .aptitud-circle .aptitud-title {
-    font-size: 0.6rem;
-  }
-  
-  .proyectos-list {
-    max-height: 55vh;
-    gap: 12px;
-    padding: 8px;
-  }
-  
-  .proyecto-detail-card {
-    min-width: 280px;
-    padding: 12px;
-    gap: 12px;
-    border-radius: 14px;
-  }
-  
-  .proyecto-image-container {
-    width: 55px;
-    height: 55px;
-    border-radius: 8px;
-  }
-  
-  .proyecto-detail-titulo {
-    font-size: 0.9rem;
-  }
-  
-  .proyecto-detail-desc {
-    font-size: 0.72rem;
-  }
-  
-  .card-btn {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .card-btn svg {
-    width: 14px;
-    height: 14px;
-  }
-}
-

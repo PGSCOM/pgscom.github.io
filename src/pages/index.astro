@@ -76,106 +76,99 @@
 	<!-- #region 🚧 SECCIONES TEMPORALES - Placeholder para contenido futuro -->
 	<div style="height: 120vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 60;"></div>
 
-	<!-- #region 📂 SECCIÓN DE PROYECTOS - Diseño circular con logo central -->
-	<section class="proyectos-section">
-		<div class="proyectos-container">
-			<!-- Grid de aptitudes girando alrededor (órbita inicial) -->
-			<div class="proyectos-grid">
-				{proyectosData.map((aptitud) => (
-					<div class="proyecto-card" data-aptitud-id={aptitud.id}>
-						<div class="proyecto-card-inner">
-							<div class="proyecto-icon">
-								<img src={aptitud.logo} alt={aptitud.titulo} />
+	<!-- #region 📂 SECCIÓN DE PROYECTOS - Layout legible con órbita decorativa -->
+	<section class="proyectos-section" id="proyectos">
+		<div class="proyectos-header">
+			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
+			<p class="proyectos-subtitulo-seccion">Explora mis trabajos por categoría</p>
+		</div>
+
+		<!-- Órbita decorativa (no captura scroll) -->
+		<div class="proyectos-hero">
+			<div class="proyectos-hero-inner">
+				<div class="proyectos-grid">
+					{proyectosData.map((aptitud) => (
+						<a href={`#aptitud-${aptitud.id}`} class="proyecto-card" data-aptitud-id={aptitud.id}>
+							<div class="proyecto-card-inner">
+								<div class="proyecto-icon">
+									<img src={aptitud.logo} alt={aptitud.titulo} />
+								</div>
+								<span class="proyecto-titulo">{aptitud.titulo}</span>
 							</div>
-							<h3 class="proyecto-titulo">{aptitud.titulo}</h3>
-							<p class="proyecto-descripcion">{aptitud.descripcion}</p>
+						</a>
+					))}
+				</div>
+				<div class="proyectos-logo">
+					<Image 
+						src={logo} 
+						alt="PGSCOM Logo" 
+						width={720} 
+						height={720} 
+						widths={[200, 400, 720]}
+						sizes="(max-width: 768px) 150px, 200px"
+					/>
+				</div>
+			</div>
+		</div>
+
+		<!-- Listado de proyectos por aptitud -->
+		<div class="proyectos-content">
+			{proyectosData.map((aptitud) => (
+				<div class="aptitud-bloque" id={`aptitud-${aptitud.id}`}>
+					<div class="aptitud-header">
+						<div class="aptitud-icono">
+							<img src={aptitud.logo} alt={aptitud.titulo} />
+						</div>
+						<div class="aptitud-info">
+							<h3 class="aptitud-titulo">{aptitud.titulo}</h3>
+							<p class="aptitud-descripcion">{aptitud.descripcion}</p>
 						</div>
 					</div>
-				))}
-			</div>
+				<div class="proyectos-grid-list">
+					{aptitud.proyectos && aptitud.proyectos.map((proyecto) => (
+						<div 
+							class="proyecto-detail-card" 
+							data-proyecto-id={proyecto.id}
+							data-tiene-contenido={proyecto.contenido ? "true" : "false"}
+						>
+							<!-- Imagen panorámica arriba -->
+							<div class="proyecto-image-container">
+								<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
+								
+								<!-- Botón de link flotante sobre la imagen -->
+								{proyecto.link && (
+									<a href={proyecto.link} target="_blank" rel="noopener noreferrer" class="card-btn-link-float" title="Visitar proyecto" onclick="event.stopPropagation();">
+										<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+											<polyline points="15 3 21 3 21 9"></polyline>
+										</svg>
+									</a>
+								)}
+							</div>
 
-			<!-- Logo en el centro (siempre visible) -->
-			<div class="proyectos-logo">
-				<Image 
-					src={logo} 
-					alt="PGSCOM Logo" 
-					width={720} 
-					height={720} 
-					widths={[200, 400, 720]}
-					sizes="(max-width: 768px) 150px, 200px"
-				/>
-			</div>
-
-			<!-- Pantallas de detalle por aptitud (generadas proceduralmente) -->
-			{proyectosData.map((aptitud, index) => (
-				<div class="aptitud-detail-screen" data-aptitud-id={aptitud.id} data-index={index}>
-					<!-- Línea que conecta logo con el círculo de aptitud -->
-					<div class="line-logo-aptitud"></div>
-					
-					<!-- Círculo de aptitud (centro) -->
-					<div class="aptitud-circle">
-						<img src={aptitud.logo} alt={aptitud.titulo} />
-						<span class="aptitud-title">{aptitud.titulo}</span>
-					</div>
-					
-					<!-- Líneas que conectan aptitud con proyectos -->
-					<div class="lines-to-projects">
-						{aptitud.proyectos && aptitud.proyectos.map((_, pIndex) => (
-							<div class="line-aptitud-proyecto" data-project-index={pIndex}></div>
-						))}
-					</div>
-					
-					<!-- Proyectos de esta aptitud -->
-					<div class="proyectos-list">
-						{aptitud.proyectos && aptitud.proyectos.map((proyecto, pIndex) => (
-							<div 
-								class="proyecto-detail-card" 
-								data-project-index={pIndex}
-								data-proyecto-id={proyecto.id}
-								data-tiene-contenido={proyecto.contenido ? "true" : "false"}
-							>
-								<div class="proyecto-image-container">
-									<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
-								</div>
+							<!-- Información debajo -->
+							<div class="proyecto-info-wrapper">
 								<div class="proyecto-info">
 									<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
 									{proyecto.descripcion && (
 										<p class="proyecto-detail-desc">{proyecto.descripcion}</p>
 									)}
-									{proyecto.tecnologias && (
-										<div class="proyecto-tecnologias">
-											{proyecto.tecnologias.slice(0, 3).map((tech) => (
-												<span class="tech-tag">{tech}</span>
-											))}
-											{proyecto.tecnologias.length > 3 && (
-												<span class="tech-tag tech-more">+{proyecto.tecnologias.length - 3}</span>
-											)}
-										</div>
-									)}
 								</div>
-								<div class="card-actions">
-									{proyecto.contenido && (
-										<span class="card-btn card-btn-info" title="Ver más información">
-											<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-												<circle cx="12" cy="12" r="10"></circle>
-												<line x1="12" y1="16" x2="12" y2="12"></line>
-												<line x1="12" y1="8" x2="12.01" y2="8"></line>
-											</svg>
-										</span>
-									)}
-									{proyecto.link && (
-										<a href={proyecto.link} target="_blank" rel="noopener noreferrer" class="card-btn card-btn-link" title="Visitar proyecto" onclick="event.stopPropagation();">
-											<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-												<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-												<polyline points="15 3 21 3 21 9"></polyline>
-												<line x1="10" y1="14" x2="21" y2="3"></line>
-											</svg>
-										</a>
-									)}
-								</div>
+								
+								{proyecto.tecnologias && (
+									<div class="proyecto-tecnologias">
+										{proyecto.tecnologias.slice(0, 4).map((tech) => (
+											<span class="tech-tag">{tech}</span>
+										))}
+										{proyecto.tecnologias.length > 4 && (
+											<span class="tech-tag tech-tag-more">+{proyecto.tecnologias.length - 4}</span>
+										)}
+									</div>
+								)}
 							</div>
-						))}
-					</div>
+						</div>
+					))}
+				</div>
 				</div>
 			))}
 		</div>
@@ -408,9 +401,9 @@
 
 	<!-- #region 🌀 SCRIPT: Órbita con pausa suave -->
 	<script is:inline>
-		document.addEventListener('DOMContentLoaded', () => {
-			const container = document.querySelector('.proyectos-section .proyectos-container');
-			if (!container) return;
+			document.addEventListener('DOMContentLoaded', () => {
+				const container = document.querySelector('.proyectos-section .proyectos-hero');
+				if (!container) return;
 
 			const cards = Array.from(container.querySelectorAll('.proyecto-card'));
 			if (cards.length === 0) return;
@@ -1221,331 +1214,7 @@
 	<!-- #endregion -->
 	<!-- Sticky de .proyectos-container manejado con CSS puro (position: sticky) -->
 
-	<!-- #region 🎬 SCRIPT: ANIMACIONES PROYECTOS -->
-	<script type="module">
-		import gsap from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm';
-		import ScrollTrigger from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger/+esm';
-		
-		// Registrar plugins de GSAP
-		gsap.registerPlugin(ScrollTrigger);
-
-		document.addEventListener('DOMContentLoaded', () => {
-			const section = document.querySelector('.proyectos-section');
-			const container = document.querySelector('.proyectos-container');
-			const grid = document.querySelector('.proyectos-grid');
-			const logo = document.querySelector('.proyectos-logo');
-			const detailScreens = document.querySelectorAll('.aptitud-detail-screen');
-			
-			if (!section || !container || !grid || !logo || detailScreens.length === 0) return;
-
-			// Configurar GSAP para optimización móvil
-			gsap.config({
-				force3D: true // Forzar aceleración GPU para mejor rendimiento en móviles
-			});
-
-			const totalAptitudes = detailScreens.length;
-			let currentAptitudIndex = -1; // -1 = vista órbita, 0+ = pantalla de aptitud
-
-			// Detectar si es móvil para adaptar comportamiento
-			const isMobileView = window.matchMedia('(max-width: 768px)').matches;
-
-			// Función para actualizar las líneas de una pantalla (usada en resize y show)
-			function updateAptitudLines(screen) {
-				if (!screen || isMobileView) return;
-
-				const aptitudCircle = screen.querySelector('.aptitud-circle');
-				const linesContainer = screen.querySelector('.lines-to-projects');
-				const linesToProjects = screen.querySelectorAll('.line-aptitud-proyecto');
-				const projectCards = screen.querySelectorAll('.proyecto-detail-card');
-				
-				if (!aptitudCircle || !linesContainer) return;
-
-				const circleRadius = aptitudCircle.offsetWidth / 2;
-				const screenRect = screen.getBoundingClientRect();
-				const circleCenterX = screenRect.left + screenRect.width / 2;
-				const circleCenterY = screenRect.top + screenRect.height / 2;
-				
-				linesContainer.style.left = `${screenRect.width / 2}px`;
-				linesContainer.style.top = `${screenRect.height / 2}px`;
-				
-				linesToProjects.forEach((line, i) => {
-					const card = projectCards[i];
-					if (!card) return;
-					
-					const cardRect = card.getBoundingClientRect();
-					const style = window.getComputedStyle(card);
-					const matrix = new DOMMatrix(style.transform);
-					
-					const cardLeft = cardRect.left - matrix.m41;
-					const cardTop = cardRect.top - matrix.m42;
-					const cardHeight = cardRect.height;
-					
-					const targetX = cardLeft;
-					const targetY = cardTop + cardHeight / 2;
-					
-					const dx = targetX - circleCenterX;
-					const dy = targetY - circleCenterY;
-					
-					const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-					const totalDistance = Math.sqrt(dx * dx + dy * dy);
-					const lineLength = totalDistance - circleRadius;
-					
-					line.style.transform = `rotate(${angle}deg) translateX(${circleRadius}px)`;
-					
-					if (line.style.width && line.style.width !== '0px') {
-						line.style.width = `${Math.max(0, lineLength)}px`;
-					}
-					
-					line.dataset.targetWidth = Math.max(0, lineLength);
-				});
-			}
-
-			// Animación de entrada para una pantalla de aptitud con GSAP
-			function showAptitudScreen(index) {
-				const screen = detailScreens[index];
-				if (!screen) return;
-
-				screen.classList.add('active');
-
-				const lineLogoAptitud = screen.querySelector('.line-logo-aptitud');
-				const aptitudCircle = screen.querySelector('.aptitud-circle');
-				const linesToProjects = screen.querySelectorAll('.line-aptitud-proyecto');
-				const projectCards = screen.querySelectorAll('.proyecto-detail-card');
-
-				updateAptitudLines(screen);
-
-				// Timeline de entrada con GSAP
-				const enterTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-
-				// 1. Fade in screen
-				enterTl.fromTo(screen, 
-					{ opacity: 0 },
-					{ opacity: 1, duration: 0.3 }
-				);
-
-				// 2. Línea desde logo hacia aptitud (solo en desktop)
-				if (!isMobileView && lineLogoAptitud) {
-					const logoLineStart = lineLogoAptitud.getBoundingClientRect().left;
-					const screenRect = screen.getBoundingClientRect();
-					const circleCenterX = screenRect.left + screenRect.width / 2;
-					const circleRadius = aptitudCircle.offsetWidth / 2;
-					const circleLeftEdge = circleCenterX - circleRadius;
-					const logoLineWidth = Math.max(0, circleLeftEdge - logoLineStart);
-
-					enterTl.fromTo(lineLogoAptitud, 
-						{ width: '0px', opacity: 0 },
-						{ width: `${logoLineWidth}px`, opacity: 1, duration: 0.4 },
-						0.1
-					);
-				}
-
-				// 3. Círculo de aptitud aparece
-				enterTl.fromTo(aptitudCircle,
-					{ opacity: 0, scale: 0.5 },
-					{ opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.7)' },
-					isMobileView ? 0.1 : 0.4
-				);
-
-				// 4. Líneas hacia tarjetas (solo en desktop)
-				const linesDelay = isMobileView ? 0.3 : 0.65;
-				
-				if (!isMobileView) {
-					linesToProjects.forEach((line, i) => {
-						const targetWidth = line.dataset.targetWidth || 100;
-						enterTl.fromTo(line,
-							{ width: '0px', opacity: 0 },
-							{ width: `${targetWidth}px`, opacity: 1, duration: 0.35, ease: 'power2.out' },
-							linesDelay + (i * 0.08)
-						);
-					});
-				}
-
-				// 5. Tarjetas de proyecto con stagger
-				const cardsStartDelay = isMobileView ? 0.4 : (0.65 + (linesToProjects.length * 0.08) + 0.1);
-				enterTl.fromTo(projectCards,
-					{ 
-						opacity: 0, 
-						x: isMobileView ? 0 : 30,
-						y: isMobileView ? 20 : 0
-					},
-					{ 
-						opacity: 1, 
-						x: 0, 
-						y: 0, 
-						duration: 0.4,
-						stagger: 0.08,
-						ease: 'power2.out'
-					},
-					cardsStartDelay
-				);
-
-				return enterTl;
-			}
-
-			// Animación de salida para una pantalla de aptitud con GSAP
-			function hideAptitudScreen(index) {
-				const screen = detailScreens[index];
-				if (!screen) return Promise.resolve();
-
-				return new Promise((resolve) => {
-					const exitTl = gsap.timeline({
-						defaults: { ease: 'power2.in' },
-						onComplete: () => {
-							screen.classList.remove('active');
-							resolve();
-						}
-					});
-
-					const projectCards = screen.querySelectorAll('.proyecto-detail-card');
-					const linesToProjects = screen.querySelectorAll('.line-aptitud-proyecto');
-					const aptitudCircle = screen.querySelector('.aptitud-circle');
-					const lineLogoAptitud = screen.querySelector('.line-logo-aptitud');
-
-					// Salida en orden inverso con stagger reverso
-					exitTl.to(projectCards, {
-						opacity: 0,
-						x: isMobileView ? 0 : -30,
-						y: isMobileView ? -20 : 0,
-						duration: 0.3,
-						stagger: { each: 0.04, from: 'end' }
-					});
-
-					// Animar líneas (solo en desktop)
-					if (!isMobileView) {
-						linesToProjects.forEach((line, i) => {
-							const currentWidth = line.style.width || '0px';
-							exitTl.fromTo(line,
-								{ width: currentWidth, opacity: 1 },
-								{ width: '0px', opacity: 0, duration: 0.25 },
-								0.2 + (i * 0.03)
-							);
-						});
-					}
-
-					exitTl.to(aptitudCircle, {
-						opacity: 0,
-						scale: 0.5,
-						duration: 0.3
-					}, isMobileView ? 0.2 : 0.35);
-
-					// Línea logo-aptitud solo en desktop
-					if (!isMobileView && lineLogoAptitud) {
-						const logoLineStart = lineLogoAptitud.getBoundingClientRect().left;
-						const circleLeft = aptitudCircle.getBoundingClientRect().left;
-						const logoLineWidth = Math.max(0, circleLeft - logoLineStart);
-
-						exitTl.fromTo(lineLogoAptitud,
-							{ width: `${logoLineWidth}px`, opacity: 1 },
-							{ width: '0px', opacity: 0, duration: 0.3 },
-							0.45
-						);
-					}
-
-					exitTl.to(screen, {
-						opacity: 0,
-						duration: 0.2
-					}, 0.6);
-				});
-			}
-
-			// Timeline principal para la transición órbita -> primera aptitud con GSAP
-			const mainTimeline = gsap.timeline({ paused: true });
-
-			// Calcular desplazamiento del logo según pantalla
-			const isMobile = window.matchMedia('(max-width: 768px)').matches;
-			const logoTranslation = isMobile ? 0 : -280;
-
-			// Ocultar órbita PRIMERO (el logo NO se mueve aún) - 0s a 0.5s
-			mainTimeline.to(grid, {
-				opacity: 0,
-				scale: 0.5,
-				duration: 0.5,
-				ease: 'power2.out'
-			}, 0)
-			// Mover logo hacia la izquierda DESPUÉS de que la órbita desaparezca - 0.5s a 1s
-			.to(logo, {
-				x: logoTranslation,
-				scale: 0.85,
-				opacity: isMobile ? 0 : 1,
-				duration: 0.5,
-				ease: 'power2.out'
-			}, 0.5);
-
-			// Control de scroll con múltiples fases
-			const ORBIT_PHASE_RATIO = 0.10;
-			const aptitudPhaseRatio = (1 - ORBIT_PHASE_RATIO) / totalAptitudes;
-
-			let isAnimating = false;
-
-			function onScroll() {
-				const rect = section.getBoundingClientRect();
-				const viewportHeight = window.innerHeight;
-				const totalScrollHeight = section.offsetHeight - viewportHeight;
-				
-				let progress = 0;
-				if (rect.top <= 0) {
-					const scrolled = Math.abs(rect.top);
-					progress = Math.min(1, Math.max(0, scrolled / totalScrollHeight));
-				}
-
-				// Fase de transición órbita
-				if (progress <= ORBIT_PHASE_RATIO) {
-					const orbitProgress = progress / ORBIT_PHASE_RATIO;
-					mainTimeline.progress(orbitProgress);
-					
-					if (currentAptitudIndex >= 0) {
-						hideAptitudScreen(currentAptitudIndex);
-						currentAptitudIndex = -1;
-					}
-				} else {
-					mainTimeline.progress(1);
-					
-					const aptitudProgress = (progress - ORBIT_PHASE_RATIO) / (1 - ORBIT_PHASE_RATIO);
-					const newAptitudIndex = Math.min(
-						totalAptitudes - 1,
-						Math.floor(aptitudProgress * totalAptitudes)
-					);
-
-					if (newAptitudIndex !== currentAptitudIndex && !isAnimating) {
-						isAnimating = true;
-						const prevIndex = currentAptitudIndex;
-						currentAptitudIndex = newAptitudIndex;
-
-						const doShow = () => {
-							showAptitudScreen(currentAptitudIndex);
-							isAnimating = false;
-						};
-
-						if (prevIndex >= 0) {
-							hideAptitudScreen(prevIndex).then(doShow);
-						} else {
-							doShow();
-						}
-					}
-				}
-			}
-
-			let rafPending = false;
-			window.addEventListener('scroll', () => {
-				if (!rafPending) {
-					rafPending = true;
-					requestAnimationFrame(() => {
-						onScroll();
-						rafPending = false;
-					});
-				}
-			}, { passive: true });
-			
-			window.addEventListener('resize', () => {
-				if (currentAptitudIndex >= 0 && !isMobileView) {
-					const screen = detailScreens[currentAptitudIndex];
-					updateAptitudLines(screen);
-				}
-			});
-			
-			onScroll();
-		});
-	</script>
+	<!-- #region 🎬 SCRIPT: ANIMACIONES PROYECTOS (deshabilitado - scroll-hijacking removido) -->
 	<!-- #endregion -->
 
 	<!-- #region 📬 SCRIPT: FORMULARIO DE CONTACTO - Validación y animaciones -->
@@ -1835,7 +1504,7 @@
 			document.querySelectorAll('.proyecto-detail-card').forEach(card => {
 				card.addEventListener('click', (e) => {
 					// No abrir modal si se clickea en el link externo
-					if (e.target.closest('.card-btn-link')) return;
+					if (e.target.closest('.card-btn-link-float')) return;
 					
 					const proyectoId = card.dataset.proyectoId;
 					openModal(proyectoId);
