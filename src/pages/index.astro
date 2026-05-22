@@ -1494,14 +1494,10 @@
 
 					if (newAptitudIndex !== currentAptitudIndex) {
 						if (currentAptitudIndex >= 0) {
-							hideAptitudScreen(currentAptitudIndex).then(() => {
-								currentAptitudIndex = newAptitudIndex;
-								showAptitudScreen(currentAptitudIndex);
-							});
-						} else {
-							currentAptitudIndex = newAptitudIndex;
-							showAptitudScreen(currentAptitudIndex);
+							hideAptitudScreen(currentAptitudIndex);
 						}
+						currentAptitudIndex = newAptitudIndex;
+						showAptitudScreen(currentAptitudIndex);
 					}
 				}
 			}

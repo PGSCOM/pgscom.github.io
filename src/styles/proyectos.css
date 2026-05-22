@@ -808,12 +808,23 @@
   opacity: 0;
   transform: translateX(30px);
   cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   min-width: 320px;
   max-width: 380px;
   position: relative;
   overflow: hidden;
 }
+
+/* Animación de entrada escalonada */
+.aptitud-detail-screen.active .proyecto-detail-card {
+  animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(1) { animation-delay: 0.1s; }
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(2) { animation-delay: 0.2s; }
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(3) { animation-delay: 0.3s; }
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(4) { animation-delay: 0.4s; }
+.aptitud-detail-screen.active .proyecto-detail-card:nth-child(5) { animation-delay: 0.5s; }
 
 /* Efecto de brillo deslizante continuo */
 .proyecto-detail-card::before {
