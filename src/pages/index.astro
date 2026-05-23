@@ -138,7 +138,7 @@ import contactoData from '../data/contacto.json';
 								{proyecto.tecnologias && (
 									<div class="proyecto-tecnologias">
 										{proyecto.tecnologias.slice(0, 4).map((tech) => (
-											<span class="tech-tag">{tech}</span>
+											<span class="tech-tag" data-tech={tech}>{tech}</span>
 										))}
 										{proyecto.tecnologias.length > 4 && (
 											<span class="tech-tag tech-tag-more">+{proyecto.tecnologias.length - 4}</span>
@@ -343,9 +343,10 @@ import contactoData from '../data/contacto.json';
 			const SMOOTH_TAU_START = 0.35;
 
 			let angle = 0;
-			let speed = DEFAULT_SPEED;
+			let speed = 0; // empieza en 0, arranca cuando es visible
 			let targetSpeed = DEFAULT_SPEED;
 			let lastT = performance.now();
+			let running = false;
 
 			const baseAngles = cards.map((_, i) => (TWO_PI * i) / cards.length);
 
@@ -414,7 +415,19 @@ import contactoData from '../data/contacto.json';
 				requestAnimationFrame(tick);
 			};
 
-			requestAnimationFrame(tick);
+			// Arranca al mostrarse
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting && !running) {
+						running = true;
+						lastT = performance.now();
+						requestAnimationFrame(tick);
+						observer.disconnect();
+					}
+				});
+			}, { threshold: 0.2 });
+
+			observer.observe(container);
 		});
 	</script>
 
