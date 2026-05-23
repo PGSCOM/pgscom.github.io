@@ -1,28 +1,24 @@
 ---
- // #region 📦 IMPORTS Y CONFIGURACIÓN INICIAL
- import Layout from '../layouts/Layout.astro';
- import './_styles.css';
- import '../styles/proyectos.css';
- import '../styles/contacto.css';
- import { Image } from 'astro:assets';
- import pgscom from '../assets/pgscom.png';
- import minimal1 from '../assets/minimal1.svg';
- import customShape from '../assets/custom-shape.svg';
- import minimal3 from '../assets/minimal3.svg';
- import logo from '../assets/logo.png';
+import Layout from '../layouts/Layout.astro';
+import './_styles.css';
+import '../styles/proyectos.css';
+import '../styles/contacto.css';
+import { Image } from 'astro:assets';
+import pgscom from '../assets/pgscom.png';
+import minimal1 from '../assets/minimal1.svg';
+import customShape from '../assets/custom-shape.svg';
+import minimal3 from '../assets/minimal3.svg';
+import logo from '../assets/logo.png';
 // import logosvganim from '../assets/animlogo/logo.svg';
- 
- // Importar datos de proyectos
- import proyectosData from '../data/proyectos.json';
- import contactoData from '../data/contacto.json';
- // #endregion
+
+import proyectosData from '../data/proyectos.json';
+import contactoData from '../data/contacto.json';
 ---
 
 <!-- Cloudflare Turnstile -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <Layout>
-	<!-- #region 🎯 SECCIÓN PRINCIPAL - Partículas flotantes y texto animado -->
 	<!--div class="sky-image">
 		<a href="/">
 			<Image src={logo} height={70} alt="Logo PGSCOM" />
@@ -41,9 +37,7 @@
 			<h1 id="animated-text" class="logo-text">PGSCOM</h1>
 		</div>
 	</main>
-	<!-- #endregion -->
 
-	<!-- #region 🧑‍💻 PERSONAJE PGSCOM - Imagen principal del personaje -->
 	<div class="image-container">
 		<Image 
 			src={pgscom} 
@@ -56,33 +50,24 @@
 			sizes="(max-width: 768px) 100vw, 50vw"
 		/>
 	</div>
-	<!-- #endregion -->
 
-	<!-- #region 🌌 SECCIÓN GALAXIA - Video con sticky scroll y logo animado -->
-	<!-- Wrapper alto para dar contexto de scroll y permitir que el sticky funcione -->
 	<section class="parte2-wrapper">
 		<div class="parte2">
 			<div class="galaxiamask">
-				<!-- Video Galaxia -->
 				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia" style="opacity: 1;"></video>
 				<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity: 0;"></video>
 			</div>
 			<img id="logoanimar" style="width: auto; height: 32.3%;" src="/assets/animlogo/logo.svg" alt="" />
-			<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
 		</div>
-	<!-- #endregion -->
 
-	<!-- #region 🚧 SECCIONES TEMPORALES - Placeholder para contenido futuro -->
 	<div style="height: 120vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 60;"></div>
 
-	<!-- #region 📂 SECCIÓN DE PROYECTOS - Layout legible con órbita decorativa -->
 	<section class="proyectos-section" id="proyectos">
 		<div class="proyectos-header">
 			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
 			<p class="proyectos-subtitulo-seccion">Explora mis trabajos por categoría</p>
 		</div>
 
-		<!-- Órbita decorativa (no captura scroll) -->
 		<div class="proyectos-hero">
 			<div class="proyectos-hero-inner">
 				<div class="proyectos-grid">
@@ -110,7 +95,6 @@
 			</div>
 		</div>
 
-		<!-- Listado de proyectos por aptitud -->
 		<div class="proyectos-content">
 			{proyectosData.map((aptitud) => (
 				<div class="aptitud-bloque" id={`aptitud-${aptitud.id}`}>
@@ -130,11 +114,9 @@
 							data-proyecto-id={proyecto.id}
 							data-tiene-contenido={proyecto.contenido ? "true" : "false"}
 						>
-							<!-- Imagen panorámica arriba -->
 							<div class="proyecto-image-container">
 								<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
 								
-								<!-- Botón de link flotante sobre la imagen -->
 								{proyecto.link && (
 									<a href={proyecto.link} target="_blank" rel="noopener noreferrer" class="card-btn-link-float" title="Visitar proyecto" onclick="event.stopPropagation();">
 										<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -145,7 +127,6 @@
 								)}
 							</div>
 
-							<!-- Información debajo -->
 							<div class="proyecto-info-wrapper">
 								<div class="proyecto-info">
 									<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
@@ -172,9 +153,8 @@
 			))}
 		</div>
 	</section>
-	<!-- #endregion -->
 
-	<!-- #region 🪟 MODAL DE PROYECTO -->
+	<!-- Modal de proyecto -->
 	<div class="proyecto-modal-overlay" id="proyectoModal">
 		<div class="proyecto-modal">
 			<button class="modal-close" id="modalClose" aria-label="Cerrar modal">
@@ -184,23 +164,18 @@
 				</svg>
 			</button>
 			
-			<!-- Imagen de fondo hero -->
 			<div class="modal-backdrop">
 				<img class="modal-backdrop-img" id="modalBackdrop" src="" alt="" />
 			</div>
 			
-			<!-- Contenido scrolleable -->
 			<div class="modal-content-wrapper">
-				<!-- Sección hero con poster y título -->
 				<div class="modal-hero">
 					<div class="modal-poster-container">
 						<img class="modal-poster" id="modalPoster" src="" alt="" />
 					</div>
 					<div class="modal-hero-info">
 						<h1 class="modal-titulo" id="modalTitulo"></h1>
-						<div class="modal-meta" id="modalMeta">
-							<!-- Se llenará dinámicamente -->
-						</div>
+						<div class="modal-meta" id="modalMeta"></div>
 						<p class="modal-tagline" id="modalTagline"></p>
 						<div class="modal-actions">
 							<a href="#" target="_blank" rel="noopener noreferrer" class="modal-btn-primary" id="modalLink" style="display: none;">
@@ -222,30 +197,20 @@
 					</div>
 				</div>
 				
-				<!-- Cuerpo del modal -->
 				<div class="modal-body">
-					<!-- Descripción -->
 					<div class="modal-description">
 						<p class="modal-description-text" id="modalDescripcion"></p>
 					</div>
-					
-					<!-- Tecnologías -->
 					<div class="modal-tecnologias" id="modalTecnologias"></div>
-					
-					<!-- Contenido HTML adicional -->
 					<div class="modal-contenido" id="modalContenido"></div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- #endregion -->
-	<!-- #endregion -->
 	</section>
 
-	<!-- #region 📧 SECCIÓN DE CONTACTO - Formulario y datos de contacto -->
 	<section class="contacto-section">
 		<div class="contacto-wrapper">
-			<!-- Partículas de fondo -->
 			<div class="contacto-particles">
 				<div class="particle-space"></div>
 				<div class="particle-space"></div>
@@ -254,17 +219,13 @@
 				<div class="particle-space"></div>
 			</div>
 
-			<!-- Contenedor principal de contacto -->
 			<div class="contacto-container">
-				<!-- Título de la sección -->
 				<div class="contacto-header">
 					<h2 class="contacto-titulo">Contacto</h2>
 					<p class="contacto-subtitulo">¿Tienes un proyecto en mente? ¡Hablemos!</p>
 				</div>
 
-				<!-- Grid de contenido -->
 				<div class="contacto-grid">
-					<!-- Información de contacto -->
 					<div class="contacto-info">
 						{contactoData.informacion.email && (
 							<div class="info-card">
@@ -281,36 +242,6 @@
 							</div>
 						)}
 
-						{contactoData.informacion.telefono && (
-							<div class="info-card">
-								<div class="info-icon">
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-										<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-									</svg>
-								</div>
-								<div class="info-content">
-									<h3>Teléfono</h3>
-									<a href={`tel:${contactoData.informacion.telefono}`}>{contactoData.informacion.telefono}</a>
-								</div>
-							</div>
-						)}
-
-						{contactoData.informacion.ubicacion && (
-							<div class="info-card">
-								<div class="info-icon">
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-										<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-										<circle cx="12" cy="10" r="3"></circle>
-									</svg>
-								</div>
-								<div class="info-content">
-									<h3>Ubicación</h3>
-									<p>{contactoData.informacion.ubicacion}</p>
-								</div>
-							</div>
-						)}
-
-						<!-- Redes sociales -->
 						<div class="social-links">
 							<h3>Sígueme en redes</h3>
 							<div class="social-icons">
@@ -324,7 +255,7 @@
 						</div>
 					</div>
 
-					<!-- Formulario de contacto -->
+					<!-- Contacto -->
 					<div class="contacto-form-container">
 						<form class="contacto-form" id="contactForm">
 							<div class="form-group">
@@ -345,7 +276,7 @@
 									type="email" 
 									id="email" 
 									name="email" 
-									placeholder="tu@email.com"
+									placeholder="manolo@gmail.com"
 									required
 								/>
 								<span class="input-border"></span>
@@ -375,7 +306,7 @@
 								<span class="input-border"></span>
 							</div>
 
-							<!-- Cloudflare Turnstile Widget (Invisible) -->
+							<!-- Cloudflare Turnstile -->
 							<div class="cf-turnstile" data-sitekey="0x4AAAAAACGiv6Et8KLomzvb" data-theme="dark"></div>
 
 							<button type="submit" class="submit-btn">
@@ -388,7 +319,6 @@
 								</span>
 							</button>
 
-							<!-- Mensaje de estado -->
 							<div class="form-status" id="formStatus"></div>
 						</form>
 					</div>
@@ -396,44 +326,39 @@
 			</div>
 		</div>
 	</section>
-	<!-- #endregion -->
 
-	<!-- #region 🌀 SCRIPT: Órbita con pausa suave -->
+	<!-- Órbita de proyectos -->
 	<script is:inline>
-			document.addEventListener('DOMContentLoaded', () => {
-				const container = document.querySelector('.proyectos-section .proyectos-hero');
-				if (!container) return;
+		document.addEventListener('DOMContentLoaded', () => {
+			const container = document.querySelector('.proyectos-section .proyectos-hero');
+			if (!container) return;
 
 			const cards = Array.from(container.querySelectorAll('.proyecto-card'));
 			if (cards.length === 0) return;
 
 			const TWO_PI = Math.PI * 2;
-
-			// Más lento: 1 vuelta cada 90s (ajusta aquí si quieres)
 			const REV_SECONDS = 90;
-			const DEFAULT_SPEED = TWO_PI / REV_SECONDS; // rad/s
-			const SMOOTH_TAU_STOP = 0.22; // s (frenada)
-			const SMOOTH_TAU_START = 0.35; // s (arranque)
+			const DEFAULT_SPEED = TWO_PI / REV_SECONDS;
+			const SMOOTH_TAU_STOP = 0.22;
+			const SMOOTH_TAU_START = 0.35;
 
 			let angle = 0;
 			let speed = DEFAULT_SPEED;
 			let targetSpeed = DEFAULT_SPEED;
 			let lastT = performance.now();
 
-			const baseAngles = cards.map((_, index) => (TWO_PI * index) / cards.length);
+			const baseAngles = cards.map((_, i) => (TWO_PI * i) / cards.length);
 
 			const readRadius = () => {
 				const raw = getComputedStyle(container).getPropertyValue('--orbit-radius').trim();
-				const radius = Number.parseFloat(raw);
-				return Number.isFinite(radius) ? radius : 350;
+				const r = parseFloat(raw);
+				return isFinite(r) ? r : 350;
 			};
 
 			const setPaused = (paused) => {
 				targetSpeed = paused ? 0 : DEFAULT_SPEED;
 			};
 
-			// Pausa estable aunque las tarjetas estén moviéndose bajo el cursor:
-			// guardamos última posición del ratón y hacemos hit-test cada frame.
 			let pointerActive = false;
 			let pointerX = 0;
 			let pointerY = 0;
@@ -462,7 +387,6 @@
 				const dt = Math.min(0.05, Math.max(0.001, (t - lastT) / 1000));
 				lastT = t;
 
-				// Hover real sobre tarjeta (sin depender de enter/leave de elementos en movimiento)
 				if (pointerActive && t - lastHoverCheck > 80) {
 					lastHoverCheck = t;
 					const el = document.elementFromPoint(pointerX, pointerY);
@@ -476,15 +400,12 @@
 					}
 				}
 
-				// Suavizar aceleración/frenada
 				const tau = (targetSpeed < speed) ? SMOOTH_TAU_STOP : SMOOTH_TAU_START;
-				const k = 1 - Math.exp(-dt / tau);
-				speed += (targetSpeed - speed) * k;
-				// Importante: no hacer modulo aquí para evitar micro-saltos al cruzar 0/360
+				speed += (targetSpeed - speed) * (1 - Math.exp(-dt / tau));
 				angle += speed * dt;
 
 				const r = readRadius();
-				for (let i = 0; i < cards.length; i += 1) {
+				for (let i = 0; i < cards.length; i++) {
 					const a = angle + baseAngles[i];
 					const deg = (a * 180) / Math.PI;
 					cards[i].style.transform = `translate(-50%, -50%) rotate(${deg}deg) translateX(${r}px) rotate(${-deg}deg)`;
@@ -496,14 +417,13 @@
 			requestAnimationFrame(tick);
 		});
 	</script>
-	<!-- #endregion -->
 
-	<!-- #region 🎨 SCRIPT: ANIMACIÓN DE FUENTES - Rotación automática de tipografías -->
+	<!-- Rotación de tipografías -->
 	<script is:inline defer>
 		document.addEventListener('DOMContentLoaded', async () => {
 			const animatedText = document.getElementById('animated-text');
 			
-			// Array de fuentes disponibles
+			// Fuentes
 			const fonts = [
 				'Allerta Stencil',
 				'Bungee Inline',
@@ -522,7 +442,7 @@
 				'Tiny5',
 			];
 			
-			// Factor de escala para cada fuente para mantener tamaño visual consistente
+			// Tamaño de las fuentes
 			const fontSizeFactors = {
 				'Allerta Stencil': 1.0,
 				'Bungee Inline': 0.9,
@@ -540,627 +460,428 @@
 				'Tapestry': 1.05,
 				'Tiny5': 1.2,
 			};
-			
-			// Base font size in viewport width units
-			const baseFontSize = 7; // corresponde al 7cqw en CSS
-			const delayfont = 5000;
-			
-			// Variables de duración de transición
-			const transitionDuration = {
-				fadeOut: 600,    // Duración del fade-out en ms
-				fadeIn: 800,     // Duración del fade-in en ms
-				get total() { return this.fadeOut + this.fadeIn; } // Duración total
+
+			// Algunas fuentes no tienen bold, usamos el peso correcto para cada una
+			const fontWeights = {
+				'Solway': '500', 'Chakra Petch': '500',
+				'Modak': '400', 'Monoton': '400',
 			};
+
+			const baseFontSize = 7;
+			const delay = 5000;
+			const fadeDuration = { out: 600, in: 800 };
 			
-			let currentFontIndex = 0;
+			let currentIndex = 0;
 			let fontsLoaded = false;
 
-			// Función para precargar todas las fuentes
+			function getFontWeight(name) {
+				return fontWeights[name] || 'bold';
+			}
+
 			async function preloadFonts() {
-				console.log('Precargando fuentes...');
-				
 				try {
-					// Usar Font Loading API si está disponible
 					if ('fonts' in document) {
-						const fontPromises = fonts.map(fontName => {
-							// Usar peso Medium (500) para Solway y Chakra Petch
-							// Usar peso Regular (400) para Modak, Monoton
-							// Bold para el resto
-							let fontWeight = 'bold';
-							if (fontName === 'Solway' || fontName === 'Chakra Petch') {
-								fontWeight = '500';
-							} else if (fontName === 'Modak' || fontName === 'Monoton') {
-								fontWeight = '400';
-							}
-							return document.fonts.load(`${fontWeight} 5rem "${fontName}"`);
-						});
-						
-						await Promise.all(fontPromises);
-						console.log('Todas las fuentes cargadas via Font Loading API');
+						await Promise.all(fonts.map(name =>
+							document.fonts.load(`${getFontWeight(name)} 5rem "${name}"`)
+						));
 					} else {
-						// Fallback: crear elementos invisibles para forzar la carga
-						const testContainer = document.createElement('div');
-						testContainer.style.position = 'absolute';
-						testContainer.style.visibility = 'hidden';
-						testContainer.style.fontSize = '5rem';
-						testContainer.style.fontWeight = 'bold';
-						document.body.appendChild(testContainer);
-						
-						const loadPromises = fonts.map(fontName => {
-							return new Promise((resolve) => {
-								const testElement = document.createElement('span');
-								testElement.textContent = 'PGSCOM';
-								testElement.style.fontFamily = `"${fontName}", cursive`;
-								// Aplicar peso específico para cada fuente
-								if (fontName === 'Solway' || fontName === 'Chakra Petch') {
-									testElement.style.fontWeight = '500';
-								} else if (fontName === 'Modak' || fontName === 'Monoton') {
-									testElement.style.fontWeight = '400';
-								} else {
-									testElement.style.fontWeight = 'bold';
-								}
-								testContainer.appendChild(testElement);
-								
-								// Esperar un poco para asegurar la carga
-								setTimeout(() => {
-									testContainer.removeChild(testElement);
-									resolve();
-								});
-							});
-						});
-						
-						await Promise.all(loadPromises);
-						document.body.removeChild(testContainer);
-						console.log('Todas las fuentes cargadas via fallback');
+						const wrapper = document.createElement('div');
+						wrapper.style.cssText = 'position:absolute;visibility:hidden;font-size:5rem';
+						document.body.appendChild(wrapper);
+
+						await Promise.all(fonts.map(name => new Promise(resolve => {
+							const el = document.createElement('span');
+							el.textContent = 'PGSCOM';
+							el.style.fontFamily = `"${name}", cursive`;
+							el.style.fontWeight = getFontWeight(name);
+							wrapper.appendChild(el);
+							setTimeout(() => { wrapper.removeChild(el); resolve(); });
+						})));
+
+						document.body.removeChild(wrapper);
 					}
-					
-					fontsLoaded = true;
-				} catch (error) {
-					console.log('Error cargando fuentes:', error);
-					fontsLoaded = true; // Continuar de todos modos
-				}
+				} catch {}
+				fontsLoaded = true;
 			}
 
-			function changeFontFamily() {
+			function applyFont(el, name) {
+				el.style.fontFamily = `"${name}", cursive`;
+				el.style.fontWeight = getFontWeight(name);
+				const factor = fontSizeFactors[name] || 1.0;
+				let size = baseFontSize * factor;
+				if (window.matchMedia('(max-width: 768px)').matches) size *= 2;
+				el.style.fontSize = `${size}cqw`;
+			}
+
+			function changeFont() {
 				if (!fontsLoaded) return;
-				
-				// Usamos la referencia global
-				const currentEl = window.animatedText;
-				
-				// Iniciar fade-out con blur
-				currentEl.classList.add('fade-out');
-				
-				// Esperar a que se complete el fade-out antes de cambiar la fuente
+				const el = window.animatedText;
+
+				el.classList.add('fade-out');
+
 				setTimeout(() => {
-					// Cambiar a la siguiente fuente
-					currentFontIndex = (currentFontIndex + 1) % fonts.length;
-					const currentFont = fonts[currentFontIndex];
-					
-					// Cambiar la fuente mientras está invisible
-					currentEl.style.fontFamily = `"${currentFont}", cursive`;
-					
-					// Aplicar peso específico para cada tipo de fuente
-					if (currentFont === 'Solway' || currentFont === 'Chakra Petch') {
-						currentEl.style.fontWeight = '500';
-					} else if (currentFont === 'Modak' || currentFont === 'Monoton') {
-						currentEl.style.fontWeight = '400';
-					} else {
-						currentEl.style.fontWeight = 'bold';
-					}
-					
-					// Ajustar el tamaño según el factor de la fuente
-					const factor = fontSizeFactors[currentFont] || 1.0;
-					let newSize = baseFontSize * factor;
-					// Duplicar tamaño en móvil
-					if (window.matchMedia('(max-width: 768px)').matches) {
-						newSize *= 2;
-					}
-					currentEl.style.fontSize = `${newSize}cqw`;
-					
-					console.log(`Font changed to: ${currentFont} (weight: ${currentEl.style.fontWeight}, factor: ${factor}, size: ${newSize}cqw)`);
-					
-					// Iniciar fade-in
-					currentEl.classList.remove('fade-out');
-					currentEl.classList.add('fade-in');
-					
-					// Remover la clase de fade-in después de completar la animación
-					setTimeout(() => {
-						currentEl.classList.remove('fade-in');
-					}, transitionDuration.fadeIn);
-					
-				}, transitionDuration.fadeOut);
+					currentIndex = (currentIndex + 1) % fonts.length;
+					applyFont(el, fonts[currentIndex]);
+
+					el.classList.remove('fade-out');
+					el.classList.add('fade-in');
+
+					setTimeout(() => el.classList.remove('fade-in'), fadeDuration.in);
+				}, fadeDuration.out);
 			}
 
-			// Inicializar con la primera fuente y estado de carga
-			const initialFont = fonts[0];
-			animatedText.style.fontFamily = `"${initialFont}", cursive`;
-			if (initialFont === 'Solway' || initialFont === 'Chakra Petch') {
-				animatedText.style.fontWeight = '500';
-			} else if (initialFont === 'Modak' || initialFont === 'Monoton') {
-				animatedText.style.fontWeight = '400';
-			} else {
-				animatedText.style.fontWeight = 'bold';
-			}
-			
-			// Aplicar el factor de escala inicial
-			const initialFactor = fontSizeFactors[initialFont] || 1.0;
-			// Ajustar tamaño según resolución: duplicar en móvil
-			let initSize = baseFontSize * initialFactor;
-			if (window.matchMedia('(max-width: 768px)').matches) {
-				  initSize *= 2;
-			}
-			animatedText.style.fontSize = `${initSize}cqw`;
-			
+			applyFont(animatedText, fonts[0]);
 			animatedText.classList.add('loading');
-			
-			// Precargar todas las fuentes
+
 			await preloadFonts();
-			
-			// Remover estado de carga y comenzar animación
+
 			animatedText.classList.remove('loading');
 			animatedText.classList.add('loaded');
-			
-			// Comenzar la animación solo después de cargar las fuentes
-			console.log('Iniciando animación de fuentes...');
-			
-			// Referencia al elemento para que pueda ser actualizado en changeFontFamily
+
 			window.animatedText = animatedText;
-			
-			setInterval(changeFontFamily, delayfont);
+			setInterval(changeFont, delay);
 		});
 	</script>
-	<!-- #endregion -->
-	<!-- #region 🎬 SCRIPT: ANIMACIONES SCROLL - Timeline principal con videos -->
+
+	<!-- Scroll + vídeo galaxia -->
 	<script type="module">
-    import gsap from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm';
-    import ScrollTrigger from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger/+esm';
-    
-    gsap.registerPlugin(ScrollTrigger);
+		import gsap from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm';
+		import ScrollTrigger from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger/+esm';
 
-    function initScrollAnim() {
-        const targetEl = document.querySelector('.image-container');
-        const logoEl = document.querySelector('#logoanimar');
-        const galaxiaMaskEl = document.querySelector('.galaxiamask');
-        const videoA = document.querySelector('#video-galaxia-a');
-        const videoB = document.querySelector('#video-galaxia-b');
+		gsap.registerPlugin(ScrollTrigger);
 
-        if (!targetEl || !logoEl || !galaxiaMaskEl || !videoA || !videoB) return;
+		function init() {
+			const targetEl    = document.querySelector('.image-container');
+			const logoEl      = document.querySelector('#logoanimar');
+			const maskEl      = document.querySelector('.galaxiamask');
+			const videoA      = document.querySelector('#video-galaxia-a');
+			const videoB      = document.querySelector('#video-galaxia-b');
 
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
-        
-        // #region 🎯 CONFIGURACIÓN TIMELINE
-        const timeline = gsap.timeline({ paused: true });
-        gsap.config({ force3D: true });
+			if (!targetEl || !logoEl || !maskEl || !videoA || !videoB) return;
 
-        timeline.fromTo(targetEl, 
-            { opacity: 1, scale: 1 },
-            { opacity: 0, scale: 0.8, duration: isMobile ? 0.311 : 0.8, ease: 'power2.out', force3D: true }, 0)
-        .fromTo(logoEl,
-            { scale: 1, y: 0 },
-            {
-                scale: 25, y: 45, duration: 1, ease: 'power2.in', force3D: true,
-                onUpdate: function() {
-                    const rect = logoEl.getBoundingClientRect();
-                    const currentSize = (rect.height / window.innerHeight) * 100 - 8;
-                    galaxiaMaskEl.style.webkitMaskSize = `${currentSize}vh ${currentSize}vh`;
-                    galaxiaMaskEl.style.maskSize = `${currentSize}vh ${currentSize}vh`;
-                }
-            }, 1)
-        .to(logoEl, { opacity: 0, duration: 0.001, ease: 'none' }, 1.8);
-        // #endregion
+			const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-		// #region 📹 CONFIGURACIÓN DE VIDEOS
-		const ZOOM_START_MS = 1000;
-		const ZOOM_END_MS = 2000;
-		const SCRUB_DURATION_S = 2; 
+			const tl = gsap.timeline({ paused: true });
+			gsap.config({ force3D: true });
 
-		// Las 3 fases de video
-		const VIDEO_SCROLL = '/vid/empezar_scroll.mp4'; // El vídeo All-Intra de 2s
-		const VIDEO_INTRO_FULL = 'https://pgscom.github.io/webvid/empezar.mp4';    // El vídeo original completo
-		const PLAYLIST = ['https://pgscom.github.io/webvid/loopinversed.mp4', 'https://pgscom.github.io/webvid/loop.mp4'];
-		
-		let playlistIndex = 0;
-		let isScrollScrubActive = true;
-		let afterZoomPlaybackStarted = false;
-		let activeMetadataReady = false;
-		let playlistStarted = false;
+			tl.fromTo(targetEl,
+				{ opacity: 1, scale: 1 },
+				{ opacity: 0, scale: 0.8, duration: isMobile ? 0.311 : 0.8, ease: 'power2.out', force3D: true }, 0)
+			.fromTo(logoEl,
+				{ scale: 1, y: 0 },
+				{
+					scale: 25, y: 45, duration: 1, ease: 'power2.in', force3D: true,
+					onUpdate() {
+						const rect = logoEl.getBoundingClientRect();
+						const s = (rect.height / window.innerHeight) * 100 - 8;
+						maskEl.style.webkitMaskSize = `${s}vh ${s}vh`;
+						maskEl.style.maskSize = `${s}vh ${s}vh`;
+					}
+				}, 1)
+			.to(logoEl, { opacity: 0, duration: 0.001, ease: 'none' }, 1.8);
 
-		let activeVideo = videoA;
-		let bufferVideo = videoB;
+			// Vídeos: scroll scrub con All-Intra, luego playback normal con el original
+			const VIDEO_SCROLL     = '/vid/empezar_scroll.mp4';
+			const VIDEO_INTRO_FULL = 'https://pgscom.github.io/webvid/empezar.mp4';
+			const PLAYLIST         = ['https://pgscom.github.io/webvid/loopinversed.mp4', 'https://pgscom.github.io/webvid/loop.mp4'];
 
-		let pendingScrubT = null;
-		let scrubRafId = 0;
-		const SCRUB_EPS = 0.02;
+			const ZOOM_START_S  = 1;
+			const ZOOM_END_S    = 2;
+			const SCRUB_DURATION_S = 2;
 
-		function applyScrub() {
-			scrubRafId = 0;
-			if (pendingScrubT == null || !activeMetadataReady) return;
-			const t = pendingScrubT;
-			pendingScrubT = null;
-			try {
-				const cur = activeVideo.currentTime || 0;
-				if (Math.abs(cur - t) < SCRUB_EPS) return;
-				if (typeof activeVideo.fastSeek === 'function') {
-					activeVideo.fastSeek(t);
-				} else {
-					activeVideo.currentTime = t;
-				}
-			} catch {}
-		}
+			let playlistIndex          = 0;
+			let isScrollScrubActive    = true;
+			let afterZoomStarted       = false;
+			let activeMetadataReady    = false;
 
-		function scheduleScrub(t) {
-			pendingScrubT = t;
-			if (!scrubRafId) scrubRafId = requestAnimationFrame(applyScrub);
-		}
+			let activeVideo = videoA;
+			let bufferVideo = videoB;
 
-		function waitForMetadata(el) {
-			return new Promise((resolve) => {
-				if (el.readyState >= 1 && !isNaN(el.duration)) { resolve(); return; }
-				const onLoaded = () => { el.removeEventListener('loadedmetadata', onLoaded); resolve(); };
-				el.addEventListener('loadedmetadata', onLoaded, { once: true });
-			});
-		}
+			let pendingScrubT = null;
+			let scrubRafId    = 0;
 
-		async function setVideoSource(el, src, startTime = 0, autoplay = false) {
-			try {
-				el.loop = false;
-				if (el.src !== location.origin + src && el.src !== src) el.src = src;
-				el.load();
-				await waitForMetadata(el);
-				if (el === activeVideo) activeMetadataReady = true;
-				
-				const clampedStart = Math.max(0, Math.min(startTime, (el.duration || Infinity)));
-				if (!Number.isNaN(clampedStart)) { try { el.currentTime = clampedStart; } catch {} }
-				
-				if (autoplay) { try { await el.play(); } catch {} } 
-				else { el.pause(); }
-			} catch (e) {}
-		}
+			function applyScrub() {
+				scrubRafId = 0;
+				if (pendingScrubT == null || !activeMetadataReady) return;
+				const t = pendingScrubT;
+				pendingScrubT = null;
+				try {
+					if (Math.abs((activeVideo.currentTime || 0) - t) < 0.02) return;
+					if (typeof activeVideo.fastSeek === 'function') activeVideo.fastSeek(t);
+					else activeVideo.currentTime = t;
+				} catch {}
+			}
 
-		async function prepareNext(src, startTime = 0) {
-			await setVideoSource(bufferVideo, src, startTime, false);
-			// Truco: reproducir y pausar rápidamente prepara el decodificador sin parpadeos
-			try { await bufferVideo.play(); bufferVideo.pause(); } catch {}
-		}
+			function scheduleScrub(t) {
+				pendingScrubT = t;
+				if (!scrubRafId) scrubRafId = requestAnimationFrame(applyScrub);
+			}
 
-		function attachEndedHandler() {
-			activeVideo.onended = async () => {
-				if (!playlistStarted) playlistStarted = true;
-				await swapToPreloaded();
-				playlistIndex = (playlistIndex + 1) % PLAYLIST.length;
-				prepareNext(PLAYLIST[playlistIndex], 0);
-			};
-			bufferVideo.onended = null;
-		}
+			function waitForMetadata(el) {
+				return new Promise(resolve => {
+					if (el.readyState >= 1 && !isNaN(el.duration)) { resolve(); return; }
+					el.addEventListener('loadedmetadata', resolve, { once: true });
+				});
+			}
 
-		async function swapToPreloaded() {
-			try { bufferVideo.currentTime = 0; } catch {}
-			try { await bufferVideo.play(); } catch {}
-			bufferVideo.style.opacity = '1';
-			
-			await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-			
-			activeVideo.style.opacity = '0';
-			try { activeVideo.pause(); } catch {}
-			
-			const tmp = activeVideo; activeVideo = bufferVideo; bufferVideo = tmp;
-			attachEndedHandler();
-		}
+			async function setVideoSource(el, src, startTime = 0, autoplay = false) {
+				try {
+					el.loop = false;
+					if (el.src !== location.origin + src && el.src !== src) el.src = src;
+					el.load();
+					await waitForMetadata(el);
+					if (el === activeVideo) activeMetadataReady = true;
 
-		// INICIALIZACIÓN MÁGICA:
-		// 1. Preparamos el video All-Intra en 0s para el scroll
-		setVideoSource(activeVideo, VIDEO_SCROLL, 0, false);
-		// 2. Preparamos en el buffer el video Original desde 0s
-		prepareNext(VIDEO_INTRO_FULL, 0);
+					const t = Math.max(0, Math.min(startTime, el.duration || Infinity));
+					if (!isNaN(t)) try { el.currentTime = t; } catch {}
 
-        function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
-		// #endregion
+					if (autoplay) try { await el.play(); } catch {}
+					else el.pause();
+				} catch {}
+			}
 
-		// #region 📜 MANEJO DE SCROLL
-		const ZOOM_START_S = ZOOM_START_MS / 1000;
-		const ZOOM_END_S = ZOOM_END_MS / 1000;
-		
-		function onScroll() {
-			const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-			const ANIMATION_VH = 2; 
-			const viewportHeight = window.innerHeight;
-			
-			const progress = clamp(scrollY / (ANIMATION_VH * viewportHeight), 0, 1);
-			const totalDuration = timeline.duration();
-			const seekTime = progress * totalDuration;
+			async function prepareNext(src, startTime = 0) {
+				await setVideoSource(bufferVideo, src, startTime, false);
+				try { await bufferVideo.play(); bufferVideo.pause(); } catch {}
+			}
 
-			timeline.progress(progress);
+			function attachEndedHandler() {
+				activeVideo.onended = async () => {
+					await swapToPreloaded();
+					playlistIndex = (playlistIndex + 1) % PLAYLIST.length;
+					prepareNext(PLAYLIST[playlistIndex], 0);
+				};
+				bufferVideo.onended = null;
+			}
 
-			if (isScrollScrubActive) {
+			async function swapToPreloaded() {
+				try { bufferVideo.currentTime = 0; } catch {}
+				try { await bufferVideo.play(); } catch {}
+				bufferVideo.style.opacity = '1';
+
+				await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+				activeVideo.style.opacity = '0';
+				try { activeVideo.pause(); } catch {}
+
+				[activeVideo, bufferVideo] = [bufferVideo, activeVideo];
+				attachEndedHandler();
+			}
+
+			setVideoSource(activeVideo, VIDEO_SCROLL, 0, false);
+			prepareNext(VIDEO_INTRO_FULL, 0);
+
+			function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+			function onScroll() {
+				const scrollY   = window.scrollY || document.documentElement.scrollTop;
+				const progress  = clamp(scrollY / (2 * window.innerHeight), 0, 1);
+				const seekTime  = progress * tl.duration();
+
+				tl.progress(progress);
+
+				if (!isScrollScrubActive) return;
+
 				if (seekTime <= ZOOM_START_S) {
 					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
 					scheduleScrub(0);
-					
 				} else if (seekTime < ZOOM_END_S) {
 					const localP = (seekTime - ZOOM_START_S) / (ZOOM_END_S - ZOOM_START_S);
-					const videoTime = localP * SCRUB_DURATION_S;
 					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
-					scheduleScrub(videoTime);
-					
-				} else {
-					if (!afterZoomPlaybackStarted && activeMetadataReady) {
-						afterZoomPlaybackStarted = true;
-						isScrollScrubActive = false; 
-						
-						// Hacemos swap al video original completo desde 0s
-						swapToPreloaded().then(() => {
-							// Una vez hecho el swap, preparamos el loop en el reproductor libre
-							prepareNext(PLAYLIST[playlistIndex], 0);
-						});
-						
-						pendingScrubT = null;
-						if (scrubRafId) { cancelAnimationFrame(scrubRafId); scrubRafId = 0; }
-					}
+					scheduleScrub(localP * SCRUB_DURATION_S);
+				} else if (!afterZoomStarted && activeMetadataReady) {
+					afterZoomStarted    = true;
+					isScrollScrubActive = false;
+
+					pendingScrubT = null;
+					if (scrubRafId) { cancelAnimationFrame(scrubRafId); scrubRafId = 0; }
+
+					swapToPreloaded().then(() => prepareNext(PLAYLIST[playlistIndex], 0));
 				}
 			}
+
+			onScroll();
+
+			let rafPending = false;
+			window.addEventListener('scroll', () => {
+				if (!rafPending) {
+					rafPending = true;
+					requestAnimationFrame(() => { onScroll(); rafPending = false; });
+				}
+			}, { passive: true });
 		}
 
-        onScroll();
-        let rafPending = false;
-        window.addEventListener('scroll', () => {
-          if (!rafPending) {
-            rafPending = true;
-            requestAnimationFrame(() => {
-              onScroll();
-              rafPending = false;
-            });
-          }
-        }, { passive: true });
-		// #endregion
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initScrollAnim);
-    } else {
-        initScrollAnim();
-    }
+		if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+		else init();
 	</script>
-	<!-- #endregion -->
-	<!-- Sticky de .proyectos-container manejado con CSS puro (position: sticky) -->
 
-	<!-- #region 🎬 SCRIPT: ANIMACIONES PROYECTOS (deshabilitado - scroll-hijacking removido) -->
-	<!-- #endregion -->
-
-	<!-- #region 📬 SCRIPT: FORMULARIO DE CONTACTO - Validación y animaciones -->
+	<!-- Formulario de contacto -->
 	<script is:inline>
 		document.addEventListener('DOMContentLoaded', () => {
-			const form = document.getElementById('contactForm');
+			const form       = document.getElementById('contactForm');
 			const formStatus = document.getElementById('formStatus');
-
 			if (!form || !formStatus) return;
 
-			// Animación de entrada de los campos del formulario
 			const formGroups = form.querySelectorAll('.form-group');
-			formGroups.forEach((group, index) => {
+			formGroups.forEach((group, i) => {
 				group.style.opacity = '0';
 				group.style.transform = 'translateY(20px)';
 				setTimeout(() => {
 					group.style.transition = 'all 0.6s ease';
 					group.style.opacity = '1';
 					group.style.transform = 'translateY(0)';
-				}, index * 100);
+				}, i * 100);
 			});
 
-			// Función para mostrar mensajes de estado
-			function showStatus(message, type) {
-				formStatus.textContent = message;
+			function showStatus(msg, type) {
+				formStatus.textContent = msg;
 				formStatus.className = `form-status show ${type}`;
-				
-				// Ocultar después de 5 segundos
-				setTimeout(() => {
-					formStatus.classList.remove('show');
-				}, 5000);
+				setTimeout(() => formStatus.classList.remove('show'), 5000);
 			}
 
-			// Validación en tiempo real
 			const inputs = form.querySelectorAll('input, textarea');
 			inputs.forEach(input => {
 				input.addEventListener('blur', function() {
 					if (this.value.trim() === '' && this.hasAttribute('required')) {
 						this.style.borderColor = 'rgba(239, 68, 68, 0.6)';
-					} else if (this.type === 'email' && this.value.trim() !== '') {
-						const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-						if (!emailRegex.test(this.value)) {
-							this.style.borderColor = 'rgba(239, 68, 68, 0.6)';
-						} else {
-							this.style.borderColor = 'rgba(34, 197, 94, 0.6)';
-						}
-					} else if (this.value.trim() !== '') {
+					} else if (this.type === 'email' && this.value.trim()) {
+						const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value);
+						this.style.borderColor = valid ? 'rgba(34, 197, 94, 0.6)' : 'rgba(239, 68, 68, 0.6)';
+					} else if (this.value.trim()) {
 						this.style.borderColor = 'rgba(34, 197, 94, 0.6)';
 					}
 				});
-
 				input.addEventListener('focus', function() {
 					this.style.borderColor = 'rgba(0, 180, 216, 0.6)';
 				});
 			});
 
-			// Manejo del envío del formulario
 			form.addEventListener('submit', async (e) => {
 				e.preventDefault();
 
-				// Obtener datos del formulario
-				const formData = new FormData(form);
-				const data = Object.fromEntries(formData);
+				const data = Object.fromEntries(new FormData(form));
 
-				// Validación básica
 				if (!data.nombre || !data.email || !data.asunto || !data.mensaje) {
 					showStatus('⚠️ Por favor, completa todos los campos', 'error');
 					return;
 				}
-
-				// Validación de email
-				const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-				if (!emailRegex.test(data.email)) {
+				if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
 					showStatus('⚠️ Por favor, ingresa un email válido', 'error');
 					return;
 				}
-
-				// Validación de Turnstile (Cliente)
-				const turnstileResponse = data['cf-turnstile-response'];
-				if (!turnstileResponse) {
+				if (!data['cf-turnstile-response']) {
 					showStatus('⚠️ Verificación de seguridad fallida. Por favor, recarga la página.', 'error');
 					return;
 				}
 
-				// Deshabilitar botón mientras se envía
 				const submitBtn = form.querySelector('.submit-btn');
-				const originalText = submitBtn.querySelector('.btn-text').textContent;
-				submitBtn.disabled = true;
-				submitBtn.querySelector('.btn-text').textContent = 'Enviando...';
+				const btnText   = submitBtn.querySelector('.btn-text');
+				const original  = btnText.textContent;
+				submitBtn.disabled    = true;
+				btnText.textContent   = 'Enviando...';
 				submitBtn.style.opacity = '0.7';
 
 				try {
-					// Enviar al backend de Cloudflare Pages Functions
 					const resp = await fetch('/contact', {
 						method: 'POST',
 						headers: { 'content-type': 'application/json' },
 						body: JSON.stringify({
-							nombre: data.nombre,
-							email: data.email,
-							asunto: data.asunto,
+							nombre:  data.nombre,
+							email:   data.email,
+							asunto:  data.asunto,
 							mensaje: data.mensaje,
-							'cf-turnstile-response': data['cf-turnstile-response']
+							'cf-turnstile-response': data['cf-turnstile-response'],
 						}),
 					});
 
 					const json = await resp.json().catch(() => ({ ok: false }));
-					if (!resp.ok || !json.ok) {
-						throw new Error(json.error || 'Error en el servidor');
-					}
+					if (!resp.ok || !json.ok) throw new Error(json.error || 'Error en el servidor');
 
 					showStatus('✨ ¡Mensaje enviado con éxito! Te responderé pronto.', 'success');
 					form.reset();
-
-					// Resetear bordes de inputs
-					inputs.forEach(input => {
-						input.style.borderColor = 'rgba(0, 180, 216, 0.2)';
-					});
-
-				} catch (error) {
-					console.error('Error al enviar el formulario:', error);
+					inputs.forEach(input => { input.style.borderColor = 'rgba(0, 180, 216, 0.2)'; });
+				} catch (err) {
 					showStatus('❌ Error al enviar el mensaje. Inténtalo nuevamente.', 'error');
 				} finally {
-					// Rehabilitar botón
-					submitBtn.disabled = false;
-					submitBtn.querySelector('.btn-text').textContent = originalText;
+					submitBtn.disabled  = false;
+					btnText.textContent = original;
 					submitBtn.style.opacity = '1';
 				}
 			});
 
-			// Efecto de partículas al interactuar con el formulario
 			let interactionCount = 0;
 			form.addEventListener('input', () => {
-				interactionCount++;
-				if (interactionCount % 5 === 0) {
-					createSparkle(form);
-				}
-			});
-
-			function createSparkle(element) {
+				if (++interactionCount % 5 !== 0) return;
 				const sparkle = document.createElement('div');
-				sparkle.style.position = 'absolute';
-				sparkle.style.width = '4px';
-				sparkle.style.height = '4px';
-				sparkle.style.background = '#48cae4';
-				sparkle.style.borderRadius = '50%';
-				sparkle.style.pointerEvents = 'none';
-				sparkle.style.boxShadow = '0 0 10px #48cae4';
-				
-				const rect = element.getBoundingClientRect();
+				sparkle.style.cssText = 'position:absolute;width:4px;height:4px;background:#48cae4;border-radius:50%;pointer-events:none;box-shadow:0 0 10px #48cae4';
+				const rect = form.getBoundingClientRect();
 				sparkle.style.left = `${Math.random() * rect.width}px`;
-				sparkle.style.top = `${Math.random() * rect.height}px`;
-				
-				element.appendChild(sparkle);
-
-				// Animar y eliminar
+				sparkle.style.top  = `${Math.random() * rect.height}px`;
+				form.appendChild(sparkle);
 				setTimeout(() => {
 					sparkle.style.transition = 'all 1s ease-out';
-					sparkle.style.transform = `translateY(-${Math.random() * 50 + 20}px)`;
-					sparkle.style.opacity = '0';
+					sparkle.style.transform  = `translateY(-${Math.random() * 50 + 20}px)`;
+					sparkle.style.opacity    = '0';
 				}, 10);
-
 				setTimeout(() => sparkle.remove(), 1100);
-			}
+			});
 		});
 	</script>
-	<!-- #endregion -->
 
-	<!-- #region 🪟 SCRIPT MODAL DE PROYECTOS -->
+	<!-- Modal de proyectos -->
 	<script define:vars={{ proyectosData }}>
 		document.addEventListener('DOMContentLoaded', () => {
-			const modal = document.getElementById('proyectoModal');
-			const modalClose = document.getElementById('modalClose');
-			const modalTitulo = document.getElementById('modalTitulo');
-			const modalBackdrop = document.getElementById('modalBackdrop');
-			const modalPoster = document.getElementById('modalPoster');
-			const modalMeta = document.getElementById('modalMeta');
-			const modalTagline = document.getElementById('modalTagline');
-			const modalDescripcion = document.getElementById('modalDescripcion');
-			const modalTecnologias = document.getElementById('modalTecnologias');
-			const modalContenido = document.getElementById('modalContenido');
-			const modalLink = document.getElementById('modalLink');
-			const modalShare = document.getElementById('modalShare');
+			const modal          = document.getElementById('proyectoModal');
+			const modalClose     = document.getElementById('modalClose');
+			const modalTitulo    = document.getElementById('modalTitulo');
+			const modalBackdrop  = document.getElementById('modalBackdrop');
+			const modalPoster    = document.getElementById('modalPoster');
+			const modalMeta      = document.getElementById('modalMeta');
+			const modalTagline   = document.getElementById('modalTagline');
+			const modalDescripcion  = document.getElementById('modalDescripcion');
+			const modalTecnologias  = document.getElementById('modalTecnologias');
+			const modalContenido    = document.getElementById('modalContenido');
+			const modalLink      = document.getElementById('modalLink');
+			const modalShare     = document.getElementById('modalShare');
 
-			// Función para encontrar proyecto por ID y su aptitud
-			function findProyectoWithAptitud(proyectoId) {
+			function findProyecto(id) {
 				for (const aptitud of proyectosData) {
-					const proyecto = aptitud.proyectos.find(p => p.id === proyectoId);
+					const proyecto = aptitud.proyectos.find(p => p.id === id);
 					if (proyecto) return { proyecto, aptitud };
 				}
 				return null;
 			}
 
-			// Abrir modal
-			function openModal(proyectoId) {
-				const result = findProyectoWithAptitud(proyectoId);
+			function openModal(id) {
+				const result = findProyecto(id);
 				if (!result) return;
-				
 				const { proyecto, aptitud } = result;
 
-				// Título
 				modalTitulo.textContent = proyecto.titulo;
-				
-				// Imagen de fondo (usa imagenFondo si existe, sino la imagen normal)
+
 				modalBackdrop.src = proyecto.imagenFondo || proyecto.imagen;
 				modalBackdrop.alt = proyecto.titulo;
-				
-				// Poster cuadrado (usa la imagen normal)
-				modalPoster.src = proyecto.imagen;
-				modalPoster.alt = proyecto.titulo;
-				
-				// Meta información (categoría, premio si existe)
+				modalPoster.src   = proyecto.imagen;
+				modalPoster.alt   = proyecto.titulo;
+
 				let metaHTML = `<span class="modal-meta-item">${aptitud.titulo}</span>`;
-				if (proyecto.premio) {
-					metaHTML += `<span class="modal-meta-badge">🏆 ${proyecto.premio}</span>`;
-				}
-				if (proyecto.tecnologias && proyecto.tecnologias.length > 0) {
-					metaHTML += `<span class="modal-meta-item">${proyecto.tecnologias.length} tecnologías</span>`;
-				}
+				if (proyecto.premio) metaHTML += `<span class="modal-meta-badge">🏆 ${proyecto.premio}</span>`;
+				if (proyecto.tecnologias?.length) metaHTML += `<span class="modal-meta-item">${proyecto.tecnologias.length} tecnologías</span>`;
 				modalMeta.innerHTML = metaHTML;
-				
-				// Tagline / descripción corta
+
 				modalTagline.textContent = proyecto.descripcion || '';
-				
-				// Descripción completa (si no hay contenido HTML)
+
 				if (proyecto.descripcion) {
 					modalDescripcion.textContent = proyecto.descripcion;
 					modalDescripcion.parentElement.style.display = 'block';
 				} else {
 					modalDescripcion.parentElement.style.display = 'none';
 				}
-				
-				// Tecnologías
-				modalTecnologias.innerHTML = proyecto.tecnologias 
+
+				modalTecnologias.innerHTML = proyecto.tecnologias
 					? proyecto.tecnologias.map(t => `<span class="modal-tech-tag">${t}</span>`).join('')
 					: '';
-				
-				// Contenido HTML adicional
+
 				if (proyecto.contenido) {
 					modalContenido.innerHTML = proyecto.contenido;
 					modalContenido.style.display = 'block';
@@ -1168,8 +889,7 @@
 					modalContenido.innerHTML = '';
 					modalContenido.style.display = 'none';
 				}
-				
-				// Link externo
+
 				if (proyecto.link) {
 					modalLink.href = proyecto.link;
 					modalLink.style.display = 'inline-flex';
@@ -1178,65 +898,38 @@
 				}
 
 				modal.classList.add('active');
-				//document.body.style.overflow = 'hidden';
 			}
 
-			// Cerrar modal
 			function closeModal() {
 				modal.classList.remove('active');
 				document.body.style.overflow = '';
 			}
 
-			// Compartir proyecto
 			modalShare?.addEventListener('click', async () => {
-				const titulo = modalTitulo.textContent;
-				const url = window.location.href;
-				
 				if (navigator.share) {
 					try {
-						await navigator.share({
-							title: titulo,
-							text: `Mira este proyecto: ${titulo}`,
-							url: url
-						});
-					} catch (err) {
-						console.log('Error al compartir:', err);
-					}
+						await navigator.share({ title: modalTitulo.textContent, text: `Mira este proyecto: ${modalTitulo.textContent}`, url: window.location.href });
+					} catch {}
 				} else {
-					// Fallback: copiar URL
-					navigator.clipboard.writeText(url);
+					navigator.clipboard.writeText(window.location.href);
 					alert('URL copiada al portapapeles');
 				}
 			});
 
-			// Event listeners para tarjetas de proyecto (ahora todas pueden abrir el modal)
 			document.querySelectorAll('.proyecto-detail-card').forEach(card => {
 				card.addEventListener('click', (e) => {
-					// No abrir modal si se clickea en el link externo
 					if (e.target.closest('.card-btn-link-float')) return;
-					
-					const proyectoId = card.dataset.proyectoId;
-					openModal(proyectoId);
+					openModal(card.dataset.proyectoId);
 				});
 			});
 
-			// Cerrar con botón X
 			modalClose?.addEventListener('click', closeModal);
-
-			// Cerrar al clickear overlay (solo el fondo, no el contenido)
 			modal?.addEventListener('click', (e) => {
-				if (e.target === modal || e.target.classList.contains('modal-backdrop')) {
-					closeModal();
-				}
+				if (e.target === modal || e.target.classList.contains('modal-backdrop')) closeModal();
 			});
-
-			// Cerrar con Escape
 			document.addEventListener('keydown', (e) => {
-				if (e.key === 'Escape' && modal.classList.contains('active')) {
-					closeModal();
-				}
+				if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
 			});
 		});
 	</script>
-	<!-- #endregion -->
 </Layout>
