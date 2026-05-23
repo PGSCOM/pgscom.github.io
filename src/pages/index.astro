@@ -826,18 +826,15 @@
 		function attachEndedHandler() {
 			activeVideo.onended = async () => {
 				if (!playlistStarted) playlistStarted = true;
-				// Cuando acaba normal (desde el segundo video), sí reiniciamos el tiempo a 0
-				await swapToPreloaded(true);
+				await swapToPreloaded();
 				playlistIndex = (playlistIndex + 1) % PLAYLIST.length;
 				prepareNext(PLAYLIST[playlistIndex], 0);
 			};
 			bufferVideo.onended = null;
 		}
 
-		async function swapToPreloaded(resetTime = true) {
-			if (resetTime) {
-				try { bufferVideo.currentTime = 0; } catch {}
-			}
+		async function swapToPreloaded() {
+			try { bufferVideo.currentTime = 0; } catch {}
 			try { await bufferVideo.play(); } catch {}
 			bufferVideo.style.opacity = '1';
 			
@@ -853,8 +850,8 @@
 		// INICIALIZACIÓN MÁGICA:
 		// 1. Preparamos el video All-Intra en 0s para el scroll
 		setVideoSource(activeVideo, VIDEO_SCROLL, 0, false);
-		// 2. Preparamos en el buffer el video Original clavado en el segundo 2.0
-		prepareNext(VIDEO_INTRO_FULL, SCRUB_DURATION_S);
+		// 2. Preparamos en el buffer el video Original desde 0s
+		prepareNext(VIDEO_INTRO_FULL, 0);
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 		// #endregion
@@ -890,8 +887,8 @@
 						afterZoomPlaybackStarted = true;
 						isScrollScrubActive = false; 
 						
-						// Hacemos swap al video original completo conservando el tiempo en 2.0s
-						swapToPreloaded(false).then(() => {
+						// Hacemos swap al video original completo desde 0s
+						swapToPreloaded().then(() => {
 							// Una vez hecho el swap, preparamos el loop en el reproductor libre
 							prepareNext(PLAYLIST[playlistIndex], 0);
 						});
