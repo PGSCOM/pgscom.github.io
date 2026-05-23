@@ -63,10 +63,9 @@
 	<section class="parte2-wrapper">
 		<div class="parte2">
 			<div class="galaxiamask">
-				<!-- Video Galaxia bucle -->
-				<canvas id="galaxia-seq" class="video-galaxia" style="opacity:0;"></canvas>
-				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia"></video>
-				<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity:0;"></video>
+				<!-- Video Galaxia -->
+				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia" style="opacity: 1;"></video>
+				<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity: 0;"></video>
 			</div>
 			<img id="logoanimar" style="width: auto; height: 32.3%;" src="/assets/animlogo/logo.svg" alt="" />
 			<!-- El width sería 18% (698/3840) y el height sería 32.3% (698/2160) -->
@@ -711,12 +710,11 @@
 		});
 	</script>
 	<!-- #endregion -->
-	<!-- #region 🎬 SCRIPT: ANIMACIONES SCROLL - Timeline principal con videos y secuencias -->
+	<!-- #region 🎬 SCRIPT: ANIMACIONES SCROLL - Timeline principal con videos -->
 	<script type="module">
     import gsap from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm';
     import ScrollTrigger from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger/+esm';
     
-    // Registrar plugins de GSAP
     gsap.registerPlugin(ScrollTrigger);
 
     function initScrollAnim() {
@@ -725,340 +723,80 @@
         const galaxiaMaskEl = document.querySelector('.galaxiamask');
         const videoA = document.querySelector('#video-galaxia-a');
         const videoB = document.querySelector('#video-galaxia-b');
-        const seqCanvas = document.querySelector('#galaxia-seq');
 
-        if (!targetEl || !logoEl || !galaxiaMaskEl || !videoA || !videoB || !seqCanvas) return;
+        if (!targetEl || !logoEl || !galaxiaMaskEl || !videoA || !videoB) return;
 
-        // Detectar si es móvil
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         
-        // #region 🎯 CONFIGURACIÓN TIMELINE - Definición de animaciones con GSAP
-        // Crear una timeline para mejor control de la animación
+        // #region 🎯 CONFIGURACIÓN TIMELINE
         const timeline = gsap.timeline({ paused: true });
-        
-        // Configurar GSAP para optimización móvil
-        gsap.config({
-            force3D: true // Forzar aceleración GPU para mejor rendimiento en móviles
-        });
-        
-        // Duración total de la timeline en segundos (normalizada a 2 segundos para mapeo con scroll)
-        const TIMELINE_DURATION = 2;
+        gsap.config({ force3D: true });
 
-        // #region ✨ DEFINICIÓN DE ANIMACIONES
-        // Fase 1: Fade out del personaje (0-0.8s / 0-40% del timeline)
         timeline.fromTo(targetEl, 
             { opacity: 1, scale: 1 },
-            { 
-                opacity: 0, 
-                scale: 0.8, 
-                duration: isMobile ? 0.311 : 0.8,
-                ease: 'power2.out',
-                force3D: true
-            }, 0)
-        
-        // Fase 2: Zoom del logo (1s-2s / 50%-100% del timeline)
+            { opacity: 0, scale: 0.8, duration: isMobile ? 0.311 : 0.8, ease: 'power2.out', force3D: true }, 0)
         .fromTo(logoEl,
             { scale: 1, y: 0 },
             {
-                scale: 25,
-                y: 45,
-                duration: 1,
-                ease: 'power2.in',
-                force3D: true,
+                scale: 25, y: 45, duration: 1, ease: 'power2.in', force3D: true,
                 onUpdate: function() {
-                    // Actualizar la máscara sincronizada con el zoom del logo
                     const rect = logoEl.getBoundingClientRect();
                     const currentSize = (rect.height / window.innerHeight) * 100 - 8;
                     galaxiaMaskEl.style.webkitMaskSize = `${currentSize}vh ${currentSize}vh`;
                     galaxiaMaskEl.style.maskSize = `${currentSize}vh ${currentSize}vh`;
                 }
             }, 1)
-        
-        // Fase 3: Ocultar el logo al finalizar (1.8s)
-        .to(logoEl, {
-            opacity: 0,
-            duration: 0.001,
-            ease: 'none'
-        }, 1.8);
-        // #endregion
+        .to(logoEl, { opacity: 0, duration: 0.001, ease: 'none' }, 1.8);
         // #endregion
 
-		// #region 📹 CONFIGURACIÓN DE VIDEOS - Gestión de reproducción y secuencias
-		// --- Sincronización de video con la animación ---
-		// Durante el zoom del logo (t=1000->2000ms de la timeline) scrubbear 0-2s de empezar.mp4
-		// Al terminar el zoom, continuar reproduciendo empezar.mp4 hasta el final
-		// Luego alternar loopinversed.mp4 y loop.mp4 en bucle
+		// #region 📹 CONFIGURACIÓN DE VIDEOS
+		const ZOOM_START_MS = 1000;
+		const ZOOM_END_MS = 2000;
+		const SCRUB_DURATION_S = 2; 
 
-	const ZOOM_START_MS = 1000;
-	const ZOOM_END_MS = 2000;
-	const SCRUB_DURATION_S = 2; // primeros 2 segundos
-
-		// Usar nombres reales del repo
-	const VIDEO_INTRO = '/vid/empezar.mp4';
-	const PLAYLIST = ['/vid/loopinversed.mp4', '/vid/loop.mp4'];
-	let playlistIndex = 0;
-	let isScrollScrubActive = true;
-	let afterZoomPlaybackStarted = false;
-	let activeMetadataReady = false;
-	let playlistStarted = false;
-
-	// Doble buffer de video
-	let activeVideo = videoA;
-	let bufferVideo = videoB;
-
-	// Detectar si es dispositivo móvil
-	const isMobileDevice = window.matchMedia('(max-width: 768px)').matches;
-	
-	// #region 🎞️ SECUENCIAS AVIF - Configuración de frames para animación fluida
-	// Secuencia de frames AVIF en canvas para el tramo de zoom (30fps móvil, 60fps PC)
-	const SEQ_FPS = isMobileDevice ? 30 : 60;
-	const SEQ_DURATION_S = 2;
-	let TOTAL_FRAMES = Math.floor(SEQ_FPS * SEQ_DURATION_S); // 60 frames (móvil) o 120 frames (PC)
-	const FRAME_BASE = '/vid/empezar/';
-	let FRAME_EXT = 'avif';
-	let frameStartIndex = 0; // detectaremos 0 o 1 según exportación
-	let padWidth = 0; // si los ficheros usan ceros a la izquierda (ej: 000.avif)
-	const imagesCache = [];
-	const ctx = seqCanvas.getContext('2d');
-	let lastDrawnIndex = -1;
-	let sequenceActive = false;
-
-	// #region 🔧 UTILIDADES DE FRAMES
-	function padNum(i) {
-		// Si todavía no se ha detectado padWidth, asumimos por defecto 3 dígitos
-		const effectivePad = (padWidth && padWidth > 0) ? padWidth : 3;
-		if (!effectivePad || effectivePad <= 1) return String(i);
-		return String(i).padStart(effectivePad, '0');
-	}
-
-	// Mapeo de frames: seleccionar cada 4to frame (móvil 30fps) o cada 2do frame (PC 60fps)
-	const FRAME_SKIP = isMobileDevice ? 4 : 2; // 120fps / 30fps = 4, 120fps / 60fps = 2
-	
-	function getActualFrameIndex(logicalIndex) {
-		// Mapear del índice lógico al índice real en la secuencia
-		// Móvil (30fps): 0..59 → 0..236, PC (60fps): 0..119 → 0..238
-		return frameStartIndex + (logicalIndex * FRAME_SKIP);
-	}
-
-	function frameSrc(logicalIndex) { 
-		const actualIndex = getActualFrameIndex(logicalIndex);
-		return `${FRAME_BASE}${padNum(actualIndex)}.${FRAME_EXT}`; 
-	}
-	// #endregion
-
-	// #region 🖼️ FUNCIONES DE CANVAS - Renderizado y gestión de imágenes
-	function resizeCanvas() {
-		const rect = galaxiaMaskEl.getBoundingClientRect();
-		const ratio = window.devicePixelRatio || 1;
-		seqCanvas.width = Math.max(1, Math.floor(rect.width * ratio));
-		seqCanvas.height = Math.max(1, Math.floor(rect.height * ratio));
-		seqCanvas.style.width = '100%';
-		seqCanvas.style.height = '100%';
-	}
-
-	function drawImageCover(img) {
-		if (!img || !ctx) return;
-		const cw = seqCanvas.width;
-		const ch = seqCanvas.height;
-		const iw = img.naturalWidth;
-		const ih = img.naturalHeight;
-		if (!iw || !ih || !cw || !ch) return;
-		const scale = Math.max(cw / iw, ch / ih);
-		const nw = iw * scale;
-		const nh = ih * scale;
-		const dx = (cw - nw) / 2;
-		const dy = (ch - nh) / 2;
-		ctx.clearRect(0, 0, cw, ch);
-		ctx.drawImage(img, dx, dy, nw, nh);
-	}
-
-	function loadFrame(i) {
-		if (imagesCache[i]) return imagesCache[i];
-		const img = new Image();
-		img.decoding = 'async';
-		img.src = frameSrc(i);
-		imagesCache[i] = new Promise((resolve) => {
-			const done = () => resolve(img);
-			img.onload = done; img.onerror = done;
-			if (img.decode) { img.decode().then(done).catch(done); }
-		});
-		return imagesCache[i];
-	}
-	// #endregion
-
-	// #region 🔍 DETECCIÓN DE FRAMES - Auto-detección de formato y rango disponible
-	async function detectFrameRange() {
-		// Probar si la secuencia comienza en 0 o en 1
-		function test(src) {
-			return new Promise((resolve) => {
-				const img = new Image();
-				img.onload = () => resolve(true);
-				img.onerror = () => resolve(false);
-				img.src = src;
-			});
-		}
+		// Las 3 fases de video
+		const VIDEO_SCROLL = '/vid/empezar_scroll.mp4'; // El vídeo All-Intra de 2s
+		const VIDEO_INTRO_FULL = '/vid/empezar.mp4';    // El vídeo original completo
+		const PLAYLIST = ['/vid/loopinversed.mp4', '/vid/loop.mp4'];
 		
-		function testActualFrame(actualIndex) {
-			const src = `${FRAME_BASE}${padNum(actualIndex)}.${FRAME_EXT}`;
-			return test(src);
-		}
-		
-		// Detectar extensión disponible: preferir avif → webp → png
-		const exts = ['avif', 'webp', 'png'];
-		for (const ext of exts) {
-			// Para cada extensión, averiguar si hay archivos con padding (3,2,1) o sin padding
-			let found = false;
-			for (const w of [3,2,1,0]) {
-				const candidate = FRAME_BASE + (w > 0 ? String(0).padStart(w,'0') : '0') + `.${ext}`;
-				if (await test(candidate)) { FRAME_EXT = ext; padWidth = w; found = true; break; }
-				// también probar el siguiente índice (1) por si empieza en 1
-				const candidate1 = FRAME_BASE + (w > 0 ? String(1).padStart(w,'0') : '1') + `.${ext}`;
-				if (await test(candidate1)) { FRAME_EXT = ext; padWidth = w; found = true; break; }
-			}
-			if (found) break;
-		}
-		
-		// Ahora probar existencia real de los frames usando el mapeo
-		const hasZero = await testActualFrame(0);
-		if (hasZero) { frameStartIndex = 0; }
-		else {
-			const hasOne = await testActualFrame(1);
-			if (hasOne) { frameStartIndex = 1; }
-			else { frameStartIndex = 0; }
-		}
-		
-		// Con framerate adaptativo tenemos frames lógicos variables según dispositivo
-		// Móvil (30fps): 60 frames lógicos, PC (60fps): 120 frames lógicos
-		// Verificar si tenemos suficientes frames en la secuencia original
-		const lastLogicalFrame = TOTAL_FRAMES - 1;
-		const lastActualFrame = getActualFrameIndex(lastLogicalFrame);
-		
-		if (await testActualFrame(lastActualFrame)) {
-			// Tenemos todos los frames necesarios
-			console.log(`Detected ${TOTAL_FRAMES} logical frames (${SEQ_FPS}fps ${isMobileDevice ? 'mobile' : 'desktop'}) mapping to actual frames up to ${lastActualFrame}`);
-		} else {
-			// Reducir el número de frames si no tenemos suficientes
-			let maxFrames = 0;
-			for (let i = 0; i < TOTAL_FRAMES; i++) {
-				const actualFrame = getActualFrameIndex(i);
-				if (await testActualFrame(actualFrame)) {
-					maxFrames = i + 1;
+		let playlistIndex = 0;
+		let isScrollScrubActive = true;
+		let afterZoomPlaybackStarted = false;
+		let activeMetadataReady = false;
+		let playlistStarted = false;
+
+		let activeVideo = videoA;
+		let bufferVideo = videoB;
+
+		let pendingScrubT = null;
+		let scrubRafId = 0;
+		const SCRUB_EPS = 0.02;
+
+		function applyScrub() {
+			scrubRafId = 0;
+			if (pendingScrubT == null || !activeMetadataReady) return;
+			const t = pendingScrubT;
+			pendingScrubT = null;
+			try {
+				const cur = activeVideo.currentTime || 0;
+				if (Math.abs(cur - t) < SCRUB_EPS) return;
+				if (typeof activeVideo.fastSeek === 'function') {
+					activeVideo.fastSeek(t);
 				} else {
-					break;
+					activeVideo.currentTime = t;
 				}
-			}
-			TOTAL_FRAMES = Math.max(1, maxFrames);
-			console.log(`Adjusted to ${TOTAL_FRAMES} logical frames due to limited actual frames`);
+			} catch {}
 		}
-	}
 
-	// Gestión de memoria: mantener solo un buffer de frames alrededor del actual
-	const CACHE_BUFFER = isMobileDevice ? 15 : 40; // Frames a mantener en memoria
-
-	function manageCache(currentIndex) {
-		// Liberar frames lejanos para ahorrar memoria
-		imagesCache.forEach((_, i) => {
-			if (imagesCache[i] && Math.abs(i - currentIndex) > CACHE_BUFFER) {
-				imagesCache[i] = null;
-			}
-		});
-		
-		// Precargar frames futuros inmediatos (buffer deslizante)
-		const preloadEnd = Math.min(TOTAL_FRAMES - 1, currentIndex + (isMobileDevice ? 5 : 10));
-		for (let i = currentIndex + 1; i <= preloadEnd; i++) {
-			loadFrame(i);
+		function scheduleScrub(t) {
+			pendingScrubT = t;
+			if (!scrubRafId) scrubRafId = requestAnimationFrame(applyScrub);
 		}
-	}
-
-	function primePreload() {
-		// Precargar frames iniciales para fluidez (reducido para evitar picos de memoria)
-		const FIRST = 0; 
-		const PRELOAD_COUNT = isMobileDevice ? 15 : 30; 
-		const LAST = Math.min(TOTAL_FRAMES - 1, PRELOAD_COUNT);
-		for (let i = FIRST; i <= LAST; i++) loadFrame(i);
-		// ELIMINADO: Preload masivo en segundo plano
-	}
-
-	function setSequenceVisible(v) {
-		if (v) {
-			if (!sequenceActive) {
-				sequenceActive = true;
-				seqCanvas.style.opacity = '1';
-				activeVideo.style.opacity = '0';
-				bufferVideo.style.opacity = '0';
-			}
-		} else {
-			if (sequenceActive) {
-				sequenceActive = false;
-				seqCanvas.style.opacity = '0';
-			}
-		}
-	}
-
-	async function showFrame(index) {
-		if (index === lastDrawnIndex) return;
-		lastDrawnIndex = index;
-		
-		// Gestionar memoria antes de cargar
-		manageCache(index);
-
-		const img = await loadFrame(index);
-		if (lastDrawnIndex !== index) return; // Evitar draw desfasado
-		drawImageCover(img);
-	}
-
-	// Inicializar canvas y precarga
-	resizeCanvas();
-	window.addEventListener('resize', resizeCanvas);
-	// Detectar rango de la secuencia (inicio y total), precargar y pintar primer frame
-	detectFrameRange().then(() => {
-		primePreload();
-		setSequenceVisible(true);
-		showFrame(0); // Siempre empezamos en frame lógico 0
-	});
-	// #endregion
-	// #endregion
-
-	// #region 🎮 CONTROL DE REPRODUCCIÓN - Scrubbing y gestión de videos
-	// Scheduler de scrubbing para fluidez
-	let pendingScrubT = null;
-	let scrubRafId = 0;
-	let lastScrubbedT = -1;
-	const SCRUB_EPS = 0.02; // segundos; evita micro-seeks <20ms
-
-	function applyScrub() {
-		scrubRafId = 0;
-		if (pendingScrubT == null || !activeMetadataReady) return;
-		const t = pendingScrubT;
-		pendingScrubT = null;
-		// Evitar mover si ya estamos muy cerca
-		try {
-			const cur = activeVideo.currentTime || 0;
-			if (Math.abs(cur - t) < SCRUB_EPS) return;
-			if (typeof activeVideo.fastSeek === 'function') {
-				activeVideo.fastSeek(t);
-			} else {
-				activeVideo.currentTime = t;
-			}
-			lastScrubbedT = t;
-		} catch {}
-	}
-
-	function scheduleScrub(t) {
-		pendingScrubT = t;
-		if (!scrubRafId) scrubRafId = requestAnimationFrame(applyScrub);
-	}
 
 		function waitForMetadata(el) {
 			return new Promise((resolve) => {
-				if (el.readyState >= 1 && !isNaN(el.duration)) {
-					resolve();
-					return;
-				}
-				const onLoaded = () => {
-					el.removeEventListener('loadedmetadata', onLoaded);
-					resolve();
-				};
+				if (el.readyState >= 1 && !isNaN(el.duration)) { resolve(); return; }
+				const onLoaded = () => { el.removeEventListener('loadedmetadata', onLoaded); resolve(); };
 				el.addEventListener('loadedmetadata', onLoaded, { once: true });
 			});
 		}
@@ -1066,130 +804,104 @@
 		async function setVideoSource(el, src, startTime = 0, autoplay = false) {
 			try {
 				el.loop = false;
-				// Cambiar src directamente en el video
-				if (el.src !== location.origin + src && el.src !== src) {
-					el.src = src;
-				}
-				// Forzar carga de metadatos
+				if (el.src !== location.origin + src && el.src !== src) el.src = src;
 				el.load();
 				await waitForMetadata(el);
 				if (el === activeVideo) activeMetadataReady = true;
-				// Posicionar
+				
 				const clampedStart = Math.max(0, Math.min(startTime, (el.duration || Infinity)));
-				if (!Number.isNaN(clampedStart)) {
-					try { el.currentTime = clampedStart; } catch {}
-				}
-				if (autoplay) {
-					try { await el.play(); } catch {}
-				} else {
-					el.pause();
-				}
-			} catch (e) {
-				// Silencioso: si falla, no romper la animación
-			}
+				if (!Number.isNaN(clampedStart)) { try { el.currentTime = clampedStart; } catch {} }
+				
+				if (autoplay) { try { await el.play(); } catch {} } 
+				else { el.pause(); }
+			} catch (e) {}
 		}
 
-		async function prepareNext(src) {
-			// Precargar en el buffer
-			await setVideoSource(bufferVideo, src, 0, false);
-			// Opcional: priming del decodificador
+		async function prepareNext(src, startTime = 0) {
+			await setVideoSource(bufferVideo, src, startTime, false);
+			// Truco: reproducir y pausar rápidamente prepara el decodificador sin parpadeos
 			try { await bufferVideo.play(); bufferVideo.pause(); } catch {}
 		}
 
 		function attachEndedHandler() {
 			activeVideo.onended = async () => {
-				// Primera vez: venimos del intro
-				if (!playlistStarted) {
-					playlistStarted = true;
-				}
-				// Swap al buffer ya precargado
-				await swapToPreloaded();
-				// Preparar el siguiente en la lista
+				if (!playlistStarted) playlistStarted = true;
+				// Cuando acaba normal (desde el segundo video), sí reiniciamos el tiempo a 0
+				await swapToPreloaded(true);
 				playlistIndex = (playlistIndex + 1) % PLAYLIST.length;
-				prepareNext(PLAYLIST[playlistIndex]);
+				prepareNext(PLAYLIST[playlistIndex], 0);
 			};
 			bufferVideo.onended = null;
 		}
 
-		async function swapToPreloaded() {
-			// Asegurar visible y reproduciendo el buffer antes del swap
-			try { bufferVideo.currentTime = 0; } catch {}
+		async function swapToPreloaded(resetTime = true) {
+			if (resetTime) {
+				try { bufferVideo.currentTime = 0; } catch {}
+			}
 			try { await bufferVideo.play(); } catch {}
 			bufferVideo.style.opacity = '1';
-			// Esperar 2 frames para asegurar un render antes de ocultar el activo
+			
 			await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-			// Ocultar/pausar el activo
+			
 			activeVideo.style.opacity = '0';
 			try { activeVideo.pause(); } catch {}
-			// Intercambiar referencias
+			
 			const tmp = activeVideo; activeVideo = bufferVideo; bufferVideo = tmp;
 			attachEndedHandler();
 		}
 
-		// Preparar el video inicial para scrubbing en el activo y precargar el primero del playlist en el buffer
-		setVideoSource(activeVideo, VIDEO_INTRO, 0, false);
-		prepareNext(PLAYLIST[playlistIndex]); // playlistIndex === 0 al inicio
-		attachEndedHandler();
+		// INICIALIZACIÓN MÁGICA:
+		// 1. Preparamos el video All-Intra en 0s para el scroll
+		setVideoSource(activeVideo, VIDEO_SCROLL, 0, false);
+		// 2. Preparamos en el buffer el video Original clavado en el segundo 2.0
+		prepareNext(VIDEO_INTRO_FULL, SCRUB_DURATION_S);
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 		// #endregion
 
-		// #region 📜 MANEJO DE SCROLL - Sincronización de animaciones con scroll
-		// Convertir milisegundos a segundos para GSAP (timeline usa segundos)
+		// #region 📜 MANEJO DE SCROLL
 		const ZOOM_START_S = ZOOM_START_MS / 1000;
 		const ZOOM_END_S = ZOOM_END_MS / 1000;
 		
 		function onScroll() {
 			const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-			
-			const ANIMATION_VH = 2; // configurable
+			const ANIMATION_VH = 2; 
 			const viewportHeight = window.innerHeight;
 			
-			// Restaurar comportamiento original: la animación comienza desde el principio de la página
-			// para que el personaje se desvanezca MIENTRAS bajamos hacia la galaxia.
-			// Esto asegura que al llegar a la sección sticky, la primera fase (fade out) ya esté avanzada o completa.
 			const progress = clamp(scrollY / (ANIMATION_VH * viewportHeight), 0, 1);
-
-			// GSAP usa progress (0-1) o time en segundos
 			const totalDuration = timeline.duration();
 			const seekTime = progress * totalDuration;
 
-			// Usar progress() para scrubbing más eficiente con GSAP
 			timeline.progress(progress);
 
-			// Sincronización del video con el tramo de zoom (convertido a segundos)
 			if (isScrollScrubActive) {
 				if (seekTime <= ZOOM_START_S) {
-					// Antes del zoom: pausar en 0 y mostrar primer frame
 					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
-					setSequenceVisible(true);
-					showFrame(0);
+					scheduleScrub(0);
+					
 				} else if (seekTime < ZOOM_END_S) {
-					// En el zoom: scrubbing 0-2s sobre la secuencia AVIF
 					const localP = (seekTime - ZOOM_START_S) / (ZOOM_END_S - ZOOM_START_S);
-					const frameIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(localP * (TOTAL_FRAMES - 1))));
+					const videoTime = localP * SCRUB_DURATION_S;
 					try { if (!activeVideo.paused) activeVideo.pause(); } catch {}
-					setSequenceVisible(true);
-					showFrame(frameIndex);
+					scheduleScrub(videoTime);
+					
 				} else {
-					// Después del zoom: continuar reproduciendo el intro
 					if (!afterZoomPlaybackStarted && activeMetadataReady) {
 						afterZoomPlaybackStarted = true;
-						isScrollScrubActive = false; // Dejar de scrubbear tras iniciar reproducción continua
-						// La 2ª parte del video ya viene recortada: empezar desde 0
-						try { activeVideo.currentTime = 0; } catch {}
-						try { activeVideo.play(); } catch {}
-						activeVideo.style.opacity = '1';
-						setSequenceVisible(false);
-						// Limpiar scheduler de scrubbing
+						isScrollScrubActive = false; 
+						
+						// Hacemos swap al video original completo conservando el tiempo en 2.0s
+						swapToPreloaded(false).then(() => {
+							// Una vez hecho el swap, preparamos el loop en el reproductor libre
+							prepareNext(PLAYLIST[playlistIndex], 0);
+						});
+						
 						pendingScrubT = null;
 						if (scrubRafId) { cancelAnimationFrame(scrubRafId); scrubRafId = 0; }
-						lastScrubbedT = -1;
 					}
 				}
 			}
 		}
-
 
         onScroll();
         let rafPending = false;
@@ -1210,7 +922,7 @@
     } else {
         initScrollAnim();
     }
-</script>
+	</script>
 	<!-- #endregion -->
 	<!-- Sticky de .proyectos-container manejado con CSS puro (position: sticky) -->
 
