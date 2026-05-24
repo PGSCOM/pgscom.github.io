@@ -63,8 +63,13 @@
 .proyectos-section {
   position: relative;
   z-index: 100;
-  padding: 0;
-  background: transparent;
+  padding: 20vh 0 8vh 0;
+  margin-top: -20vh;
+  background: linear-gradient(
+    to bottom,
+    transparent 90%,
+    #000814 100%
+  );
   overflow: visible;
 }
 
