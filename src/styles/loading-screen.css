@@ -1,0 +1,125 @@
+/* ============================================
+   PANTALLA DE CARGA
+   ============================================ */
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #0a0e17;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.loading-screen.dismissed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Logo animado */
+.loading-logo-text {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: 0.4rem;
+  margin-bottom: 48px;
+  background-image: linear-gradient(
+    60deg,
+    #2a6b66, #367e78, #4a9d94, #93c5fd, #4a9d94, #367e78, #2a6b66
+  );
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: loading-gradient 3s ease-in-out infinite,
+             loading-pulse 2s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%, 100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes loading-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Barra de progreso */
+.loading-progress-container {
+  width: 220px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #2563eb, #93c5fd, #4a9d94);
+  background-size: 200% 100%;
+  border-radius: 2px;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: loading-bar-shimmer 2s linear infinite;
+}
+
+@keyframes loading-bar-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Porcentaje */
+.loading-percentage {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 18px;
+  letter-spacing: 0.15rem;
+  transition: color 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .loading-logo-text {
+    font-size: 2rem;
+    letter-spacing: 0.3rem;
+    margin-bottom: 36px;
+  }
+
+  .loading-progress-container {
+    width: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-logo-text {
+    font-size: 1.6rem;
+    letter-spacing: 0.2rem;
+    margin-bottom: 28px;
+  }
+
+  .loading-progress-container {
+    width: 130px;
+    height: 2px;
+  }
+
+  .loading-percentage {
+    font-size: 0.65rem;
+  }
+}

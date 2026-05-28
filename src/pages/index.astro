@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import './_styles.css';
 import '../styles/proyectos.css';
 import '../styles/contacto.css';
+import '../styles/loading-screen.css';
 import { Image } from 'astro:assets';
 //import pgscom from '../assets/pgscom.png';
 import minimal1 from '../assets/minimal1.svg';
@@ -13,12 +14,109 @@ import logo from '../assets/logo.png';
 
 import proyectosData from '../data/proyectos.json';
 import contactoData from '../data/contacto.json';
+
+const scrollCircles = proyectosData.slice(0, 6);
 ---
 
 <!-- Cloudflare Turnstile -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <Layout>
+	<!-- Loading Screen -->
+	<div id="loading-screen" class="loading-screen">
+		<div class="loading-logo-text">PGSCOM</div>
+		<div class="loading-progress-container">
+			<div id="loading-progress-bar" class="loading-progress-bar"></div>
+		</div>
+		<div id="loading-percentage" class="loading-percentage">0%</div>
+	</div>
+
+	<!-- Loading script -->
+	<script is:inline>
+		document.addEventListener('DOMContentLoaded', () => {
+			document.body.style.overflow = 'hidden';
+			const videoUrl = '/vid/empezar_scroll.mp4';
+			const progressBar = document.getElementById('loading-progress-bar');
+			const percentageText = document.getElementById('loading-percentage');
+			const loadingScreen = document.getElementById('loading-screen');
+			
+			if (!loadingScreen) return;
+
+			let loaded = 0;
+			const total = 5424408; 
+
+			function finishLoading(blobUrl) {
+				if (blobUrl) {
+					window.preloadedVideoUrl = blobUrl;
+					window.dispatchEvent(new CustomEvent('videoLoaded', { detail: { url: blobUrl } }));
+				}
+				progressBar.style.width = '100%';
+				percentageText.textContent = '100%';
+				
+				setTimeout(() => {
+					loadingScreen.classList.add('dismissed');
+					document.body.style.overflow = '';
+				}, 500);
+			}
+
+			fetch(videoUrl)
+				.then(response => {
+					if (!response.ok) throw new Error('Network error');
+					const contentLength = response.headers.get('content-length');
+					const totalBytes = contentLength ? parseInt(contentLength, 10) : total;
+					
+					const reader = response.body.getReader();
+					const stream = new ReadableStream({
+						start(controller) {
+							function push() {
+								reader.read().then(({ done, value }) => {
+									if (done) {
+										controller.close();
+										return;
+									}
+									loaded += value.byteLength;
+									const progress = Math.min((loaded / totalBytes) * 100, 100);
+									progressBar.style.width = `${progress}%`;
+									percentageText.textContent = `${Math.round(progress)}%`;
+									controller.enqueue(value);
+									push();
+								}).catch(err => controller.error(err));
+							}
+							push();
+						}
+					});
+					return new Response(stream);
+				})
+				.then(response => response.blob())
+				.then(blob => {
+					finishLoading(URL.createObjectURL(blob));
+				})
+				.catch(err => {
+					console.error('Error loading video:', err);
+					finishLoading(null);
+				});
+
+			setTimeout(() => {
+				if (!loadingScreen.classList.contains('dismissed')) {
+					finishLoading(null);
+				}
+			}, 15000);
+		});
+	</script>
+
+	<!-- Scroll circles (fixed, full-journey animation) -->
+	<div id="scroll-circles-container" aria-hidden="true">
+		{scrollCircles.map((aptitud) => (
+			<div class="scroll-circle" style="position: fixed; top: 0; left: 0; z-index: 200; pointer-events: none; opacity: 0; width: 100px; height: 100px;">
+				<div class="proyecto-card-inner">
+					<div class="proyecto-icon">
+						<img src={aptitud.logo} alt={aptitud.titulo} />
+					</div>
+				</div>
+			</div>
+		))}
+	</div>
+
 	<!--div class="sky-image">
 		<a href="/">
 			<Image src={logo} height={70} alt="Logo PGSCOM" />
@@ -60,7 +158,7 @@ import contactoData from '../data/contacto.json';
 			<img id="logoanimar" style="width: auto; height: 32.3%;" src="/assets/animlogo/logo.svg" alt="" />
 		</div>
 
-	<div style="height: 120vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 60;"></div>
+	<div id="transition-spacer" style="height: 120vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 60;"></div>
 
 	<section class="proyectos-section" id="proyectos">
 		<div class="proyectos-header">
@@ -70,18 +168,7 @@ import contactoData from '../data/contacto.json';
 
 		<div class="proyectos-hero">
 			<div class="proyectos-hero-inner">
-				<div class="proyectos-grid">
-					{proyectosData.map((aptitud) => (
-						<a href={`#aptitud-${aptitud.id}`} class="proyecto-card" data-aptitud-id={aptitud.id}>
-							<div class="proyecto-card-inner">
-								<div class="proyecto-icon">
-									<img src={aptitud.logo} alt={aptitud.titulo} />
-								</div>
-								<span class="proyecto-titulo">{aptitud.titulo}</span>
-							</div>
-						</a>
-					))}
-				</div>
+				<!-- Orbit cards removed: now handled by scroll-animation.js -->
 				<div class="proyectos-logo">
 					<Image 
 						src={logo} 
@@ -327,109 +414,7 @@ import contactoData from '../data/contacto.json';
 		</div>
 	</section>
 
-	<!-- Órbita de proyectos -->
-	<script is:inline>
-		document.addEventListener('DOMContentLoaded', () => {
-			const container = document.querySelector('.proyectos-section .proyectos-hero');
-			if (!container) return;
-
-			const cards = Array.from(container.querySelectorAll('.proyecto-card'));
-			if (cards.length === 0) return;
-
-			const TWO_PI = Math.PI * 2;
-			const REV_SECONDS = 90;
-			const DEFAULT_SPEED = TWO_PI / REV_SECONDS;
-			const SMOOTH_TAU_STOP = 0.22;
-			const SMOOTH_TAU_START = 0.35;
-
-			let angle = 0;
-			let speed = 0; // empieza en 0, arranca cuando es visible
-			let targetSpeed = DEFAULT_SPEED;
-			let lastT = performance.now();
-			let running = false;
-
-			const baseAngles = cards.map((_, i) => (TWO_PI * i) / cards.length);
-
-			const readRadius = () => {
-				const raw = getComputedStyle(container).getPropertyValue('--orbit-radius').trim();
-				const r = parseFloat(raw);
-				return isFinite(r) ? r : 350;
-			};
-
-			const setPaused = (paused) => {
-				targetSpeed = paused ? 0 : DEFAULT_SPEED;
-			};
-
-			let pointerActive = false;
-			let pointerX = 0;
-			let pointerY = 0;
-			let hoverOffAt = 0;
-			const HOVER_RELEASE_DELAY_MS = 140;
-
-			container.addEventListener('pointerenter', (e) => {
-				pointerActive = true;
-				pointerX = e.clientX;
-				pointerY = e.clientY;
-			});
-			container.addEventListener('pointermove', (e) => {
-				pointerActive = true;
-				pointerX = e.clientX;
-				pointerY = e.clientY;
-			});
-			container.addEventListener('pointerleave', () => {
-				pointerActive = false;
-				hoverOffAt = 0;
-				setPaused(false);
-			});
-
-			let lastHoverCheck = 0;
-
-			const tick = (t) => {
-				const dt = Math.min(0.05, Math.max(0.001, (t - lastT) / 1000));
-				lastT = t;
-
-				if (pointerActive && t - lastHoverCheck > 80) {
-					lastHoverCheck = t;
-					const el = document.elementFromPoint(pointerX, pointerY);
-					const isOnCard = !!(el && container.contains(el) && el.closest('.proyecto-card'));
-					if (isOnCard) {
-						hoverOffAt = 0;
-						setPaused(true);
-					} else {
-						if (!hoverOffAt) hoverOffAt = t;
-						if (t - hoverOffAt > HOVER_RELEASE_DELAY_MS) setPaused(false);
-					}
-				}
-
-				const tau = (targetSpeed < speed) ? SMOOTH_TAU_STOP : SMOOTH_TAU_START;
-				speed += (targetSpeed - speed) * (1 - Math.exp(-dt / tau));
-				angle += speed * dt;
-
-				const r = readRadius();
-				for (let i = 0; i < cards.length; i++) {
-					const a = angle + baseAngles[i];
-					const deg = (a * 180) / Math.PI;
-					cards[i].style.transform = `translate(-50%, -50%) rotate(${deg}deg) translateX(${r}px) rotate(${-deg}deg)`;
-				}
-
-				requestAnimationFrame(tick);
-			};
-
-			// Arranca al mostrarse
-			const observer = new IntersectionObserver((entries) => {
-				entries.forEach(entry => {
-					if (entry.isIntersecting && !running) {
-						running = true;
-						lastT = performance.now();
-						requestAnimationFrame(tick);
-						observer.disconnect();
-					}
-				});
-			}, { threshold: 0.2 });
-
-			observer.observe(container);
-		});
-	</script>
+	<!-- Orbit animation is now handled by scroll-animation.js -->
 
 	<!-- Rotación de tipografías -->
 	<script is:inline defer>
@@ -562,6 +547,8 @@ import contactoData from '../data/contacto.json';
 	<!-- Scroll + vídeo galaxia -->
 	<script>
 		import '../scripts/galaxia-scroll.js';
+		import { initScrollCircles } from '../scripts/scroll-animation.js';
+		initScrollCircles();
 	</script>
 
 	<!-- Formulario de contacto -->

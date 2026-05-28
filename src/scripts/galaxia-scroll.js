@@ -33,7 +33,7 @@ function init() {
 		}, 1)
 	.to(logoEl, { opacity: 0, duration: 0.001, ease: 'none' }, 1.8);
 
-	const VIDEO_SCROLL     = '/vid/empezar_scroll.mp4';
+	let VIDEO_SCROLL     = '/vid/empezar_scroll.mp4';
 	const VIDEO_INTRO_FULL = 'https://pgscom.github.io/webvid/empezar.mp4';
 	const PLAYLIST         = ['https://pgscom.github.io/webvid/loopinversed.mp4', 'https://pgscom.github.io/webvid/loop.mp4'];
 
@@ -120,8 +120,29 @@ function init() {
 		attachEndedHandler();
 	}
 
-	setVideoSource(activeVideo, VIDEO_SCROLL, 0, false);
-	prepareNext(VIDEO_INTRO_FULL, 0);
+	function startVideoSequence(src) {
+		setVideoSource(activeVideo, src, 0, false).then(() => {
+			// Trigger a scroll check once video metadata is ready
+			onScroll();
+		});
+		prepareNext(VIDEO_INTRO_FULL, 0);
+	}
+
+	if (window.preloadedVideoUrl) {
+		startVideoSequence(window.preloadedVideoUrl);
+	} else if (document.getElementById('loading-screen') && !document.getElementById('loading-screen').classList.contains('dismissed')) {
+		window.addEventListener('videoLoaded', (e) => {
+			startVideoSequence(e.detail.url);
+		}, { once: true });
+		// Fallback in case event fails
+		setTimeout(() => {
+			if (!activeVideo.src || activeVideo.src.endsWith('undefined')) {
+				startVideoSequence(VIDEO_SCROLL);
+			}
+		}, 10000);
+	} else {
+		startVideoSequence(VIDEO_SCROLL);
+	}
 
 	function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
