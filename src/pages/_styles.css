@@ -123,6 +123,20 @@
     left: 0;
     top: 0;
     will-change: transform;
+    background: rgba(30, 35, 55, 0.75);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.2),
+        0 0 20px rgba(147, 197, 253, 0.1);
+}
+
+.hero-dot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: inherit;
+    background-clip: padding-box;
 }
 
 /* Eliminamos el overlay global */

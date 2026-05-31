@@ -6,30 +6,51 @@ gsap.registerPlugin(MotionPathPlugin, ScrollTrigger);
 
 let orbitRAF = null;
 
-function createProjectOrbs() {
+function hashColor(str, fallbackIdx) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = ((hash % 360) + 360) % 360;
+  const fb = ['#367e78','#2563eb','#fbbf24','#f472b6','#10b981','#f97316'];
+  return { h, fallback: fb[fallbackIdx % fb.length] };
+}
+
+async function createProjectOrbs() {
   const layer = document.querySelector('.hero-motion-layer');
   if (!layer) return;
 
   const old = document.getElementById('elemento');
   if (old) old.remove();
 
-  const colors = [
-    '#367e78', '#2563eb', '#fbbf24',
-    '#f472b6', '#10b981', '#f97316'
-  ];
+  const cards = document.querySelectorAll('.proyecto-card');
+  const count = Math.max(cards.length, 6);
 
-  for (let i = 0; i < colors.length; i++) {
+  for (let i = 0; i < count; i++) {
     const dot = document.createElement('div');
     dot.className = 'hero-dot proyecto-orb';
     dot.dataset.index = i;
-    dot.style.background = `radial-gradient(circle at 35% 35%, ${colors[i]}, #0a0a0a)`;
-    dot.style.boxShadow = `0 0 24px ${colors[i]}66, 0 0 60px ${colors[i]}33`;
+
+    let color;
+    if (i < cards.length) {
+      const key = cards[i].getAttribute('data-aptitud-id') || cards[i].querySelector('.proyecto-titulo')?.textContent || i;
+      const { h, fallback } = hashColor(String(key), i);
+      color = `hsl(${h}, 65%, 55%)`;
+      dot.style.setProperty('--dot-color', color);
+      dot.style.setProperty('--dot-hue', h);
+    } else {
+      const { h, fallback } = hashColor(String(i), i);
+      color = fallback;
+    }
+
+    dot.style.background = `radial-gradient(circle at 35% 35%, ${color}, #0a0a0a)`;
+    dot.style.boxShadow = `0 0 24px ${color}66, 0 0 60px ${color}33`;
     layer.appendChild(dot);
   }
 }
 
-function initHeroMotion() {
-  createProjectOrbs();
+async function initHeroMotion() {
+  await createProjectOrbs();
 
   const isMobile = window.innerWidth < 768;
   const dots = document.querySelectorAll('.proyecto-orb');
