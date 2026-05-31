@@ -4,138 +4,205 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(MotionPathPlugin, ScrollTrigger);
 
-let orbitRAF = null;
+let orbitTicker = null;
+let orbitRadius = 0;
 
-function hashColor(str, fallbackIdx) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+function cloneCardContent(card) {
+  const inner = document.createElement('div');
+  inner.className = 'proyecto-card-inner';
+
+  const icon = document.createElement('div');
+  icon.className = 'proyecto-icon';
+  const img = card.querySelector('.proyecto-icon img');
+  if (img) {
+    const clone = img.cloneNode(true);
+    clone.removeAttribute('srcset');
+    icon.appendChild(clone);
   }
-  const h = ((hash % 360) + 360) % 360;
-  const fb = ['#367e78','#2563eb','#fbbf24','#f472b6','#10b981','#f97316'];
-  return { h, fallback: fb[fallbackIdx % fb.length] };
+
+  inner.appendChild(icon);
+  return inner;
 }
 
-async function createProjectOrbs() {
+function initHeroMotion() {
   const layer = document.querySelector('.hero-motion-layer');
   if (!layer) return;
 
-  const old = document.getElementById('elemento');
-  if (old) old.remove();
+  const svg = document.querySelector('.motion-path-svg');
+  if (!svg) return;
+
+  svg.querySelector('#mi-path')?.remove();
 
   const cards = document.querySelectorAll('.proyecto-card');
-  const count = Math.max(cards.length, 6);
+  const count = cards.length;
+  if (!count) return;
 
-  for (let i = 0; i < count; i++) {
+  const isMobile = window.innerWidth < 768;
+  const rPx = Math.min(isMobile ? 120 : 220, window.innerWidth * (isMobile ? 0.22 : 0.18));
+  orbitRadius = rPx;
+
+  const dots = [];
+
+  cards.forEach((card, i) => {
     const dot = document.createElement('div');
     dot.className = 'hero-dot proyecto-orb';
     dot.dataset.index = i;
-
-    let color;
-    if (i < cards.length) {
-      const key = cards[i].getAttribute('data-aptitud-id') || cards[i].querySelector('.proyecto-titulo')?.textContent || i;
-      const { h, fallback } = hashColor(String(key), i);
-      color = `hsl(${h}, 65%, 55%)`;
-      dot.style.setProperty('--dot-color', color);
-      dot.style.setProperty('--dot-hue', h);
-    } else {
-      const { h, fallback } = hashColor(String(i), i);
-      color = fallback;
-    }
-
-    dot.style.background = `radial-gradient(circle at 35% 35%, ${color}, #0a0a0a)`;
-    dot.style.boxShadow = `0 0 24px ${color}66, 0 0 60px ${color}33`;
+    dot.appendChild(cloneCardContent(card));
     layer.appendChild(dot);
-  }
-}
+    dots.push(dot);
 
-async function initHeroMotion() {
-  await createProjectOrbs();
+    const startY = 60 + (i / (count - 1)) * (isMobile ? 300 : 440);
+    const angle = (i / count) * Math.PI * 2 - Math.PI / 2;
+    const endX = 600 + Math.cos(angle) * rPx * 1200 / window.innerWidth;
+    const endY = 300 + Math.sin(angle) * rPx * 600 / window.innerHeight;
+    const cpX = (1250 + endX) / 2;
+    const cpY = (startY + endY) / 2 - (isMobile ? 30 : 60);
+    const d = `M 1250,${startY} Q ${cpX},${cpY} ${endX},${endY}`;
 
-  const isMobile = window.innerWidth < 768;
-  const dots = document.querySelectorAll('.proyecto-orb');
-  if (!dots.length) return;
+    const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    pathEl.setAttribute('d', d);
+    pathEl.setAttribute('fill', 'none');
+    pathEl.setAttribute('stroke', 'transparent');
+    pathEl.id = `mi-path-${i}`;
+    svg.appendChild(pathEl);
+  });
 
-  const pathD = isMobile
-    ? 'M 0,200 L 300,200 Q 400,0 500,200 T 600,300'
-    : 'M 0,300 C 200,50 400,550 600,300';
-  const pathEl = document.getElementById('mi-path');
-  if (pathEl) pathEl.setAttribute('d', pathD);
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.main-container',
+      start: () => 2 * window.innerHeight,
+      endTrigger: '.proyectos-logo',
+      end: 'center center',
+      scrub: 1.5,
+      onLeave: startOrbit,
+      onEnterBack: stopOrbit,
+    }
+  });
 
-  dots.forEach((dot) => {
-    gsap.to(dot, {
-      ease: 'none',
+  dots.forEach((dot, i) => {
+    tl.to(dot, {
+      ease: 'power2.out',
+      force3D: true,
+      opacity: 1,
       motionPath: {
-        path: '#mi-path',
-        align: '#mi-path',
+        path: `#mi-path-${i}`,
+        align: `#mi-path-${i}`,
         alignOrigin: [0.5, 0.5],
       },
-      scrollTrigger: {
-        trigger: '.main-container',
-        start: 'top top',
-        endTrigger: '.proyectos-logo',
-        end: 'center center',
-        scrub: 1.2,
-        onLeave: startOrbit,
-        onEnterBack: stopOrbit,
-      }
-    });
+      duration: 0.7,
+    }, i * 0.12);
   });
 }
 
 function startOrbit() {
-  if (orbitRAF) return;
+  if (orbitTicker) return;
+
+  const layer = document.querySelector('.hero-motion-layer');
+  if (layer) {
+    layer.style.position = 'absolute';
+    layer.style.top = window.scrollY + 'px';
+  }
 
   const dots = document.querySelectorAll('.proyecto-orb');
   if (!dots.length) return;
 
+  let cx = 0, cy = 0;
+  const angles = [];
   dots.forEach(dot => {
-    gsap.getTweensOf(dot).forEach(t => t.pause());
+    const x = gsap.getProperty(dot, 'x');
+    const y = gsap.getProperty(dot, 'y');
+    const px = typeof x === 'number' ? x : 0;
+    const py = typeof y === 'number' ? y : 0;
+    cx += px;
+    cy += py;
+    angles.push({ x: px, y: py });
   });
+  cx /= dots.length;
+  cy /= dots.length;
 
-  const r = Math.min(220, window.innerWidth * 0.18);
   let angle = 0;
-  let started = performance.now();
-  let expanded = false;
+  angles.forEach((p, i) => {
+    const a = Math.atan2(p.y - cy, p.x - cx);
+    angle += a - (i / dots.length) * Math.PI * 2;
+  });
+  angle /= dots.length;
 
-  const animate = (now) => {
-    const dt = Math.min((now - started) / 1000, 0.05);
-    started = now;
+  let prevTime = performance.now();
+  const r = orbitRadius;
 
-    if (!expanded) {
-      angle += dt * 0.25;
-      if (angle >= 0.8) expanded = true;
-    } else {
-      angle += dt * 0.5;
-    }
-
-    const currentR = r * (1 - Math.exp(-angle * 3));
+  orbitTicker = function () {
+    const now = performance.now();
+    const dt = Math.min((now - prevTime) / 1000, 0.05);
+    prevTime = now;
+    angle += dt * 0.45;
 
     dots.forEach((dot, i) => {
       const a = angle + (i / dots.length) * Math.PI * 2;
       gsap.set(dot, {
-        x: Math.cos(a) * currentR,
-        y: Math.sin(a) * currentR,
+        x: cx + Math.cos(a) * r,
+        y: cy + Math.sin(a) * r,
+        force3D: true,
       });
     });
-
-    orbitRAF = requestAnimationFrame(animate);
   };
 
-  orbitRAF = requestAnimationFrame(animate);
+  gsap.ticker.add(orbitTicker);
 }
 
 function stopOrbit() {
-  if (!orbitRAF) return;
-  cancelAnimationFrame(orbitRAF);
-  orbitRAF = null;
+  if (orbitTicker) {
+    gsap.ticker.remove(orbitTicker);
+    orbitTicker = null;
+  }
+
+  const layer = document.querySelector('.hero-motion-layer');
+  if (layer) {
+    layer.style.position = 'fixed';
+    layer.style.top = '0';
+  }
 
   const dots = document.querySelectorAll('.proyecto-orb');
-  dots.forEach(dot => {
-    gsap.getTweensOf(dot).forEach(t => {
-      t.invalidate().resume();
-    });
+  if (!dots.length) return;
+
+  const targets = [];
+  let allOk = true;
+  dots.forEach((dot, i) => {
+    const tween = gsap.getTweensOf(dot)[0];
+    if (tween) {
+      tween.progress(1);
+      const x = gsap.getProperty(dot, 'x');
+      const y = gsap.getProperty(dot, 'y');
+      targets.push({
+        x: typeof x === 'number' ? x : 0,
+        y: typeof y === 'number' ? y : 0,
+      });
+    } else {
+      allOk = false;
+    }
   });
+
+  if (allOk) {
+    gsap.to(dots, {
+      x: (i) => targets[i].x,
+      y: (i) => targets[i].y,
+      duration: 0.35,
+      ease: 'power2.inOut',
+      force3D: true,
+      onComplete: () => {
+        dots.forEach(dot => {
+          gsap.getTweensOf(dot).forEach(t => {
+            t.invalidate().resume();
+          });
+        });
+      },
+    });
+  } else {
+    dots.forEach(dot => {
+      gsap.getTweensOf(dot).forEach(t => {
+        t.invalidate().resume();
+      });
+    });
+  }
 }
 
 if (document.readyState === 'loading') {

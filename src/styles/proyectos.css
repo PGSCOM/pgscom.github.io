@@ -188,6 +188,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
   box-shadow: 
     0 8px 20px rgba(0, 0, 0, 0.2),
     0 0 20px rgba(147, 197, 253, 0.1);
@@ -393,6 +394,7 @@
   position: relative;
   overflow: hidden;
   height: 100%;
+  will-change: transform;
 }
 
 .proyecto-detail-card:hover {
@@ -417,6 +419,7 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
 }
 
 .proyecto-detail-card:hover .proyecto-image {

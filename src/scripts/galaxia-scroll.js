@@ -25,8 +25,9 @@ function init() {
 		{
 			scale: 25, y: 45, duration: 1, ease: 'power2.in', force3D: true,
 			onUpdate() {
-				const rect = logoEl.getBoundingClientRect();
-				const s = (rect.height / window.innerHeight) * 100 - 8;
+				const p = this.progress();
+				const scale = 1 + 24 * p * p * p;
+				const s = 32.3 * scale - 8;
 				maskEl.style.webkitMaskSize = `${s}vh ${s}vh`;
 				maskEl.style.maskSize = `${s}vh ${s}vh`;
 			}
