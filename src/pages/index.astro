@@ -24,6 +24,12 @@ import contactoData from '../data/contacto.json';
 			<Image src={logo} height={70} alt="Logo PGSCOM" />
 		</a>
 	</div-->
+	<div class="hero-motion-layer">
+		<svg class="motion-path-svg" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+			<path id="mi-path" d="M 0,300 C 200,50 400,550 600,300 S 1000,50 1200,300" fill="none" stroke="transparent" />
+		</svg>
+		<div id="elemento" class="hero-dot"></div>
+	</div>
 	<main class="main-container">
 		<div class="particles">
 			<Image src={minimal1} alt="" class="particle particle-1" width={100} height={100} />
@@ -562,6 +568,11 @@ import contactoData from '../data/contacto.json';
 	<!-- Scroll + vídeo galaxia -->
 	<script>
 		import '../scripts/galaxia-scroll.js';
+	</script>
+
+	<!-- Motion path hero -->
+	<script>
+		import '../scripts/motion-path-hero.js';
 	</script>
 
 	<!-- Formulario de contacto -->
