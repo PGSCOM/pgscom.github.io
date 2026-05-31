@@ -9,9 +9,9 @@ export function initScrollCircles() {
     const logoEl  = document.querySelector('.proyectos-logo');
     if (!circles.length) return;
 
-    const vw    = window.innerWidth;
-    const vh    = window.innerHeight;
-    const count = circles.length;
+    const vw     = window.innerWidth;
+    const vh     = window.innerHeight;
+    const count  = circles.length;
     const TWO_PI = Math.PI * 2;
     const orbitR = Math.min(vw, vh) * 0.22;
 
@@ -20,7 +20,33 @@ export function initScrollCircles() {
         gsap.set(logoEl, { opacity: 0, scale: 0.5, transformOrigin: 'center center' });
     }
 
-    /* ── Position presets ── */
+    /* ══════════════════════════════════════════════════════════
+       CLAVE: calcula la posición REAL del logo cuando el trigger
+       termina (.proyectos-hero top = 50% viewport).
+       Con esto orbitPos apunta exactamente al logo y no hay salto.
+       ══════════════════════════════════════════════════════════ */
+    function calcLogoAtTriggerEnd() {
+        if (!logoEl) return { x: vw / 2, y: vh * 0.75 };
+        const heroEl   = document.querySelector('.proyectos-hero');
+        const logoRect = logoEl.getBoundingClientRect();
+        if (!heroEl) return { x: logoRect.left + logoRect.width / 2, y: vh * 0.75 };
+
+        // Posiciones absolutas en el documento (independientes del scroll actual)
+        const heroDocY = heroEl.getBoundingClientRect().top + window.scrollY;
+        const logoDocY = logoRect.top + window.scrollY;
+
+        // Cuando el trigger termina: scrollY = heroDocY - vh * 0.5
+        const scrollAtEnd = heroDocY - vh * 0.5;
+
+        return {
+            x: logoRect.left + logoRect.width  / 2,  // X no cambia con scroll vertical
+            y: logoDocY - scrollAtEnd + logoRect.height / 2,
+        };
+    }
+
+    const logoTarget = calcLogoAtTriggerEnd();
+
+    /* ── Posiciones predefinidas ── */
     const heroPos = [
         { x: vw * 0.70, y: vh * 0.15 },
         { x: vw * 0.88, y: vh * 0.28 },
@@ -39,79 +65,104 @@ export function initScrollCircles() {
         { x: vw * 0.88, y: vh * 0.50 },
     ];
 
-    // Posiciones de órbita centradas en el viewport (el ticker las ajustará al logo real)
+    // orbitPos ahora apunta a la posición REAL del logo al final del trigger
     const orbitPos = Array.from({ length: count }, (_, i) => {
         const a = (TWO_PI * i) / count - Math.PI / 2;
         return {
-            x: vw / 2 + Math.cos(a) * orbitR,
-            y: vh / 2 + Math.sin(a) * orbitR,
+            x: logoTarget.x + Math.cos(a) * orbitR,
+            y: logoTarget.y + Math.sin(a) * orbitR,
         };
     });
 
     /* ── Estado inicial ── */
     circles.forEach((el, i) => {
         gsap.set(el, {
-            x: heroPos[i].x,
-            y: heroPos[i].y,
+            x:        heroPos[i].x,
+            y:        heroPos[i].y,
             xPercent: -50,
             yPercent: -50,
-            scale: 0.65,
-            opacity: 1,
-            force3D: true,
+            scale:    0.65,
+            opacity:  1,
+            force3D:  true,
         });
     });
 
     /* ════════════════════════════════════════════
-       SISTEMA DE ÓRBITA (ticker)
+       SISTEMA DE ÓRBITA
        ════════════════════════════════════════════ */
-    let orbitActive  = false;
-    let orbitAngle   = 0;
-    let tickerFn     = null;
+    let orbitActive = false;
+    let orbitAngle  = 0;
+    let tickerFn    = null;
+    let snapTweens  = [];
 
     function startOrbit() {
         if (orbitActive || !logoEl) return;
         orbitActive = true;
+        orbitAngle  = 0;
 
-        /* Snap suave a las posiciones reales del logo antes de empezar a rotar */
+        // Matar tweens anteriores
+        snapTweens.forEach(t => t.kill());
+        snapTweens = [];
+
+        // Forzar el logo visible independientemente del lag del scrub
+        gsap.to(logoEl, {
+            opacity:  1,
+            scale:    1,
+            duration: 0.5,
+            ease:     'power2.out',
+            overwrite: true,
+        });
+
+        // Posición actual real del logo
         const rect = logoEl.getBoundingClientRect();
         const lx   = rect.left + rect.width  / 2;
         const ly   = rect.top  + rect.height / 2;
 
-        circles.forEach((el, i) => {
-            const a = (TWO_PI * i) / count - Math.PI / 2;
-            gsap.to(el, {
-                x: lx + Math.cos(a) * orbitR,
-                y: ly + Math.sin(a) * orbitR,
-                duration: 0.45,
-                ease: 'power2.out',
-                overwrite: true,
-            });
-        });
+        let completed = 0;
 
-        orbitAngle = 0;
+        circles.forEach((el, i) => {
+            const a  = (TWO_PI * i) / count - Math.PI / 2;
+            const tw = gsap.to(el, {
+                x:        lx + Math.cos(a) * orbitR,
+                y:        ly + Math.sin(a) * orbitR,
+                opacity:  1,
+                scale:    1,
+                duration: 0.5,
+                ease:     'power2.out',
+                overwrite: true,
+                onComplete() {
+                    completed++;
+                    // El ticker solo arranca DESPUÉS de que todos los snaps terminen
+                    if (completed === count) startOrbitTicker();
+                },
+            });
+            snapTweens.push(tw);
+        });
+    }
+
+    function startOrbitTicker() {
+        if (!orbitActive) return; // puede haberse cancelado durante el snap
 
         tickerFn = () => {
             if (!logoEl) return;
-
             const r  = logoEl.getBoundingClientRect();
             const ox = r.left + r.width  / 2;
             const oy = r.top  + r.height / 2;
 
-            // El logo ha salido completamente por arriba → limpiar y parar
+            // Si el logo sale por arriba → limpiar y parar
             if (oy < -(orbitR + 60)) {
                 gsap.set(circles, { opacity: 0 });
                 stopOrbit();
                 return;
             }
 
-            orbitAngle += 0.006; // velocidad de rotación (rad/frame a ~60fps)
+            orbitAngle += 0.006;
 
             circles.forEach((el, i) => {
                 const a = (TWO_PI * i) / count - Math.PI / 2 + orbitAngle;
                 gsap.set(el, {
                     x: ox + Math.cos(a) * orbitR,
                     y: oy + Math.sin(a) * orbitR,
-                    overwrite: 'auto',
                 });
             });
         };
@@ -122,6 +173,8 @@ export function initScrollCircles() {
     function stopOrbit() {
         if (!orbitActive) return;
         orbitActive = false;
+        snapTweens.forEach(t => t.kill());
+        snapTweens = [];
         if (tickerFn) {
             gsap.ticker.remove(tickerFn);
             tickerFn = null;
@@ -137,14 +190,24 @@ export function initScrollCircles() {
             start:      'top top',
             endTrigger: '.proyectos-hero',
             end:        'top 50%',
-            scrub:      1.5,
-            onLeave:      () => startOrbit(),
-            onEnterBack:  () => {
+            scrub:      1.0,   // reducido de 1.5 → más responsivo
+            onLeave() {
+                startOrbit();
+            },
+            onEnterBack() {
                 stopOrbit();
-                // Devolvemos el logo a invisble para que el scrub lo re-anime
-                if (logoEl) gsap.set(logoEl, { opacity: 0, scale: 0.5 });
-                // Re-mostramos los círculos si habían sido ocultados por el ticker
-                gsap.set(circles, { opacity: 1 });
+                // Colocar círculos y logo en su estado de progress=1.0
+                // para que el scrub pueda revertir suavemente desde ahí
+                circles.forEach((el, i) => {
+                    gsap.set(el, {
+                        x:       orbitPos[i].x,
+                        y:       orbitPos[i].y,
+                        opacity: 1,
+                        scale:   1,
+                    });
+                });
+                // Logo en estado visible (progress=1.0) para que el scrub lo revierta
+                if (logoEl) gsap.set(logoEl, { opacity: 1, scale: 1 });
             },
         },
     });
@@ -159,7 +222,7 @@ export function initScrollCircles() {
                     { x: h.x + dir * vw * 0.012, y: h.y - vh * 0.012 },
                     { x: h.x + dir * vw * 0.025, y: h.y - vh * 0.030 },
                 ],
-                curviness: 1.4,
+                curviness:  1.4,
                 autoRotate: false,
             },
             scale:    0.72,
@@ -189,7 +252,7 @@ export function initScrollCircles() {
         }, 0.20);
     });
 
-    /* ── Fase 3 (0.52 → 0.65): Entrada curva desde esquina superior-derecha ── */
+    /* ── Fase 3 (0.52 → 0.65): Entrada desde esquina superior-derecha ── */
     circles.forEach((el, i) => {
         const d = darkPos[i];
         tl.set(el, {
@@ -215,16 +278,16 @@ export function initScrollCircles() {
         }, 0.52 + i * 0.008);
     });
 
-    /* ── Fase 4 (0.65 → 0.93): Convergencia al anillo con arcos bezier ── */
+    /* ── Fase 4 (0.65 → 0.93): Convergencia al anillo alrededor del logo REAL ── */
     circles.forEach((el, i) => {
         const d    = darkPos[i];
-        const o    = orbitPos[i];
+        const o    = orbitPos[i];    // ← ahora apunta al logo real
         const side = i % 2 === 0 ? 1 : -1;
         tl.to(el, {
             motionPath: {
                 path: [
                     { x: (d.x + o.x) / 2 + side * vw * 0.09, y: (d.y + o.y) / 2 - vh * 0.07 },
-                    { x: o.x,                                  y: o.y                          },
+                    { x: o.x, y: o.y },
                 ],
                 curviness:  1.6,
                 autoRotate: false,
@@ -245,5 +308,5 @@ export function initScrollCircles() {
         }, 0.65);
     }
 
-    /* ── Fase 5 (0.93 → 1.00): Hold — el ticker toma el control al llegar aquí ── */
+    /* ── Fase 5 (0.93 → 1.00): Hold — el ticker toma el control al salir ── */
 }
