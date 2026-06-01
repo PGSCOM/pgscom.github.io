@@ -1103,23 +1103,23 @@
   }
 
   .proyectos-logo {
-    width: 130px;
-    height: 130px;
+    width: 110px; /* Reducido para evitar solapamiento */
+    height: 110px;
   }
 
   .proyecto-card {
-    width: 75px;
-    height: 75px;
+    width: 65px; /* Reducido */
+    height: 65px;
   }
 
   .proyecto-card-inner {
-    width: 75px;
-    height: 75px;
+    width: 65px;
+    height: 65px;
   }
 
   .proyecto-icon img {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
   }
 
   .proyecto-titulo {
@@ -1304,23 +1304,23 @@
   }
 
   .proyectos-logo {
-    width: 100px;
-    height: 100px;
+    width: 90px; /* Reducido */
+    height: 90px;
   }
 
   .proyecto-card {
-    width: 65px;
-    height: 65px;
+    width: 55px; /* Reducido */
+    height: 55px;
   }
 
   .proyecto-card-inner {
-    width: 65px;
-    height: 65px;
+    width: 55px;
+    height: 55px;
   }
 
   .proyecto-icon img {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 
   .proyecto-titulo {

@@ -122,7 +122,6 @@
     left: 0;
     top: 0;
     will-change: transform;
-    opacity: 0;
 }
 
 /* Eliminamos el overlay global */
