@@ -83,15 +83,16 @@ function initHeroMotion() {
     gsap.set(gscomWrap, { width: 'auto' });
     const targetWidth = gscomWrap.offsetWidth;
     gsap.set(gscomWrap, { width: 0, opacity: 0 });
-    gsap.set(pEl, { scale: 0, opacity: 0 });
     
-    // 2. Centrado matemático perfecto de la 'P' en el monitor
-    const logoRect = logoWrap.getBoundingClientRect();
-    const logoCenterX = logoRect.left + logoRect.width / 2;
-    const logoCenterY = logoRect.top + logoRect.height / 2;
-    const dx = cx - logoCenterX;
-    const dy = cy - logoCenterY;
+    // 2. Centrado matemático de la 'P' (midiendo antes de escalar a 0)
+    const pRect = pEl.getBoundingClientRect();
+    const pCenterX = pRect.left + pRect.width / 2;
+    const pCenterY = pRect.top + pRect.height / 2;
+    const dx = cx - pCenterX + pRect.width * 0.14;
+    const dy = cy - pCenterY - pRect.height * 0.12;
+    
     gsap.set(logoWrap, { x: dx, y: dy });
+    gsap.set(pEl, { scale: 0, opacity: 0 });
   }
 
   const grayDots = [];
@@ -184,6 +185,7 @@ function initHeroMotion() {
       .to(wrappers, { 
         scale: 1, 
         opacity: 1, 
+        rotation: "+=180",
         duration: 0.4, 
         stagger: 0.05, 
         ease: 'back.out(2)',
@@ -221,6 +223,7 @@ function initHeroMotion() {
             // Liberamos todo el control y encendemos el scroll
             document.documentElement.style.overflow = '';
             gsap.set(logoWrap, { clearProps: "all" });
+            gsap.set(gscomWrap, { clearProps: "width", overflow: "visible" });
             const gradientAnim = 'pgscom-intro-scroll 2s linear forwards, pgscom-loop-scroll 4s linear 2s infinite';
             pEl.style.animation = gradientAnim;
             document.getElementById('letters-gscom').style.animation = gradientAnim;
@@ -353,8 +356,20 @@ function stopOrbit() {
   });
 }
 
+function safeInit() {
+  // Ocultar temporalmente para evitar parpadeos antes de que cargue la fuente
+  const logoWrap = document.getElementById('logo-wrapper');
+  if (logoWrap) logoWrap.style.opacity = '0';
+  
+  // Esperar a que la tipografía esté renderizada para hacer matemáticas perfectas
+  document.fonts.ready.then(() => {
+    if (logoWrap) logoWrap.style.opacity = '';
+    initHeroMotion();
+  });
+}
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initHeroMotion);
+  document.addEventListener('DOMContentLoaded', safeInit);
 } else {
-  initHeroMotion();
+  safeInit();
 }
