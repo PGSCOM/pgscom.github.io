@@ -3,14 +3,13 @@ import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(MotionPathPlugin, ScrollTrigger);
 
-/* ── estado de módulo ── */
-let orbitTicker = null;
-let orbitState  = { rotOffset: 0 };
-let scrollTl    = null;
-let wrappers    = [];
-let dots        = [];
-let dotData     = [];
-let cx = 0, cy = 0;
+let scrollTl = null;
+let wrappers = [];
+let dots = [];
+let orbitTween = null;
+let orbitState = { rot: 0 };
+let rPx = 0;
+let count = 0;
 
 /* ────────────────────────────────────────────────────────── */
 function cloneCardContent(card) {
@@ -29,9 +28,7 @@ function cloneCardContent(card) {
 }
 
 /* ────────────────────────────────────────────────────────── */
-// Distribución procedural de los puntos intermedios (peaks)
-function getPeakPos(i, W, H) {
-  const isMobile = W < 768;
+function getPeakPos(i, W, H, isMobile) {
   const mobilePeaks = [
     {x: 0.15, y: 0.15}, {x: 0.85, y: 0.25},
     {x: 0.20, y: 0.45}, {x: 0.80, y: 0.55},
@@ -43,10 +40,17 @@ function getPeakPos(i, W, H) {
     {x: 0.55, y: 0.70}, {x: 0.80, y: 0.80}
   ];
   const p = isMobile ? mobilePeaks[i] : desktopPeaks[i];
-  return {
-    x: p ? p.x * W : W * 0.5,
-    y: p ? p.y * H : H * 0.5
-  };
+  return { x: p ? p.x * W : W * 0.5, y: p ? p.y * H : H * 0.5 };
+}
+
+function buildCubicPath(startX, startY, endX, endY, curveAmount, sweep) {
+  const dx = endX - startX;
+  const dy = endY - startY;
+  const cp1x = startX + dx * 0.2 - dy * curveAmount * sweep;
+  const cp1y = startY + dy * 0.2 + dx * curveAmount * sweep;
+  const cp2x = startX + dx * 0.8 - dy * curveAmount * sweep;
+  const cp2y = startY + dy * 0.8 + dx * curveAmount * sweep;
+  return `M ${startX},${startY} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${endX},${endY}`;
 }
 
 /* ────────────────────────────────────────────────────────── */
@@ -55,243 +59,209 @@ function initHeroMotion() {
   const svg = document.querySelector('.motion-path-svg');
   if (!layer || !svg) return;
 
-  const W = window.innerWidth;
+  const W = document.documentElement.clientWidth;
   const H = window.innerHeight;
+  const isMobile = W < 768;
   
-  // Adaptamos el SVG de forma 1 a 1 a la pantalla (Píxeles perfectos, no más achatado)
+  // Seteamos el SVG para que matchee el 100% de los píxeles reales, evitando el achatamiento
+  svg.style.width = '100%';
+  svg.style.height = '100vh';
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
   const cards = document.querySelectorAll('.proyecto-card');
-  const count = cards.length;
+  count = cards.length;
   if (!count) return;
 
-  const isMobile = W < 768;
-  const rPx = Math.min(
-    isMobile ? 140 : 250,
-    W * (isMobile ? 0.38 : 0.22)
-  );
+  rPx = Math.min(isMobile ? 130 : 220, W * (isMobile ? 0.35 : 0.22));
+  const cx = W / 2;
+  const cy = H / 2;
 
   cards.forEach((card, i) => {
-    // ── Elemento Wrapper ──
     const wrapper = document.createElement('div');
     wrapper.className = 'hero-dot-wrapper';
     wrapper.style.position = 'absolute';
     wrapper.style.width = '100px';
     wrapper.style.height = '100px';
-    wrapper.style.left = '0';
-    wrapper.style.top = '0';
+    wrapper.style.left = '0px';
+    wrapper.style.top = '0px';
     wrapper.style.zIndex = '4';
     wrapper.style.pointerEvents = 'none';
-    wrapper.style.willChange = 'transform';
     wrapper.dataset.index = i;
 
-    // ── Elemento Dot (Órbita) ──
+    const floatWrapper = document.createElement('div');
+    floatWrapper.className = 'hero-float-wrapper';
+    floatWrapper.style.width = '100%';
+    floatWrapper.style.height = '100%';
+
     const dot = document.createElement('div');
     dot.className = 'hero-dot proyecto-orb';
-    dot.dataset.index = i;
     dot.appendChild(cloneCardContent(card));
     
-    wrapper.appendChild(dot);
+    floatWrapper.appendChild(dot);
+    wrapper.appendChild(floatWrapper);
     layer.appendChild(wrapper);
     wrappers.push(wrapper);
     dots.push(dot);
 
-    const peak = getPeakPos(i, W, H);
-    const ang  = (i / count) * Math.PI * 2 - Math.PI / 2;
+    const peak = getPeakPos(i, W, H, isMobile);
+    const ang = -Math.PI / 2 + (i / count) * Math.PI * 2;
+    
+    const destX = cx + Math.cos(ang) * rPx;
+    const destY = cy + Math.sin(ang) * rPx;
 
-    // Coordenadas finales exactas (Círculo perfecto en píxeles de pantalla)
-    const endX = W / 2 + Math.cos(ang) * rPx;
-    const endY = H / 2 + Math.sin(ang) * rPx;
+    const sweep = i % 2 === 0 ? 1 : -1;
 
-    const cpScrollX = (peak.x + endX) / 2;
-    const cpScrollY = (peak.y + endY) / 2 - (isMobile ? 30 : 60);
-
-    const startX = W + 150; // Inicia fuera de la pantalla
-    const startY = H * 0.15 + (i / count) * (H * 0.7);
-
-    const cpIntroX = startX * 0.6 + peak.x * 0.4;
-    const cpIntroY = (startY + peak.y) / 2 - 50;
-
-    // ── PATH DE SCROLL ──
+    // Camino con curvas C (Cúbicas) mucho más estéticas y orgánicas
     const sp = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    sp.setAttribute('d', `M ${peak.x},${peak.y} Q ${cpScrollX},${cpScrollY} ${endX},${endY}`);
+    sp.setAttribute('d', buildCubicPath(peak.x, peak.y, destX, destY, 0.4, sweep));
     sp.setAttribute('fill', 'none');
     sp.setAttribute('stroke', 'transparent');
-    sp.id = `mi-path-${i}`;
+    sp.id = `scroll-path-${i}`;
     svg.appendChild(sp);
 
-    // ── PATH DE INTRO ──
+    const startX = W + (isMobile ? 150 : 300);
+    const startY = peak.y + (Math.random() * 200 - 100);
+    
     const ip = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    ip.setAttribute('d', `M ${startX},${startY} Q ${cpIntroX},${cpIntroY} ${peak.x},${peak.y}`);
+    ip.setAttribute('d', buildCubicPath(startX, startY, peak.x, peak.y, 0.3, sweep * -1));
     ip.setAttribute('fill', 'none');
     ip.setAttribute('stroke', 'transparent');
     ip.id = `intro-path-${i}`;
     svg.appendChild(ip);
+
+    // Animación extra flotante, ahora independiente de la rotación principal
+    gsap.to(floatWrapper, {
+      y: "-=15",
+      duration: 1.5 + Math.random(),
+      yoyo: true,
+      repeat: -1,
+      ease: "sine.inOut",
+      delay: Math.random()
+    });
   });
 
   gsap.set(wrappers, { opacity: 0 });
 
-  /* ── Timeline de SCROLL ── */
-  scrollTl = gsap.timeline({
-    scrollTrigger: {
-      trigger:    '.main-container',
-      start:      () => 2 * window.innerHeight,
-      endTrigger: '.proyectos-logo',
-      end:        'center center',
-      scrub:      1.5,
-      onLeave:      startOrbit,
-      onEnterBack:  stopOrbit,
-    }
-  });
-
+  const introTl = gsap.timeline();
   wrappers.forEach((wrapper, i) => {
-    scrollTl.to(wrapper, {
-      ease:    'power2.out',
-      force3D: true,
-      opacity: 1,
-      motionPath: {
-        path:        `#mi-path-${i}`,
-        align:       `#mi-path-${i}`,
-        alignOrigin: [0.5, 0.5],
-      },
-      duration: 0.7,
-    }, i * 0.12);
-  });
-
-  /* ── Exit scroll ── */
-  const exitTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '.main-container',
-      start:   () => window.innerHeight * 0.45,
-      end:     () => window.innerHeight * 0.85,
-      scrub:   1,
-    },
-  });
-  wrappers.forEach((wrapper, i) => {
-    exitTl.to(wrapper, {
-      x:       `+=${isMobile ? 700 : 1000}`,
-      opacity: 0,
-      ease:    'power2.in',
-      force3D: true,
-      duration: 0.5,
-    }, i * 0.07);
-  });
-
-  /* ── Timeline de INTRO ── */
-  const introTl  = gsap.timeline();
-  const introDur = isMobile ? 0.9 : 1.4;
-
-  wrappers.forEach((wrapper, i) => {
-    const t0 = 0.12 + i * 0.13;
     introTl.to(wrapper, {
       opacity: 1,
       motionPath: {
-        path:        `#intro-path-${i}`,
-        align:       `#intro-path-${i}`,
-        alignOrigin: [0.5, 0.5],
+        path: `#intro-path-${i}`,
+        align: `#intro-path-${i}`,
+        alignOrigin: [0.5, 0.5]
       },
-      ease:    'power2.out',
+      ease: 'power2.out',
       force3D: true,
-      duration: introDur,
-    }, t0);
+      duration: isMobile ? 1 : 1.4,
+    }, 0.12 + i * 0.13);
   });
 
-  const KILL_Y = window.innerHeight * 0.4;
+  const KILL_Y = H * 0.4;
   window.addEventListener('scroll', function killIntro() {
     if (window.scrollY < KILL_Y) return;
     introTl.progress(1).kill();
     window.removeEventListener('scroll', killIntro);
   }, { passive: true });
+
+  const exitTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.main-container',
+      start: () => H * 0.45,
+      end: () => H * 0.85,
+      scrub: 1,
+    }
+  });
+  wrappers.forEach((wrapper, i) => {
+    exitTl.to(wrapper, {
+      x: `+=${isMobile ? 700 : 1000}`,
+      opacity: 0,
+      ease: 'power2.in',
+      duration: 0.5,
+    }, i * 0.07);
+  });
+
+  scrollTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.main-container',
+      start: () => 2 * H,
+      endTrigger: '.proyectos-logo',
+      end: 'center center',
+      scrub: 1.5,
+      onLeave: startOrbit,
+      onEnterBack: stopOrbit,
+    }
+  });
+  
+  wrappers.forEach((wrapper, i) => {
+    scrollTl.to(wrapper, {
+      ease: 'power1.inOut',
+      opacity: 1,
+      motionPath: {
+        path: `#scroll-path-${i}`,
+        align: `#scroll-path-${i}`,
+        alignOrigin: [0.5, 0.5]
+      },
+      duration: 1,
+    }, i * 0.1);
+  });
 }
 
-/* ────────────────────────────────────────────────────────── */
 function startOrbit() {
-  if (orbitTicker) return;
-
   const layer = document.querySelector('.hero-motion-layer');
-  const logoEl = document.querySelector('.proyectos-logo');
-
-  // Ajuste perfecto absoluto compensando el padding del DOM en cualquier dispositivo
-  if (layer && logoEl) {
-    const logoRect = logoEl.getBoundingClientRect();
-    const logoCenterY = logoRect.top + window.scrollY + (logoRect.height / 2);
-    layer.style.position = 'absolute';
-    layer.style.top = (logoCenterY - window.innerHeight / 2) + 'px';
+  
+  if (scrollTl && scrollTl.scrollTrigger) {
+    // Al usar scrollTrigger.end, capturamos el píxel matemático exacto 
+    // y lo bloqueamos. Ya no importa a qué velocidad bajes el scroll.
+    const st = scrollTl.scrollTrigger;
+    if (layer) {
+      layer.style.position = 'absolute';
+      layer.style.top = st.end + 'px';
+    }
+    
+    // Forzar el final exacto de GSAP previene las asimetrías
+    if (scrollTl.progress() < 1) {
+      scrollTl.progress(1);
+    }
   }
 
-  if (!wrappers.length) return;
+  if (orbitTween) orbitTween.kill();
+  orbitState.rot = 0;
 
-  dots.forEach(dot => gsap.killTweensOf(dot));
-
-  // 💥 FIX DEFINITIVO SCROLL BRUSCO: Obliga a GSAP a colocar los wrappers en su destino 
-  // final (Círculo Perfecto) antes de extraer la matemática de la órbita.
-  if (scrollTl && scrollTl.progress() < 1) {
-    scrollTl.progress(1);
-  }
-
-  cx = 0; cy = 0;
-  const pos = wrappers.map(w => {
-    const x = parseFloat(gsap.getProperty(w, 'x')) || 0;
-    const y = parseFloat(gsap.getProperty(w, 'y')) || 0;
-    cx += x; cy += y;
-    return { x, y };
-  });
-  cx /= wrappers.length;
-  cy /= wrappers.length;
-
-  dotData = pos.map(p => ({
-    r: Math.hypot(p.x - cx, p.y - cy),
-    a: Math.atan2(p.y - cy, p.x - cx),
-  }));
-
-  orbitState.rotOffset = 0;
-
-  const xSet = dots.map(d => gsap.quickSetter(d, 'x', 'px'));
-  const ySet = dots.map(d => gsap.quickSetter(d, 'y', 'px'));
-
-  orbitTicker = () => {
-    dots.forEach((_, i) => {
-      const { r, a } = dotData[i];
-      const wX = parseFloat(gsap.getProperty(wrappers[i], 'x')) || pos[i].x;
-      const wY = parseFloat(gsap.getProperty(wrappers[i], 'y')) || pos[i].y;
-      
-      xSet[i](cx + Math.cos(a + orbitState.rotOffset) * r - wX);
-      ySet[i](cy + Math.sin(a + orbitState.rotOffset) * r - wY);
-    });
-  };
-  gsap.ticker.add(orbitTicker);
-
-  gsap.to(orbitState, {
-    rotOffset: Math.PI * 2,
-    duration: 14,
+  // Órbita basada en compensación trigonométrica pura.
+  // Permite trasladar los elementos alrededor de un círculo
+  // SIN inyectar propiedades "rotate" en CSS. Los iconos quedan 100% rectos.
+  orbitTween = gsap.to(orbitState, {
+    rot: Math.PI * 2,
+    duration: 25,
     ease: "none",
     repeat: -1,
-    id: "orbitTween"
+    onUpdate: () => {
+      dots.forEach((dot, i) => {
+        const baseA = -Math.PI / 2 + (i / count) * Math.PI * 2;
+        const localX = Math.cos(baseA + orbitState.rot) * rPx - Math.cos(baseA) * rPx;
+        const localY = Math.sin(baseA + orbitState.rot) * rPx - Math.sin(baseA) * rPx;
+        
+        gsap.set(dot, { x: localX, y: localY });
+      });
+    }
   });
 }
 
-/* ────────────────────────────────────────────────────────── */
 function stopOrbit() {
   const layer = document.querySelector('.hero-motion-layer');
   if (layer) {
     layer.style.position = 'fixed';
-    layer.style.top = '0';
+    layer.style.top = '0px';
   }
 
-  if (orbitTicker) {
-    gsap.ticker.remove(orbitTicker);
-    orbitTicker = null;
-  }
-  
-  const orbitTween = gsap.getById("orbitTween");
   if (orbitTween) {
     orbitTween.kill();
+    orbitTween = null;
   }
 
-  if (!dots.length) return;
-
-  // Restauración suave de los offsets de cada dot a 0, regresando
-  // perfectamente al cauce del scroll animado hacia atrás.
+  // Devolvemos el desplazamiento suavemente al origen 0 para
+  // enganchar de forma indetectable con el scroll al hacer marcha atrás
   dots.forEach(dot => {
     gsap.to(dot, {
       x: 0,
@@ -303,7 +273,6 @@ function stopOrbit() {
   });
 }
 
-/* ────────────────────────────────────────────────────────── */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initHeroMotion);
 } else {
