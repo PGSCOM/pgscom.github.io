@@ -698,3 +698,61 @@
     position: fixed;
     right: 50%;
 }
+
+/* ═══════════════════════════════════════════
+   LOADING SCREEN
+   ═══════════════════════════════════════════ */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#loading-logo-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-family: 'PGSText', 'Montserrat', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  color: #2563eb;
+  letter-spacing: -0.01em;
+  will-change: transform, opacity;
+  white-space: nowrap;
+}
+
+#loading-p {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: center;
+}
+
+#loading-gscom {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* El anillo de puntos se ancla al centro de la pantalla */
+#loading-dots-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ldot {
+  position: absolute;
+  width: clamp(7px, 1.1vw, 12px);
+  height: clamp(7px, 1.1vw, 12px);
+  border-radius: 50%;
+  background: #2563eb;
+  will-change: transform, opacity;
+}

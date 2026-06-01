@@ -19,6 +19,23 @@ import contactoData from '../data/contacto.json';
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <Layout>
+	<!-- ░░ LOADING SCREEN ░░ -->
+<script is:inline>document.documentElement.style.overflow = 'hidden';</script>
+<div id="loading-screen" aria-hidden="true">
+  <div id="loading-logo-wrap">
+    <span id="loading-p">P</span>
+    <span id="loading-gscom">GSCOM</span>
+  </div>
+  <div id="loading-dots-ring">
+    <span class="ldot"></span>
+    <span class="ldot"></span>
+    <span class="ldot"></span>
+    <span class="ldot"></span>
+    <span class="ldot"></span>
+    <span class="ldot"></span>
+  </div>
+</div>
+
 	<!--div class="sky-image">
 		<a href="/">
 			<Image src={logo} height={70} alt="Logo PGSCOM" />
@@ -468,6 +485,35 @@ import contactoData from '../data/contacto.json';
 	<!-- Motion path hero -->
 	<script>
 		import '../scripts/motion-path-hero.js';
+	</script>
+
+	<!-- Loading animation -->
+	<script>
+		import { runLoadingAnimation } from '../scripts/loading-animation.js';
+
+		const safetyTimer = setTimeout(() => {
+			document.documentElement.style.overflow = '';
+			const s = document.getElementById('loading-screen');
+			if (s && s.style.display !== 'none') {
+				s.style.display = 'none';
+				window.dispatchEvent(new CustomEvent('loading-done'));
+			}
+		}, 7000);
+
+		document.addEventListener('DOMContentLoaded', async () => {
+			await document.fonts.ready;
+			try {
+				await runLoadingAnimation();
+			} catch (e) {
+				console.warn('Loading anim failed:', e);
+				document.documentElement.style.overflow = '';
+				window.dispatchEvent(new CustomEvent('loading-done'));
+				const s = document.getElementById('loading-screen');
+				if (s) s.style.display = 'none';
+			} finally {
+				clearTimeout(safetyTimer);
+			}
+		});
 	</script>
 
 	<!-- Formulario de contacto -->

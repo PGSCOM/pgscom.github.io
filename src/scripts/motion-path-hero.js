@@ -295,8 +295,13 @@ function stopOrbit() {
   });
 }
 
+// Espera a que la animación de carga termine antes de volar los iconos
+function waitAndInit() {
+  window.addEventListener('loading-done', initHeroMotion, { once: true });
+}
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initHeroMotion);
+  document.addEventListener('DOMContentLoaded', waitAndInit);
 } else {
-  initHeroMotion();
+  waitAndInit();
 }
