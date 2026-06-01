@@ -27,13 +27,12 @@ function cloneCardContent(card) {
 /* ────────────────────────────────────────────────────────── */
 function getPeakPos(i, isMobile) {
   const peaks = isMobile
-    ? [[505,110],[660,150],[570,225],[705,280],[535,355],[655,415]]
-    : [[760,135],[980,180],[870,255],[1060,305],[785,395],[955,460]];
-  if (i < peaks.length) return { x: peaks[i][0], y: peaks[i][1] };
-  return {
-    x: isMobile ? 570 + (i % 2) * 130 : 860 + (i % 2) * 190,
-    y: isMobile ? 110 + Math.floor(i / 2) * 90 : 135 + Math.floor(i / 2) * 110,
-  };
+    ? [[500,110],[650,155],[570,225],[700,280],[535,360],[660,415]]
+    : [[750,130],[990,175],[860,255],[1070,310],[780,395],[960,455]];
+  return i < peaks.length
+    ? { x: peaks[i][0], y: peaks[i][1] }
+    : { x: isMobile ? 570+(i%2)*120 : 860+(i%2)*180,
+        y: isMobile ? 110+Math.floor(i/2)*90 : 130+Math.floor(i/2)*110 };
 }
 
 function buildIntroPath(i, count, isMobile, peak) {
@@ -130,6 +129,25 @@ function initHeroMotion() {
       },
       duration: 0.7,
     }, i * 0.12);
+  });
+
+  /* ── Exit scroll: bolitas salen por la derecha ANTES de "parte2" ── */
+  const exitTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.main-container',
+      start:   () => window.innerHeight * 0.45,  // justo tras killIntro
+      end:     () => window.innerHeight * 0.85,  // margen antes de parte2
+      scrub:   1,
+    },
+  });
+  dots.forEach((dot, i) => {
+    exitTl.to(dot, {
+      x:       `+=${isMobile ? 700 : 1000}`,
+      opacity: 0,
+      ease:    'power2.in',
+      force3D: true,
+      duration: 0.5,
+    }, i * 0.07);
   });
 
   /* ── Timeline de INTRO ──
