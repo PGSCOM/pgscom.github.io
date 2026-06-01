@@ -1,16 +1,17 @@
 import gsap from 'gsap';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
 gsap.registerPlugin(MotionPathPlugin, ScrollTrigger);
 
+/* ── estado de módulo ── */
 let orbitTicker = null;
-let orbitRadius = 0;
+let orbitEndPos = []; // {x,y} de cada dot al final del scroll-tl — guardado en startOrbit
+let scrollTl    = null;
 
+/* ────────────────────────────────────────────────────────── */
 function cloneCardContent(card) {
   const inner = document.createElement('div');
   inner.className = 'proyecto-card-inner';
-
   const icon = document.createElement('div');
   icon.className = 'proyecto-icon';
   const img = card.querySelector('.proyecto-icon img');
@@ -19,18 +20,39 @@ function cloneCardContent(card) {
     clone.removeAttribute('srcset');
     icon.appendChild(clone);
   }
-
   inner.appendChild(icon);
   return inner;
 }
 
+/* ────────────────────────────────────────────────────────── */
+function getPeakPos(i, isMobile) {
+  const peaks = isMobile
+    ? [[505,110],[660,150],[570,225],[705,280],[535,355],[655,415]]
+    : [[760,135],[980,180],[870,255],[1060,305],[785,395],[955,460]];
+  if (i < peaks.length) return { x: peaks[i][0], y: peaks[i][1] };
+  return {
+    x: isMobile ? 570 + (i % 2) * 130 : 860 + (i % 2) * 190,
+    y: isMobile ? 110 + Math.floor(i / 2) * 90 : 135 + Math.floor(i / 2) * 110,
+  };
+}
+
+function buildIntroPath(i, count, isMobile, peak) {
+  const t      = count > 1 ? i / (count - 1) : 0;
+  const startX = isMobile ? 1000 : 1600;
+  const startY = isMobile ? 90 + t * 230 : 90 + t * 370;
+
+  const cpX = startX * 0.6 + peak.x * 0.4 + (isMobile ? 8 : 20);
+  const cpY = (startY + peak.y) / 2 - (isMobile ? 18 : 40);
+
+  return `M ${startX},${startY} Q ${cpX},${cpY} ${peak.x},${peak.y}`;
+}
+
+/* ────────────────────────────────────────────────────────── */
 function initHeroMotion() {
   const layer = document.querySelector('.hero-motion-layer');
   if (!layer) return;
-
   const svg = document.querySelector('.motion-path-svg');
   if (!svg) return;
-
   svg.querySelector('#mi-path')?.remove();
 
   const cards = document.querySelectorAll('.proyecto-card');
@@ -38,12 +60,15 @@ function initHeroMotion() {
   if (!count) return;
 
   const isMobile = window.innerWidth < 768;
-  const rPx = Math.min(isMobile ? 120 : 220, window.innerWidth * (isMobile ? 0.22 : 0.18));
-  orbitRadius = rPx;
+  const rPx = Math.min(
+    isMobile ? 120 : 220,
+    window.innerWidth * (isMobile ? 0.22 : 0.18)
+  );
 
   const dots = [];
 
   cards.forEach((card, i) => {
+    /* ── elemento dot ── */
     const dot = document.createElement('div');
     dot.className = 'hero-dot proyecto-orb';
     dot.dataset.index = i;
@@ -51,49 +76,94 @@ function initHeroMotion() {
     layer.appendChild(dot);
     dots.push(dot);
 
-    const startY = 60 + (i / (count - 1)) * (isMobile ? 300 : 440);
-    const angle = (i / count) * Math.PI * 2 - Math.PI / 2;
-    const endX = 600 + Math.cos(angle) * rPx * 1200 / window.innerWidth;
-    const endY = 300 + Math.sin(angle) * rPx * 600 / window.innerHeight;
-    const cpX = (1250 + endX) / 2;
-    const cpY = (startY + endY) / 2 - (isMobile ? 30 : 60);
-    const d = `M 1250,${startY} Q ${cpX},${cpY} ${endX},${endY}`;
+    /* ── posición pico: origen compartido intro → scroll ── */
+    const peak = getPeakPos(i, isMobile);
 
-    const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    pathEl.setAttribute('d', d);
-    pathEl.setAttribute('fill', 'none');
-    pathEl.setAttribute('stroke', 'transparent');
-    pathEl.id = `mi-path-${i}`;
-    svg.appendChild(pathEl);
+    /* ── path de SCROLL: pico → órbita (el scroll lo gestiona) ── */
+    const ang  = (i / count) * Math.PI * 2 - Math.PI / 2;
+    const endX = 600 + Math.cos(ang) * rPx * 1200 / window.innerWidth;
+    const endY = 300 + Math.sin(ang) * rPx * 600  / window.innerHeight;
+    const cpX  = (peak.x + endX) / 2;
+    const cpY  = (peak.y + endY) / 2 - (isMobile ? 30 : 60);
+
+    const sp = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    sp.setAttribute('d', `M ${peak.x},${peak.y} Q ${cpX},${cpY} ${endX},${endY}`);
+    sp.setAttribute('fill', 'none');
+    sp.setAttribute('stroke', 'transparent');
+    sp.id = `mi-path-${i}`;
+    svg.appendChild(sp);
+
+    /* ── path de INTRO: derecha → pico ── */
+    const ip = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    ip.setAttribute('d', buildIntroPath(i, count, isMobile, peak));
+    ip.setAttribute('fill', 'none');
+    ip.setAttribute('stroke', 'transparent');
+    ip.id = `intro-path-${i}`;
+    svg.appendChild(ip);
   });
 
-  const tl = gsap.timeline({
+  /* ── Todos los dots empiezan invisibles.
+     Evita el flash en su posición CSS por defecto durante el stagger. ── */
+  gsap.set(dots, { opacity: 0 });
+
+  /* ── Timeline de SCROLL ── */
+  scrollTl = gsap.timeline({
     scrollTrigger: {
-      trigger: '.main-container',
-      start: () => 2 * window.innerHeight,
+      trigger:    '.main-container',
+      start:      () => 2 * window.innerHeight,
       endTrigger: '.proyectos-logo',
-      end: 'center center',
-      scrub: 1.5,
-      onLeave: startOrbit,
-      onEnterBack: stopOrbit,
+      end:        'center center',
+      scrub:      1.5,
+      onLeave:      startOrbit,
+      onEnterBack:  stopOrbit,
     }
   });
-
   dots.forEach((dot, i) => {
-    tl.to(dot, {
-      ease: 'power2.out',
+    scrollTl.to(dot, {
+      ease:    'power2.out',
       force3D: true,
       opacity: 1,
       motionPath: {
-        path: `#mi-path-${i}`,
-        align: `#mi-path-${i}`,
+        path:        `#mi-path-${i}`,
+        align:       `#mi-path-${i}`,
         alignOrigin: [0.5, 0.5],
       },
       duration: 0.7,
     }, i * 0.12);
   });
+
+  /* ── Timeline de INTRO ──
+     Dots entran desde la derecha y SE QUEDAN en sus picos.
+     La desaparición la gestiona el scrollTl (scroll-driven). */
+  const introTl  = gsap.timeline();
+  const introDur = isMobile ? 0.9 : 1.4;
+
+  dots.forEach((dot, i) => {
+    const t0 = 0.12 + i * 0.13;
+    introTl.to(dot, {
+      opacity: 1,
+      motionPath: {
+        path:        `#intro-path-${i}`,
+        align:       `#intro-path-${i}`,
+        alignOrigin: [0.5, 0.5],
+      },
+      ease:    'power2.out',
+      force3D: true,
+      duration: introDur,
+    }, t0);
+  });
+
+  const KILL_Y = window.innerHeight * 0.4;
+  window.addEventListener('scroll', function killIntro() {
+    if (window.scrollY < KILL_Y) return;
+    // Salta al final del intro (todos los dots al pico, opacity:1)
+    // para que el scroll-tl arranque desde la posición correcta.
+    introTl.progress(1).kill();
+    window.removeEventListener('scroll', killIntro);
+  }, { passive: true });
 }
 
+/* ────────────────────────────────────────────────────────── */
 function startOrbit() {
   if (orbitTicker) return;
 
@@ -103,52 +173,56 @@ function startOrbit() {
     layer.style.top = window.scrollY + 'px';
   }
 
-  const dots = document.querySelectorAll('.proyecto-orb');
+  const dots = Array.from(document.querySelectorAll('.proyecto-orb'));
   if (!dots.length) return;
 
+  /* Calcular centroide a partir de las posiciones ACTUALES
+     (= posición final del scroll-tl, progress=1) */
   let cx = 0, cy = 0;
-  const angles = [];
-  dots.forEach(dot => {
-    const x = gsap.getProperty(dot, 'x');
-    const y = gsap.getProperty(dot, 'y');
-    const px = typeof x === 'number' ? x : 0;
-    const py = typeof y === 'number' ? y : 0;
-    cx += px;
-    cy += py;
-    angles.push({ x: px, y: py });
+  const pos = dots.map(dot => {
+    const x = parseFloat(gsap.getProperty(dot, 'x')) || 0;
+    const y = parseFloat(gsap.getProperty(dot, 'y')) || 0;
+    cx += x; cy += y;
+    return { x, y };
   });
   cx /= dots.length;
   cy /= dots.length;
 
-  let angle = 0;
-  angles.forEach((p, i) => {
-    const a = Math.atan2(p.y - cy, p.x - cx);
-    angle += a - (i / dots.length) * Math.PI * 2;
-  });
-  angle /= dots.length;
+  /* PUNTO CLAVE FIX #2:
+     Guardamos las posiciones exactas del final del scroll-tl.
+     stopOrbit las usará para re-situar los dots sin salto. */
+  orbitEndPos = pos.map(p => ({ x: p.x, y: p.y }));
 
-  let prevTime = performance.now();
-  const r = orbitRadius;
+  /* FIX #2 — ángulo y radio POR DOT desde el centroide.
+     Con rotOffset=0, cada dot arranca en EXACTAMENTE su posición actual
+     → cero salto visual al iniciar la órbita. */
+  const dotData = pos.map(p => ({
+    r: Math.hypot(p.x - cx, p.y - cy),
+    a: Math.atan2(p.y - cy, p.x - cx),
+  }));
 
-  orbitTicker = function () {
+  /* FIX #4 — quickSetters: mucho más rápido que gsap.set para updates por frame */
+  const xSet = dots.map(d => gsap.quickSetter(d, 'x', 'px'));
+  const ySet = dots.map(d => gsap.quickSetter(d, 'y', 'px'));
+
+  let rotOffset = 0;
+  let prevTime  = performance.now();
+
+  orbitTicker = () => {
     const now = performance.now();
-    const dt = Math.min((now - prevTime) / 1000, 0.05);
-    prevTime = now;
-    angle += dt * 0.45;
-
-    dots.forEach((dot, i) => {
-      const a = angle + (i / dots.length) * Math.PI * 2;
-      gsap.set(dot, {
-        x: cx + Math.cos(a) * r,
-        y: cy + Math.sin(a) * r,
-        force3D: true,
-      });
+    const dt  = Math.min((now - prevTime) / 1000, 0.05);
+    prevTime  = now;
+    rotOffset += dt * 0.45;
+    dots.forEach((_, i) => {
+      const { r, a } = dotData[i];
+      xSet[i](cx + Math.cos(a + rotOffset) * r);
+      ySet[i](cy + Math.sin(a + rotOffset) * r);
     });
   };
-
   gsap.ticker.add(orbitTicker);
 }
 
+/* ────────────────────────────────────────────────────────── */
 function stopOrbit() {
   if (orbitTicker) {
     gsap.ticker.remove(orbitTicker);
@@ -161,50 +235,27 @@ function stopOrbit() {
     layer.style.top = '0';
   }
 
-  const dots = document.querySelectorAll('.proyecto-orb');
-  if (!dots.length) return;
+  const dots = Array.from(document.querySelectorAll('.proyecto-orb'));
+  if (!dots.length || !orbitEndPos.length) return;
 
-  const targets = [];
-  let allOk = true;
+  /* FIX #2 + #3:
+     Colocamos cada dot en su posición de fin de scroll-tl (orbitEndPos).
+     - onEnterBack se dispara cuando el scroll vuelve al borde del trigger,
+       momento en que el scrub tiene progress≈1.0 → el motionPath coloca
+       los dots en esas mismas coordenadas → CERO SALTO.
+     - Desde ahí el scrub retrocede suavemente por el path hacia atrás. */
   dots.forEach((dot, i) => {
-    const tween = gsap.getTweensOf(dot)[0];
-    if (tween) {
-      tween.progress(1);
-      const x = gsap.getProperty(dot, 'x');
-      const y = gsap.getProperty(dot, 'y');
-      targets.push({
-        x: typeof x === 'number' ? x : 0,
-        y: typeof y === 'number' ? y : 0,
+    if (orbitEndPos[i]) {
+      gsap.set(dot, {
+        x:       orbitEndPos[i].x,
+        y:       orbitEndPos[i].y,
+        force3D: true,
       });
-    } else {
-      allOk = false;
     }
   });
-
-  if (allOk) {
-    gsap.to(dots, {
-      x: (i) => targets[i].x,
-      y: (i) => targets[i].y,
-      duration: 0.35,
-      ease: 'power2.inOut',
-      force3D: true,
-      onComplete: () => {
-        dots.forEach(dot => {
-          gsap.getTweensOf(dot).forEach(t => {
-            t.invalidate().resume();
-          });
-        });
-      },
-    });
-  } else {
-    dots.forEach(dot => {
-      gsap.getTweensOf(dot).forEach(t => {
-        t.invalidate().resume();
-      });
-    });
-  }
 }
 
+/* ────────────────────────────────────────────────────────── */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initHeroMotion);
 } else {
