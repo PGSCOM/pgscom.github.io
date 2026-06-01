@@ -71,7 +71,7 @@ function initHeroMotion() {
   rPx = Math.min(isMobile ? 130 : 220, W * (isMobile ? 0.35 : 0.22));
   const cx = W / 2;
   const cy = H / 2;
-  const loadingRadius = isMobile ? 65 : 110;
+  const loadingRadius = isMobile ? 80 : 140;
 
   // Elementos DOM para la intro 
   const pEl = document.getElementById('letter-p');
