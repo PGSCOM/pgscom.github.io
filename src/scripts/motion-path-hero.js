@@ -11,8 +11,6 @@ let orbitState = { rot: 0 };
 let rPx = 0;
 let count = 0;
 
-/* ────────────────────────────────────────────────────────── */
-// Clona el HTML original de las cards para usarlo en la animación
 function cloneCardContent(card) {
   const inner = document.createElement('div');
   inner.className = 'proyecto-card-inner';
@@ -28,8 +26,6 @@ function cloneCardContent(card) {
   return inner;
 }
 
-/* ────────────────────────────────────────────────────────── */
-// Distribución de las posiciones de "espera" tras la intro
 function getPeakPos(i, W, H, isMobile) {
   const mobilePeaks = [
     {x: 0.15, y: 0.15}, {x: 0.85, y: 0.25},
@@ -45,7 +41,6 @@ function getPeakPos(i, W, H, isMobile) {
   return { x: p ? p.x * W : W * 0.5, y: p ? p.y * H : H * 0.5 };
 }
 
-// Magia: Genera curvas de Bézier cúbicas en forma de "S" para un vuelo orgánico
 function buildCubicPath(startX, startY, endX, endY, curveAmount, sweep) {
   const dx = endX - startX;
   const dy = endY - startY;
@@ -56,7 +51,6 @@ function buildCubicPath(startX, startY, endX, endY, curveAmount, sweep) {
   return `M ${startX},${startY} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${endX},${endY}`;
 }
 
-/* ────────────────────────────────────────────────────────── */
 function initHeroMotion() {
   const layer = document.querySelector('.hero-motion-layer');
   const svg = document.querySelector('.motion-path-svg');
@@ -66,7 +60,6 @@ function initHeroMotion() {
   const H = window.innerHeight;
   const isMobile = W < 768;
   
-  // Tamaño en pixeles absolutos para evitar achatamiento en pantallas wide/estrechas
   svg.style.width = '100vw';
   svg.style.height = '100vh';
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
@@ -78,55 +71,76 @@ function initHeroMotion() {
   rPx = Math.min(isMobile ? 130 : 220, W * (isMobile ? 0.35 : 0.22));
   const cx = W / 2;
   const cy = H / 2;
+  const loadingRadius = isMobile ? 65 : 110;
 
+  // Elementos DOM para la intro 
+  const pEl = document.getElementById('letter-p');
+  const gscomWrap = document.getElementById('letters-gscom-wrap');
+  const logoWrap = document.getElementById('logo-wrapper');
+  
+  if (pEl && gscomWrap && logoWrap) {
+    // 1. Configuraciones iniciales 
+    gsap.set(gscomWrap, { width: 'auto' });
+    const targetWidth = gscomWrap.offsetWidth;
+    gsap.set(gscomWrap, { width: 0, opacity: 0 });
+    gsap.set(pEl, { scale: 0, opacity: 0 });
+    
+    // 2. Centrado matemático perfecto de la 'P' en el monitor
+    const logoRect = logoWrap.getBoundingClientRect();
+    const logoCenterX = logoRect.left + logoRect.width / 2;
+    const logoCenterY = logoRect.top + logoRect.height / 2;
+    const dx = cx - logoCenterX;
+    const dy = cy - logoCenterY;
+    gsap.set(logoWrap, { x: dx, y: dy });
+  }
+
+  const grayDots = [];
+  const clones = [];
+
+  // Creación y setup de los envoltorios
   cards.forEach((card, i) => {
-    // 1. Wrapper Base (Viaja por el MotionPath)
     const wrapper = document.createElement('div');
     wrapper.className = 'hero-dot-wrapper';
     wrapper.style.position = 'absolute';
     wrapper.style.width = '100px';
     wrapper.style.height = '100px';
-    wrapper.style.left = '-50px'; // Centrado en el path
+    wrapper.style.left = '-50px';
     wrapper.style.top = '-50px';
     wrapper.style.zIndex = '4';
     wrapper.style.pointerEvents = 'none';
 
-    // 2. Float Wrapper (Añade el efecto de gravedad cero independiente)
     const floatWrapper = document.createElement('div');
     floatWrapper.className = 'hero-float-wrapper';
     floatWrapper.style.position = 'absolute';
     floatWrapper.style.width = '100%';
     floatWrapper.style.height = '100%';
 
-    // 3. Dot (El que orbita trigonométricamente al final)
     const dot = document.createElement('div');
     dot.className = 'hero-dot proyecto-orb';
-    dot.appendChild(cloneCardContent(card));
+    
+    // El punto gris para la carga
+    const grayCircle = document.createElement('div');
+    grayCircle.className = 'gray-loading-dot';
+    
+    // El ícono real clonado (Oculto inicialmente)
+    const contentClone = cloneCardContent(card);
+    contentClone.classList.add('orb-content-clone');
+    
+    dot.appendChild(grayCircle);
+    dot.appendChild(contentClone);
     
     floatWrapper.appendChild(dot);
     wrapper.appendChild(floatWrapper);
     layer.appendChild(wrapper);
     wrappers.push(wrapper);
     dots.push(dot);
+    grayDots.push(grayCircle);
+    clones.push(contentClone);
 
-    const peak = getPeakPos(i, W, H, isMobile);
-    const ang = -Math.PI / 2 + (i / count) * Math.PI * 2;
-    
-    const destX = cx + Math.cos(ang) * rPx;
-    const destY = cy + Math.sin(ang) * rPx;
     const sweep = i % 2 === 0 ? 1 : -1;
+    const destX = cx + Math.cos(-Math.PI / 2 + (i / count) * Math.PI * 2) * rPx;
+    const destY = cy + Math.sin(-Math.PI / 2 + (i / count) * Math.PI * 2) * rPx;
 
-    // --- PATH 1: INTRO (Efecto "Big Bang" desde el centro)
-    const introStartX = W / 2;
-    const introStartY = H / 2 + 50; 
-    const ip = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    ip.setAttribute('d', buildCubicPath(introStartX, introStartY, peak.x, peak.y, 0.8, sweep));
-    ip.setAttribute('fill', 'none');
-    ip.setAttribute('stroke', 'transparent');
-    ip.id = `intro-path-${i}`;
-    svg.appendChild(ip);
-
-    // --- PATH 2: SCROLL (Vuelo en picado hacia la órbita)
     const swoopStartX = W / 2 + (sweep * (W * 0.4 + i * 30));
     const swoopStartY = -200 - (i * 60);
     const sp = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -136,7 +150,10 @@ function initHeroMotion() {
     sp.id = `scroll-path-${i}`;
     svg.appendChild(sp);
 
-    // --- ANIMACIÓN: Flotación espacial orgánica continua
+    // Ocultos por defecto en el centro
+    gsap.set(wrapper, { x: cx, y: cy, scale: 0, opacity: 0 });
+
+    // Animación de flotación libre constante
     gsap.to(floatWrapper, {
       y: () => (Math.random() > 0.5 ? "+=18" : "-=18"),
       x: () => (Math.random() > 0.5 ? "+=12" : "-=12"),
@@ -149,35 +166,85 @@ function initHeroMotion() {
     });
   });
 
-  // Estado inicial oculto y pequeño
-  gsap.set(wrappers, { opacity: 0, scale: 0, rotation: -180 });
+  /* ── STORYBOARD ANIMATION TIMELINE ── */
+  const masterTl = gsap.timeline();
+  
+  if (pEl && gscomWrap && logoWrap) {
+    const proxy = { rotation: 0 };
+    
+    gsap.set(gscomWrap, { width: 'auto' });
+    const realWidth = gscomWrap.offsetWidth;
+    gsap.set(gscomWrap, { width: 0 });
 
-  /* ── 1. TIMELINE INTRO ── */
-  const introTl = gsap.timeline();
-  wrappers.forEach((wrapper, i) => {
-    introTl.to(wrapper, {
-      opacity: 1,
-      scale: 1,
-      rotation: 0, // Giran mientras se abren
-      motionPath: {
-        path: `#intro-path-${i}`,
-        align: `#intro-path-${i}`,
-        alignOrigin: [0.5, 0.5]
-      },
-      ease: 'back.out(1.5)', // Rebote chulo al final
-      force3D: true,
-      duration: isMobile ? 1.4 : 1.8,
-    }, 0.1 + i * 0.12);
-  });
+    masterTl
+      // 1. Nace la "P" en el centro
+      .to(pEl, { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(2)' })
+      .to(pEl, { scale: 1.4, duration: 0.6, ease: 'power2.inOut' }, "+=0.2")
+      // 2. Nacen los envoltorios de forma circular (muestran la piel gris)
+      .to(wrappers, { 
+        scale: 1, 
+        opacity: 1, 
+        duration: 0.4, 
+        stagger: 0.05, 
+        ease: 'back.out(2)',
+        onStart: function() {
+            wrappers.forEach((wrapper, i) => {
+                const ang = -Math.PI / 2 + (i / count) * Math.PI * 2;
+                gsap.set(wrapper, {
+                    x: cx + Math.cos(ang) * loadingRadius,
+                    y: cy + Math.sin(ang) * loadingRadius
+                });
+            });
+        }
+      }, "<0.1")
+      // 3. Orbitan los puntos
+      .to(proxy, {
+        rotation: Math.PI,
+        duration: 1.2,
+        ease: 'power1.inOut',
+        onUpdate: () => {
+          wrappers.forEach((wrapper, i) => {
+            const currentAng = -Math.PI / 2 + (i / count) * Math.PI * 2 + proxy.rotation;
+            gsap.set(wrapper, {
+              x: cx + Math.cos(currentAng) * loadingRadius,
+              y: cy + Math.sin(currentAng) * loadingRadius
+            });
+          });
+        }
+      }, "<")
+      .to(pEl, { scale: 1, duration: 0.6, ease: 'power2.inOut' }, "+=0.2")
+      
+      // 4. EL MORPH - EXPLOSIÓN A LAS ESQUINAS
+      .to(logoWrap, { 
+        x: 0, y: 0, duration: 1.2, ease: 'power3.inOut',
+        onComplete: () => {
+            // Liberamos todo el control y encendemos el scroll
+            document.documentElement.style.overflow = '';
+            gsap.set(logoWrap, { clearProps: "all" });
+            const gradientAnim = 'pgscom-intro-scroll 2s linear forwards, pgscom-loop-scroll 4s linear 2s infinite';
+            pEl.style.animation = gradientAnim;
+            document.getElementById('letters-gscom').style.animation = gradientAnim;
+            window.dispatchEvent(new CustomEvent('loading-done'));
+        }
+      }, "explode")
+      .to(gscomWrap, { width: realWidth, opacity: 1, duration: 1.2, ease: 'power3.inOut' }, "explode")
+      // Piel gris muta a los iconos reales
+      .to(grayDots, { opacity: 0, scale: 0, duration: 0.4, ease: 'power2.in' }, "explode")
+      .to(clones, { opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.5)' }, "explode+=0.2");
+      
+      // Las bolas salen disparadas en curva a sus esquinas
+      wrappers.forEach((wrapper, i) => {
+        const peak = getPeakPos(i, W, H, isMobile);
+        masterTl.to(wrapper, {
+          x: peak.x,
+          y: peak.y,
+          ease: 'power3.out',
+          duration: 1.2 + (i % 2) * 0.1
+        }, "explode");
+      });
+  }
 
-  const KILL_Y = H * 0.4;
-  window.addEventListener('scroll', function killIntro() {
-    if (window.scrollY < KILL_Y) return;
-    introTl.progress(1).kill();
-    window.removeEventListener('scroll', killIntro);
-  }, { passive: true });
-
-  /* ── 2. TIMELINE EXIT (Al hacer scroll se elevan como humo) ── */
+  // ── SCROLL EXIT TIMELINE ──
   const exitTl = gsap.timeline({
     scrollTrigger: {
       trigger: '.main-container',
@@ -189,7 +256,7 @@ function initHeroMotion() {
   wrappers.forEach((wrapper, i) => {
     exitTl.to(wrapper, {
       y: `-=${H * 0.5}`,
-      x: `+=${(i % 2 === 0 ? -1 : 1) * 200}`, // Se separan a los lados
+      x: `+=${(i % 2 === 0 ? -1 : 1) * 200}`,
       opacity: 0,
       scale: 0.5,
       rotation: (i % 2 === 0 ? -45 : 45),
@@ -198,7 +265,7 @@ function initHeroMotion() {
     }, i * 0.05);
   });
 
-  /* ── 3. TIMELINE SCROLL HACIA LA ÓRBITA ── */
+  // ── SCROLL ORBIT TIMELINE ──
   scrollTl = gsap.timeline({
     scrollTrigger: {
       trigger: '.main-container',
@@ -212,7 +279,6 @@ function initHeroMotion() {
   });
   
   wrappers.forEach((wrapper, i) => {
-    // Usamos fromTo para garantizar un reseteo impecable si subes y bajas el scroll rápido
     scrollTl.fromTo(wrapper, {
       opacity: 0,
       scale: 0.2,
@@ -220,7 +286,7 @@ function initHeroMotion() {
     }, {
       opacity: 1,
       scale: 1,
-      rotation: 360, // Hacen un giro espectacular de 360 grados durante el vuelo y acaban rectos
+      rotation: 360,
       ease: 'power2.inOut',
       motionPath: {
         path: `#scroll-path-${i}`,
@@ -232,11 +298,8 @@ function initHeroMotion() {
   });
 }
 
-/* ────────────────────────────────────────────────────────── */
 function startOrbit() {
   const layer = document.querySelector('.hero-motion-layer');
-  const logoEl = document.querySelector('.proyectos-logo');
-  
   if (scrollTl && scrollTl.scrollTrigger) {
     const st = scrollTl.scrollTrigger;
     if (layer) {
@@ -251,11 +314,9 @@ function startOrbit() {
   if (orbitTween) orbitTween.kill();
   orbitState.rot = 0;
 
-  // Órbita basada en pura matemática trigonométrica
-  // Traslada los iconos en círculo perfecto manteniéndolos apuntando rectos siempre.
   orbitTween = gsap.to(orbitState, {
     rot: Math.PI * 2,
-    duration: 30, // Un poco más lento para más elegancia
+    duration: 30,
     ease: "none",
     repeat: -1,
     onUpdate: () => {
@@ -263,7 +324,6 @@ function startOrbit() {
         const baseA = -Math.PI / 2 + (i / count) * Math.PI * 2;
         const localX = Math.cos(baseA + orbitState.rot) * rPx - Math.cos(baseA) * rPx;
         const localY = Math.sin(baseA + orbitState.rot) * rPx - Math.sin(baseA) * rPx;
-        
         gsap.set(dot, { x: localX, y: localY });
       });
     }
@@ -282,8 +342,6 @@ function stopOrbit() {
     orbitTween = null;
   }
 
-  // Devolvemos el desplazamiento suavemente al origen 0 para
-  // enganchar de forma indetectable con el scroll al hacer marcha atrás
   dots.forEach(dot => {
     gsap.to(dot, {
       x: 0,
@@ -295,13 +353,8 @@ function stopOrbit() {
   });
 }
 
-// Espera a que la animación de carga termine antes de volar los iconos
-function waitAndInit() {
-  window.addEventListener('loading-done', initHeroMotion, { once: true });
-}
-
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', waitAndInit);
+  document.addEventListener('DOMContentLoaded', initHeroMotion);
 } else {
-  waitAndInit();
+  initHeroMotion();
 }
