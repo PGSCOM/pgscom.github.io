@@ -325,6 +325,9 @@ function stopOrbit() {
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 
 async function safeInit() {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+  document.documentElement.style.overflow = 'hidden';
   const logoWrap = document.getElementById('logo-wrapper');
   if (logoWrap) logoWrap.style.opacity = '0';
 
@@ -340,6 +343,25 @@ async function safeInit() {
   if (logoWrap) logoWrap.style.opacity = '';
   initHeroMotion();
 }
+
+function cleanup() {
+  ScrollTrigger.getAll().forEach(st => st.kill());
+  orbitTween?.kill();
+  orbitTween = null;
+  scrollTl    = null;
+  wrappers.forEach(w => w.remove());
+  wrappers = [];
+  dots     = [];
+  document.querySelector('.motion-path-svg')?.replaceChildren();
+}
+
+// Bfcache: el navegador restaura la página del caché sin re-ejecutar scripts.
+// GSAP queda en estado inconsistente → limpiamos todo y arrancamos de cero.
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
+  cleanup();
+  safeInit();
+});
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', safeInit);

@@ -752,3 +752,8 @@
     align-items: center;
     will-change: opacity, transform;
 }
+
+/* Las cards del hero son la fuente de datos para los orbs — no se pintan */
+.proyectos-grid {
+    display: none;
+}
