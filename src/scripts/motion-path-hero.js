@@ -86,7 +86,7 @@ function initHeroMotion() {
 
   // Medir el ancho natural de "GSCOM" antes de ocultarlo
   gsap.set(gscomWrap, { width: 'auto' });
-  const gscomWidth = gscomWrap.offsetWidth;
+  const gscomWidth = gscomWrap.offsetWidth + 2;
   gsap.set(gscomWrap, { width: 0, opacity: 0 });
 
   // Desplazar el logo-wrapper para que la "P" quede centrada en pantalla.
@@ -212,7 +212,7 @@ function initHeroMotion() {
       onComplete() {
         document.documentElement.style.overflow = '';
         gsap.set(logoWrap, { clearProps: 'all' });
-        gsap.set(gscomWrap, { clearProps: 'width', overflow: 'visible' });
+        gsap.set(gscomWrap, { width: 'auto', overflow: 'visible' });
 
         const gradAnim = 'pgscom-intro-scroll 2s linear forwards, pgscom-loop-scroll 4s linear 2s infinite';
         pEl.style.animation       = gradAnim;
@@ -324,15 +324,21 @@ function stopOrbit() {
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 
-function safeInit() {
+async function safeInit() {
   const logoWrap = document.getElementById('logo-wrapper');
   if (logoWrap) logoWrap.style.opacity = '0';
 
-  // Esperar a que las fuentes estén listas para medir el layout con precisión
-  document.fonts.ready.then(() => {
-    if (logoWrap) logoWrap.style.opacity = '';
-    initHeroMotion();
-  });
+  // Forzar que PGSText esté descargada antes de medir el layout.
+  // El timeout de 3s es el fallback por si el woff2 no responde.
+  try {
+    await Promise.race([
+      document.fonts.load('400 5rem "PGSText"'),
+      new Promise(r => setTimeout(r, 3000)),
+    ]);
+  } catch {}
+
+  if (logoWrap) logoWrap.style.opacity = '';
+  initHeroMotion();
 }
 
 if (document.readyState === 'loading') {
