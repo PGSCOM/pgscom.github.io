@@ -75,14 +75,6 @@
     z-index: 1;
 }
 
-/*Logo flotante*/
-.sky-image {
-  position: fixed;
-  top: 25px;
-  left: 25px;
-  z-index: 9999;
-}
-
 /* Contenedor principal */
 .main-container {
     width: 100vw;
@@ -140,6 +132,15 @@
     height: 100%;
     width: 48%;
     align-items: center;
+}
+
+.scroll-spacer {
+    height: 120vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 60;
 }
 
 /* Contenedor de la imagen */
@@ -413,47 +414,12 @@
     }
 }
 
-/* Animaciones para el logo-text */
-@keyframes fadeInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes gradientShift {
-    0%, 100% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-}
-
-@keyframes shimmer {
-    0%, 100% {
-        opacity: 0.1;
-    }
-    50% {
-        opacity: 0.3;
-    }
-}
-
 /* Estilos para el contenedor del logo */
-.logo-container {
-    display: inline-block;
-    position: absolute;
-    min-height: 120px; /* Altura mínima fija para evitar saltos */
-    min-width: 300px; /* Ancho mínimo para evitar redimensionamientos bruscos */
-    overflow: hidden; /* Evita que el contenido se salga durante las transiciones */
-    width: 100vh;
-    height: 100%;
-    right: 50%;
-    left: 50%;
+#logo-wrapper {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    will-change: transform, opacity;
 }
 
 /* Estados de animación del logo */
@@ -535,14 +501,6 @@
         margin: 0 auto;
     }
     
-    .logo-container {
-        min-height: 80px;
-        min-width: 200px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
-    
     .logo-text {
         font-size: 10cqw;
         letter-spacing: 0.2rem;
@@ -569,11 +527,6 @@
         position: absolute;
         top: 0;
         left: 0;
-    }
-    
-    /* Mostrar todas las partículas */
-    .particle-1, .particle-2, .particle-3, .particle-4, .particle-5, .particle-6 {
-        display: block;
     }
     
     /* Reposicionar las partículas para que ocupen toda la pantalla */
@@ -652,11 +605,6 @@
         max-height: 50vh;
     }
     
-    /* Mantener todas las partículas pero hacerlas más pequeñas */
-    .particle-1, .particle-2, .particle-3, .particle-4, .particle-5, .particle-6 {
-        display: block;
-    }
-    
     .particle-1 {
         width: 35px;
         height: 35px;
@@ -707,25 +655,6 @@
 }
 
 /* El sticky de .parte2 se maneja con CSS puro (position: sticky en .parte2) */
-
-.liquidglassstyle{
-    position: fixed;
-    right: 50%;
-}
-
-/* ═══════════════════════════════════════════
-   LOADING SCREEN & LOGO SPLIT
-   ═══════════════════════════════════════════ */
-.content {
-    position: relative;
-}
-
-#logo-wrapper {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    will-change: transform, opacity;
-}
 
 /* ── ESTILOS DEL MORPH: LOS PUNTOS GRISES MUTAN A ICONOS ── */
 .gray-loading-dot {

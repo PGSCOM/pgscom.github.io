@@ -46,18 +46,7 @@ import contactoData from '../data/contacto.json';
 		</div>
 	</main>
 
-	<div class="image-container">
-		<!--Image 
-			src={pgscom} 
-			alt="PGSCOM Character" 
-			class="fotopgs" 
-			width={2617} 
-			height={3490} 
-			loading="eager" 
-			widths={[320, 640, 1280, 2617]}
-			sizes="(max-width: 768px) 100vw, 50vw"
-		/-->
-	</div>
+	<div class="image-container"></div>
 
 	<section class="parte2-wrapper">
 		<div class="parte2">
@@ -68,7 +57,7 @@ import contactoData from '../data/contacto.json';
 			<img id="logoanimar" style="width: auto; height: 32.3%;" src="/assets/animlogo/logo.svg" alt="" />
 		</div>
 
-	<div style="height: 120vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 60;"></div>
+	<div class="scroll-spacer"></div>
 
 	<section class="proyectos-section" id="proyectos">
 		<div class="proyectos-header">
@@ -338,7 +327,7 @@ import contactoData from '../data/contacto.json';
 
 
 	<!-- Rotación de tipografías -->
-	<script is:inline defer>
+	<script is:inline>
 		document.addEventListener('DOMContentLoaded', async () => {
 			const animatedText = document.getElementById('animated-text');
 			
@@ -437,7 +426,7 @@ import contactoData from '../data/contacto.json';
 
 			function changeFont() {
 				if (!fontsLoaded) return;
-				const el = window.animatedText;
+				const el = animatedText;
 
 				el.classList.add('fade-out');
 
@@ -460,8 +449,6 @@ import contactoData from '../data/contacto.json';
 			animatedText.classList.remove('loading');
 			animatedText.classList.add('loaded');
 
-			window.animatedText = animatedText;
-			
 			// Esperar a que la carga termine para empezar a rotar fuentes
 			window.addEventListener('loading-done', () => {
 				setInterval(changeFont, delay);
@@ -669,7 +656,7 @@ import contactoData from '../data/contacto.json';
 				document.body.style.overflow = '';
 			}
 
-			modalShare?.addEventListener('click', async () => {
+			modalShare.addEventListener('click', async () => {
 				if (navigator.share) {
 					try {
 						await navigator.share({ title: modalTitulo.textContent, text: `Mira este proyecto: ${modalTitulo.textContent}`, url: window.location.href });
@@ -687,8 +674,8 @@ import contactoData from '../data/contacto.json';
 				});
 			});
 
-			modalClose?.addEventListener('click', closeModal);
-			modal?.addEventListener('click', (e) => {
+			modalClose.addEventListener('click', closeModal);
+			modal.addEventListener('click', (e) => {
 				if (e.target === modal || e.target.classList.contains('modal-backdrop')) closeModal();
 			});
 			document.addEventListener('keydown', (e) => {

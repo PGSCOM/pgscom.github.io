@@ -1,18 +1,18 @@
+interface TurnstileResponse {
+  success: boolean;
+  'error-codes'?: string[];
+}
+
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
-  console.log('📨 Recibiendo petición de contacto...');
-  
   try {
     const contentType = request.headers.get('content-type') || '';
-    console.log('Content-Type:', contentType);
     let data: Record<string, string> = {};
 
     if (contentType.includes('application/json')) {
       data = await request.json();
-      console.log('✅ Datos JSON parseados');
     } else if (contentType.includes('application/x-www-form-urlencoded')) {
       const form = await request.formData();
       data = Object.fromEntries([...form.entries()].map(([k, v]) => [k, String(v)]));
-      console.log('✅ Datos form-data parseados');
     } else {
       console.error('❌ Content-type no soportado:', contentType);
       return new Response(JSON.stringify({ ok: false, error: 'Unsupported content type' }), {
@@ -22,8 +22,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     }
 
     const { nombre, email, asunto, mensaje } = data;
-    console.log('Datos recibidos:', { nombre, email, asunto, mensajeLength: mensaje?.length });
-    
+
     if (!nombre || !email || !asunto || !mensaje) {
       console.error('❌ Campos faltantes');
       return new Response(JSON.stringify({ ok: false, error: 'Missing fields' }), {
@@ -32,7 +31,6 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       });
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       console.error('❌ Email inválido:', email);
@@ -45,11 +43,11 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     // Validar Turnstile
     const turnstileToken = data['cf-turnstile-response'];
     if (!turnstileToken) {
-        console.error('❌ Token de Turnstile faltante');
-        return new Response(JSON.stringify({ ok: false, error: 'Turnstile token missing' }), {
-            status: 400,
-            headers: { 'content-type': 'application/json' },
-        });
+      console.error('❌ Token de Turnstile faltante');
+      return new Response(JSON.stringify({ ok: false, error: 'Turnstile token missing' }), {
+        status: 400,
+        headers: { 'content-type': 'application/json' },
+      });
     }
 
     const ip = request.headers.get('CF-Connecting-IP');
@@ -64,20 +62,16 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       method: 'POST',
     });
 
-    const turnstileOutcome: any = await turnstileResult.json();
+    const turnstileOutcome: TurnstileResponse = await turnstileResult.json();
     if (!turnstileOutcome.success) {
-       console.error('❌ Validación de Turnstile fallida:', turnstileOutcome);
-       return new Response(JSON.stringify({ ok: false, error: 'Invalid Turnstile token' }), {
+      console.error('❌ Validación de Turnstile fallida:', turnstileOutcome);
+      return new Response(JSON.stringify({ ok: false, error: 'Invalid Turnstile token' }), {
         status: 403,
         headers: { 'content-type': 'application/json' },
       });
     }
 
     // Enviar mensaje via Telegram Bot
-    console.log('🔍 Verificando variables de Telegram...');
-    console.log('TELEGRAM_BOT_TOKEN presente:', !!env.TELEGRAM_BOT_TOKEN);
-    console.log('TELEGRAM_CHAT_ID presente:', !!env.TELEGRAM_CHAT_ID);
-    
     if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
       console.error('❌ Variables de entorno de Telegram NO configuradas');
       return new Response(JSON.stringify({ 
@@ -103,7 +97,6 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       `🕐 ${new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' })}`,
     ].join('\n');
 
-    console.log('📤 Enviando mensaje a Telegram...');
     const tgResp = await fetch(tgApi, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -115,7 +108,6 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     });
 
     const tgData = await tgResp.json();
-    console.log('Respuesta de Telegram:', { status: tgResp.status, ok: tgData.ok });
 
     if (!tgResp.ok || !tgData.ok) {
       console.error('❌ Error de Telegram:', JSON.stringify(tgData));
@@ -128,7 +120,6 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       });
     }
 
-    console.log('✅ Mensaje enviado exitosamente a Telegram');
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { 'content-type': 'application/json' },
