@@ -4,7 +4,24 @@ import React, { useRef, useState, useEffect } from 'react';
 import _pkg from 'liquid-glass-react';
 const LiquidGlass = (_pkg && (_pkg.LiquidGlass || _pkg.default || _pkg)) || null;
 
-// Acepta `children` como una prop
+// Fallback ligero para móviles
+const MobileFallback = ({ children }) => (
+  <div style={{
+    width: '90%',
+    maxWidth: '400px',
+    padding: '20px 28px',
+    background: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: '24px',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    position: 'relative',
+    zIndex: 100,
+    margin: '0 auto',
+    boxSizing: 'border-box',
+  }}>
+    {children}
+  </div>
+);
+
 export default function LiquidGlassComponent({ children }) {
   const containerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(true); // Por defecto móvil para SSR
@@ -29,32 +46,14 @@ export default function LiquidGlassComponent({ children }) {
     // NO actualizar en resize para evitar re-renders costosos
   }, []);
   
-  // Fallback ULTRA-LIGERO para móviles - SIN backdrop-filter, SIN efectos pesados
-  const MobileFallback = () => (
-    <div style={{
-      width: '90%',
-      maxWidth: '400px',
-      padding: '20px 28px',
-      background: 'rgba(0, 0, 0, 0.5)', // Fondo semi-opaco simple
-      borderRadius: '24px',
-      border: '1px solid rgba(255, 255, 255, 0.15)',
-      position: 'relative',
-      zIndex: 100,
-      margin: '0 auto',
-      boxSizing: 'border-box',
-    }}>
-      {children}
-    </div>
-  );
-  
   // Si no se encontró el componente o estamos en el servidor, renderizamos fallback
   if (!LiquidGlass || !isClient) {
-    return <MobileFallback />;
+    return <MobileFallback>{children}</MobileFallback>;
   }
   
   // En móviles, usar fallback CSS ultra-ligero (sin WebGL, sin backdrop-filter)
   if (isMobile) {
-    return <MobileFallback />;
+    return <MobileFallback>{children}</MobileFallback>;
   }
 
   // En desktop, usar el efecto completo pero muy optimizado
@@ -71,9 +70,6 @@ export default function LiquidGlassComponent({ children }) {
         mode="standard"
         mouseContainer={containerRef}
         style={{
-          position: 'auto',
-          top: '500px',
-          left: '500px',
           transform: 'translateX(-50%)',
           zIndex: 100,
           maxWidth: '550px'
