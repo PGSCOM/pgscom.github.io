@@ -1,3 +1,16 @@
+---
+const {
+	title = 'PGSCOM — Pablo García Santamaría',
+	description = 'Portfolio de Pablo García Santamaría: proyectos de desarrollo web, producción audiovisual, animación 3D, programación, diseño gráfico y fotografía.',
+	image = '/assets/proyectos/portfolio.png',
+	type = 'website',
+	noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const ogImage = new URL(image, Astro.site ?? Astro.url.origin).href;
+---
+
 <!doctype html>
 <html lang="es">
 	<head>
@@ -5,8 +18,67 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>PGSCOM</title>
-		
+
+		<!-- SEO -->
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+		<!-- Open Graph / Twitter -->
+		<meta property="og:type" content={type} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:locale" content="es_ES" />
+		<meta property="og:site_name" content="PGSCOM" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+
+		<!-- Transición entre páginas (View Transitions multi-documento).
+		     Inline en el head: debe estar presente en el primer render de ambas
+		     páginas o el navegador descarta la transición (el CSS empaquetado
+		     por Vite llega tarde en dev). -->
+		<style is:inline>
+			@view-transition {
+				navigation: auto;
+			}
+
+			@media (prefers-reduced-motion: no-preference) {
+				::view-transition-old(root) {
+					animation: vt-fade-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+				}
+				::view-transition-new(root) {
+					animation: vt-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+				}
+
+				/* La imagen del proyecto que "vuela" de la tarjeta a la ficha */
+				::view-transition-group(project-hero) {
+					animation-duration: 0.55s;
+					animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+				}
+				::view-transition-old(project-hero),
+				::view-transition-new(project-hero) {
+					height: 100%;
+					object-fit: cover;
+					overflow: clip;
+				}
+			}
+
+			@keyframes vt-fade-out {
+				to { opacity: 0; }
+			}
+			@keyframes vt-fade-in {
+				from { opacity: 0; transform: translateY(18px); }
+				to   { opacity: 1; transform: translateY(0); }
+			}
+		</style>
+
+		<slot name="head" />
+
 		<!-- Google Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

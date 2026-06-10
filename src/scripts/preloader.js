@@ -9,6 +9,8 @@ gsap.registerPlugin(DrawSVGPlugin);
 
 function dispatchDone() {
   document.documentElement.style.overflow = '';
+  // Flag para listeners que se registran tarde (p. ej. tras un await)
+  window.__loadingDone = true;
   window.dispatchEvent(new CustomEvent('loading-done'));
 }
 

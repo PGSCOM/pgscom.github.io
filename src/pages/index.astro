@@ -58,19 +58,34 @@ const heroLayout = [
 
 	</div>
 
+	<!-- ?sincarga o volver atrás: se quita el preloader antes del primer paint -->
+	<script is:inline>
+		(function () {
+			var nav = performance.getEntriesByType('navigation')[0];
+			var sinCarga = new URLSearchParams(location.search).has('sincarga');
+			var esVuelta = nav && nav.type === 'back_forward';
+			if (!sinCarga && !esVuelta) return;
+			var pre = document.getElementById('preloader');
+			if (pre) pre.remove();
+			document.documentElement.style.overflow = '';
+			// Limpia el parámetro para que una recarga manual sí muestre la intro
+			if (sinCarga) history.replaceState(null, '', location.pathname + location.hash);
+		})();
+	</script>
+
 	<main class="main-container">
 		<div class="hero-cards">
 			{featured.map((proyecto, i) => {
 				const l = heroLayout[i];
 				return (
-					<div
+					<a
 						class={`hero-card hero-card--${l.size}${l.far ? ' is-far' : ''}`}
 						data-depth={l.depth}
 						data-rot={l.rot}
-						data-proyecto-id={proyecto.id}
+						data-proyecto-link
+						href={`/proyectos/${proyecto.id}`}
 						style={`left:${l.left};top:${l.top};`}
-						role="button"
-						tabindex="0"
+						aria-label={`Ver proyecto: ${proyecto.titulo}`}
 					>
 						<span class="hero-card-tilt">
 							<span class="hero-card-media">
@@ -81,7 +96,7 @@ const heroLayout = [
 								</span>
 							</span>
 						</span>
-					</div>
+					</a>
 				);
 			})}
 		</div>
@@ -162,21 +177,21 @@ const heroLayout = [
 					</div>
 				<div class="proyectos-grid-list">
 					{aptitud.proyectos && aptitud.proyectos.map((proyecto) => (
-						<div 
-							class="proyecto-detail-card" 
-							data-proyecto-id={proyecto.id}
-							data-tiene-contenido={proyecto.contenido ? "true" : "false"}
+						<a
+							class="proyecto-detail-card"
+							href={`/proyectos/${proyecto.id}`}
+							data-proyecto-link
 						>
 							<div class="proyecto-image-container">
 								<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
-								
+
 								{proyecto.link && (
-									<a href={proyecto.link} target="_blank" rel="noopener noreferrer" class="card-btn-link-float" title="Visitar proyecto" onclick="event.stopPropagation();">
+									<span class="card-btn-link-float" title="Tiene enlace externo" aria-hidden="true">
 										<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 											<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
 											<polyline points="15 3 21 3 21 9"></polyline>
 										</svg>
-									</a>
+									</span>
 								)}
 							</div>
 
@@ -199,7 +214,7 @@ const heroLayout = [
 									</div>
 								)}
 							</div>
-						</div>
+						</a>
 					))}
 				</div>
 				</div>
@@ -207,59 +222,6 @@ const heroLayout = [
 		</div>
 	</section>
 
-	<!-- Modal de proyecto -->
-	<div class="proyecto-modal-overlay" id="proyectoModal">
-		<div class="proyecto-modal">
-			<button class="modal-close" id="modalClose" aria-label="Cerrar modal">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<line x1="18" y1="6" x2="6" y2="18"></line>
-					<line x1="6" y1="6" x2="18" y2="18"></line>
-				</svg>
-			</button>
-			
-			<div class="modal-backdrop">
-				<img class="modal-backdrop-img" id="modalBackdrop" src="" alt="" />
-			</div>
-			
-			<div class="modal-content-wrapper">
-				<div class="modal-hero">
-					<div class="modal-poster-container">
-						<img class="modal-poster" id="modalPoster" src="" alt="" />
-					</div>
-					<div class="modal-hero-info">
-						<h1 class="modal-titulo" id="modalTitulo"></h1>
-						<div class="modal-meta" id="modalMeta"></div>
-						<p class="modal-tagline" id="modalTagline"></p>
-						<div class="modal-actions">
-							<a href="#" target="_blank" rel="noopener noreferrer" class="modal-btn-primary" id="modalLink" style="display: none;">
-								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-									<polygon points="5 3 19 12 5 21 5 3"></polygon>
-								</svg>
-								<span>Visitar proyecto</span>
-							</a>
-							<button class="modal-btn-secondary" id="modalShare" title="Compartir">
-								<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-									<circle cx="18" cy="5" r="3"></circle>
-									<circle cx="6" cy="12" r="3"></circle>
-									<circle cx="18" cy="19" r="3"></circle>
-									<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-									<line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-								</svg>
-							</button>
-						</div>
-					</div>
-				</div>
-				
-				<div class="modal-body">
-					<div class="modal-description">
-						<p class="modal-description-text" id="modalDescripcion"></p>
-					</div>
-					<div class="modal-tecnologias" id="modalTecnologias"></div>
-					<div class="modal-contenido" id="modalContenido"></div>
-				</div>
-			</div>
-		</div>
-	</div>
 	</section>
 
 	<section class="contacto-section" id="contacto">
@@ -506,9 +468,14 @@ const heroLayout = [
 			animatedText.classList.add('loaded');
 
 			// Esperar a que la carga termine para empezar a rotar fuentes
-			window.addEventListener('loading-done', () => {
+			// (si ya terminó —p. ej. con ?sincarga— arranca directamente)
+			if (window.__loadingDone) {
 				setInterval(changeFont, delay);
-			}, { once: true });
+			} else {
+				window.addEventListener('loading-done', () => {
+					setInterval(changeFont, delay);
+				}, { once: true });
+			}
 		});
 	</script>
 
@@ -637,114 +604,24 @@ const heroLayout = [
 		});
 	</script>
 
-	<!-- Modal de proyectos -->
-	<script define:vars={{ proyectosData }}>
-		document.addEventListener('DOMContentLoaded', () => {
-			const modal          = document.getElementById('proyectoModal');
-			const modalClose     = document.getElementById('modalClose');
-			const modalTitulo    = document.getElementById('modalTitulo');
-			const modalBackdrop  = document.getElementById('modalBackdrop');
-			const modalPoster    = document.getElementById('modalPoster');
-			const modalMeta      = document.getElementById('modalMeta');
-			const modalTagline   = document.getElementById('modalTagline');
-			const modalDescripcion  = document.getElementById('modalDescripcion');
-			const modalTecnologias  = document.getElementById('modalTecnologias');
-			const modalContenido    = document.getElementById('modalContenido');
-			const modalLink      = document.getElementById('modalLink');
-			const modalShare     = document.getElementById('modalShare');
-
-			function findProyecto(id) {
-				for (const aptitud of proyectosData) {
-					const proyecto = aptitud.proyectos.find(p => p.id === id);
-					if (proyecto) return { proyecto, aptitud };
-				}
-				return null;
+	<!-- Transición al abrir un proyecto: marca la imagen pulsada para el morph -->
+	<script is:inline>
+		(function () {
+			// Asigna el view-transition-name solo a la tarjeta pulsada para que su
+			// imagen "vuele" hasta la ficha del proyecto. Garantiza unicidad.
+			function tagAndGo(link) {
+				const img = link.querySelector('img');
+				if (img) img.style.viewTransitionName = 'project-hero';
 			}
-
-			function openModal(id) {
-				const result = findProyecto(id);
-				if (!result) return;
-				const { proyecto, aptitud } = result;
-
-				modalTitulo.textContent = proyecto.titulo;
-
-				modalBackdrop.src = proyecto.imagenFondo || proyecto.imagen;
-				modalBackdrop.alt = proyecto.titulo;
-				modalPoster.src   = proyecto.imagen;
-				modalPoster.alt   = proyecto.titulo;
-
-				let metaHTML = `<span class="modal-meta-item">${aptitud.titulo}</span>`;
-				if (proyecto.premio) metaHTML += `<span class="modal-meta-badge">🏆 ${proyecto.premio}</span>`;
-				if (proyecto.tecnologias?.length) metaHTML += `<span class="modal-meta-item">${proyecto.tecnologias.length} tecnologías</span>`;
-				modalMeta.innerHTML = metaHTML;
-
-				modalTagline.textContent = proyecto.descripcion || '';
-
-				if (proyecto.descripcion) {
-					modalDescripcion.textContent = proyecto.descripcion;
-					modalDescripcion.parentElement.style.display = 'block';
-				} else {
-					modalDescripcion.parentElement.style.display = 'none';
-				}
-
-				modalTecnologias.innerHTML = proyecto.tecnologias
-					? proyecto.tecnologias.map(t => `<span class="modal-tech-tag">${t}</span>`).join('')
-					: '';
-
-				if (proyecto.contenido) {
-					modalContenido.innerHTML = proyecto.contenido;
-					modalContenido.style.display = 'block';
-				} else {
-					modalContenido.innerHTML = '';
-					modalContenido.style.display = 'none';
-				}
-
-				if (proyecto.link) {
-					modalLink.href = proyecto.link;
-					modalLink.style.display = 'inline-flex';
-				} else {
-					modalLink.style.display = 'none';
-				}
-
-				modal.classList.add('active');
-			}
-
-			function closeModal() {
-				modal.classList.remove('active');
-				document.body.style.overflow = '';
-			}
-
-			modalShare.addEventListener('click', async () => {
-				if (navigator.share) {
-					try {
-						await navigator.share({ title: modalTitulo.textContent, text: `Mira este proyecto: ${modalTitulo.textContent}`, url: window.location.href });
-					} catch {}
-				} else {
-					navigator.clipboard.writeText(window.location.href);
-					alert('URL copiada al portapapeles');
-				}
+			document.querySelectorAll('[data-proyecto-link]').forEach((link) => {
+				link.addEventListener('click', () => tagAndGo(link), { capture: true });
 			});
-
-			document.querySelectorAll('.hero-card').forEach(card => {
-				card.addEventListener('click', () => {
-					openModal(card.dataset.proyectoId);
+			// Si se vuelve atrás (bfcache), limpia el nombre para no dejar duplicados
+			window.addEventListener('pageshow', () => {
+				document.querySelectorAll('[data-proyecto-link] img').forEach((img) => {
+					img.style.viewTransitionName = '';
 				});
 			});
-
-			document.querySelectorAll('.proyecto-detail-card').forEach(card => {
-				card.addEventListener('click', (e) => {
-					if (e.target.closest('.card-btn-link-float')) return;
-					openModal(card.dataset.proyectoId);
-				});
-			});
-
-			modalClose.addEventListener('click', closeModal);
-			modal.addEventListener('click', (e) => {
-				if (e.target === modal || e.target.classList.contains('modal-backdrop')) closeModal();
-			});
-			document.addEventListener('keydown', (e) => {
-				if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
-			});
-		});
+		})();
 	</script>
 </Layout>

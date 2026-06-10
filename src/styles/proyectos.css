@@ -335,8 +335,10 @@
 .proyecto-detail-card {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, 
-    rgba(30, 35, 55, 0.7), 
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(135deg,
+    rgba(30, 35, 55, 0.7),
     rgba(15, 20, 35, 0.8));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
