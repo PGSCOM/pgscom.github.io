@@ -27,7 +27,7 @@ function init() {
 			onUpdate() {
 				const p = this.progress();
 				const scale = 1 + 24 * p * p * p;
-				const s = 32.3 * scale - 8;
+				const s = 34 * scale - 8;
 				maskEl.style.webkitMaskSize = `${s}vh ${s}vh`;
 				maskEl.style.maskSize = `${s}vh ${s}vh`;
 			}
