@@ -12,13 +12,6 @@ import contactoData from '../data/contacto.json';
 // Forma de la P extraída de public/assets/animlogo/carga.svg (viewBox 600x600)
 const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.19165 c 66.88974,0 121.11609,-54.22597 121.11609,-121.11609 0,-66.88986 -54.22635,-121.114324 -121.11609,-121.114324 v -0.004 z';
 
-// Imágenes del collage del preloader (deben existir en /public)
-const preloaderImgs = [
-	'/assets/proyectos/portfolio.png',
-	'/assets/proyectos/Macula.png',
-	'/assets/proyectos/UI.png',
-];
-
 // Proyectos destacados que flotan en el hero (con imagen existente)
 const featuredIds = ['portfolio-pgscom', 'premio-macula-2024', 'diseño-web', 'portafolio-cine', 'python-tools', 'blog-personal'];
 const featured = [];
@@ -48,36 +41,19 @@ const heroLayout = [
 <Layout>
 	<script is:inline>document.documentElement.style.overflow = 'hidden';</script>
 
-	<!-- Preloader: la P como máscara con collage de proyectos -->
+	<!-- Preloader: la P se construye trazándose (DrawSVG) y se rellena -->
 	<div id="preloader" aria-hidden="true">
 		<svg class="pl-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
 			<defs>
-				<clipPath id="pl-clip">
-					<path d={pPath} />
-				</clipPath>
 				<linearGradient id="pl-grad" x1="0" y1="0" x2="1" y2="1">
 					<stop offset="0" stop-color="#2563eb" />
 					<stop offset="0.6" stop-color="#367e78" />
 					<stop offset="1" stop-color="#ff5acd" />
 				</linearGradient>
 			</defs>
-			<g clip-path="url(#pl-clip)">
-				<rect x="0" y="0" width="600" height="600" fill="url(#pl-grad)" />
-				<g class="pl-track">
-					{[...preloaderImgs, preloaderImgs[0]].map((src, i) => (
-						<image
-							href={src}
-							x="185"
-							y={93 + i * 364}
-							width="243"
-							height="364"
-							preserveAspectRatio="xMidYMid slice"
-						/>
-					))}
-				</g>
-				<!--rect x="0" y="0" width="600" height="600" fill="#ffffff" opacity="0.4" /-->
-			</g>
+			<path class="pl-fill" d={pPath} fill="url(#pl-grad)" />
 			<path class="pl-outline" d={pPath} />
+			<path class="pl-draw" d={pPath} stroke="url(#pl-grad)" />
 		</svg>
 		<div class="pl-meta">
 			<span class="pl-word">PGSCOM — Portfolio</span>

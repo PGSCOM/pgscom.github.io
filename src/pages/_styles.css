@@ -22,15 +22,33 @@
 .pl-svg {
     width: min(56vmin, 420px);
     height: min(56vmin, 420px);
-    /* Origen del zoom: interior del lóbulo de la P (350/600, 214/600) */
-    transform-origin: 58.3% 35.7%;
+    /* Origen del zoom: centro real del glifo de la P.
+       BBox de la P en el viewBox 600: x[185,427] y[93,456] → centro (306,275)
+       → (306/600, 275/600) = (51%, 45.8%). Así crece desde su propio centro. */
+    transform-origin: 51% 45.8%;
     will-change: transform;
 }
 
+/* Guía tenue de la forma completa, siempre visible bajo el trazo */
 .pl-outline {
     fill: none;
     stroke: rgba(0, 0, 0, 0.12);
     stroke-width: 2;
+}
+
+/* Trazo que construye la P (DrawSVG, ligado al progreso de carga).
+   Oculto hasta que el JS fija drawSVG:0% para evitar ver el trazo completo. */
+.pl-draw {
+    fill: none;
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    visibility: hidden;
+}
+
+/* Relleno con degradado que aparece al completar la carga */
+.pl-fill {
+    opacity: 0;
 }
 
 .pl-meta {

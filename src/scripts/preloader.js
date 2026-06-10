@@ -1,10 +1,11 @@
 import gsap from 'gsap';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+gsap.registerPlugin(DrawSVGPlugin);
 
-// ── Preloader: la P de carga.svg como máscara con collage de proyectos ────────
+// ── Preloader: la P de carga.svg se construye trazándose con DrawSVG ─────────
 // El overlay viene renderizado desde el servidor (index.astro) para que cubra
-// la pantalla desde el primer paint. Este script solo lo anima y lo retira.
-
-const TRACK_STEP = 364; // alto de cada imagen dentro del clip (unidades del viewBox)
+// la pantalla desde el primer paint. El trazo avanza con la carga real y, al
+// completar, el relleno con el degradado aparece y la P hace zoom de salida.
 
 function dispatchDone() {
   document.documentElement.style.overflow = '';
@@ -12,13 +13,15 @@ function dispatchDone() {
 }
 
 function initPreloader() {
-  const pre   = document.getElementById('preloader');
+  const pre = document.getElementById('preloader');
   if (!pre) { dispatchDone(); return; }
 
-  const svg   = pre.querySelector('.pl-svg');
-  const track = pre.querySelector('.pl-track');
-  const count = pre.querySelector('.pl-count');
-  const meta  = pre.querySelector('.pl-meta');
+  const svg     = pre.querySelector('.pl-svg');
+  const draw    = pre.querySelector('.pl-draw');
+  const fill    = pre.querySelector('.pl-fill');
+  const outline = pre.querySelector('.pl-outline');
+  const count   = pre.querySelector('.pl-count');
+  const meta    = pre.querySelector('.pl-meta');
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
@@ -27,21 +30,23 @@ function initPreloader() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) {
     count.textContent = '100';
+    gsap.set(fill, { opacity: 1 });
+    gsap.set(draw, { drawSVG: '100%', visibility: 'visible' });
     dispatchDone();
     gsap.to(pre, { autoAlpha: 0, duration: 0.4, delay: 0.3, onComplete: () => pre.remove() });
     return;
   }
 
-  const images   = track.querySelectorAll('image');
-  const distance = TRACK_STEP * (images.length - 1);
-  const state    = { p: 0 };
+  gsap.set(draw, { drawSVG: '0%', visibility: 'visible' });
+  gsap.set(fill, { opacity: 0 });
 
+  const state = { p: 0 };
   const render = () => {
     count.textContent = String(Math.round(state.p));
-    gsap.set(track, { y: -(state.p / 100) * distance });
+    gsap.set(draw, { drawSVG: `0% ${state.p}%` });
   };
 
-  // Avanza hasta 90 mientras carga de verdad; el 100 llega con el load real
+  // El trazo avanza hasta 90 mientras carga de verdad; el 100 llega con el load real
   const crawl = gsap.to(state, { p: 90, duration: 2.6, ease: 'power1.inOut', onUpdate: render });
 
   const ready = Promise.all([
@@ -55,8 +60,12 @@ function initPreloader() {
   ready.then(() => {
     crawl.kill();
     gsap.timeline()
+      // El trazo se cierra del todo…
       .to(state, { p: 100, duration: 0.5, ease: 'power2.out', onUpdate: render })
       .to(meta,  { autoAlpha: 0, y: -24, duration: 0.4, ease: 'power2.in' }, '<')
+      // …y la P se rellena con el degradado mientras los trazos se apagan
+      .to(fill, { opacity: 1, duration: 0.45, ease: 'power2.inOut' }, '-=0.1')
+      .to([draw, outline], { opacity: 0, duration: 0.35, ease: 'power1.out' }, '<0.15')
       // El hero arranca su entrada debajo mientras la P hace zoom
       .add(dispatchDone, '+=0.1')
       // Zoom a través de la P: transform compositado sobre el propio <svg>
