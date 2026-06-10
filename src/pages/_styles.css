@@ -9,8 +9,8 @@
     position: relative;
     display: block;
     width: 100%;
-    /* min-height: 300vh; - Eliminado para que crezca con el contenido */
-    z-index: 50; /* Asegurar z-index correcto para el wrapper */
+    z-index: 50;
+    contain: paint style;
 }
 
 .parte2 {
@@ -49,6 +49,8 @@
     mask-position: center;
     -webkit-mask-repeat: no-repeat; /* Evitar que la máscara se repita */
     mask-repeat: no-repeat;
+
+    will-change: mask-size, -webkit-mask-size;
 
     /* Imagen inicial de fondo para evitar parpadeo o vacío antes de cargar la secuencia */
     background-image: url(/vid/empezar/000.png);
@@ -126,9 +128,8 @@
     align-items: center;
     width: 40%;
     height: 100vh;
-    /* Elimina dependencias de .image-wrapper */
-    /* Ajusta para que la imagen se centre y escale bien sin el wrapper */
     overflow: hidden;
+    will-change: transform, opacity;
 }
 
 /* Estilo para la imagen de personaje */

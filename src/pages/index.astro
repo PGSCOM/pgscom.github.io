@@ -350,11 +350,17 @@ import contactoData from '../data/contacto.json';
 
 			const baseAngles = cards.map((_, i) => (TWO_PI * i) / cards.length);
 
-			const readRadius = () => {
+			let cachedRadius = 350;
+			const readRadius = () => cachedRadius;
+
+			const updateRadius = () => {
 				const raw = getComputedStyle(container).getPropertyValue('--orbit-radius').trim();
 				const r = parseFloat(raw);
-				return isFinite(r) ? r : 350;
+				cachedRadius = isFinite(r) ? r : 350;
 			};
+			updateRadius();
+			const ro = new ResizeObserver(updateRadius);
+			ro.observe(container);
 
 			const setPaused = (paused) => {
 				targetSpeed = paused ? 0 : DEFAULT_SPEED;
@@ -405,7 +411,10 @@ import contactoData from '../data/contacto.json';
 				speed += (targetSpeed - speed) * (1 - Math.exp(-dt / tau));
 				angle += speed * dt;
 
-				const r = readRadius();
+				const r = cachedRadius;
+				const cosA = Math.cos(angle);
+				const sinA = Math.sin(angle);
+				// Pre-compute per-card transforms
 				for (let i = 0; i < cards.length; i++) {
 					const a = angle + baseAngles[i];
 					const deg = (a * 180) / Math.PI;
@@ -576,7 +585,7 @@ import contactoData from '../data/contacto.json';
 				group.style.opacity = '0';
 				group.style.transform = 'translateY(20px)';
 				setTimeout(() => {
-					group.style.transition = 'all 0.6s ease';
+					group.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
 					group.style.opacity = '1';
 					group.style.transform = 'translateY(0)';
 				}, i * 100);
@@ -668,7 +677,7 @@ import contactoData from '../data/contacto.json';
 				sparkle.style.top  = `${Math.random() * rect.height}px`;
 				form.appendChild(sparkle);
 				setTimeout(() => {
-					sparkle.style.transition = 'all 1s ease-out';
+					sparkle.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
 					sparkle.style.transform  = `translateY(-${Math.random() * 50 + 20}px)`;
 					sparkle.style.opacity    = '0';
 				}, 10);
