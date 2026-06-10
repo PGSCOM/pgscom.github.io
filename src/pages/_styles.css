@@ -78,10 +78,9 @@
     align-items: center;
     justify-content: center;
     background:
-        radial-gradient(60vw 45vh at 72% 18%, rgba(37, 99, 235, 0.06), transparent 60%),
-        radial-gradient(50vw 40vh at 18% 78%, rgba(255, 90, 205, 0.04), transparent 60%),
-        radial-gradient(45vw 35vh at 50% 50%, rgba(54, 126, 120, 0.05), transparent 65%),
-        #f5f7fa;
+        radial-gradient(60vw 45vh at 72% 18%, rgba(37, 99, 235, 0.20), transparent 60%),
+        radial-gradient(50vw 40vh at 18% 78%, rgba(255, 90, 205, 0.15), transparent 60%),
+        radial-gradient(45vw 35vh at 50% 50%, rgba(54, 126, 120, 0.18), transparent 65%);
 }
 
 /* Retícula de puntos sutil, desvanecida hacia los bordes */
@@ -93,6 +92,18 @@
     background-size: 34px 34px;
     -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 78%);
     mask-image: radial-gradient(ellipse at center, black 25%, transparent 78%);
+    pointer-events: none;
+}
+
+/* Fundido inferior: de transparente al color de parte2-wrapper */
+.main-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30vh;
+    background: linear-gradient(to bottom, transparent, #f5f7fa);
     pointer-events: none;
 }
 
@@ -410,6 +421,7 @@
     display: block;
     width: 100%;
     z-index: 50;
+    background: #f5f7fa;
 }
 
 .parte2 {
