@@ -63,12 +63,14 @@ const heroLayout = [
 			{featured.map((proyecto, i) => {
 				const l = heroLayout[i];
 				return (
-					<a
-						href={`#aptitud-${proyecto.aptitudId}`}
+					<div
 						class={`hero-card hero-card--${l.size}${l.far ? ' is-far' : ''}`}
 						data-depth={l.depth}
 						data-rot={l.rot}
+						data-proyecto-id={proyecto.id}
 						style={`left:${l.left};top:${l.top};`}
+						role="button"
+						tabindex="0"
 					>
 						<span class="hero-card-tilt">
 							<span class="hero-card-media">
@@ -79,7 +81,7 @@ const heroLayout = [
 								</span>
 							</span>
 						</span>
-					</a>
+					</div>
 				);
 			})}
 		</div>
@@ -722,6 +724,12 @@ const heroLayout = [
 					navigator.clipboard.writeText(window.location.href);
 					alert('URL copiada al portapapeles');
 				}
+			});
+
+			document.querySelectorAll('.hero-card').forEach(card => {
+				card.addEventListener('click', () => {
+					openModal(card.dataset.proyectoId);
+				});
 			});
 
 			document.querySelectorAll('.proyecto-detail-card').forEach(card => {

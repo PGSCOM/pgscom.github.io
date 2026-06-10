@@ -215,6 +215,7 @@
     width: clamp(150px, 16vw, 250px);
     text-decoration: none;
     will-change: transform;
+    cursor: pointer;
 }
 
 .hero-card--lg {
