@@ -51,38 +51,6 @@
     opacity: 0;
 }
 
-.pl-meta {
-    position: absolute;
-    left: clamp(20px, 5vw, 56px);
-    bottom: clamp(20px, 5vh, 48px);
-    display: flex;
-    align-items: baseline;
-    gap: 18px;
-    font-family: 'Chakra Petch', 'Montserrat', sans-serif;
-}
-
-.pl-word {
-    color: rgba(0, 0, 0, 0.5);
-    font-size: clamp(0.7rem, 1.2vw, 0.85rem);
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-}
-
-.pl-count {
-    color: #111;
-    font-size: clamp(3.5rem, 9vw, 7rem);
-    font-weight: 700;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-}
-
-.pl-count::after {
-    content: '%';
-    font-size: 0.35em;
-    color: rgba(0, 0, 0, 0.35);
-    margin-left: 0.15em;
-}
-
 /* ============================================
    HERO — landing oscura con proyectos flotando
    ============================================ */

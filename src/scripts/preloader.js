@@ -20,8 +20,6 @@ function initPreloader() {
   const draw    = pre.querySelector('.pl-draw');
   const fill    = pre.querySelector('.pl-fill');
   const outline = pre.querySelector('.pl-outline');
-  const count   = pre.querySelector('.pl-count');
-  const meta    = pre.querySelector('.pl-meta');
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
@@ -29,7 +27,6 @@ function initPreloader() {
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) {
-    count.textContent = '100';
     gsap.set(fill, { opacity: 1 });
     gsap.set(draw, { drawSVG: '100%', visibility: 'visible' });
     dispatchDone();
@@ -42,7 +39,6 @@ function initPreloader() {
 
   const state = { p: 0 };
   const render = () => {
-    count.textContent = String(Math.round(state.p));
     gsap.set(draw, { drawSVG: `0% ${state.p}%` });
   };
 
@@ -62,7 +58,6 @@ function initPreloader() {
     gsap.timeline()
       // El trazo se cierra del todo…
       .to(state, { p: 100, duration: 0.5, ease: 'power2.out', onUpdate: render })
-      .to(meta,  { autoAlpha: 0, y: -24, duration: 0.4, ease: 'power2.in' }, '<')
       // …y la P se rellena con el degradado mientras los trazos se apagan
       .to(fill, { opacity: 1, duration: 0.45, ease: 'power2.inOut' }, '-=0.1')
       .to([draw, outline], { opacity: 0, duration: 0.35, ease: 'power1.out' }, '<0.15')
