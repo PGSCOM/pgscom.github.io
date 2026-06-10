@@ -128,6 +128,57 @@ function initHero() {
     exit.to('.hero-scroll-hint', { autoAlpha: 0, ease: 'none', duration: 0.25 }, 0);
   }
 
+  // ── Botón "Ver proyectos": scroll suave para no saltarse las animaciones ──
+  // En vez de saltar directo a #proyectos (lo que se salta el zoom de galaxia y
+  // la salida de las cards), recorremos toda la página con un scroll animado por
+  // tiempo para que se vean todas las animaciones de scroll antes de llegar.
+  const cta = document.querySelector('.hero-cta');
+  if (cta) {
+    cta.addEventListener('click', (e) => {
+      const target = document.querySelector('#proyectos');
+      if (!target) return;
+      e.preventDefault();
+
+      if (reduced) {
+        target.scrollIntoView();
+        return;
+      }
+
+      const startY = window.scrollY || document.documentElement.scrollTop;
+      const endY   = target.getBoundingClientRect().top + startY;
+      const dist   = endY - startY;
+      if (Math.abs(dist) < 4) return;
+
+      // Duración proporcional a la distancia para que el ritmo sea agradable
+      const duration = Math.min(7000, Math.max(7000, Math.abs(dist) * 1.5));
+      const startT   = performance.now();
+      let cancelled  = false;
+
+      // Si el usuario interactúa, le devolvemos el control inmediatamente
+      const cancel = () => { cancelled = true; cleanup(); };
+      const cleanup = () => {
+        window.removeEventListener('wheel', cancel);
+        window.removeEventListener('touchstart', cancel);
+        window.removeEventListener('keydown', cancel);
+      };
+      window.addEventListener('wheel', cancel, { passive: true });
+      window.addEventListener('touchstart', cancel, { passive: true });
+      window.addEventListener('keydown', cancel);
+
+      // easeInOutCubic
+      const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      function step(now) {
+        if (cancelled) return;
+        const p = Math.min(1, (now - startT) / duration);
+        window.scrollTo(0, startY + dist * ease(p));
+        if (p < 1) requestAnimationFrame(step);
+        else cleanup();
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
   // El preloader dispara la entrada; fallback por si ya no existe
   if (!document.getElementById('preloader')) {
     entrance();
