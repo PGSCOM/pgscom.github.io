@@ -6,7 +6,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
-   sodipodi:docname="logoflat.svg"
+   sodipodi:docname="logo.svg"
    inkscape:export-filename="C:\Users\pablo\Google Drive\Logo svg\Logocircular.png"
    inkscape:export-xdpi="333.27728"
    inkscape:export-ydpi="333.27728"
@@ -25,14 +25,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.70710685"
-     inkscape:cx="308.29853"
+     inkscape:cx="309.71274"
      inkscape:cy="272.23608"
      inkscape:document-units="mm"
      inkscape:current-layer="layer5"
      inkscape:document-rotation="0"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1129"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -63,7 +63,7 @@
      transform="translate(23.0118, 50.3065)">
     <path
        id="rect1"
-       style="fill:#ffffff;stroke-width:3.43958"
+       style="fill:#05060a;stroke-width:3.43958;fill-opacity:1"
        d="M -23.011803 -50.3065 L -23.011803 142.04558 L 169.34028 142.04558 L 169.34028 -50.3065 L -23.011803 -50.3065 z M 33.437465 -24.97678 L 82.017445 -24.97678 L 82.017445 -24.975746 C 108.84733 -24.975746 130.59743 -3.2256421 130.59743 23.604234 C 130.59743 50.434109 108.84733 72.184215 82.017445 72.184215 L 82.017445 120.76161 L 33.437465 120.76161 L 33.437465 23.602684 L 33.437465 -24.97678 z "
        transform="translate(2.8354167e-6)" />
   </g>

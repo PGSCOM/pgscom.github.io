@@ -109,7 +109,7 @@
       {
         "id": "github-contributions",
         "titulo": "Contribuciones Open Source",
-        "imagen": "/assets/proyectos/github.jpg",
+        "imagen": "/assets/proyectos/Contribuciones.png",
         "descripcion": "Más de 4 años de experiencia con Git/GitHub.",
         "tecnologias": ["Git", "GitHub", "Python", "JavaScript"],
         "link": "https://github.com/PGSCOM",

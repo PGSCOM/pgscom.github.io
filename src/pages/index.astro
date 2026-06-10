@@ -4,15 +4,42 @@ import './_styles.css';
 import '../styles/proyectos.css';
 import '../styles/contacto.css';
 import { Image } from 'astro:assets';
-//import pgscom from '../assets/pgscom.png';
-import minimal1 from '../assets/minimal1.svg';
-import customShape from '../assets/custom-shape.svg';
-import minimal3 from '../assets/minimal3.svg';
 import logo from '../assets/logo.png';
-// import logosvganim from '../assets/animlogo/logo.svg';
 
 import proyectosData from '../data/proyectos.json';
 import contactoData from '../data/contacto.json';
+
+// Forma de la P extraída de public/assets/animlogo/carga.svg (viewBox 600x600)
+const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.19165 c 66.88974,0 121.11609,-54.22597 121.11609,-121.11609 0,-66.88986 -54.22635,-121.114324 -121.11609,-121.114324 v -0.004 z';
+
+// Imágenes del collage del preloader (deben existir en /public)
+const preloaderImgs = [
+	'/assets/proyectos/portfolio.png',
+	'/assets/proyectos/Macula.png',
+	'/assets/proyectos/UI.png',
+];
+
+// Proyectos destacados que flotan en el hero (con imagen existente)
+const featuredIds = ['portfolio-pgscom', 'premio-macula-2024', 'diseño-web', 'portafolio-cine', 'python-tools', 'blog-personal'];
+const featured = [];
+for (const aptitud of proyectosData) {
+	for (const proyecto of aptitud.proyectos) {
+		if (featuredIds.includes(proyecto.id)) {
+			featured.push({ ...proyecto, aptitudId: aptitud.id, aptitudTitulo: aptitud.titulo });
+		}
+	}
+}
+featured.sort((a, b) => featuredIds.indexOf(a.id) - featuredIds.indexOf(b.id));
+
+// Posición, profundidad (parallax) y rotación de cada card del hero
+const heroLayout = [
+	{ left: '14%', top: '26%', depth: 0.9,  rot: -7,  size: 'md', far: false },
+	{ left: '80%', top: '20%', depth: 0.7,  rot: 6,   size: 'md', far: false },
+	{ left: '87%', top: '64%', depth: 1.15, rot: 9,   size: 'lg', far: false },
+	{ left: '11%', top: '69%', depth: 1.25, rot: -10, size: 'lg', far: false },
+	{ left: '30%', top: '87%', depth: 0.55, rot: 5,   size: 'sm', far: true },
+	{ left: '67%', top: '89%', depth: 0.8,  rot: -5,  size: 'sm', far: true },
+];
 ---
 
 <!-- Cloudflare Turnstile -->
@@ -20,30 +47,85 @@ import contactoData from '../data/contacto.json';
 
 <Layout>
 	<script is:inline>document.documentElement.style.overflow = 'hidden';</script>
-	<!--div class="sky-image">
-		<a href="/">
-			<Image src={logo} height={70} alt="Logo PGSCOM" />
-		</a>
-	</div-->
-	<div class="hero-motion-layer">
-		<svg class="motion-path-svg" xmlns="http://www.w3.org/2000/svg"></svg>
-	</div>
-	<main class="main-container">
-		<div class="particles">
-			<Image src={minimal1} alt="" class="particle particle-1" width={100} height={100} />
-			<Image src={customShape} alt="" class="particle particle-2" width={100} height={100} />
-			<Image src={minimal3} alt="" class="particle particle-3" width={100} height={100} />
-			<Image src={minimal1} alt="" class="particle particle-4" width={100} height={100} />
-			<Image src={customShape} alt="" class="particle particle-5" width={100} height={100} />
-			<Image src={minimal3} alt="" class="particle particle-6" width={100} height={100} />
+
+	<!-- Preloader: la P como máscara con collage de proyectos -->
+	<div id="preloader" aria-hidden="true">
+		<svg class="pl-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+			<defs>
+				<clipPath id="pl-clip">
+					<path d={pPath} />
+				</clipPath>
+				<linearGradient id="pl-grad" x1="0" y1="0" x2="1" y2="1">
+					<stop offset="0" stop-color="#2563eb" />
+					<stop offset="0.6" stop-color="#367e78" />
+					<stop offset="1" stop-color="#ff5acd" />
+				</linearGradient>
+			</defs>
+			<g clip-path="url(#pl-clip)">
+				<rect x="0" y="0" width="600" height="600" fill="url(#pl-grad)" />
+				<g class="pl-track">
+					{[...preloaderImgs, preloaderImgs[0]].map((src, i) => (
+						<image
+							href={src}
+							x="185"
+							y={93 + i * 364}
+							width="243"
+							height="364"
+							preserveAspectRatio="xMidYMid slice"
+						/>
+					))}
+				</g>
+				<rect x="0" y="0" width="600" height="600" fill="#05060a" opacity="0.18" />
+			</g>
+			<path class="pl-outline" d={pPath} />
+		</svg>
+		<div class="pl-meta">
+			<span class="pl-word">PGSCOM — Portfolio</span>
+			<span class="pl-count">0</span>
 		</div>
+	</div>
+
+	<main class="main-container">
+		<div class="hero-cards">
+			{featured.map((proyecto, i) => {
+				const l = heroLayout[i];
+				return (
+					<a
+						href={`#aptitud-${proyecto.aptitudId}`}
+						class={`hero-card hero-card--${l.size}${l.far ? ' is-far' : ''}`}
+						data-depth={l.depth}
+						data-rot={l.rot}
+						style={`left:${l.left};top:${l.top};`}
+					>
+						<span class="hero-card-tilt">
+							<span class="hero-card-media">
+								<img src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />
+								<span class="hero-card-label">
+									<strong>{proyecto.titulo}</strong>
+									<em>{proyecto.aptitudTitulo}</em>
+								</span>
+							</span>
+						</span>
+					</a>
+				);
+			})}
+		</div>
+
 		<div class="content" id="content-container">
+			<p class="hero-kicker">Desarrollo web · Audiovisual · Animación 3D</p>
 			<div id="logo-wrapper">
 				<h1 id="animated-text" class="logo-text">
 					<span id="letter-p">P</span><span id="letters-gscom-wrap"><span id="letters-gscom">GSCOM</span></span>
 				</h1>
 			</div>
+			<p class="hero-sub">Portfolio de Pablo García Santamaría — proyectos de código, cine y diseño.</p>
+			<div class="hero-actions">
+				<a class="hero-cta" href="#proyectos">Ver proyectos</a>
+				<a class="hero-cta hero-cta--ghost" href="#contacto">Contacto</a>
+			</div>
 		</div>
+
+		<div class="hero-scroll-hint">Scroll</div>
 	</main>
 
 	<div class="image-container"></div>
@@ -206,7 +288,7 @@ import contactoData from '../data/contacto.json';
 	</div>
 	</section>
 
-	<section class="contacto-section">
+	<section class="contacto-section" id="contacto">
 		<div class="contacto-wrapper">
 			<div class="contacto-particles">
 				<div class="particle-space"></div>
@@ -461,9 +543,11 @@ import contactoData from '../data/contacto.json';
 		import '../scripts/galaxia-scroll.js';
 	</script>
 
-	<!-- Motion path hero -->
+	<!-- Preloader + hero + órbita de proyectos -->
 	<script>
-		import '../scripts/motion-path-hero.js';
+		import '../scripts/preloader.js';
+		import '../scripts/hero.js';
+		import '../scripts/proyectos-orbit.js';
 	</script>
 
 	<!-- Formulario de contacto -->
