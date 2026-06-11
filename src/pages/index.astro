@@ -44,27 +44,28 @@ const catColors = {
 	'fotografia': '#ffc94d',
 };
 
-// Datos planos para el mapa de burbujas (peso = envergadura → tamaño)
-const burbujasData = {
-	cats: proyectosData.map((a) => ({
-		id: a.id,
-		titulo: a.titulo,
-		color: catColors[a.id] ?? '#9bb4d0',
-		logo: a.logo,
-	})),
-	projects: proyectosData.flatMap((a) =>
-		(a.proyectos ?? []).map((p) => ({
-			id: p.id,
-			titulo: p.titulo.trim(),
-			cat: a.id,
-			peso: p.peso ?? 50,
-			imagen: p.imagen,
-			descripcion: p.descripcion ?? '',
-			tecnologias: p.tecnologias ?? [],
-			premio: p.premio ?? null,
-		}))
-	),
-};
+// Ruta de proyectos: tarjetas grandes a lo largo del scroll, una estación por
+// categoría. peso → tamaño de tarjeta; lado e inset alternan para que la línea
+// serpentee de forma orgánica.
+let rutaIndice = 0;
+const rutaData = proyectosData.map((a) => ({
+	id: a.id,
+	titulo: a.titulo,
+	descripcion: a.descripcion,
+	logo: a.logo,
+	color: catColors[a.id] ?? '#9bb4d0',
+	items: (a.proyectos ?? []).map((p) => {
+		const i = rutaIndice++;
+		const peso = p.peso ?? 50;
+		return {
+			...p,
+			num: String(i + 1).padStart(2, '0'),
+			lado: i % 2 === 0 ? 'izq' : 'der',
+			inset: ['0%', '7%', '3%'][i % 3],
+			w: peso >= 75 ? 580 : peso >= 55 ? 500 : 420,
+		};
+	}),
+}));
 ---
 
 <!-- Cloudflare Turnstile -->
@@ -166,7 +167,7 @@ const burbujasData = {
 		<div class="proyectos-header">
 			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
 			<p class="proyectos-subtitulo-seccion">
-				Todos mis proyectos de un vistazo. Cada icono es un proyecto, su tamaño refleja la envergadura y el color indica la categoría.
+				Un recorrido por todos mis proyectos: baja siguiendo la línea y párate en los que te llamen. El tamaño de cada parada refleja la envergadura del proyecto.
 			</p>
 		</div>
 
@@ -175,7 +176,7 @@ const burbujasData = {
 				<div class="proyectos-grid">
 					{proyectosData.map((aptitud) => (
 						<a
-							href="#proyectos-mapa"
+							href={`#ruta-${aptitud.id}`}
 							class="proyecto-card"
 							data-aptitud-id={aptitud.id}
 							style={`--cat-color:${catColors[aptitud.id] ?? '#9bb4d0'}`}
@@ -203,35 +204,47 @@ const burbujasData = {
 		</div>
 
 		<div class="proyectos-mapa" id="proyectos-mapa">
-			<div class="mapa-pills" id="mapaPills" role="group" aria-label="Resaltar proyectos por categoría"></div>
+			<!-- Línea de la ruta: se dibuja con el scroll (la traza el JS) -->
+			<svg class="ruta-linea" aria-hidden="true"></svg>
 
-			<div class="mapa-panel">
-				<div class="mapa-wrap" id="mapaWrap">
-					<svg id="mapaChart" role="group" aria-label="Panal de proyectos: cada icono es un proyecto, el tamaño indica su envergadura"></svg>
-					<div class="mapa-tip" id="mapaTip" role="tooltip"></div>
-				</div>
-			</div>
+			{rutaData.map((aptitud) => (
+				<Fragment>
+					<div class="ruta-estacion" id={`ruta-${aptitud.id}`} style={`--cat-color:${aptitud.color}`}>
+						<span class="ruta-estacion-dot" aria-hidden="true"></span>
+						<h3 class="ruta-estacion-titulo">{aptitud.titulo}</h3>
+						<p class="ruta-estacion-desc">{aptitud.descripcion}</p>
+					</div>
 
-			<p class="mapa-leyenda">
-				Tamaño = envergadura · Mueve el cursor para ampliar · Pulsa un icono para abrir el proyecto
-			</p>
-
-			<!-- Enlaces reales a cada proyecto: rastreables por buscadores y lectores de pantalla -->
-			<ul class="sr-only">
-				{proyectosData.map((aptitud) => (
-					<li>
-						{aptitud.titulo}
-						<ul>
-							{(aptitud.proyectos ?? []).map((proyecto) => (
-								<li><a href={`/proyectos/${proyecto.id}`}>{proyecto.titulo.trim()}</a></li>
-							))}
-						</ul>
-					</li>
-				))}
-			</ul>
+					{aptitud.items.map((proyecto) => (
+						<a
+							class={`ruta-item ruta-item--${proyecto.lado}`}
+							href={`/proyectos/${proyecto.id}`}
+							data-proyecto-link
+							style={`--cat-color:${aptitud.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
+						>
+							<span class="ruta-num" aria-hidden="true">{proyecto.num}</span>
+							<div class="ruta-media">
+								<img class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />
+								<img class="ruta-fallback" src={aptitud.logo} alt="" aria-hidden="true" loading="lazy" />
+								{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
+								<div class="ruta-info">
+									<span class="ruta-cat">{aptitud.titulo}</span>
+									<h4 class="ruta-titulo">{proyecto.titulo.trim()}</h4>
+									{proyecto.descripcion && <p class="ruta-desc">{proyecto.descripcion}</p>}
+									{proyecto.tecnologias && (
+										<div class="ruta-techs">
+											{proyecto.tecnologias.slice(0, 4).map((tech) => (
+												<span class="ruta-tech">{tech}</span>
+											))}
+										</div>
+									)}
+								</div>
+							</div>
+						</a>
+					))}
+				</Fragment>
+			))}
 		</div>
-
-		<script type="application/json" id="burbujas-data" set:html={JSON.stringify(burbujasData)} />
 	</section>
 
 	</section>
@@ -496,12 +509,12 @@ const burbujasData = {
 		import '../scripts/galaxia-scroll.js';
 	</script>
 
-	<!-- Preloader + hero + órbita de categorías + panal de proyectos -->
+	<!-- Preloader + hero + órbita de categorías + ruta de proyectos -->
 	<script>
 		import '../scripts/preloader.js';
 		import '../scripts/hero.js';
 		import '../scripts/proyectos-orbit.js';
-		import '../scripts/proyectos-panal.js';
+		import '../scripts/proyectos-ruta.js';
 	</script>
 
 	<!-- Formulario de contacto -->
