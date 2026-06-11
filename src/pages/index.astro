@@ -297,16 +297,21 @@ const rutaEntries = cronologia.map((p, i) => {
 
 							{proyecto.subs.length > 0 && (
 								<div class="ruta-subs">
-									{proyecto.subs.map((s) => (
-										<div class="ruta-sub" style={s.color ? `--cat-color:${s.color}` : undefined}>
-											{s.cat && <img class="ruta-sub-icon" src={s.cat.logo} alt={s.cat.titulo} title={s.cat.titulo} />}
-											<div class="ruta-sub-body">
-												<strong class="ruta-sub-titulo">{s.titulo}</strong>
-												{s.descripcion && <p class="ruta-sub-desc">{s.descripcion}</p>}
-												{s.fechaTexto && <span class="ruta-sub-fecha">{s.fechaTexto}</span>}
-											</div>
-										</div>
-									))}
+                                    {proyecto.subs.map((s) => (
+                                        <div class={`ruta-sub ${s.imagen ? 'ruta-sub--con-img' : ''}`} style={s.color ? `--cat-color:${s.color}` : undefined}>
+                                            {s.cat && <img class="ruta-sub-icon" src={s.cat.logo} alt={s.cat.titulo} title={s.cat.titulo} />}
+                                            {s.imagen && (
+                                                <div class="ruta-sub-media">
+                                                    <img src={s.imagen} alt={s.titulo} loading="lazy" decoding="async" />
+                                                </div>
+                                            )}
+                                            <div class="ruta-sub-body">
+                                                <strong class="ruta-sub-titulo">{s.titulo}</strong>
+                                                {s.descripcion && <p class="ruta-sub-desc">{s.descripcion}</p>}
+                                                {s.fechaTexto && <span class="ruta-sub-fecha">{s.fechaTexto}</span>}
+                                            </div>
+                                        </div>
+                                    ))}
 								</div>
 							)}
 						</div>

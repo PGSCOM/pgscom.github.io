@@ -723,6 +723,49 @@
   margin-top: 6px;
 }
 
+/* Subtarjetas con imagen - thumbnail horizontal compactor */
+.ruta-sub--con-img {
+  padding: 10px 12px;
+  gap: 12px;
+  align-items: center;
+}
+
+.ruta-sub--con-img .ruta-sub-media {
+  width: 86px;
+  height: 54px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.ruta-sub--con-img .ruta-sub-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.ruta-sub--con-img:hover .ruta-sub-media img {
+  transform: scale(1.06);
+}
+
+.ruta-sub--con-img .ruta-sub-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ruta-sub--con-img .ruta-sub-icon {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */
