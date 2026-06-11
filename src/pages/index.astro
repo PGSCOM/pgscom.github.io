@@ -6,14 +6,17 @@ import '../styles/contacto.css';
 import { Image } from 'astro:assets';
 import logo from '../assets/logo.png';
 
-import proyectosData from '../data/proyectos.json';
+import { getCollection } from 'astro:content';
+import categoriasData from '../data/categorias.json';
 import contactoData from '../data/contacto.json';
 
 // Forma de la P extraída de public/assets/animlogo/carga.svg (viewBox 600x600)
 const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.19165 c 66.88974,0 121.11609,-54.22597 121.11609,-121.11609 0,-66.88986 -54.22635,-121.114324 -121.11609,-121.114324 v -0.004 z';
 
-const categorias = proyectosData.categorias;
-const proyectos = proyectosData.proyectos;
+const categorias = categoriasData.categorias;
+// Cada proyecto vive en src/content/proyectos/<id>.md; aquí solo se usan
+// los metadatos del frontmatter (el cuerpo markdown se renderiza en su ficha)
+const proyectos = (await getCollection('proyectos')).map((e) => ({ id: e.id, ...e.data }));
 const catById = Object.fromEntries(categorias.map((c) => [c.id, c]));
 
 // Proyectos destacados que flotan en el hero (con imagen existente)

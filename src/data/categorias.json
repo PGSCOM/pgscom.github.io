@@ -1,0 +1,40 @@
+{
+  "categorias": [
+    {
+      "id": "desarrollo-web",
+      "titulo": "Desarrollo Web",
+      "logo": "/icons/web.svg",
+      "descripcion": "Desarrollo de sitios y aplicaciones web con tecnologías modernas"
+    },
+    {
+      "id": "video-produccion",
+      "titulo": "Producción Audiovisual",
+      "logo": "/icons/video.svg",
+      "descripcion": "Cortometrajes, documentales y proyectos cinematográficos"
+    },
+    {
+      "id": "animacion-3d",
+      "titulo": "Animación 3D",
+      "logo": "/icons/animation.svg",
+      "descripcion": "Modelado, animación y renders con Blender y Unreal Engine"
+    },
+    {
+      "id": "programacion",
+      "titulo": "Programación",
+      "logo": "/icons/code.svg",
+      "descripcion": "Aplicaciones y scripts en Python, C++ y más"
+    },
+    {
+      "id": "diseño-grafico",
+      "titulo": "Diseño Gráfico",
+      "logo": "/icons/design.svg",
+      "descripcion": "Identidad visual, carteles y diseño digital"
+    },
+    {
+      "id": "fotografia",
+      "titulo": "Fotografía",
+      "logo": "/icons/photo.svg",
+      "descripcion": "Fotografía digital y retoque profesional"
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 import type { APIRoute } from 'astro';
-import proyectosData from '../data/proyectos.json';
+import { getCollection } from 'astro:content';
 
 // Sitemap generado proceduralmente: portada + una URL por cada proyecto.
-export const GET: APIRoute = ({ site }) => {
+export const GET: APIRoute = async ({ site }) => {
 	const base = (site?.href ?? 'https://pgscom.es/').replace(/\/$/, '');
 
 	const urls: string[] = [`${base}/`];
-	for (const proyecto of proyectosData.proyectos ?? []) {
+	for (const proyecto of await getCollection('proyectos')) {
 		urls.push(`${base}/proyectos/${proyecto.id}`);
 	}
 

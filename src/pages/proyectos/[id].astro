@@ -1,27 +1,33 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/proyecto-detalle.css';
-import proyectosData from '../../data/proyectos.json';
+import { getCollection, render } from 'astro:content';
+import categoriasData from '../../data/categorias.json';
 
-// Genera una ruta estática por cada proyecto.
+// Genera una ruta estática por cada .md de src/content/proyectos/.
 // Cada página es HTML real y rastreable por los bots de Google.
-export function getStaticPaths() {
-	const cats = proyectosData.categorias;
-	return proyectosData.proyectos.map((proyecto) => {
+export async function getStaticPaths() {
+	const cats = categoriasData.categorias;
+	const entradas = await getCollection('proyectos');
+	const proyectos = entradas.map((e) => ({ id: e.id, ...e.data }));
+	return entradas.map((entrada) => {
+		const proyecto = { id: entrada.id, ...entrada.data };
 		const catIds = proyecto.categorias ?? [];
 		// La primera categoría del proyecto actúa como principal
 		const aptitud = cats.find((c) => c.id === catIds[0]) ?? cats[0];
-		const relacionados = proyectosData.proyectos
+		const relacionados = proyectos
 			.filter((p) => p.id !== proyecto.id && (p.categorias ?? []).some((c) => catIds.includes(c)))
 			.slice(0, 3);
 		return {
 			params: { id: proyecto.id },
-			props: { proyecto, aptitud, relacionados },
+			props: { entrada, proyecto, aptitud, relacionados },
 		};
 	});
 }
 
-const { proyecto, aptitud, relacionados } = Astro.props;
+const { entrada, proyecto, aptitud, relacionados } = Astro.props;
+// El cuerpo markdown del .md se convierte en el contenido de la ficha
+const { Content } = await render(entrada);
 
 // Fecha con precisión variable: "YYYY", "YYYY-MM" o "YYYY-MM-DD"
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
@@ -164,9 +170,9 @@ const breadcrumbLd = {
 					</section>
 				)}
 
-				{proyecto.contenido && (
-					<section class="pd-contenido" set:html={proyecto.contenido} />
-				)}
+				<section class="pd-contenido">
+					<Content />
+				</section>
 
 				{relacionados.length > 0 && (
 					<section class="pd-relacionados">
