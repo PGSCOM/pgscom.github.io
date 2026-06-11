@@ -6,10 +6,8 @@ export const GET: APIRoute = ({ site }) => {
 	const base = (site?.href ?? 'https://pgscom.es/').replace(/\/$/, '');
 
 	const urls: string[] = [`${base}/`];
-	for (const aptitud of proyectosData) {
-		for (const proyecto of aptitud.proyectos ?? []) {
-			urls.push(`${base}/proyectos/${proyecto.id}`);
-		}
+	for (const proyecto of proyectosData.proyectos ?? []) {
+		urls.push(`${base}/proyectos/${proyecto.id}`);
 	}
 
 	const body = `<?xml version="1.0" encoding="UTF-8"?>

@@ -1,4 +1,4 @@
-/* Estilos para la sección de proyectos - Órbita de categorías + ruta de proyectos */
+/* Estilos para la sección de proyectos - Órbita de categorías + ruta cronológica */
 
 /* ============================================
    ANIMACIONES PERSONALIZADAS
@@ -57,7 +57,7 @@
 
 /* ============================================
    HERO DECORATIVO - Órbita de categorías
-   (cada tarjeta en órbita navega a su estación)
+   (cada tarjeta en órbita filtra la cronología)
    ============================================ */
 
 .proyectos-hero {
@@ -187,6 +187,18 @@
     rgba(255, 255, 255, 0.08));
 }
 
+/* Categoría activa como filtro: aro en su color */
+.proyecto-card.is-active {
+  filter: brightness(1.15) saturate(1.2);
+}
+
+.proyecto-card.is-active .proyecto-card-inner {
+  border-color: var(--cat-color, rgba(147, 197, 253, 0.8));
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 26px color-mix(in srgb, var(--cat-color, #93c5fd) 55%, transparent);
+}
+
 .proyecto-icon {
   width: 100%;
   height: auto;
@@ -235,15 +247,79 @@
 }
 
 /* ============================================
-   RUTA DE PROYECTOS - Línea + paradas con scroll
+   RUTA CRONOLÓGICA - Currículum con scroll
    ============================================ */
 
 .proyectos-mapa {
   position: relative;
-  max-width: 1200px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 4vh 24px 12vh;
+  padding: 2vh 24px 12vh;
   scroll-margin-top: 8vh;
+}
+
+/* Filtros por disciplina (atenúan, no ocultan) */
+.ruta-filtros {
+  position: sticky;
+  top: 14px;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 7vh;
+  padding: 10px 14px;
+  border-radius: 22px;
+  background: rgba(5, 8, 18, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.4);
+}
+
+.ruta-filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ruta-filtro img {
+  width: 14px;
+  height: 14px;
+}
+
+.ruta-filtro:hover {
+  color: white;
+  border-color: color-mix(in srgb, var(--cat-color, #93c5fd) 60%, transparent);
+  transform: translateY(-1px);
+}
+
+.ruta-filtro.act {
+  color: white;
+  background: color-mix(in srgb, var(--cat-color, #ffffff) 24%, transparent);
+  border-color: var(--cat-color, #ffffff);
+}
+
+.ruta-filtro[data-cat="all"].act {
+  background: white;
+  color: #0a0e1c;
+}
+
+/* Cuerpo de la cronología (sobre él se dibuja la línea) */
+.ruta-cuerpo {
+  position: relative;
 }
 
 /* La línea que serpentea (la dibuja el JS) */
@@ -271,91 +347,114 @@
   stroke-linecap: round;
 }
 
-/* Estación de categoría */
-.ruta-estacion {
+/* Marcador de año en la línea */
+.ruta-año {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  text-align: center;
-  max-width: 560px;
-  margin: 9vh auto 8vh;
-  scroll-margin-top: 14vh;
+  gap: 12px;
+  width: fit-content;
+  margin: 2vh auto 7vh;
 }
 
-.ruta-estacion-dot {
-  width: 20px;
-  height: 20px;
+.ruta-año-dot {
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: var(--cat-color, #93c5fd);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--cat-color, #93c5fd) 22%, transparent);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+  background: rgba(196, 218, 255, 0.95);
+  box-shadow: 0 0 0 5px rgba(147, 197, 253, 0.18);
+  transition: box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.ruta-estacion.on .ruta-estacion-dot {
-  transform: scale(1.3);
+.ruta-año.on .ruta-año-dot {
+  transform: scale(1.25);
   box-shadow:
-    0 0 0 6px color-mix(in srgb, var(--cat-color, #93c5fd) 28%, transparent),
-    0 0 28px var(--cat-color, #93c5fd);
+    0 0 0 6px rgba(147, 197, 253, 0.25),
+    0 0 26px rgba(147, 197, 253, 0.85);
 }
 
-.ruta-estacion-titulo {
+.ruta-año-num {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
   font-weight: 700;
-  color: white;
-  margin: 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.95);
+  padding: 4px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(6, 9, 20, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
 }
 
-.ruta-estacion-desc {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* Parada de proyecto: imagen grande protagonista */
-.ruta-item {
+/* Entrada de la cronología: tarjeta principal + subtarjetas conectadas */
+.ruta-entry {
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  margin-bottom: 14vh;
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.ruta-entry--izq {
+  justify-content: flex-start;
+  padding-left: var(--inset, 0%);
+}
+
+.ruta-entry--der {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  padding-right: var(--inset, 0%);
+}
+
+/* Filtrado: fuera de la disciplina elegida → gris y atenuado */
+.ruta-entry.fuera {
+  opacity: 0.32;
+  filter: grayscale(1) brightness(0.85);
+}
+
+/* Tarjeta principal */
+.ruta-item {
+  position: relative;
   display: block;
-  width: min(46%, var(--w, 500px));
-  margin-bottom: 10vh;
+  flex: 0 1 var(--w, 500px);
+  min-width: 280px;
   text-decoration: none;
   outline: none;
 }
 
-.ruta-item--izq {
-  margin-right: auto;
-  margin-left: var(--inset, 0%);
-}
-
-.ruta-item--der {
-  margin-left: auto;
-  margin-right: var(--inset, 0%);
-}
-
-/* Número de parada, como un hito del recorrido */
-.ruta-num {
+/* Fecha del proyecto: chip legible sobre la esquina de la tarjeta */
+.ruta-fecha {
   position: absolute;
-  top: -0.52em;
-  z-index: 2;
+  top: -15px;
+  left: 18px;
+  z-index: 3;
   font-family: 'Chakra Petch', sans-serif;
   font-weight: 700;
-  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--cat-color, #93c5fd) 75%, white 15%);
-  opacity: 0.85;
-  pointer-events: none;
+  font-size: 0.8rem;
+  color: white;
+  white-space: nowrap;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(6, 9, 20, 0.9);
+  border: 1px solid color-mix(in srgb, var(--cat-color, #93c5fd) 60%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 4px 18px rgba(0, 0, 0, 0.45),
+    0 0 14px color-mix(in srgb, var(--cat-color, #93c5fd) 18%, transparent);
 }
 
-.ruta-item--izq .ruta-num { right: 14px; }
-.ruta-item--der .ruta-num { left: 14px; }
+.ruta-entry--der .ruta-fecha {
+  left: auto;
+  right: 18px;
+}
 
 .ruta-media {
   position: relative;
@@ -429,7 +528,7 @@
 .ruta-premio {
   position: absolute;
   top: 14px;
-  left: 14px;
+  right: 14px;
   z-index: 2;
   padding: 6px 12px;
   border-radius: 999px;
@@ -443,7 +542,7 @@
   font-weight: 600;
 }
 
-/* Info sobre la imagen: título siempre, detalle al pasar el cursor */
+/* Info sobre la imagen: chips de categoría + título; detalle al pasar el cursor */
 .ruta-info {
   position: absolute;
   left: 0;
@@ -452,7 +551,7 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   padding: 56px 20px 16px;
   background: linear-gradient(180deg,
     transparent 0%,
@@ -460,13 +559,32 @@
     rgba(2, 8, 23, 0.92) 100%);
 }
 
-.ruta-cat {
+/* Distintivo de categoría: color + icono (puede haber varias) */
+.ruta-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ruta-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--cat-color, #93c5fd);
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--cat-color, #93c5fd) 45%, transparent);
+  background: rgba(6, 9, 20, 0.55);
+}
+
+.ruta-cat-chip img {
+  width: 12px;
+  height: 12px;
 }
 
 .ruta-titulo {
@@ -521,6 +639,88 @@
   border: 1px solid rgba(147, 197, 253, 0.25);
   background: rgba(8, 12, 26, 0.55);
   color: #bfdbfe;
+}
+
+/* Subtarjetas: trabajos concretos dentro del proyecto, conectadas al lado */
+.ruta-subs {
+  flex: 0 1 320px;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ruta-sub {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 13px 15px;
+  border-radius: 14px;
+  background: rgba(10, 14, 28, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 3px solid var(--cat-color, rgba(147, 197, 253, 0.55));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.35);
+}
+
+/* Conector hacia la tarjeta principal */
+.ruta-sub::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -35px;
+  width: 34px;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--cat-color, #93c5fd) 70%, transparent),
+    color-mix(in srgb, var(--cat-color, #93c5fd) 22%, transparent));
+}
+
+.ruta-entry--der .ruta-sub::before {
+  left: auto;
+  right: -35px;
+  background: linear-gradient(270deg,
+    color-mix(in srgb, var(--cat-color, #93c5fd) 70%, transparent),
+    color-mix(in srgb, var(--cat-color, #93c5fd) 22%, transparent));
+}
+
+.ruta-sub-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
+}
+
+.ruta-sub-titulo {
+  display: block;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  line-height: 1.3;
+}
+
+.ruta-sub-desc {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.45;
+  margin: 4px 0 0;
+}
+
+.ruta-sub-fecha {
+  display: inline-block;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cat-color, #93c5fd);
+  margin-top: 6px;
 }
 
 /* ============================================
@@ -584,49 +784,98 @@
     height: 38px;
   }
 
-  .ruta-item {
-    width: min(48%, var(--w, 500px));
+  .ruta-entry {
+    gap: 26px;
+  }
+
+  .ruta-subs {
+    flex-basis: 280px;
+  }
+}
+
+/* Las subtarjetas pasan debajo de la tarjeta cuando no caben al lado */
+@media (max-width: 980px) {
+  .ruta-entry {
+    flex-wrap: wrap;
+    row-gap: 22px;
+  }
+
+  .ruta-subs {
+    flex: 1 1 100%;
+    max-width: var(--w, 500px);
+  }
+
+  .ruta-entry--izq .ruta-subs {
+    margin-right: auto;
+  }
+
+  .ruta-entry--der .ruta-subs {
+    margin-left: auto;
+  }
+
+  .ruta-sub::before,
+  .ruta-entry--der .ruta-sub::before {
+    display: none;
   }
 }
 
 @media (max-width: 760px) {
-  /* La ruta pasa a línea de tiempo: línea recta a la izquierda */
+  /* La cronología pasa a línea de tiempo: línea recta a la izquierda */
   .proyectos-mapa {
-    padding: 3vh 16px 8vh 46px;
+    padding: 2vh 16px 8vh 44px;
   }
 
-  .ruta-item,
-  .ruta-item--izq,
-  .ruta-item--der {
+  /* En táctil ocupa varias filas: mejor estática para no tapar contenido */
+  .ruta-filtros {
+    position: static;
+    padding: 8px 10px;
+    gap: 6px;
+    margin-bottom: 5vh;
+  }
+
+  .ruta-filtro {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+  }
+
+  .ruta-entry,
+  .ruta-entry--der {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 9vh;
+  }
+
+  .ruta-item {
+    flex-basis: auto;
+    min-width: 0;
     width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 7vh;
   }
 
-  .ruta-estacion {
-    align-items: flex-start;
-    text-align: left;
-    margin: 7vh 0 5vh;
+  .ruta-entry--der .ruta-fecha {
+    right: auto;
+    left: 14px;
   }
 
-  .ruta-estacion-dot {
+  .ruta-subs {
+    max-width: none;
+    gap: 12px;
+  }
+
+  .ruta-año {
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    margin: 1vh 0 5vh;
+  }
+
+  .ruta-año-dot {
     position: absolute;
-    left: -38px;
-    top: 4px;
-    width: 18px;
-    height: 18px;
-  }
-
-  .ruta-num {
-    font-size: 2rem;
-    top: -0.5em;
-  }
-
-  .ruta-item--izq .ruta-num,
-  .ruta-item--der .ruta-num {
-    left: auto;
-    right: 12px;
+    left: -36px;
+    width: 16px;
+    height: 16px;
   }
 
   /* Sin hover en táctil: la descripción y las techs se muestran siempre */
@@ -721,11 +970,11 @@
   }
 
   .proyectos-mapa {
-    padding: 2vh 12px 7vh 40px;
+    padding: 1vh 12px 7vh 38px;
   }
 
-  .ruta-estacion-dot {
-    left: -32px;
+  .ruta-año-dot {
+    left: -30px;
   }
 
   .ruta-titulo {
@@ -734,5 +983,10 @@
 
   .ruta-desc {
     font-size: 0.8rem;
+  }
+
+  .ruta-fecha {
+    font-size: 0.72rem;
+    padding: 6px 11px;
   }
 }

@@ -2,15 +2,17 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Ruta de proyectos ─────────────────────────────────────────────────────────
-// Una línea luminosa serpentea por la sección pasando por cada estación de
-// categoría y cada tarjeta de proyecto, y se va trazando a medida que se hace
-// scroll. Las tarjetas (HTML estático) entran animadas al llegar a ellas.
+// ── Ruta cronológica de proyectos ─────────────────────────────────────────────
+// Una línea luminosa baja por la cronología (lo más reciente arriba) pasando
+// por cada marcador de año y cada tarjeta, y se traza con el scroll. Las
+// subtarjetas aparecen "conectándose" a su tarjeta principal. Los filtros por
+// disciplina atenúan y desaturan lo que no encaja, sin ocultarlo.
 
 function initRuta() {
-  const cont = document.getElementById('proyectos-mapa');
-  const svg = cont?.querySelector('.ruta-linea');
-  if (!cont || !svg) return;
+  const mapa = document.getElementById('proyectos-mapa');
+  const cuerpo = mapa?.querySelector('.ruta-cuerpo');
+  const svg = mapa?.querySelector('.ruta-linea');
+  if (!mapa || !cuerpo || !svg) return;
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const NS = 'http://www.w3.org/2000/svg';
@@ -22,24 +24,24 @@ function initRuta() {
 
   let drawTween = null;
 
-  // Puntos de paso: el dot de cada estación y el centro de cada tarjeta.
+  // Puntos de paso: el punto de cada año y el centro de cada tarjeta principal.
   // En pantallas estrechas la línea baja recta por el margen izquierdo.
   function puntos() {
-    const base = cont.getBoundingClientRect();
+    const base = cuerpo.getBoundingClientRect();
     const narrow = base.width < 760;
-    const els = cont.querySelectorAll('.ruta-estacion-dot, .ruta-item');
+    const els = cuerpo.querySelectorAll('.ruta-año-dot, .ruta-item');
     return [...els].map((el) => {
       const b = el.getBoundingClientRect();
       return {
-        x: narrow ? 18 : b.left - base.left + b.width / 2,
+        x: narrow ? 16 : b.left - base.left + b.width / 2,
         y: b.top - base.top + b.height / 2,
       };
     });
   }
 
   function build() {
-    const w = cont.clientWidth;
-    const h = cont.scrollHeight;
+    const w = cuerpo.clientWidth;
+    const h = cuerpo.scrollHeight;
     svg.setAttribute('width', w);
     svg.setAttribute('height', h);
     svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -71,7 +73,7 @@ function initRuta() {
       strokeDashoffset: 0,
       ease: 'none',
       scrollTrigger: {
-        trigger: cont,
+        trigger: cuerpo,
         start: 'top 65%',
         end: 'bottom 85%',
         scrub: 0.5,
@@ -81,29 +83,46 @@ function initRuta() {
 
   // ── Entradas al hacer scroll ──
   if (!reduced) {
-    gsap.utils.toArray('.ruta-estacion', cont).forEach((el) => {
+    gsap.utils.toArray('.ruta-año', cuerpo).forEach((el) => {
       gsap.from(el, {
         autoAlpha: 0,
-        y: 30,
-        duration: 0.7,
-        ease: 'power3.out',
+        scale: 0.7,
+        duration: 0.6,
+        ease: 'back.out(1.6)',
         scrollTrigger: { trigger: el, start: 'top 88%' },
       });
     });
-    gsap.utils.toArray('.ruta-item', cont).forEach((el, i) => {
-      gsap.from(el, {
+
+    gsap.utils.toArray('.ruta-entry', cuerpo).forEach((entry) => {
+      const der = entry.classList.contains('ruta-entry--der');
+      const item = entry.querySelector('.ruta-item');
+      const subs = entry.querySelectorAll('.ruta-sub');
+
+      gsap.from(item, {
         autoAlpha: 0,
         y: 56,
-        rotation: i % 2 === 0 ? -1.4 : 1.4,
+        rotation: der ? 1.4 : -1.4,
         duration: 0.9,
         ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%' },
+        scrollTrigger: { trigger: entry, start: 'top 86%' },
       });
+
+      // Las subtarjetas brotan desde la tarjeta principal, en cascada
+      if (subs.length) {
+        gsap.from(subs, {
+          autoAlpha: 0,
+          x: der ? 36 : -36,
+          duration: 0.7,
+          ease: 'power3.out',
+          stagger: 0.16,
+          scrollTrigger: { trigger: entry, start: 'top 70%' },
+        });
+      }
     });
   }
 
-  // La estación se "enciende" cuando la ruta pasa por ella
-  gsap.utils.toArray('.ruta-estacion', cont).forEach((el) => {
+  // El marcador de año se "enciende" cuando la ruta pasa por él
+  gsap.utils.toArray('.ruta-año', cuerpo).forEach((el) => {
     ScrollTrigger.create({
       trigger: el,
       start: 'top 75%',
@@ -113,20 +132,48 @@ function initRuta() {
   });
 
   // ── Imágenes que no existen: fondo tintado + icono de la categoría ──
-  cont.querySelectorAll('.ruta-img').forEach((img) => {
+  cuerpo.querySelectorAll('.ruta-img').forEach((img) => {
     const fallar = () => img.closest('.ruta-item')?.classList.add('sin-imagen');
     if (img.complete && img.naturalWidth === 0) fallar();
     else img.addEventListener('error', fallar, { once: true });
   });
 
-  // ── La órbita de categorías navega a su estación con scroll suave ──
+  // ── Filtro por disciplina: atenúa y desatura, no oculta ──
+  const filtros = mapa.querySelectorAll('.ruta-filtro');
+  const entries = cuerpo.querySelectorAll('.ruta-entry');
+  let filtroActual = 'all';
+
+  function setFiltro(cat) {
+    filtroActual = cat;
+    entries.forEach((entry) => {
+      const cats = (entry.dataset.cats || '').split(',');
+      entry.classList.toggle('fuera', cat !== 'all' && !cats.includes(cat));
+    });
+    filtros.forEach((f) => {
+      const act = f.dataset.cat === cat;
+      f.classList.toggle('act', act);
+      f.setAttribute('aria-pressed', act ? 'true' : 'false');
+    });
+    document.querySelectorAll('.proyecto-card').forEach((card) => {
+      card.classList.toggle('is-active', card.dataset.aptitudId === cat);
+    });
+  }
+
+  filtros.forEach((f) => {
+    f.addEventListener('click', () => {
+      const cat = f.dataset.cat;
+      setFiltro(cat !== 'all' && filtroActual === cat ? 'all' : cat);
+    });
+  });
+
+  // La órbita de categorías también filtra y baja hasta la cronología
   document.querySelectorAll('.proyecto-card').forEach((card) => {
     card.addEventListener('click', (e) => {
       const id = card.dataset.aptitudId;
-      const target = id && document.getElementById(`ruta-${id}`);
-      if (!target) return;
+      if (!id) return;
       e.preventDefault();
-      target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      setFiltro(filtroActual === id ? 'all' : id);
+      mapa.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
     });
   });
 
@@ -139,13 +186,13 @@ function initRuta() {
   });
 
   let resizeRaf = 0;
-  let lastW = cont.clientWidth;
+  let lastW = cuerpo.clientWidth;
   window.addEventListener('resize', () => {
     if (resizeRaf) return;
     resizeRaf = requestAnimationFrame(() => {
       resizeRaf = 0;
-      if (cont.clientWidth !== lastW) {
-        lastW = cont.clientWidth;
+      if (cuerpo.clientWidth !== lastW) {
+        lastW = cuerpo.clientWidth;
         build();
       }
     });

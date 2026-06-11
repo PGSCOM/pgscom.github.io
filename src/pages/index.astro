@@ -12,17 +12,20 @@ import contactoData from '../data/contacto.json';
 // Forma de la P extraída de public/assets/animlogo/carga.svg (viewBox 600x600)
 const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.19165 c 66.88974,0 121.11609,-54.22597 121.11609,-121.11609 0,-66.88986 -54.22635,-121.114324 -121.11609,-121.114324 v -0.004 z';
 
+const categorias = proyectosData.categorias;
+const proyectos = proyectosData.proyectos;
+const catById = Object.fromEntries(categorias.map((c) => [c.id, c]));
+
 // Proyectos destacados que flotan en el hero (con imagen existente)
 const featuredIds = ['portfolio-pgscom', 'premio-macula-2024', 'diseño-web', 'portafolio-cine', 'python-tools', 'blog-personal'];
-const featured = [];
-for (const aptitud of proyectosData) {
-	for (const proyecto of aptitud.proyectos) {
-		if (featuredIds.includes(proyecto.id)) {
-			featured.push({ ...proyecto, aptitudId: aptitud.id, aptitudTitulo: aptitud.titulo });
-		}
-	}
-}
-featured.sort((a, b) => featuredIds.indexOf(a.id) - featuredIds.indexOf(b.id));
+const featured = featuredIds
+	.map((id) => proyectos.find((p) => p.id === id))
+	.filter(Boolean)
+	.map((p) => ({
+		...p,
+		aptitudId: p.categorias?.[0],
+		aptitudTitulo: catById[p.categorias?.[0]]?.titulo ?? '',
+	}));
 
 // Posición, profundidad (parallax) y rotación de cada card del hero
 const heroLayout = [
@@ -44,28 +47,53 @@ const catColors = {
 	'fotografia': '#ffc94d',
 };
 
-// Ruta de proyectos: tarjetas grandes a lo largo del scroll, una estación por
-// categoría. peso → tamaño de tarjeta; lado e inset alternan para que la línea
-// serpentee de forma orgánica.
-let rutaIndice = 0;
-const rutaData = proyectosData.map((a) => ({
-	id: a.id,
-	titulo: a.titulo,
-	descripcion: a.descripcion,
-	logo: a.logo,
-	color: catColors[a.id] ?? '#9bb4d0',
-	items: (a.proyectos ?? []).map((p) => {
-		const i = rutaIndice++;
-		const peso = p.peso ?? 50;
-		return {
-			...p,
-			num: String(i + 1).padStart(2, '0'),
-			lado: i % 2 === 0 ? 'izq' : 'der',
-			inset: ['0%', '7%', '3%'][i % 3],
-			w: peso >= 75 ? 580 : peso >= 55 ? 500 : 420,
-		};
-	}),
-}));
+// ── Ruta cronológica (formato currículum: lo más reciente arriba) ──
+// fecha admite "YYYY", "YYYY-MM" o "YYYY-MM-DD"; se muestra con la precisión
+// que tenga. Las categorías son etiquetas del proyecto (puede tener varias) y
+// las subtarjetas (`sub`) muestran trabajos concretos dentro del proyecto.
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+function formatFecha(f) {
+	if (!f) return '';
+	const [y, m, d] = String(f).split('-');
+	if (!m) return y;
+	const mes = MESES[Number(m) - 1] ?? '';
+	if (d) return `${Number(d)} de ${mes} de ${y}`;
+	return `${mes.charAt(0).toUpperCase()}${mes.slice(1)} ${y}`;
+}
+
+const cronologia = [...proyectos].sort((a, b) =>
+	String(b.fecha ?? '').localeCompare(String(a.fecha ?? ''))
+);
+
+let añoAnterior = null;
+const rutaEntries = cronologia.map((p, i) => {
+	const año = String(p.fecha ?? '').slice(0, 4) || 'Otros';
+	const nuevoAño = año !== añoAnterior;
+	añoAnterior = año;
+	const peso = p.peso ?? 50;
+	const catsProyecto = p.categorias ?? [];
+	const subs = (p.sub ?? []).map((s) => ({
+		...s,
+		cat: s.categoria ? catById[s.categoria] : null,
+		color: s.categoria ? (catColors[s.categoria] ?? '#9bb4d0') : null,
+		fechaTexto: formatFecha(s.fecha),
+	}));
+	// Para el filtro cuentan las categorías del proyecto y las de sus subtarjetas
+	const todasCats = [...new Set([...catsProyecto, ...subs.map((s) => s.categoria).filter(Boolean)])];
+	return {
+		...p,
+		año,
+		nuevoAño,
+		fechaTexto: formatFecha(p.fecha),
+		lado: i % 2 === 0 ? 'izq' : 'der',
+		inset: ['0%', '5%', '2%'][i % 3],
+		w: peso >= 75 ? 580 : peso >= 55 ? 500 : 430,
+		color: catColors[catsProyecto[0]] ?? '#9bb4d0',
+		cats: catsProyecto.map((id) => catById[id]).filter(Boolean),
+		todasCats,
+		subs,
+	};
+});
 ---
 
 <!-- Cloudflare Turnstile -->
@@ -167,16 +195,16 @@ const rutaData = proyectosData.map((a) => ({
 		<div class="proyectos-header">
 			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
 			<p class="proyectos-subtitulo-seccion">
-				Un recorrido por todos mis proyectos: baja siguiendo la línea y párate en los que te llamen. El tamaño de cada parada refleja la envergadura del proyecto.
+				Mi trayectoria en orden cronológico, de lo más reciente a lo más antiguo. Filtra por disciplina para ver solo lo que te interesa.
 			</p>
 		</div>
 
 		<div class="proyectos-hero">
 			<div class="proyectos-hero-inner">
 				<div class="proyectos-grid">
-					{proyectosData.map((aptitud) => (
+					{categorias.map((aptitud) => (
 						<a
-							href={`#ruta-${aptitud.id}`}
+							href="#proyectos-mapa"
 							class="proyecto-card"
 							data-aptitud-id={aptitud.id}
 							style={`--cat-color:${catColors[aptitud.id] ?? '#9bb4d0'}`}
@@ -204,46 +232,87 @@ const rutaData = proyectosData.map((a) => ({
 		</div>
 
 		<div class="proyectos-mapa" id="proyectos-mapa">
-			<!-- Línea de la ruta: se dibuja con el scroll (la traza el JS) -->
-			<svg class="ruta-linea" aria-hidden="true"></svg>
+			<!-- Filtros por disciplina: atenúan (no ocultan) lo que no encaja -->
+			<div class="ruta-filtros" role="group" aria-label="Filtrar proyectos por disciplina">
+				<button type="button" class="ruta-filtro act" data-cat="all" aria-pressed="true">Todos</button>
+				{categorias.map((c) => (
+					<button
+						type="button"
+						class="ruta-filtro"
+						data-cat={c.id}
+						aria-pressed="false"
+						style={`--cat-color:${catColors[c.id] ?? '#9bb4d0'}`}
+					>
+						<img src={c.logo} alt="" aria-hidden="true" />
+						<span>{c.titulo}</span>
+					</button>
+				))}
+			</div>
 
-			{rutaData.map((aptitud) => (
-				<Fragment>
-					<div class="ruta-estacion" id={`ruta-${aptitud.id}`} style={`--cat-color:${aptitud.color}`}>
-						<span class="ruta-estacion-dot" aria-hidden="true"></span>
-						<h3 class="ruta-estacion-titulo">{aptitud.titulo}</h3>
-						<p class="ruta-estacion-desc">{aptitud.descripcion}</p>
-					</div>
+			<div class="ruta-cuerpo">
+				<!-- Línea de la ruta: se dibuja con el scroll (la traza el JS) -->
+				<svg class="ruta-linea" aria-hidden="true"></svg>
 
-					{aptitud.items.map((proyecto) => (
-						<a
-							class={`ruta-item ruta-item--${proyecto.lado}`}
-							href={`/proyectos/${proyecto.id}`}
-							data-proyecto-link
-							style={`--cat-color:${aptitud.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
+				{rutaEntries.map((proyecto) => (
+					<Fragment>
+						{proyecto.nuevoAño && (
+							<div class="ruta-año">
+								<span class="ruta-año-dot" aria-hidden="true"></span>
+								<span class="ruta-año-num">{proyecto.año}</span>
+							</div>
+						)}
+
+						<div
+							class={`ruta-entry ruta-entry--${proyecto.lado}`}
+							data-cats={proyecto.todasCats.join(',')}
+							style={`--cat-color:${proyecto.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
 						>
-							<span class="ruta-num" aria-hidden="true">{proyecto.num}</span>
-							<div class="ruta-media">
-								<img class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />
-								<img class="ruta-fallback" src={aptitud.logo} alt="" aria-hidden="true" loading="lazy" />
-								{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
-								<div class="ruta-info">
-									<span class="ruta-cat">{aptitud.titulo}</span>
-									<h4 class="ruta-titulo">{proyecto.titulo.trim()}</h4>
-									{proyecto.descripcion && <p class="ruta-desc">{proyecto.descripcion}</p>}
-									{proyecto.tecnologias && (
-										<div class="ruta-techs">
-											{proyecto.tecnologias.slice(0, 4).map((tech) => (
-												<span class="ruta-tech">{tech}</span>
+							<a class="ruta-item" href={`/proyectos/${proyecto.id}`} data-proyecto-link>
+								{proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
+								<div class="ruta-media">
+									<img class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />
+									<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
+									{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
+									<div class="ruta-info">
+										<div class="ruta-cats">
+											{proyecto.cats.map((c) => (
+												<span class="ruta-cat-chip" style={`--cat-color:${catColors[c.id] ?? '#9bb4d0'}`}>
+													<img src={c.logo} alt="" aria-hidden="true" />
+													<span>{c.titulo}</span>
+												</span>
 											))}
 										</div>
-									)}
+										<h4 class="ruta-titulo">{proyecto.titulo.trim()}</h4>
+										{proyecto.descripcion && <p class="ruta-desc">{proyecto.descripcion}</p>}
+										{proyecto.tecnologias && (
+											<div class="ruta-techs">
+												{proyecto.tecnologias.slice(0, 4).map((tech) => (
+													<span class="ruta-tech">{tech}</span>
+												))}
+											</div>
+										)}
+									</div>
 								</div>
-							</div>
-						</a>
-					))}
-				</Fragment>
-			))}
+							</a>
+
+							{proyecto.subs.length > 0 && (
+								<div class="ruta-subs">
+									{proyecto.subs.map((s) => (
+										<div class="ruta-sub" style={s.color ? `--cat-color:${s.color}` : undefined}>
+											{s.cat && <img class="ruta-sub-icon" src={s.cat.logo} alt={s.cat.titulo} title={s.cat.titulo} />}
+											<div class="ruta-sub-body">
+												<strong class="ruta-sub-titulo">{s.titulo}</strong>
+												{s.descripcion && <p class="ruta-sub-desc">{s.descripcion}</p>}
+												{s.fechaTexto && <span class="ruta-sub-fecha">{s.fechaTexto}</span>}
+											</div>
+										</div>
+									))}
+								</div>
+							)}
+						</div>
+					</Fragment>
+				))}
+			</div>
 		</div>
 	</section>
 

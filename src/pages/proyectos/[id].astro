@@ -3,23 +3,37 @@ import Layout from '../../layouts/Layout.astro';
 import '../../styles/proyecto-detalle.css';
 import proyectosData from '../../data/proyectos.json';
 
-// Genera una ruta estática por cada proyecto de cada aptitud.
+// Genera una ruta estática por cada proyecto.
 // Cada página es HTML real y rastreable por los bots de Google.
 export function getStaticPaths() {
-	const paths = [];
-	for (const aptitud of proyectosData) {
-		for (const proyecto of aptitud.proyectos ?? []) {
-			const relacionados = aptitud.proyectos.filter((p) => p.id !== proyecto.id);
-			paths.push({
-				params: { id: proyecto.id },
-				props: { proyecto, aptitud, relacionados },
-			});
-		}
-	}
-	return paths;
+	const cats = proyectosData.categorias;
+	return proyectosData.proyectos.map((proyecto) => {
+		const catIds = proyecto.categorias ?? [];
+		// La primera categoría del proyecto actúa como principal
+		const aptitud = cats.find((c) => c.id === catIds[0]) ?? cats[0];
+		const relacionados = proyectosData.proyectos
+			.filter((p) => p.id !== proyecto.id && (p.categorias ?? []).some((c) => catIds.includes(c)))
+			.slice(0, 3);
+		return {
+			params: { id: proyecto.id },
+			props: { proyecto, aptitud, relacionados },
+		};
+	});
 }
 
 const { proyecto, aptitud, relacionados } = Astro.props;
+
+// Fecha con precisión variable: "YYYY", "YYYY-MM" o "YYYY-MM-DD"
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+function formatFecha(f) {
+	if (!f) return '';
+	const [y, m, d] = String(f).split('-');
+	if (!m) return y;
+	const mes = MESES[Number(m) - 1] ?? '';
+	if (d) return `${Number(d)} de ${mes} de ${y}`;
+	return `${mes.charAt(0).toUpperCase()}${mes.slice(1)} ${y}`;
+}
+const fechaTexto = formatFecha(proyecto.fecha);
 
 const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
 const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;
@@ -110,6 +124,7 @@ const breadcrumbLd = {
 					<h1 class="pd-titulo">{proyecto.titulo.trim()}</h1>
 
 					<div class="pd-meta">
+						{fechaTexto && <span class="pd-meta-item">📅 {fechaTexto}</span>}
 						{proyecto.premio && <span class="pd-meta-badge">🏆 {proyecto.premio}</span>}
 						{proyecto.tecnologias?.length && (
 							<span class="pd-meta-item">{proyecto.tecnologias.length} tecnologías</span>
