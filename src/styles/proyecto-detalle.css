@@ -21,33 +21,47 @@ body:has(.pd-page) {
   isolation: isolate;
 }
 
-/* ── Fondo cinematográfico ───────────────────────────── */
-.pd-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
+/* ── Cabecera cinematográfica (trailer/portada) ──────── */
+.pd-hero {
+  position: relative;
+  width: 100%;
+  height: 94vh;
+  min-height: 560px;
   overflow: hidden;
 }
 
-.pd-backdrop-img {
-  width: 100%;
-  height: 70vh;
-  min-height: 480px;
-  object-fit: cover;
-  object-position: center top;
-  filter: brightness(0.45) saturate(1.05);
-  transform: scale(1.05);
-}
-
-.pd-backdrop::after {
-  content: '';
+.pd-hero-media {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Respaldo sin portada: el icono de la categoría, contenido y tenue */
+.pd-hero-media--icono {
+  box-sizing: border-box;
+  object-fit: contain;
+  padding: 16vh 25vw 38vh;
+  opacity: 0.55;
+  filter: drop-shadow(0 12px 50px rgba(0, 0, 0, 0.6));
+}
+
+.pd-hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 24px 56px;
   background: linear-gradient(
     180deg,
-    rgba(5, 7, 13, 0.35) 0%,
-    rgba(5, 7, 13, 0.55) 35%,
-    rgba(5, 7, 13, 0.9) 70%,
+    rgba(5, 7, 13, 0.55) 0%,
+    rgba(5, 7, 13, 0) 22%,
+    rgba(5, 7, 13, 0) 48%,
+    rgba(5, 7, 13, 0.78) 82%,
     var(--pd-bg) 100%
   );
 }
@@ -86,18 +100,23 @@ body:has(.pd-page) {
   z-index: 1;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 32px 12vh;
+  padding: 40px 32px 12vh;
 }
 
-/* ── Migas de pan ────────────────────────────────────── */
+/* ── Migas de pan (superpuestas sobre la cabecera) ───── */
 .pd-breadcrumb {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding-top: 96px;
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
 }
 
 .pd-breadcrumb a {
@@ -114,35 +133,13 @@ body:has(.pd-page) {
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* ── Hero ────────────────────────────────────────────── */
-.pd-hero {
-  display: flex;
-  align-items: flex-end;
-  gap: 36px;
-  padding: 26vh 0 36px;
-  min-height: 50vh;
-}
-
-.pd-poster-container {
-  flex-shrink: 0;
-  width: 260px;
-  height: 260px;
-}
-
-.pd-poster {
-  width: 100%;
-  height: 100%;
-  border-radius: 14px;
-  object-fit: cover;
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.65),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-}
-
+/* ── Info del hero (título y datos centrados abajo) ──── */
 .pd-hero-info {
-  flex: 1;
-  min-width: 0;
-  padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 820px;
 }
 
 .pd-categoria {
@@ -179,6 +176,7 @@ body:has(.pd-page) {
 .pd-meta {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 14px;
   margin-bottom: 18px;
@@ -212,6 +210,7 @@ body:has(.pd-page) {
 .pd-actions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -472,40 +471,24 @@ body:has(.pd-page) {
 /* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 768px) {
   .pd-wrapper {
-    padding: 0 20px 10vh;
-  }
-
-  .pd-backdrop-img {
-    height: 60vh;
+    padding: 32px 20px 10vh;
   }
 
   .pd-hero {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 18vh 0 28px;
-    gap: 22px;
-    min-height: auto;
+    height: 80vh;
+    min-height: 480px;
   }
 
-  .pd-poster-container {
-    width: 190px;
-    height: 190px;
+  .pd-hero-overlay {
+    padding-bottom: 40px;
   }
 
-  .pd-hero-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .pd-hero-media--icono {
+    padding: 14vh 18vw 24vh;
   }
 
   .pd-titulo {
     font-size: 1.9rem;
-  }
-
-  .pd-meta,
-  .pd-actions {
-    justify-content: center;
   }
 
   .pd-tagline {
@@ -522,11 +505,6 @@ body:has(.pd-page) {
 }
 
 @media (max-width: 480px) {
-  .pd-poster-container {
-    width: 150px;
-    height: 150px;
-  }
-
   .pd-titulo {
     font-size: 1.6rem;
   }

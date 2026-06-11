@@ -31,8 +31,13 @@ const { entrada, proyecto, aptitud, relacionados } = Astro.props;
 const { Content } = await render(entrada);
 
 const fechaTexto = formatFecha(proyecto.fecha);
-// Sin imagen propia, el poster y el fondo usan el icono de la categoría
+// `imagen` viste las tarjetas/relacionados y el og:image; la cabecera usa
+// `trailer` (vídeo) o `portada`, con `imagen` como respaldo
 const imagen = proyecto.imagen || aptitud.logo;
+const portada = proyecto.portada || proyecto.imagen;
+// Sin portada ni imagen, la cabecera muestra el icono de la categoría contenido
+const esIcono = !portada;
+const portadaSrc = portada || aptitud.logo;
 
 const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
 const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;
@@ -81,11 +86,6 @@ const breadcrumbLd = {
 	<script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
 
 	<main class="pd-page">
-		<!-- Fondo cinematográfico -->
-		<div class="pd-backdrop">
-			<img class="pd-backdrop-img" src={imagen} alt="" aria-hidden="true" loading="eager" />
-		</div>
-
 		<a class="pd-back" href="/?sincarga#proyectos-mapa" aria-label="Volver a proyectos">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 				<line x1="19" y1="12" x2="5" y2="12"></line>
@@ -94,26 +94,38 @@ const breadcrumbLd = {
 			<span>Proyectos</span>
 		</a>
 
-		<article class="pd-wrapper">
-			<!-- Migas de pan rastreables -->
-			<nav class="pd-breadcrumb" aria-label="Migas de pan">
-				<a href="/">Inicio</a>
-				<span aria-hidden="true">/</span>
-				<a href="/?sincarga#proyectos-mapa">Proyectos</a>
-				<span aria-hidden="true">/</span>
-				<span class="pd-breadcrumb-current">{aptitud.titulo}</span>
-			</nav>
+		<!-- Cabecera cinematográfica: trailer o portada a pantalla completa -->
+		<header class="pd-hero">
+			{proyecto.trailer ? (
+				<video
+					class="pd-hero-media"
+					src={proyecto.trailer}
+					poster={portada}
+					autoplay
+					muted
+					loop
+					playsinline
+					aria-hidden="true"
+				></video>
+			) : (
+				<img
+					class:list={['pd-hero-media', { 'pd-hero-media--icono': esIcono }]}
+					src={portadaSrc}
+					alt={proyecto.titulo.trim()}
+					style="view-transition-name: project-hero"
+					loading="eager"
+				/>
+			)}
 
-			<header class="pd-hero">
-				<div class="pd-poster-container">
-					<img
-						class="pd-poster"
-						src={imagen}
-						alt={proyecto.titulo.trim()}
-						style="view-transition-name: project-hero"
-						loading="eager"
-					/>
-				</div>
+			<div class="pd-hero-overlay">
+				<!-- Migas de pan rastreables -->
+				<nav class="pd-breadcrumb" aria-label="Migas de pan">
+					<a href="/">Inicio</a>
+					<span aria-hidden="true">/</span>
+					<a href="/?sincarga#proyectos-mapa">Proyectos</a>
+					<span aria-hidden="true">/</span>
+					<span class="pd-breadcrumb-current">{aptitud.titulo}</span>
+				</nav>
 
 				<div class="pd-hero-info">
 					<p class="pd-categoria">
@@ -152,8 +164,10 @@ const breadcrumbLd = {
 						</button>
 					</div>
 				</div>
-			</header>
+			</div>
+		</header>
 
+		<article class="pd-wrapper">
 			<div class="pd-body">
 				{proyecto.tecnologias?.length && (
 					<section class="pd-tecnologias" aria-label="Tecnologías">

@@ -14,6 +14,10 @@ const proyectos = defineCollection({
 		peso: z.number().optional(),
 		// Opcional: sin imagen la tarjeta muestra el icono de su categoría
 		imagen: z.string().optional(),
+		// Imagen grande de la cabecera de la ficha; si falta se usa `imagen`
+		portada: z.string().optional(),
+		// Vídeo "trailer" (mp4/webm) para la cabecera; sustituye a la portada
+		trailer: z.string().optional(),
 		// Orden en el hero (1 = primero); los proyectos sin destacado no flotan
 		destacado: z.number().optional(),
 		descripcion: z.string().optional(),
