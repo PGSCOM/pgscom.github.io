@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin.js';
 gsap.registerPlugin(DrawSVGPlugin);
 
 // ── Preloader: la P de carga.svg se construye trazándose con DrawSVG ─────────

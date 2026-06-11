@@ -328,15 +328,19 @@
   display: block;
 }
 
-/* Burbujas: squircles clicables */
-.bub {
+/* Iconos del panal: squircles-enlace estilo springboard */
+.picon {
   cursor: pointer;
   outline: none;
+  transition: opacity 0.3s ease;
 }
 
-.bub:focus-visible .bub-ring {
+.picon.dim {
+  opacity: 0.16;
+}
+
+.picon:focus-visible .picon-ring {
   stroke-width: 4;
-  opacity: 1;
 }
 
 /* Tooltip */

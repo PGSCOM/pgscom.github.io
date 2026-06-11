@@ -52,7 +52,7 @@ const breadcrumbLd = {
 	'@type': 'BreadcrumbList',
 	itemListElement: [
 		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: Astro.site?.href },
-		{ '@type': 'ListItem', position: 2, name: 'Proyectos', item: new URL('/#proyectos', Astro.site).href },
+		{ '@type': 'ListItem', position: 2, name: 'Proyectos', item: new URL('/#proyectos-mapa', Astro.site).href },
 		{ '@type': 'ListItem', position: 3, name: proyecto.titulo.trim(), item: new URL(`/proyectos/${proyecto.id}`, Astro.site).href },
 	],
 };
@@ -73,7 +73,7 @@ const breadcrumbLd = {
 			<img class="pd-backdrop-img" src={proyecto.imagen} alt="" aria-hidden="true" loading="eager" />
 		</div>
 
-		<a class="pd-back" href="/?sincarga#proyectos" aria-label="Volver a proyectos">
+		<a class="pd-back" href="/?sincarga#proyectos-mapa" aria-label="Volver a proyectos">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 				<line x1="19" y1="12" x2="5" y2="12"></line>
 				<polyline points="12 19 5 12 12 5"></polyline>
@@ -86,7 +86,7 @@ const breadcrumbLd = {
 			<nav class="pd-breadcrumb" aria-label="Migas de pan">
 				<a href="/">Inicio</a>
 				<span aria-hidden="true">/</span>
-				<a href="/?sincarga#proyectos">Proyectos</a>
+				<a href="/?sincarga#proyectos-mapa">Proyectos</a>
 				<span aria-hidden="true">/</span>
 				<span class="pd-breadcrumb-current">{aptitud.titulo}</span>
 			</nav>

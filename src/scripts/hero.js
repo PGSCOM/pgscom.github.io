@@ -129,13 +129,13 @@ function initHero() {
   }
 
   // ── Botón "Ver proyectos": scroll suave para no saltarse las animaciones ──
-  // En vez de saltar directo a #proyectos (lo que se salta el zoom de galaxia y
+  // En vez de saltar directo al panal (lo que se salta el zoom de galaxia y
   // la salida de las cards), recorremos toda la página con un scroll animado por
   // tiempo para que se vean todas las animaciones de scroll antes de llegar.
   const cta = document.querySelector('.hero-cta');
   if (cta) {
     cta.addEventListener('click', (e) => {
-      const target = document.querySelector('#proyectos');
+      const target = document.querySelector('#proyectos-mapa') || document.querySelector('#proyectos');
       if (!target) return;
       e.preventDefault();
 

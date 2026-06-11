@@ -142,7 +142,7 @@ const burbujasData = {
 			</div>
 			<p class="hero-sub">Portfolio de Pablo García Santamaría — proyectos de código, cine y diseño.</p>
 			<div class="hero-actions">
-				<a class="hero-cta" href="#proyectos">Ver proyectos</a>
+				<a class="hero-cta" href="#proyectos-mapa">Ver proyectos</a>
 			</div>
 		</div>
 
@@ -166,7 +166,7 @@ const burbujasData = {
 		<div class="proyectos-header">
 			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
 			<p class="proyectos-subtitulo-seccion">
-				Un mapa interactivo de mis trabajos: cada burbuja es un proyecto y su tamaño refleja la envergadura. Filtra por categoría o arrastra las burbujas.
+				Todos mis proyectos de un vistazo. Cada icono es un proyecto, su tamaño refleja la envergadura y el color indica la categoría.
 			</p>
 		</div>
 
@@ -203,17 +203,17 @@ const burbujasData = {
 		</div>
 
 		<div class="proyectos-mapa" id="proyectos-mapa">
-			<div class="mapa-pills" id="mapaPills" role="group" aria-label="Filtrar proyectos por categoría"></div>
+			<div class="mapa-pills" id="mapaPills" role="group" aria-label="Resaltar proyectos por categoría"></div>
 
 			<div class="mapa-panel">
 				<div class="mapa-wrap" id="mapaWrap">
-					<svg id="mapaChart" role="group" aria-label="Mapa de burbujas: cada burbuja es un proyecto, el tamaño indica su envergadura"></svg>
+					<svg id="mapaChart" role="group" aria-label="Panal de proyectos: cada icono es un proyecto, el tamaño indica su envergadura"></svg>
 					<div class="mapa-tip" id="mapaTip" role="tooltip"></div>
 				</div>
 			</div>
 
 			<p class="mapa-leyenda">
-				Tamaño = envergadura del proyecto · Pasa el cursor para ver detalles · Pulsa una burbuja para abrir el proyecto
+				Tamaño = envergadura · Mueve el cursor para ampliar · Pulsa un icono para abrir el proyecto
 			</p>
 
 			<!-- Enlaces reales a cada proyecto: rastreables por buscadores y lectores de pantalla -->
@@ -496,12 +496,12 @@ const burbujasData = {
 		import '../scripts/galaxia-scroll.js';
 	</script>
 
-	<!-- Preloader + hero + órbita de categorías + mapa de burbujas -->
+	<!-- Preloader + hero + órbita de categorías + panal de proyectos -->
 	<script>
 		import '../scripts/preloader.js';
 		import '../scripts/hero.js';
 		import '../scripts/proyectos-orbit.js';
-		import '../scripts/proyectos-burbujas.js';
+		import '../scripts/proyectos-panal.js';
 	</script>
 
 	<!-- Formulario de contacto -->
