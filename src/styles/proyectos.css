@@ -643,11 +643,61 @@
 
 /* Subtarjetas: trabajos concretos dentro del proyecto, conectadas al lado */
 .ruta-subs {
+  position: relative;
   flex: 0 1 320px;
   min-width: 240px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+/* Espina vertical que agrupa todas las subtarjetas bajo el proyecto padre.
+   Va en el CENTRO del hueco (gap 34px → -17px) para que nunca quede
+   tapada por la tarjeta padre ni se funda con su borde. */
+.ruta-subs::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: -17px;
+  width: 3px;
+  border-radius: 3px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--cat-color, #93c5fd) 12%,
+    var(--cat-color, #93c5fd) 88%,
+    transparent 100%
+  );
+  box-shadow: 0 0 9px color-mix(in srgb, var(--cat-color, #93c5fd) 55%, transparent);
+}
+
+/* Nodo de unión: punto del que nacen las ramas, a la altura del padre */
+.ruta-subs::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -17px;
+  width: 13px;
+  height: 13px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--cat-color, #93c5fd);
+  border: 2px solid rgba(5, 8, 18, 0.92);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--cat-color, #93c5fd) 80%, transparent);
+}
+
+.ruta-entry--der .ruta-subs::before {
+  left: auto;
+  right: -17px;
+  transform: translateX(50%);
+}
+
+.ruta-entry--der .ruta-subs::after {
+  left: auto;
+  right: -17px;
+  transform: translate(50%, -50%);
 }
 
 .ruta-sub {
@@ -688,26 +738,23 @@
   outline-offset: 3px;
 }
 
-/* Conector hacia la tarjeta principal */
+/* Conector horizontal desde la espina hacia cada subtarjeta */
 .ruta-sub::before {
   content: '';
   position: absolute;
   top: 50%;
-  left: -35px;
-  width: 34px;
-  height: 2px;
+  left: -17px;
+  width: 17px;
+  height: 2.5px;
   transform: translateY(-50%);
-  background: linear-gradient(90deg,
-    color-mix(in srgb, var(--cat-color, #93c5fd) 70%, transparent),
-    color-mix(in srgb, var(--cat-color, #93c5fd) 22%, transparent));
+  border-radius: 2px;
+  background: var(--cat-color, #93c5fd);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--cat-color, #93c5fd) 45%, transparent);
 }
 
 .ruta-entry--der .ruta-sub::before {
   left: auto;
-  right: -35px;
-  background: linear-gradient(270deg,
-    color-mix(in srgb, var(--cat-color, #93c5fd) 70%, transparent),
-    color-mix(in srgb, var(--cat-color, #93c5fd) 22%, transparent));
+  right: -17px;
 }
 
 .ruta-sub-icon {
@@ -880,7 +927,8 @@
   }
 
   .ruta-sub::before,
-  .ruta-entry--der .ruta-sub::before {
+  .ruta-entry--der .ruta-sub::before,
+  .ruta-subs::before {
     display: none;
   }
 }
