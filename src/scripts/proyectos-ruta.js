@@ -20,7 +20,53 @@ function initRuta() {
   const trazo = document.createElementNS(NS, 'path');
   glow.setAttribute('class', 'ruta-linea-glow');
   trazo.setAttribute('class', 'ruta-linea-trazo');
-  svg.append(glow, trazo);
+
+  // ── Máscara: la línea se oculta al pasar por detrás de cada tarjeta ──
+  // Siempre activa (con o sin filtro): la línea parece "colarse" entre las
+  // tarjetas. Los bordes se difuminan para que el corte sea suave. El
+  // desenfoque se aplica una sola vez a todo el grupo de recortes (más barato
+  // en móvil) y la máscara solo se recalcula cuando cambia el layout.
+  const defs = document.createElementNS(NS, 'defs');
+  const blur = document.createElementNS(NS, 'filter');
+  blur.setAttribute('id', 'ruta-mascara-blur');
+  blur.setAttribute('x', '-20%');
+  blur.setAttribute('y', '-20%');
+  blur.setAttribute('width', '140%');
+  blur.setAttribute('height', '140%');
+  const feBlur = document.createElementNS(NS, 'feGaussianBlur');
+  feBlur.setAttribute('stdDeviation', '16');
+  blur.append(feBlur);
+  const mask = document.createElementNS(NS, 'mask');
+  mask.setAttribute('id', 'ruta-mascara');
+  mask.setAttribute('maskUnits', 'userSpaceOnUse');
+  const maskBg = document.createElementNS(NS, 'rect'); // blanco = visible
+  maskBg.setAttribute('x', '0');
+  maskBg.setAttribute('y', '0');
+  maskBg.setAttribute('fill', '#fff');
+  const recortes = document.createElementNS(NS, 'g'); // negro = oculto
+  recortes.setAttribute('filter', 'url(#ruta-mascara-blur)');
+  mask.append(maskBg, recortes);
+  defs.append(blur, mask);
+  svg.append(defs, glow, trazo);
+  glow.setAttribute('mask', 'url(#ruta-mascara)');
+  trazo.setAttribute('mask', 'url(#ruta-mascara)');
+
+  function construirMascara() {
+    recortes.replaceChildren();
+    const base = cuerpo.getBoundingClientRect();
+    cuerpo.querySelectorAll('.ruta-item').forEach((el) => {
+      const b = el.getBoundingClientRect();
+      const pad = 22;
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', (b.left - base.left - pad).toFixed(1));
+      r.setAttribute('y', (b.top - base.top - pad).toFixed(1));
+      r.setAttribute('width', (b.width + pad * 2).toFixed(1));
+      r.setAttribute('height', (b.height + pad * 2).toFixed(1));
+      r.setAttribute('rx', '36');
+      r.setAttribute('fill', '#000');
+      recortes.append(r);
+    });
+  }
 
   let drawTween = null;
 
@@ -46,6 +92,14 @@ function initRuta() {
     svg.setAttribute('height', h);
     svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
 
+    mask.setAttribute('x', '0');
+    mask.setAttribute('y', '0');
+    mask.setAttribute('width', w);
+    mask.setAttribute('height', h);
+    maskBg.setAttribute('width', w);
+    maskBg.setAttribute('height', h);
+    construirMascara();
+
     const ps = puntos();
     if (ps.length < 2) return;
 
@@ -68,6 +122,7 @@ function initRuta() {
       gsap.set([glow, trazo], { strokeDasharray: 'none', strokeDashoffset: 0 });
       return;
     }
+
     gsap.set([glow, trazo], { strokeDasharray: L, strokeDashoffset: L });
     drawTween = gsap.to([glow, trazo], {
       strokeDashoffset: 0,
