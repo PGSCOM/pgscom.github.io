@@ -27,7 +27,8 @@ function initPreloader() {
   window.scrollTo(0, 0);
   document.documentElement.style.overflow = 'hidden';
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Animaciones siempre activas: ignoramos deliberadamente prefers-reduced-motion
+  const reduced = false;
   if (reduced) {
     gsap.set(fill, { opacity: 1 });
     gsap.set(draw, { drawSVG: '100%', visibility: 'visible' });

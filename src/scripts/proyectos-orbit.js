@@ -12,7 +12,8 @@ function initOrbit() {
   const cards = gsap.utils.toArray('.proyecto-card', ring);
   if (!cards.length) return;
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Animaciones siempre activas: ignoramos deliberadamente prefers-reduced-motion
+  const reduced = false;
   const proxy   = { a: 0 };
   let radius    = 0;
 

@@ -14,7 +14,8 @@ function initRuta() {
   const svg = mapa?.querySelector('.ruta-linea');
   if (!mapa || !cuerpo || !svg) return;
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Animaciones siempre activas: ignoramos deliberadamente prefers-reduced-motion
+  const reduced = false;
   const NS = 'http://www.w3.org/2000/svg';
   const glow = document.createElementNS(NS, 'path');
   const trazo = document.createElementNS(NS, 'path');

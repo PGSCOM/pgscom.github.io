@@ -8,7 +8,8 @@ gsap.registerPlugin(ScrollTrigger);
 //   .hero-card-tilt   → rotación base + flotación orgánica (GSAP)
 //   .hero-card-media  → hover scale (CSS)
 
-const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Animaciones siempre activas: ignoramos deliberadamente prefers-reduced-motion
+const reduced = false;
 
 function initHero() {
   const cards     = gsap.utils.toArray('.hero-card');
