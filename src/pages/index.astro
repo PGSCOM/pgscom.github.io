@@ -33,6 +33,38 @@ const heroLayout = [
 	{ left: '30%', top: '87%', depth: 0.55, rot: 5,   size: 'sm', far: true },
 	{ left: '67%', top: '89%', depth: 0.8,  rot: -5,  size: 'sm', far: true },
 ];
+
+// Color de cada categoría: lo comparten la órbita, las pills y el mapa de burbujas
+const catColors = {
+	'desarrollo-web': '#4da3ff',
+	'video-produccion': '#ff7a4d',
+	'animacion-3d': '#9a8cff',
+	'programacion': '#34d39b',
+	'diseño-grafico': '#ff6fb3',
+	'fotografia': '#ffc94d',
+};
+
+// Datos planos para el mapa de burbujas (peso = envergadura → tamaño)
+const burbujasData = {
+	cats: proyectosData.map((a) => ({
+		id: a.id,
+		titulo: a.titulo,
+		color: catColors[a.id] ?? '#9bb4d0',
+		logo: a.logo,
+	})),
+	projects: proyectosData.flatMap((a) =>
+		(a.proyectos ?? []).map((p) => ({
+			id: p.id,
+			titulo: p.titulo.trim(),
+			cat: a.id,
+			peso: p.peso ?? 50,
+			imagen: p.imagen,
+			descripcion: p.descripcion ?? '',
+			tecnologias: p.tecnologias ?? [],
+			premio: p.premio ?? null,
+		}))
+	),
+};
 ---
 
 <!-- Cloudflare Turnstile -->
@@ -133,14 +165,21 @@ const heroLayout = [
 	<section class="proyectos-section" id="proyectos">
 		<div class="proyectos-header">
 			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
-			<p class="proyectos-subtitulo-seccion">Explora mis trabajos por categoría</p>
+			<p class="proyectos-subtitulo-seccion">
+				Un mapa interactivo de mis trabajos: cada burbuja es un proyecto y su tamaño refleja la envergadura. Filtra por categoría o arrastra las burbujas.
+			</p>
 		</div>
 
 		<div class="proyectos-hero">
 			<div class="proyectos-hero-inner">
 				<div class="proyectos-grid">
 					{proyectosData.map((aptitud) => (
-						<a href={`#aptitud-${aptitud.id}`} class="proyecto-card" data-aptitud-id={aptitud.id}>
+						<a
+							href="#proyectos-mapa"
+							class="proyecto-card"
+							data-aptitud-id={aptitud.id}
+							style={`--cat-color:${catColors[aptitud.id] ?? '#9bb4d0'}`}
+						>
 							<div class="proyecto-card-inner">
 								<div class="proyecto-icon">
 									<img src={aptitud.logo} alt={aptitud.titulo} />
@@ -163,63 +202,36 @@ const heroLayout = [
 			</div>
 		</div>
 
-		<div class="proyectos-content">
-			{proyectosData.map((aptitud) => (
-				<div class="aptitud-bloque" id={`aptitud-${aptitud.id}`}>
-					<div class="aptitud-header">
-						<div class="aptitud-icono">
-							<img src={aptitud.logo} alt={aptitud.titulo} />
-						</div>
-						<div class="aptitud-info">
-							<h3 class="aptitud-titulo">{aptitud.titulo}</h3>
-							<p class="aptitud-descripcion">{aptitud.descripcion}</p>
-						</div>
-					</div>
-				<div class="proyectos-grid-list">
-					{aptitud.proyectos && aptitud.proyectos.map((proyecto) => (
-						<a
-							class="proyecto-detail-card"
-							href={`/proyectos/${proyecto.id}`}
-							data-proyecto-link
-						>
-							<div class="proyecto-image-container">
-								<img src={proyecto.imagen} alt={proyecto.titulo} class="proyecto-image" />
+		<div class="proyectos-mapa" id="proyectos-mapa">
+			<div class="mapa-pills" id="mapaPills" role="group" aria-label="Filtrar proyectos por categoría"></div>
 
-								{proyecto.link && (
-									<span class="card-btn-link-float" title="Tiene enlace externo" aria-hidden="true">
-										<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-											<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-											<polyline points="15 3 21 3 21 9"></polyline>
-										</svg>
-									</span>
-								)}
-							</div>
+			<div class="mapa-panel">
+				<div class="mapa-wrap" id="mapaWrap">
+					<svg id="mapaChart" role="group" aria-label="Mapa de burbujas: cada burbuja es un proyecto, el tamaño indica su envergadura"></svg>
+					<div class="mapa-tip" id="mapaTip" role="tooltip"></div>
+				</div>
+			</div>
 
-							<div class="proyecto-info-wrapper">
-								<div class="proyecto-info">
-									<h4 class="proyecto-detail-titulo">{proyecto.titulo}</h4>
-									{proyecto.descripcion && (
-										<p class="proyecto-detail-desc">{proyecto.descripcion}</p>
-									)}
-								</div>
-								
-								{proyecto.tecnologias && (
-									<div class="proyecto-tecnologias">
-										{proyecto.tecnologias.slice(0, 4).map((tech) => (
-											<span class="tech-tag" data-tech={tech}>{tech}</span>
-										))}
-										{proyecto.tecnologias.length > 4 && (
-											<span class="tech-tag tech-tag-more">+{proyecto.tecnologias.length - 4}</span>
-										)}
-									</div>
-								)}
-							</div>
-						</a>
-					))}
-				</div>
-				</div>
-			))}
+			<p class="mapa-leyenda">
+				Tamaño = envergadura del proyecto · Pasa el cursor para ver detalles · Pulsa una burbuja para abrir el proyecto
+			</p>
+
+			<!-- Enlaces reales a cada proyecto: rastreables por buscadores y lectores de pantalla -->
+			<ul class="sr-only">
+				{proyectosData.map((aptitud) => (
+					<li>
+						{aptitud.titulo}
+						<ul>
+							{(aptitud.proyectos ?? []).map((proyecto) => (
+								<li><a href={`/proyectos/${proyecto.id}`}>{proyecto.titulo.trim()}</a></li>
+							))}
+						</ul>
+					</li>
+				))}
+			</ul>
 		</div>
+
+		<script type="application/json" id="burbujas-data" set:html={JSON.stringify(burbujasData)} />
 	</section>
 
 	</section>
@@ -484,11 +496,12 @@ const heroLayout = [
 		import '../scripts/galaxia-scroll.js';
 	</script>
 
-	<!-- Preloader + hero + órbita de proyectos -->
+	<!-- Preloader + hero + órbita de categorías + mapa de burbujas -->
 	<script>
 		import '../scripts/preloader.js';
 		import '../scripts/hero.js';
 		import '../scripts/proyectos-orbit.js';
+		import '../scripts/proyectos-burbujas.js';
 	</script>
 
 	<!-- Formulario de contacto -->

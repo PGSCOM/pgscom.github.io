@@ -8,6 +8,7 @@
       {
         "id": "portfolio-pgscom",
         "titulo": "Portfolio PGSCOM",
+        "peso": 90,
         "imagen": "/assets/proyectos/portfolio.png",
         "descripcion": "Sitio web personal desarrollado con Astro, React y animaciones con AnimeJS.",
         "tecnologias": ["Astro", "React", "TypeScript", "AnimeJS", "CSS3"],
@@ -17,6 +18,7 @@
       {
         "id": "blog-personal",
         "titulo": "Blog Personal",
+        "peso": 45,
         "imagen": "/assets/proyectos/Blog.png",
         "descripcion": "Blog técnico sobre audiovisual, tecnología y programación.",
         "tecnologias": ["HTML", "CSS", "JavaScript"],
@@ -26,6 +28,7 @@
       {
         "id": "portafolio-cine",
         "titulo": "Portafolio Cinematográfico",
+        "peso": 60,
         "imagen": "/assets/proyectos/PortfolioCortos.png",
         "descripcion": "Galería de proyectos audiovisuales con reproductor de video integrado.",
         "tecnologias": ["HTML5", "CSS3", "JavaScript", "Video.js"],
@@ -43,6 +46,7 @@
       {
         "id": "premio-macula-2024",
         "titulo": "Premio Mácula 2024 ",
+        "peso": 80,
         "imagen": "/assets/proyectos/Macula.png",
         "descripcion": "Segundo Premio Mácula 2024 - Cortometraje documental galardonado.",
         "tecnologias": ["DaVinci Resolve", "Premiere Pro", "After Effects"],
@@ -52,6 +56,7 @@
       {
         "id": "premio-macula-2023",
         "titulo": "Premio Mácula 2023 ",
+        "peso": 70,
         "imagen": "/assets/proyectos/Macula.png",
         "descripcion": "Segundo Premio Mácula 2023 - Proyecto audiovisual experimental.",
         "tecnologias": ["DaVinci Resolve", "Premiere Pro"],
@@ -61,6 +66,7 @@
       {
         "id": "cortometrajes",
         "titulo": "Cortometrajes Varios",
+        "peso": 60,
         "imagen": "/assets/proyectos/PortfolioCortos.png",
         "descripcion": "Colección de cortometrajes de ficción y documental.",
         "tecnologias": ["DaVinci Resolve", "After Effects", "Audition"],
@@ -77,6 +83,7 @@
       {
         "id": "logo-animado-pgscom",
         "titulo": "Logo Animado PGSCOM",
+        "peso": 50,
         "imagen": "/assets/proyectos/logo-anim.jpg",
         "descripcion": "Animación 3D del logo personal con partículas y efectos visuales.",
         "tecnologias": ["Blender", "Cycles", "After Effects"],
@@ -85,6 +92,7 @@
       {
         "id": "visuales-unreal",
         "titulo": "Entornos Virtuales",
+        "peso": 70,
         "imagen": "/assets/proyectos/unreal.jpg",
         "descripcion": "Creación de entornos virtuales fotorrealistas en Unreal Engine.",
         "tecnologias": ["Unreal Engine", "Blender", "Substance Painter"],
@@ -93,6 +101,7 @@
       {
         "id": "motion-graphics",
         "titulo": "Motion Graphics",
+        "peso": 55,
         "imagen": "/assets/proyectos/motion.jpg",
         "descripcion": "Piezas de motion graphics para redes sociales y proyectos comerciales.",
         "tecnologias": ["Blender", "After Effects", "Illustrator"],
@@ -109,6 +118,7 @@
       {
         "id": "github-contributions",
         "titulo": "Contribuciones Open Source",
+        "peso": 65,
         "imagen": "/assets/proyectos/Contribuciones.png",
         "descripcion": "Más de 4 años de experiencia con Git/GitHub.",
         "tecnologias": ["Git", "GitHub", "Python", "JavaScript"],
@@ -118,6 +128,7 @@
       {
         "id": "python-tools",
         "titulo": "Herramientas Python",
+        "peso": 75,
         "imagen": "/assets/proyectos/Herramientas.png",
         "descripcion": "Scripts de automatización para proyectos audiovisuales. +6 años.",
         "tecnologias": ["Python", "NumPy", "OpenCV", "FFmpeg"],
@@ -126,6 +137,7 @@
       {
         "id": "cpp-learning",
         "titulo": "Aprendiendo C++",
+        "peso": 40,
         "imagen": "/assets/proyectos/cpp.jpg",
         "descripcion": "Proyectos académicos y personales en C++.",
         "tecnologias": ["C++", "CMake", "Visual Studio"],
@@ -142,6 +154,7 @@
       {
         "id": "identidad-pgscom",
         "titulo": "Identidad PGSCOM",
+        "peso": 55,
         "imagen": "/assets/proyectos/branding.jpg",
         "descripcion": "Diseño de identidad visual completa.",
         "tecnologias": ["Illustrator", "Photoshop", "Figma"],
@@ -150,6 +163,7 @@
       {
         "id": "carteleria",
         "titulo": "Cartelería de Eventos",
+        "peso": 45,
         "imagen": "/assets/proyectos/posters.jpg",
         "descripcion": "Diseño de carteles para eventos culturales.",
         "tecnologias": ["Photoshop", "Illustrator", "InDesign"],
@@ -158,6 +172,7 @@
       {
         "id": "diseño-web",
         "titulo": "UI/UX Design",
+        "peso": 60,
         "imagen": "/assets/proyectos/UI.png",
         "descripcion": "Diseño de interfaces para aplicaciones web y móviles.",
         "tecnologias": ["Figma", "Adobe XD", "Sketch"],
@@ -174,6 +189,7 @@
       {
         "id": "fotografia-eventos",
         "titulo": "Fotografía de Eventos",
+        "peso": 55,
         "imagen": "/assets/proyectos/eventos.jpg",
         "descripcion": "Cobertura fotográfica de eventos culturales.",
         "tecnologias": ["Lightroom", "Photoshop", "Capture One"],
@@ -182,6 +198,7 @@
       {
         "id": "retratos",
         "titulo": "Retratos",
+        "peso": 40,
         "imagen": "/assets/proyectos/retratos.jpg",
         "descripcion": "Sesiones de retrato profesional.",
         "tecnologias": ["Lightroom", "Photoshop"],
@@ -190,6 +207,7 @@
       {
         "id": "fotografia-producto",
         "titulo": "Fotografía de Producto",
+        "peso": 50,
         "imagen": "/assets/proyectos/producto.jpg",
         "descripcion": "Fotografía comercial de productos.",
         "tecnologias": ["Photoshop", "Lightroom", "Capture One"],
