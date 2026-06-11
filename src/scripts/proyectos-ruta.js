@@ -15,8 +15,8 @@ function initRuta() {
   const svg = mapa?.querySelector('.ruta-linea');
   if (!mapa || !cuerpo || !svg) return;
 
-  // Animaciones siempre activas: ignoramos deliberadamente prefers-reduced-motion
-  const reduced = false;
+  // Mismo punto de corte que el @media del CSS que endereza la cronología
+  const narrowQuery = window.matchMedia('(max-width: 760px)');
   const NS = 'http://www.w3.org/2000/svg';
   const glow = document.createElementNS(NS, 'path');
   const trazo = document.createElementNS(NS, 'path');
@@ -53,17 +53,28 @@ function initRuta() {
   glow.setAttribute('mask', 'url(#ruta-mascara)');
   trazo.setAttribute('mask', 'url(#ruta-mascara)');
 
+  // Posición de layout relativa al cuerpo: ignora los transforms de las
+  // animaciones de entrada (scale/translate), que falsearían las medidas
+  function rectLayout(el) {
+    let x = 0;
+    let y = 0;
+    for (let n = el; n && n !== cuerpo; n = n.offsetParent) {
+      x += n.offsetLeft;
+      y += n.offsetTop;
+    }
+    return { x, y, w: el.offsetWidth, h: el.offsetHeight };
+  }
+
   function construirMascara() {
     recortes.replaceChildren();
-    const base = cuerpo.getBoundingClientRect();
     cuerpo.querySelectorAll('.ruta-item').forEach((el) => {
-      const b = el.getBoundingClientRect();
+      const b = rectLayout(el);
       const pad = 22;
       const r = document.createElementNS(NS, 'rect');
-      r.setAttribute('x', (b.left - base.left - pad).toFixed(1));
-      r.setAttribute('y', (b.top - base.top - pad).toFixed(1));
-      r.setAttribute('width', (b.width + pad * 2).toFixed(1));
-      r.setAttribute('height', (b.height + pad * 2).toFixed(1));
+      r.setAttribute('x', (b.x - pad).toFixed(1));
+      r.setAttribute('y', (b.y - pad).toFixed(1));
+      r.setAttribute('width', (b.w + pad * 2).toFixed(1));
+      r.setAttribute('height', (b.h + pad * 2).toFixed(1));
       r.setAttribute('rx', '36');
       r.setAttribute('fill', '#000');
       recortes.append(r);
@@ -73,16 +84,21 @@ function initRuta() {
   let drawTween = null;
 
   // Puntos de paso: el punto de cada año y el centro de cada tarjeta principal.
-  // En pantallas estrechas la línea baja recta por el margen izquierdo.
+  // En pantallas estrechas la línea baja recta pasando por los puntos de año.
   function puntos() {
-    const base = cuerpo.getBoundingClientRect();
-    const narrow = base.width < 760;
+    const narrow = narrowQuery.matches;
     const els = cuerpo.querySelectorAll('.ruta-año-dot, .ruta-item');
+    let xRecta = 16;
+    const dot = cuerpo.querySelector('.ruta-año-dot');
+    if (dot) {
+      const b = rectLayout(dot);
+      xRecta = b.x + b.w / 2;
+    }
     return [...els].map((el) => {
-      const b = el.getBoundingClientRect();
+      const b = rectLayout(el);
       return {
-        x: narrow ? 16 : b.left - base.left + b.width / 2,
-        y: b.top - base.top + b.height / 2,
+        x: narrow ? xRecta : b.x + b.w / 2,
+        y: b.y + b.h / 2,
       };
     });
   }
@@ -120,11 +136,6 @@ function initRuta() {
     drawTween?.scrollTrigger?.kill();
     drawTween?.kill();
 
-    if (reduced) {
-      gsap.set([glow, trazo], { strokeDasharray: 'none', strokeDashoffset: 0 });
-      return;
-    }
-
     gsap.set([glow, trazo], { strokeDasharray: L, strokeDashoffset: L });
     drawTween = gsap.to([glow, trazo], {
       strokeDashoffset: 0,
@@ -139,53 +150,49 @@ function initRuta() {
   }
 
   // ── Entradas al hacer scroll ──
-  if (!reduced) {
-    gsap.utils.toArray('.ruta-año', cuerpo).forEach((el) => {
-      gsap.from(el, {
-        autoAlpha: 0,
-        scale: 0.7,
-        duration: 0.6,
-        ease: 'back.out(1.6)',
-        scrollTrigger: { trigger: el, start: 'top 88%' },
-      });
-    });
-
-    gsap.utils.toArray('.ruta-entry', cuerpo).forEach((entry) => {
-      const der = entry.classList.contains('ruta-entry--der');
-      const item = entry.querySelector('.ruta-item');
-      const subs = entry.querySelectorAll('.ruta-sub');
-
-      gsap.from(item, {
-        autoAlpha: 0,
-        y: 56,
-        rotation: der ? 1.4 : -1.4,
-        duration: 0.9,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: entry, start: 'top 86%' },
-      });
-
-      // Las subtarjetas brotan desde la tarjeta principal, en cascada
-      if (subs.length) {
-        gsap.from(subs, {
-          autoAlpha: 0,
-          x: der ? 36 : -36,
-          duration: 0.7,
-          ease: 'power3.out',
-          stagger: 0.16,
-          scrollTrigger: { trigger: entry, start: 'top 70%' },
-        });
-      }
-    });
-  }
-
-  // El marcador de año se "enciende" cuando la ruta pasa por él
+  // Un único ScrollTrigger por marcador de año: entrada animada y "encendido"
+  // del punto cuando la ruta pasa por él (se apaga al volver hacia arriba)
   gsap.utils.toArray('.ruta-año', cuerpo).forEach((el) => {
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 75%',
-      onEnter: () => el.classList.add('on'),
-      onLeaveBack: () => el.classList.remove('on'),
+    gsap.from(el, {
+      autoAlpha: 0,
+      scale: 0.7,
+      duration: 0.6,
+      ease: 'back.out(1.6)',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 82%',
+        onEnter: () => el.classList.add('on'),
+        onLeaveBack: () => el.classList.remove('on'),
+      },
     });
+  });
+
+  // Un único ScrollTrigger por entrada: la tarjeta principal entra y las
+  // subtarjetas brotan de ella en cascada, todo en la misma timeline
+  gsap.utils.toArray('.ruta-entry', cuerpo).forEach((entry) => {
+    const der = entry.classList.contains('ruta-entry--der');
+    const item = entry.querySelector('.ruta-item');
+    const subs = entry.querySelectorAll('.ruta-sub');
+
+    const tlEntry = gsap.timeline({
+      scrollTrigger: { trigger: entry, start: 'top 84%' },
+    });
+    tlEntry.from(item, {
+      autoAlpha: 0,
+      y: 56,
+      rotation: der ? 1.4 : -1.4,
+      duration: 0.9,
+      ease: 'power3.out',
+    });
+    if (subs.length) {
+      tlEntry.from(subs, {
+        autoAlpha: 0,
+        x: der ? 36 : -36,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: 0.16,
+      }, '-=0.45');
+    }
   });
 
   // ── Imágenes que no existen: fondo tintado + icono de la categoría ──
@@ -210,7 +217,14 @@ function initRuta() {
     filtroActual = cat;
     entries.forEach((entry) => {
       const cats = (entry.dataset.cats || '').split(',');
-      entry.classList.toggle('fuera', cat !== 'all' && !cats.includes(cat));
+      const item = entry.querySelector('.ruta-item');
+      if (item) {
+        item.classList.toggle('fuera', cat !== 'all' && !cats.includes(cat));
+      }
+    });
+    cuerpo.querySelectorAll('.ruta-sub').forEach((sub) => {
+      const cats = (sub.dataset.cats || '').split(',');
+      sub.classList.toggle('fuera', cat !== 'all' && !cats.includes(cat));
     });
     filtros.forEach((f) => {
       const act = f.dataset.cat === cat;

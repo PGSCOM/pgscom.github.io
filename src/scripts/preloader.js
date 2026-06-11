@@ -27,16 +27,6 @@ function initPreloader() {
   window.scrollTo(0, 0);
   document.documentElement.style.overflow = 'hidden';
 
-  // Animaciones siempre activas: ignoramos deliberadamente prefers-reduced-motion
-  const reduced = false;
-  if (reduced) {
-    gsap.set(fill, { opacity: 1 });
-    gsap.set(draw, { drawSVG: '100%', visibility: 'visible' });
-    dispatchDone();
-    gsap.to(pre, { autoAlpha: 0, duration: 0.4, delay: 0.3, onComplete: () => pre.remove() });
-    return;
-  }
-
   gsap.set(draw, { drawSVG: '0%', visibility: 'visible' });
   gsap.set(fill, { opacity: 0 });
 

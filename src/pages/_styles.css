@@ -443,11 +443,6 @@
     mask-position: center;
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
-
-    background-image: url(/vid/empezar/000.png);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
 .video-galaxia {
@@ -473,17 +468,6 @@
     justify-content: center;
     position: relative;
     z-index: 60;
-}
-
-/* Contenedor heredado que galaxia-scroll.js anima (queda vacío) */
-.image-container {
-    position: fixed;
-    top: 0;
-    right: 5%;
-    z-index: -1;
-    width: 40%;
-    height: 100vh;
-    pointer-events: none;
 }
 
 /* ============================================

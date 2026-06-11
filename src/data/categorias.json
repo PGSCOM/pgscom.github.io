@@ -4,36 +4,42 @@
       "id": "desarrollo-web",
       "titulo": "Desarrollo Web",
       "logo": "/icons/web.svg",
+      "color": "#4da3ff",
       "descripcion": "Desarrollo de sitios y aplicaciones web con tecnologías modernas"
     },
     {
       "id": "video-produccion",
       "titulo": "Producción Audiovisual",
       "logo": "/icons/video.svg",
+      "color": "#ff7a4d",
       "descripcion": "Cortometrajes, documentales y proyectos cinematográficos"
     },
     {
       "id": "animacion-3d",
       "titulo": "Animación 3D",
       "logo": "/icons/animation.svg",
+      "color": "#9a8cff",
       "descripcion": "Modelado, animación y renders con Blender y Unreal Engine"
     },
     {
       "id": "programacion",
       "titulo": "Programación",
       "logo": "/icons/code.svg",
+      "color": "#34d39b",
       "descripcion": "Aplicaciones y scripts en Python, C++ y más"
     },
     {
       "id": "diseño-grafico",
       "titulo": "Diseño Gráfico",
       "logo": "/icons/design.svg",
+      "color": "#ff6fb3",
       "descripcion": "Identidad visual, carteles y diseño digital"
     },
     {
       "id": "fotografia",
       "titulo": "Fotografía",
       "logo": "/icons/photo.svg",
+      "color": "#ffc94d",
       "descripcion": "Fotografía digital y retoque profesional"
     }
   ]

@@ -3,6 +3,7 @@ titulo: Premio Mácula 2024
 fecha: "2024-05"
 categorias: [video-produccion, programacion]
 peso: 80
+destacado: 2
 imagen: /assets/proyectos/Macula.png
 descripcion: Segundo Premio Mácula 2024 - Cortometraje documental galardonado.
 tecnologias: [DaVinci Resolve, Premiere Pro, After Effects]
@@ -17,7 +18,6 @@ sub:
   - titulo: Cartelería del festival
     descripcion: Diseño del cartel y material promocional de la edición.
     categoria: diseño-grafico
-    imagen: /assets/proyectos/posters.jpg
     link: /proyectos/premio-macula-2024#carteleria
 ---
 

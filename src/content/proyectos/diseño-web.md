@@ -3,6 +3,7 @@ titulo: UI/UX Design
 fecha: "2024-06"
 categorias: [diseño-grafico, desarrollo-web]
 peso: 60
+destacado: 3
 imagen: /assets/proyectos/UI.png
 descripcion: Diseño de interfaces para aplicaciones web y móviles.
 tecnologias: [Figma, Adobe XD, Sketch]

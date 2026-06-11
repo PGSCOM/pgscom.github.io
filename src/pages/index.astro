@@ -9,6 +9,7 @@ import logo from '../assets/logo.png';
 import { getCollection } from 'astro:content';
 import categoriasData from '../data/categorias.json';
 import contactoData from '../data/contacto.json';
+import { formatFecha } from '../utils/fechas.js';
 
 // Forma de la P extraída de public/assets/animlogo/carga.svg (viewBox 600x600)
 const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.19165 c 66.88974,0 121.11609,-54.22597 121.11609,-121.11609 0,-66.88986 -54.22635,-121.114324 -121.11609,-121.114324 v -0.004 z';
@@ -18,19 +19,13 @@ const categorias = categoriasData.categorias;
 // los metadatos del frontmatter (el cuerpo markdown se renderiza en su ficha)
 const proyectos = (await getCollection('proyectos')).map((e) => ({ id: e.id, ...e.data }));
 const catById = Object.fromEntries(categorias.map((c) => [c.id, c]));
+// Color cuando un proyecto no tiene categoría (o esta no existe en el JSON)
+const COLOR_NEUTRO = '#9bb4d0';
+const colorDe = (catId) => catById[catId]?.color ?? COLOR_NEUTRO;
 
-// Proyectos destacados que flotan en el hero (con imagen existente)
-const featuredIds = ['portfolio-pgscom', 'premio-macula-2024', 'diseño-web', 'portafolio-cine', 'python-tools', 'blog-personal'];
-const featured = featuredIds
-	.map((id) => proyectos.find((p) => p.id === id))
-	.filter(Boolean)
-	.map((p) => ({
-		...p,
-		aptitudId: p.categorias?.[0],
-		aptitudTitulo: catById[p.categorias?.[0]]?.titulo ?? '',
-	}));
-
-// Posición, profundidad (parallax) y rotación de cada card del hero
+// Posición, profundidad (parallax) y rotación de cada card del hero.
+// Los proyectos con `destacado: N` en su frontmatter flotan aquí (ordenados
+// por N); solo caben tantos como huecos hay en este layout.
 const heroLayout = [
 	{ left: '14%', top: '26%', depth: 0.9,  rot: -7,  size: 'md', far: false },
 	{ left: '80%', top: '20%', depth: 0.7,  rot: 6,   size: 'md', far: false },
@@ -40,30 +35,15 @@ const heroLayout = [
 	{ left: '67%', top: '89%', depth: 0.8,  rot: -5,  size: 'sm', far: true },
 ];
 
-// Color de cada categoría: lo comparten la órbita, las pills y el mapa de burbujas
-const catColors = {
-	'desarrollo-web': '#4da3ff',
-	'video-produccion': '#ff7a4d',
-	'animacion-3d': '#9a8cff',
-	'programacion': '#34d39b',
-	'diseño-grafico': '#ff6fb3',
-	'fotografia': '#ffc94d',
-};
+const featured = proyectos
+	.filter((p) => p.destacado != null && p.imagen)
+	.sort((a, b) => a.destacado - b.destacado)
+	.slice(0, heroLayout.length)
+	.map((p) => ({ ...p, aptitudTitulo: catById[p.categorias?.[0]]?.titulo ?? '' }));
 
 // ── Ruta cronológica (formato currículum: lo más reciente arriba) ──
-// fecha admite "YYYY", "YYYY-MM" o "YYYY-MM-DD"; se muestra con la precisión
-// que tenga. Las categorías son etiquetas del proyecto (puede tener varias) y
-// las subtarjetas (`sub`) muestran trabajos concretos dentro del proyecto.
-const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-function formatFecha(f) {
-	if (!f) return '';
-	const [y, m, d] = String(f).split('-');
-	if (!m) return y;
-	const mes = MESES[Number(m) - 1] ?? '';
-	if (d) return `${Number(d)} de ${mes} de ${y}`;
-	return `${mes.charAt(0).toUpperCase()}${mes.slice(1)} ${y}`;
-}
-
+// Las categorías son etiquetas del proyecto (puede tener varias) y las
+// subtarjetas (`sub`) muestran trabajos concretos dentro del proyecto.
 const cronologia = [...proyectos].sort((a, b) =>
 	String(b.fecha ?? '').localeCompare(String(a.fecha ?? ''))
 );
@@ -78,11 +58,9 @@ const rutaEntries = cronologia.map((p, i) => {
 	const subs = (p.sub ?? []).map((s) => ({
 		...s,
 		cat: s.categoria ? catById[s.categoria] : null,
-		color: s.categoria ? (catColors[s.categoria] ?? '#9bb4d0') : null,
+		color: s.categoria ? colorDe(s.categoria) : null,
 		fechaTexto: formatFecha(s.fecha),
 	}));
-	// Para el filtro cuentan las categorías del proyecto y las de sus subtarjetas
-	const todasCats = [...new Set([...catsProyecto, ...subs.map((s) => s.categoria).filter(Boolean)])];
 	return {
 		...p,
 		año,
@@ -91,9 +69,10 @@ const rutaEntries = cronologia.map((p, i) => {
 		lado: i % 2 === 0 ? 'izq' : 'der',
 		inset: ['0%', '5%', '2%'][i % 3],
 		w: peso >= 75 ? 580 : peso >= 55 ? 500 : 430,
-		color: catColors[catsProyecto[0]] ?? '#9bb4d0',
+		color: colorDe(catsProyecto[0]),
+		// Para el filtro cuentan solo las categorías del proyecto
+		catIds: catsProyecto,
 		cats: catsProyecto.map((id) => catById[id]).filter(Boolean),
-		todasCats,
 		subs,
 	};
 });
@@ -181,8 +160,6 @@ const rutaEntries = cronologia.map((p, i) => {
 		<div class="hero-scroll-hint">Scroll</div>
 	</main>
 
-	<div class="image-container"></div>
-
 	<section class="parte2-wrapper">
 		<div class="parte2">
 			<div class="galaxiamask">
@@ -210,7 +187,7 @@ const rutaEntries = cronologia.map((p, i) => {
 							href="#proyectos-mapa"
 							class="proyecto-card"
 							data-aptitud-id={aptitud.id}
-							style={`--cat-color:${catColors[aptitud.id] ?? '#9bb4d0'}`}
+							style={`--cat-color:${aptitud.color ?? COLOR_NEUTRO}`}
 						>
 							<div class="proyecto-card-inner">
 								<div class="proyecto-icon">
@@ -244,7 +221,7 @@ const rutaEntries = cronologia.map((p, i) => {
 						class="ruta-filtro"
 						data-cat={c.id}
 						aria-pressed="false"
-						style={`--cat-color:${catColors[c.id] ?? '#9bb4d0'}`}
+						style={`--cat-color:${c.color ?? COLOR_NEUTRO}`}
 					>
 						<img src={c.logo} alt="" aria-hidden="true" />
 						<span>{c.titulo}</span>
@@ -267,19 +244,19 @@ const rutaEntries = cronologia.map((p, i) => {
 
 						<div
 							class={`ruta-entry ruta-entry--${proyecto.lado}`}
-							data-cats={proyecto.todasCats.join(',')}
+							data-cats={proyecto.catIds.join(',')}
 							style={`--cat-color:${proyecto.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
 						>
-							<a class="ruta-item" href={`/proyectos/${proyecto.id}`} data-proyecto-link>
+							<a class={`ruta-item${proyecto.imagen ? '' : ' sin-imagen'}`} href={`/proyectos/${proyecto.id}`} data-proyecto-link>
 								{proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
 								<div class="ruta-media">
-									<img class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />
+									{proyecto.imagen && <img class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
 									<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
 									{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
 									<div class="ruta-info">
 										<div class="ruta-cats">
 											{proyecto.cats.map((c) => (
-												<span class="ruta-cat-chip" style={`--cat-color:${catColors[c.id] ?? '#9bb4d0'}`}>
+												<span class="ruta-cat-chip" style={`--cat-color:${c.color ?? COLOR_NEUTRO}`}>
 													<img src={c.logo} alt="" aria-hidden="true" />
 													<span>{c.titulo}</span>
 												</span>
@@ -305,6 +282,7 @@ const rutaEntries = cronologia.map((p, i) => {
 										return (
 											<Tag
 												class="ruta-sub"
+												data-cats={s.categoria || undefined}
 												style={s.color ? `--cat-color:${s.color}` : undefined}
 												{...(s.link ? { href: s.link } : {})}
 											>

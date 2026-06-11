@@ -414,8 +414,9 @@
 }
 
 /* Filtrado: fuera de la disciplina elegida → gris y atenuado */
-.ruta-entry.fuera {
-  opacity: 0.32;
+.ruta-item.fuera,
+.ruta-sub.fuera {
+  opacity: 0.2;
   filter: grayscale(1) brightness(0.85);
 }
 

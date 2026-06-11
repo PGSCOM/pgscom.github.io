@@ -3,6 +3,7 @@ titulo: Blog Personal
 fecha: "2023-09"
 categorias: [desarrollo-web]
 peso: 45
+destacado: 6
 imagen: /assets/proyectos/Blog.png
 descripcion: Blog técnico sobre audiovisual, tecnología y programación.
 tecnologias: [HTML, CSS, JavaScript]

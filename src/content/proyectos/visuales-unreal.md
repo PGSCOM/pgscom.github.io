@@ -3,7 +3,6 @@ titulo: Entornos Virtuales
 fecha: "2024-08"
 categorias: [animacion-3d]
 peso: 70
-imagen: /assets/proyectos/unreal.jpg
 descripcion: Creación de entornos virtuales fotorrealistas en Unreal Engine.
 tecnologias: [Unreal Engine, Blender, Substance Painter]
 ---

@@ -3,7 +3,6 @@ titulo: Motion Graphics
 fecha: "2023-04"
 categorias: [animacion-3d, diseño-grafico]
 peso: 55
-imagen: /assets/proyectos/motion.jpg
 descripcion: Piezas de motion graphics para redes sociales y proyectos comerciales.
 tecnologias: [Blender, After Effects, Illustrator]
 ---

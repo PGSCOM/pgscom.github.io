@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import lenis from './smooth-scroll.js';
 gsap.registerPlugin(ScrollTrigger);
 
 // ── Hero: cards de proyectos flotando alrededor del logo ─────────────────────
@@ -7,9 +8,6 @@ gsap.registerPlugin(ScrollTrigger);
 //   .hero-card        → posición, entrada, parallax de ratón y scroll (GSAP)
 //   .hero-card-tilt   → rotación base + flotación orgánica (GSAP)
 //   .hero-card-media  → hover scale (CSS)
-
-// Animaciones siempre activas: ignoramos deliberadamente prefers-reduced-motion
-const reduced = false;
 
 function initHero() {
   const cards     = gsap.utils.toArray('.hero-card');
@@ -35,7 +33,6 @@ function initHero() {
   let entered = false;
 
   function startIdleFloat() {
-    if (reduced) return;
     cards.forEach(card => {
       const tilt = card.querySelector('.hero-card-tilt');
       const d    = parseFloat(card.dataset.depth) || 1;
@@ -57,13 +54,6 @@ function initHero() {
     gsap.set(gscomWrap, { width: 'auto' });
     const gscomWidth = gscomWrap.offsetWidth + 2;
     gsap.set(gscomWrap, { width: 0 });
-
-    if (reduced) {
-      gsap.set([pEl, ...fadeEls], { autoAlpha: 1, scale: 1, y: 0, clearProps: 'transform' });
-      gsap.set(gscomWrap, { width: 'auto', opacity: 1, overflow: 'visible' });
-      gsap.set(cards, { autoAlpha: 1, scale: 1 });
-      return;
-    }
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     tl.to(pEl, { scale: 1, autoAlpha: 1, duration: 0.7, ease: 'back.out(1.8)' })
@@ -90,7 +80,7 @@ function initHero() {
   }
 
   // ── Parallax de ratón (solo puntero fino, fuera del hero se pausa) ───────
-  if (!reduced && window.matchMedia('(pointer: fine)').matches && cards.length) {
+  if (window.matchMedia('(pointer: fine)').matches && cards.length) {
     let heroVisible = true;
     const setters = cards.map(card => ({
       x: gsap.quickTo(card, 'x', { duration: 0.9, ease: 'power3' }),
@@ -113,70 +103,34 @@ function initHero() {
   }
 
   // ── Salida con scroll: cada profundidad sube a distinta velocidad ────────
-  if (!reduced) {
-    const exit = gsap.timeline({
-      scrollTrigger: {
-        trigger: '.main-container',
-        start: 'top top', end: 'bottom top',
-        scrub: 0.8,
-      },
-    });
-    cards.forEach(card => {
-      const d = parseFloat(card.dataset.depth) || 1;
-      exit.to(card, { yPercent: -(50 + 55 * d), ease: 'none' }, 0);
-    });
-    exit.to('.content', { yPercent: -22, autoAlpha: 0.15, ease: 'none' }, 0);
-    exit.to('.hero-scroll-hint', { autoAlpha: 0, ease: 'none', duration: 0.25 }, 0);
-  }
+  const exit = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.main-container',
+      start: 'top top', end: 'bottom top',
+      scrub: 0.8,
+    },
+  });
+  cards.forEach(card => {
+    const d = parseFloat(card.dataset.depth) || 1;
+    exit.to(card, { yPercent: -(50 + 55 * d), ease: 'none' }, 0);
+  });
+  exit.to('.content', { yPercent: -22, autoAlpha: 0.15, ease: 'none' }, 0);
+  exit.to('.hero-scroll-hint', { autoAlpha: 0, ease: 'none', duration: 0.25 }, 0);
 
   // ── Botón "Ver proyectos": scroll suave para no saltarse las animaciones ──
-  // En vez de saltar directo al panal (lo que se salta el zoom de galaxia y
-  // la salida de las cards), recorremos toda la página con un scroll animado por
-  // tiempo para que se vean todas las animaciones de scroll antes de llegar.
+  // En vez de saltar directo a la cronología (lo que se salta el zoom de
+  // galaxia y la salida de las cards), recorremos la página despacio con
+  // Lenis; si el usuario interactúa, Lenis le devuelve el control.
   const cta = document.querySelector('.hero-cta');
   if (cta) {
     cta.addEventListener('click', (e) => {
       const target = document.querySelector('#proyectos-mapa') || document.querySelector('#proyectos');
       if (!target) return;
       e.preventDefault();
-
-      if (reduced) {
-        target.scrollIntoView();
-        return;
-      }
-
-      const startY = window.scrollY || document.documentElement.scrollTop;
-      const endY   = target.getBoundingClientRect().top + startY;
-      const dist   = endY - startY;
-      if (Math.abs(dist) < 4) return;
-
-      // Duración proporcional a la distancia para que el ritmo sea agradable
-      const duration = Math.min(7000, Math.max(7000, Math.abs(dist) * 1.5));
-      const startT   = performance.now();
-      let cancelled  = false;
-
-      // Si el usuario interactúa, le devolvemos el control inmediatamente
-      const cancel = () => { cancelled = true; cleanup(); };
-      const cleanup = () => {
-        window.removeEventListener('wheel', cancel);
-        window.removeEventListener('touchstart', cancel);
-        window.removeEventListener('keydown', cancel);
-      };
-      window.addEventListener('wheel', cancel, { passive: true });
-      window.addEventListener('touchstart', cancel, { passive: true });
-      window.addEventListener('keydown', cancel);
-
-      // easeInOutCubic
-      const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-      function step(now) {
-        if (cancelled) return;
-        const p = Math.min(1, (now - startT) / duration);
-        window.scrollTo(0, startY + dist * ease(p));
-        if (p < 1) requestAnimationFrame(step);
-        else cleanup();
-      }
-      requestAnimationFrame(step);
+      lenis.scrollTo(target, {
+        duration: 7,
+        easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+      });
     });
   }
 

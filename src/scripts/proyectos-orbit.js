@@ -12,10 +12,8 @@ function initOrbit() {
   const cards = gsap.utils.toArray('.proyecto-card', ring);
   if (!cards.length) return;
 
-  // Animaciones siempre activas: ignoramos deliberadamente prefers-reduced-motion
-  const reduced = false;
-  const proxy   = { a: 0 };
-  let radius    = 0;
+  const proxy = { a: 0 };
+  let radius  = 0;
 
   const measure = () => {
     const rect = ring.getBoundingClientRect();
@@ -40,17 +38,16 @@ function initOrbit() {
     scrollTrigger: { trigger: '.proyectos-hero', start: 'top 75%' },
   });
 
-  if (!reduced) {
-    const spin = gsap.to(proxy, {
-      a: Math.PI * 2, duration: 48, repeat: -1, ease: 'none',
-      onUpdate: place, paused: true,
-    });
-    ScrollTrigger.create({
-      trigger: '.proyectos-hero',
-      start: 'top bottom', end: 'bottom top',
-      onToggle: self => (self.isActive ? spin.play() : spin.pause()),
-    });
-  }
+  // La órbita solo gira mientras la sección está en pantalla
+  const spin = gsap.to(proxy, {
+    a: Math.PI * 2, duration: 48, repeat: -1, ease: 'none',
+    onUpdate: place, paused: true,
+  });
+  ScrollTrigger.create({
+    trigger: '.proyectos-hero',
+    start: 'top bottom', end: 'bottom top',
+    onToggle: self => (self.isActive ? spin.play() : spin.pause()),
+  });
 
   let resizeRaf = 0;
   window.addEventListener('resize', () => {

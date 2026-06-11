@@ -12,7 +12,10 @@ const proyectos = defineCollection({
 		fecha: z.coerce.string().optional(),
 		categorias: z.array(z.string()).default([]),
 		peso: z.number().optional(),
-		imagen: z.string(),
+		// Opcional: sin imagen la tarjeta muestra el icono de su categoría
+		imagen: z.string().optional(),
+		// Orden en el hero (1 = primero); los proyectos sin destacado no flotan
+		destacado: z.number().optional(),
 		descripcion: z.string().optional(),
 		tecnologias: z.array(z.string()).optional(),
 		link: z.string().optional(),

@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import '../../styles/proyecto-detalle.css';
 import { getCollection, render } from 'astro:content';
 import categoriasData from '../../data/categorias.json';
+import { formatFecha } from '../../utils/fechas.js';
 
 // Genera una ruta estática por cada .md de src/content/proyectos/.
 // Cada página es HTML real y rastreable por los bots de Google.
@@ -29,17 +30,9 @@ const { entrada, proyecto, aptitud, relacionados } = Astro.props;
 // El cuerpo markdown del .md se convierte en el contenido de la ficha
 const { Content } = await render(entrada);
 
-// Fecha con precisión variable: "YYYY", "YYYY-MM" o "YYYY-MM-DD"
-const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-function formatFecha(f) {
-	if (!f) return '';
-	const [y, m, d] = String(f).split('-');
-	if (!m) return y;
-	const mes = MESES[Number(m) - 1] ?? '';
-	if (d) return `${Number(d)} de ${mes} de ${y}`;
-	return `${mes.charAt(0).toUpperCase()}${mes.slice(1)} ${y}`;
-}
 const fechaTexto = formatFecha(proyecto.fecha);
+// Sin imagen propia, el poster y el fondo usan el icono de la categoría
+const imagen = proyecto.imagen || aptitud.logo;
 
 const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
 const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;
@@ -51,7 +44,7 @@ const jsonLd = {
 	name: proyecto.titulo.trim(),
 	description: descripcionPagina,
 	url: new URL(`/proyectos/${proyecto.id}`, Astro.site).href,
-	image: new URL(proyecto.imagen, Astro.site).href,
+	image: new URL(imagen, Astro.site).href,
 	genre: aptitud.titulo,
 	keywords: (proyecto.tecnologias ?? []).join(', '),
 	creator: {
@@ -81,7 +74,7 @@ const breadcrumbLd = {
 <Layout
 	title={tituloPagina}
 	description={descripcionPagina}
-	image={proyecto.imagen}
+	image={imagen}
 	type="article"
 >
 	<script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
@@ -90,7 +83,7 @@ const breadcrumbLd = {
 	<main class="pd-page">
 		<!-- Fondo cinematográfico -->
 		<div class="pd-backdrop">
-			<img class="pd-backdrop-img" src={proyecto.imagen} alt="" aria-hidden="true" loading="eager" />
+			<img class="pd-backdrop-img" src={imagen} alt="" aria-hidden="true" loading="eager" />
 		</div>
 
 		<a class="pd-back" href="/?sincarga#proyectos-mapa" aria-label="Volver a proyectos">
@@ -115,7 +108,7 @@ const breadcrumbLd = {
 				<div class="pd-poster-container">
 					<img
 						class="pd-poster"
-						src={proyecto.imagen}
+						src={imagen}
 						alt={proyecto.titulo.trim()}
 						style="view-transition-name: project-hero"
 						loading="eager"

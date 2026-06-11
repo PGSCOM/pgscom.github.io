@@ -15,8 +15,10 @@ lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add((time) => lenis.raf(time * 1000));
 gsap.ticker.lagSmoothing(0);
 
-// Enlaces de ancla: scroll animado con la misma inercia
+// Enlaces de ancla: scroll animado con la misma inercia.
+// Si otro handler ya gestionó el click (CTA del hero, órbita), no se duplica.
 document.addEventListener('click', (e) => {
+  if (e.defaultPrevented) return;
   const a = e.target.closest('a[href^="#"]');
   if (!a || a.getAttribute('href') === '#') return;
   const dest = document.querySelector(a.getAttribute('href'));
