@@ -99,13 +99,15 @@
           "descripcion": "Aplicación web para validar las entradas del festival en la puerta.",
           "categoria": "programacion",
           "fecha": "2024-04",
-          "imagen": "/assets/proyectos/Herramientas.png"
+          "imagen": "/assets/proyectos/Herramientas.png",
+          "link": "/proyectos/premio-macula-2024#sistema-validacion"
         },
         {
           "titulo": "Cartelería del festival",
           "descripcion": "Diseño del cartel y material promocional de la edición.",
           "categoria": "diseño-grafico",
-          "imagen": "/assets/proyectos/posters.jpg"
+          "imagen": "/assets/proyectos/posters.jpg",
+          "link": "/proyectos/premio-macula-2024#carteleria"
         }
       ],
       "contenido": "<h3> Segundo Premio Mácula 2024</h3><p>Cortometraje documental galardonado con el <strong>Segundo Premio</strong>.</p><h4>Ficha técnica:</h4><ul><li> <strong>Formato:</strong> Documental</li><li> <strong>Duración:</strong> 12 minutos</li><li> <strong>Postproducción:</strong> DaVinci Resolve</li></ul><blockquote>\"Trabajo excepcional\" - Jurado Festival Mácula</blockquote>"
