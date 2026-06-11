@@ -194,6 +194,12 @@ function initRuta() {
     else img.addEventListener('error', fallar, { once: true });
   });
 
+  cuerpo.querySelectorAll('.ruta-sub-img').forEach((img) => {
+    const fallar = () => img.closest('.ruta-sub')?.classList.add('sin-imagen');
+    if (img.complete && img.naturalWidth === 0) fallar();
+    else img.addEventListener('error', fallar, { once: true });
+  });
+
   // ── Filtro por disciplina: atenúa y desatura, no oculta ──
   const filtros = mapa.querySelectorAll('.ruta-filtro');
   const entries = cuerpo.querySelectorAll('.ruta-entry');
