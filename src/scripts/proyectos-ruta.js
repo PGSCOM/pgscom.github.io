@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import lenis from './smooth-scroll.js';
 gsap.registerPlugin(ScrollTrigger);
 
 // ── Ruta cronológica de proyectos ─────────────────────────────────────────────
@@ -235,7 +236,7 @@ function initRuta() {
       if (!id) return;
       e.preventDefault();
       setFiltro(filtroActual === id ? 'all' : id);
-      mapa.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      lenis.scrollTo(mapa);
     });
   });
 
