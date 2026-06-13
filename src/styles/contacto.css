@@ -3,6 +3,7 @@
 .contacto-section {
   position: relative;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -473,6 +474,7 @@
 
   .contacto-section {
     height: 100vh;
+    height: 100dvh;
     padding: 1.25rem 0.875rem;
     overflow-y: auto;
   }
