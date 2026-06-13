@@ -60,7 +60,6 @@
     position: relative;
     width: 100vw;
     height: 100vh;
-    height: 100dvh;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -421,7 +420,6 @@
     z-index: 50;
     overflow: visible;
     height: 100vh;
-    height: 100dvh;
     width: 100%;
     display: flex;
     align-items: center;
