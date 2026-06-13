@@ -10,6 +10,8 @@
   background: linear-gradient(180deg, #000814 0%, #001d3d 50%, #000814 100%);
   overflow: hidden;
   z-index: 61;
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
 }
 
 /* Partículas flotantes de fondo */
@@ -148,7 +150,8 @@
   border: 1px solid rgba(0, 180, 216, 0.2);
   border-radius: 12px;
   backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  will-change: transform;
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .info-card:hover {
@@ -236,14 +239,15 @@
   border: 1px solid rgba(0, 180, 216, 0.3);
   border-radius: 10px;
   color: rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
+  will-change: transform;
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .social-icon img {
   width: 24px;
   height: 24px;
   object-fit: contain;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .social-icon:hover {
@@ -308,7 +312,7 @@
   border: 2px solid rgba(0, 180, 216, 0.2);
   border-radius: 10px;
   outline: none;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   font-family: inherit;
 }
 
@@ -367,7 +371,8 @@
   border-radius: 10px;
   cursor: pointer;
   overflow: hidden;
-  transition: all 0.3s ease;
+  will-change: transform;
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -421,7 +426,7 @@
   text-align: center;
   opacity: 0;
   transform: translateY(-10px);
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .form-status.show {

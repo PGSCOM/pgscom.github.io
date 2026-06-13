@@ -595,7 +595,7 @@ const rutaEntries = cronologia.map((p, i) => {
 				group.style.opacity = '0';
 				group.style.transform = 'translateY(20px)';
 				setTimeout(() => {
-					group.style.transition = 'all 0.6s ease';
+					group.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
 					group.style.opacity = '1';
 					group.style.transform = 'translateY(0)';
 				}, i * 100);
@@ -687,7 +687,7 @@ const rutaEntries = cronologia.map((p, i) => {
 				sparkle.style.top  = `${Math.random() * rect.height}px`;
 				form.appendChild(sparkle);
 				setTimeout(() => {
-					sparkle.style.transition = 'all 1s ease-out';
+					sparkle.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
 					sparkle.style.transform  = `translateY(-${Math.random() * 50 + 20}px)`;
 					sparkle.style.opacity    = '0';
 				}, 10);
