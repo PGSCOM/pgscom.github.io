@@ -1,229 +1,365 @@
 /* Reset y estilos base */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.parte2-wrapper {
-    position: relative;
-    display: block;
-    width: 100%;
-    z-index: 50;
-    contain: paint style;
+/* ============================================
+   PRELOADER — la P de carga.svg como máscara
+   ============================================ */
+
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #f5f5f7;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
 }
 
-.parte2 {
-    /* Sticky para mantener el bloque en la parte superior mientras se hace scroll */
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    z-index: 50;
+.pl-svg {
+    width: min(56vmin, 420px);
+    height: min(56vmin, 420px);
+    /* Origen del zoom: centro real del glifo de la P.
+       BBox de la P en el viewBox 600: x[185,427] y[93,456] → centro (306,275)
+       → (306/600, 275/600) = (51%, 45.8%). Así crece desde su propio centro. */
+    transform-origin: 51% 45.8%;
+    will-change: transform;
+}
 
-    /* Containing block para .galaxiamask */
-    overflow: visible; /* permitir que el video y máscara se muestren correctamente */
+/* Guía tenue de la forma completa, siempre visible bajo el trazo */
+.pl-outline {
+    fill: none;
+    stroke: rgba(0, 0, 0, 0.12);
+    stroke-width: 2;
+}
 
-    /* Estilos de layout por defecto; si hay inline styles se pueden sobreescribir */
+/* Trazo que construye la P (DrawSVG, ligado al progreso de carga).
+   Oculto hasta que el JS fija drawSVG:0% para evitar ver el trazo completo. */
+.pl-draw {
+    fill: none;
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    visibility: hidden;
+}
+
+/* Relleno con degradado que aparece al completar la carga */
+.pl-fill {
+    opacity: 0;
+}
+
+/* ============================================
+   HERO — landing oscura con proyectos flotando
+   ============================================ */
+
+.main-container {
+    position: relative;
+    width: 100vw;
     height: 100vh;
-    width: 100%; /* Asegurar ancho completo */
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    background:
+        radial-gradient(60vw 45vh at 72% 18%, rgba(37, 99, 235, 0.20), transparent 60%),
+        radial-gradient(50vw 40vh at 18% 78%, rgba(255, 90, 205, 0.15), transparent 60%),
+        radial-gradient(45vw 35vh at 50% 50%, rgba(54, 126, 120, 0.18), transparent 65%);
 }
 
-.galaxiamask {
-    /* Contenedor del video: ocupa todo el area de .parte2 */
+/* Retícula de puntos sutil, desvanecida hacia los bordes */
+.main-container::before {
+    content: '';
     position: absolute;
-    inset: 0; /* top:0; right:0; bottom:0; left:0; */
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    pointer-events: none; /* No bloquear interacciones */
-
-    /* Máscara cuadrada */
-    -webkit-mask-image: linear-gradient(#000, #000);
-    mask-image: linear-gradient(#000, #000);
-    -webkit-mask-size: 38vh 38vh; /* Convertido a cuadrado y tamaño inicial subido */
-    mask-size: 38vh 38vh;
-    -webkit-mask-position: center; /* Centrado horizontal y vertical */
-    mask-position: center;
-    -webkit-mask-repeat: no-repeat; /* Evitar que la máscara se repita */
-    mask-repeat: no-repeat;
-
-    will-change: mask-size, -webkit-mask-size;
-
-    /* Imagen inicial de fondo para evitar parpadeo o vacío antes de cargar la secuencia */
-    background-image: url(/vid/empezar/000.png);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.video-galaxia {
-    /* Llenar el contenedor .galaxiamask sin afectar al layout */
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0; /* Queda dentro de .parte2; el logo tendrá z-index mayor */
+    inset: 0;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1.5px);
+    background-size: 34px 34px;
+    -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 78%);
+    mask-image: radial-gradient(ellipse at center, black 25%, transparent 78%);
     pointer-events: none;
 }
 
-.parte2 > img {
-    /* Asegurar que el logo quede por encima del video y no cambie su posición */
+/* Fundido inferior: de transparente al color de parte2-wrapper */
+.main-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30vh;
+    background: linear-gradient(to bottom, transparent, #f5f7fa);
+    pointer-events: none;
+}
+
+/* Contenido central */
+.content {
     position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 1.6vh, 20px);
+    text-align: center;
+    padding: 0 20px;
+    pointer-events: none;
+}
+
+.content a {
+    pointer-events: auto;
+}
+
+.hero-kicker {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.hero-sub {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+    color: rgba(0, 0, 0, 0.6);
+    max-width: 560px;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: clamp(6px, 1.2vh, 14px);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hero-cta {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: #1a1a2e;
+    border: 1px solid #1a1a2e;
+    border-radius: 999px;
+    padding: 13px 30px;
+    text-decoration: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+}
+
+.hero-cta--ghost {
+    background: transparent;
+    color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.25);
+}
+
+.hero-cta--ghost:hover {
+    border-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+}
+
+/* Indicador de scroll */
+.hero-scroll-hint {
+    position: absolute;
+    bottom: clamp(18px, 4vh, 40px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+
+.hero-scroll-hint::before {
+    content: '';
+    width: 1px;
+    height: 34px;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+    animation: scroll-hint-drop 2s ease-in-out infinite;
+}
+
+@keyframes scroll-hint-drop {
+    0%   { transform: scaleY(0); transform-origin: top; }
+    45%  { transform: scaleY(1); transform-origin: top; }
+    55%  { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ── Cards de proyectos flotando ── */
+
+.hero-cards {
+    position: absolute;
+    inset: 0;
     z-index: 1;
 }
 
-/*Logo flotante*/
-.sky-image {
-  position: fixed;
-  top: 25px;
-  left: 25px;
-  z-index: 9999;
+.hero-card {
+    position: absolute;
+    display: block;
+    width: clamp(150px, 16vw, 250px);
+    text-decoration: none;
+    will-change: transform;
+    cursor: pointer;
 }
 
-/* Contenedor principal */
-.main-container {
-    width: 100vw;
-    height: 100vh;
-    /*background: white;*/
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    overflow: visible; /* Cambiado de hidden a visible para permitir scroll */
-    z-index: -2;
+.hero-card--lg {
+    width: clamp(180px, 19vw, 300px);
+    z-index: 3;
 }
 
-/* Eliminamos el overlay global */
+.hero-card--sm {
+    width: clamp(110px, 11vw, 180px);
+}
 
-/* Contenido principal - lado izquierdo */
-.content {
-    z-index: 2;
-    text-align: center;
-    color: #367e78;
-    padding: 0;
-    background: transparent; /* Sin fondo para seguir el boceto */
-    animation: fadeInLeft 1s ease-out;
-    max-width: 60%;
+.hero-card.is-far img {
+    filter: brightness(0.9) saturate(0.85);
+}
+
+.hero-card-tilt {
+    display: block;
+    will-change: transform;
+}
+
+.hero-card-media {
+    position: relative;
+    display: block;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #e8ecf0;
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+
+.hero-card:hover .hero-card-media {
+    transform: scale(1.05);
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(0, 0, 0, 0.1),
+        0 0 45px rgba(37, 99, 235, 0.1);
+}
+
+.hero-card-media img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+}
+
+.hero-card-label {
+    position: absolute;
+    inset: auto 0 0 0;
     display: flex;
     flex-direction: column;
+    gap: 2px;
+    padding: 24px 12px 10px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.95), transparent);
+    opacity: 0;
+    translate: 0 8px;
+    transition: opacity 0.3s ease, translate 0.3s ease;
+}
+
+.hero-card:hover .hero-card-label {
+    opacity: 1;
+    translate: 0 0;
+}
+
+.hero-card-label strong {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 0.8rem;
+    color: #111;
+    line-height: 1.2;
+}
+
+.hero-card-label em {
+    font-family: 'Chakra Petch', sans-serif;
+    font-style: normal;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   LOGO / TIPOGRAFÍA ANIMADA
+   ============================================ */
+
+#logo-wrapper {
+    display: inline-flex;
     justify-content: center;
-    height: 100%;
-    width: 48%;
     align-items: center;
-}
-
-/* Contenedor de la imagen */
-.image-container {
-    position: fixed;
-    top: 0;
-    right: 5%;
-    z-index: -1;
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 40%;
-    height: 100vh;
-    overflow: hidden;
     will-change: transform, opacity;
+    min-height: 13vw;
 }
 
-/* Estilo para la imagen de personaje */
-.fotopgs {
-    display: block;
-    max-height: 80vh;
-    max-width: 100%;
-    object-fit: contain;
-    /*filter: drop-shadow(2px 2px 10px rgba(0, 0, 0, 0.1));*/
-    /* máscara aplicada por .image-wrapper::after (ya no se usa) */
-}
-
-/* Partículas flotantes */
-.content::after {
-    content: '';
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, rgba(65, 105, 225, 0.1) 0%, transparent 70%);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: float 4s ease-in-out infinite;
-    z-index: -1;
-    pointer-events: none;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.3;
-    }
-    50% {
-        transform: translate(-50%, -60%) scale(1.2);
-        opacity: 0.6;
-    }
-}
-
-/* Texto principal del logo */
 .logo-text {
-    font-size: 7cqw; /*Tamaño base*/
+    font-size: 7cqw;
     font-weight: bold;
-    /* color: #367e78; Reemplazado por gradiente */
     text-align: center;
     letter-spacing: 0.3rem;
     line-height: 1.2;
     position: relative;
-    display: inline-block;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
     font-family: 'Montserrat', sans-serif;
-    /* Propiedades para mantener tamaño consistente */
     width: 100%;
-    min-height: 1.5em; /* Altura mínima consistente */
-    height: auto;
-    padding: 0 10px; /* Añadimos margen horizontal */
-    box-sizing: border-box; /* Para que el padding no afecte al ancho total */
+    padding: 0 10px;
+    box-sizing: border-box;
+    animation: none !important;
+    color: inherit;
+    background: none;
+    -webkit-background-clip: initial;
+}
 
-    /* Animación de entrada y gradiente */
+/* El degradado multicolor viaja sobre las letras para evitar que desaparezcan */
+#letter-p, #letters-gscom {
     background-image: linear-gradient(
         60deg,
-        /* Fase 1: Arcoíris vibrante */
         #2563eb, #ff5acd, #fbda61, #ff5acd, #2563eb,
-        /* Fase 2: Azul verdoso (Ciclo 1) */
         #2a6b66, #367e78, #4a9d94, #367e78, #2a6b66,
-        /* Fase 3: Azul verdoso (Ciclo 2 para loop infinito) */
         #2a6b66, #367e78, #4a9d94, #367e78, #2a6b66
     );
     background-size: 300%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    
-    animation: 
-        pgscom-entrance 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0s 1 normal,
-        pgscom-intro-scroll 2s linear forwards,
-        pgscom-loop-scroll 4s linear 2s infinite;
 }
 
-@keyframes pgscom-entrance {
-    0% {
-        opacity: 0;
-        transform: perspective(800px) translate3d(0, 0, 400px) rotateY(-40deg) scale(0.5);
-        filter: blur(10px);
-    }
-    50% {
-        opacity: 1;
-        transform: perspective(800px) translate3d(0, 0, 0) rotateY(0deg) scale(1.1);
-        filter: blur(0);
-    }
-    70% {
-        transform: perspective(800px) translate3d(0, 0, 0) rotateY(0deg) scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: perspective(800px) translate3d(0, 0, 0) rotateY(0deg) scale(1);
-    }
+#letter-p {
+    display: inline-block;
+    will-change: transform, opacity;
+    transform-origin: center;
+}
+
+#letters-gscom-wrap {
+    display: inline-flex;
+    overflow: hidden;
+    white-space: pre;
+    will-change: width, opacity;
+}
+
+#letters-gscom {
+    display: inline-block;
+    padding-right: 0.05em;
 }
 
 @keyframes pgscom-intro-scroll {
@@ -234,184 +370,6 @@
 @keyframes pgscom-loop-scroll {
     0% { background-position: 50% 50%; }
     100% { background-position: 100% 50%; }
-}
-
-/* Eliminamos la animación anterior pgscom-gradient ya que se reemplaza por intro/loop */
-
-/*.logo-text::before {
-    content: 'PGSCOM';
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: rgba(255, 255, 255, 0.1);
-    font-size: inherit;
-    font-family: inherit;
-    font-weight: inherit;
-    letter-spacing: inherit;
-    text-shadow: none;
-    z-index: -1;
-    transform: translate(3px, 3px);
-    animation: shimmer 2s ease-in-out infinite;
-}*/
-
-/* Subtítulo */
-.subtitle {
-    font-size: 1.4rem;
-    color: rgba(0, 0, 0, 0.7);
-    margin-top: 0.2rem;
-    font-weight: 300;
-    letter-spacing: 0.1rem;
-    margin-left: 0.5rem;
-}
-
-/* Tagline adicional */
-.tagline {
-    font-size: 0.9rem;
-    color: rgba(0, 0, 0, 0.7);
-    margin-top: 0.5rem;
-    font-weight: 400;
-    letter-spacing: 0.15rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    opacity: 0.9;
-}
-
-/* Sistema de partículas minimalistas SVG */
-.particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-}
-
-.particle {
-    position: absolute;
-    opacity: 0;
-    animation: floatParticle 15s ease-in-out infinite;
-    filter: none;
-    box-shadow: none;
-    will-change: transform, opacity;
-}
-
-.particle-1 {
-    top: 20%;
-    left: 15%;
-    width: 50px;
-    height: 50px;
-    animation-delay: 0s;
-    animation-duration: 12s;
-}
-
-.particle-2 {
-    top: 60%;
-    left: 25%;
-    width: 80px;
-    height: 80px;
-    animation-delay: 3s;
-    animation-duration: 15s;
-}
-
-.particle-3 {
-    top: 40%;
-    left: 10%;
-    width: 35px;
-    height: 35px;
-    animation-delay: 6s;
-    animation-duration: 10s;
-}
-
-.particle-4 {
-    top: 70%;
-    left: 35%;
-    width: 45px;
-    height: 45px;
-    animation-delay: 2s;
-    animation-duration: 14s;
-}
-
-.particle-5 {
-    top: 30%;
-    left: 28%;
-    width: 75px;
-    height: 75px;
-    animation-delay: 5s;
-    animation-duration: 32.2s;
-}
-
-.particle-6 {
-    top: 50%;
-    left: 20%;
-    width: 30px;
-    height: 30px;
-    animation-delay: 1s;
-    animation-duration: 8s;
-}
-
-@keyframes floatParticle {
-    0% {
-        transform: translateY(0) scale(0.8) rotate(0deg);
-        opacity: 0;
-    }
-    10% {
-        opacity: 0.5;
-    }
-    50% {
-        opacity: 0.7;
-        transform: translateY(-120px) scale(1) rotate(180deg);
-    }
-    90% {
-        opacity: 0.5;
-    }
-    100% {
-        transform: translateY(-240px) scale(0.8) rotate(360deg);
-        opacity: 0;
-    }
-}
-
-/* Animaciones para el logo-text */
-@keyframes fadeInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes gradientShift {
-    0%, 100% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-}
-
-@keyframes shimmer {
-    0%, 100% {
-        opacity: 0.1;
-    }
-    50% {
-        opacity: 0.3;
-    }
-}
-
-/* Estilos para el contenedor del logo */
-.logo-container {
-    display: inline-block;
-    position: absolute;
-    min-height: 120px; /* Altura mínima fija para evitar saltos */
-    min-width: 300px; /* Ancho mínimo para evitar redimensionamientos bruscos */
-    overflow: hidden; /* Evita que el contenido se salga durante las transiciones */
-    width: 100vh;
-    height: 100%;
-    right: 50%;
-    left: 50%;
 }
 
 /* Estados de animación del logo */
@@ -428,8 +386,8 @@
     opacity: 0;
     filter: blur(6px);
     transform: scale(0.92);
-    transition: opacity 0.6s ease-in-out, 
-                filter 0.6s ease-in-out, 
+    transition: opacity 0.6s ease-in-out,
+                filter 0.6s ease-in-out,
                 transform 0.6s ease-in-out;
 }
 
@@ -437,147 +395,135 @@
     opacity: 1;
     filter: blur(0px);
     transform: scale(1);
-    transition: opacity 0.8s ease-out, 
-                filter 0.8s ease-out, 
+    transition: opacity 0.8s ease-out,
+                filter 0.8s ease-out,
                 transform 0.8s ease-out;
 }
 
-/* Efectos hover */
-/*.content:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-}*/
+/* ============================================
+   SECCIÓN GALAXIA (scroll + vídeo enmascarado)
+   ============================================ */
 
-/*.logo-text:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
-}*/
+.parte2-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+    z-index: 50;
+    background: #f5f7fa;
+}
 
-/* Responsive design */
+.parte2 {
+    /* Sticky para mantener el bloque en la parte superior mientras se hace scroll */
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    overflow: visible;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.galaxiamask {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+
+    /* Máscara cuadrada */
+    -webkit-mask-image: linear-gradient(#000, #000);
+    mask-image: linear-gradient(#000, #000);
+    -webkit-mask-size: 38vh 38vh;
+    mask-size: 38vh 38vh;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+.video-galaxia {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.parte2 > img {
+    position: relative;
+    z-index: 1;
+}
+
+.scroll-spacer {
+    height: 120vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 60;
+}
+
+/* ============================================
+   ÓRBITA DE CATEGORÍAS (sección proyectos)
+   ============================================ */
+
+.proyectos-grid {
+    position: absolute;
+    inset: 0;
+}
+
+.proyectos-grid .proyecto-card {
+    will-change: transform;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
-        padding: 1rem;
-        justify-content: flex-start;
-    }
-    
-    .content {
-        max-width: 100%;
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 0;
-        text-align: center;
-        position: absolute;
-        height: auto;
-        top: 15%;
-        padding-top: 2rem;
-        padding-left: 20px;
-        padding-right: 20px;
-        align-items: stretch; /* permitir que hijos ocupen ancho completo */
-    }
-    
-    .image-container {
-        max-width: 100%;
-        width: 100%;
-        height: auto;
-        right: auto;
-        overflow: visible;
-        justify-content: center;
-        /*bottom: 17%;*/
-        top: 30%;
-    }
-    
-    .fotopgs {
-        max-height: 60vh;
-        margin: 0 auto;
-    }
-    
-    .logo-container {
-        min-height: 80px;
-        min-width: 200px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
-    
     .logo-text {
         font-size: 10cqw;
         letter-spacing: 0.2rem;
-        text-align: center;
-        width: 100%;
-        padding: 0 15px;
-        box-sizing: border-box;
-        display: block; /* asegurar que el elemento ocupe ancho completo */
     }
-    
-    .subtitle {
-        font-size: 1rem;
+
+    #logo-wrapper {
+        min-height: 26vw;
     }
-    
-    .tagline {
+
+    .hero-card {
+        width: clamp(105px, 26vw, 150px);
+    }
+
+    .hero-card--lg {
+        width: clamp(120px, 30vw, 170px);
+    }
+
+    /* Las cards lejanas sobran en pantallas pequeñas */
+    .hero-card.is-far {
+        display: none;
+    }
+
+    /* Posiciones pensadas para no tapar el texto central */
+    .hero-card:nth-child(1) { left: 20% !important; top: 16% !important; }
+    .hero-card:nth-child(2) { left: 80% !important; top: 13% !important; }
+    .hero-card:nth-child(3) { left: 79% !important; top: 84% !important; }
+    .hero-card:nth-child(4) { left: 21% !important; top: 86% !important; }
+
+    .hero-sub {
+        font-size: 0.85rem;
+        max-width: 320px;
+    }
+
+    .hero-cta {
+        padding: 11px 22px;
         font-size: 0.8rem;
-        letter-spacing: 0.1rem;
-    }
-    
-    /* Ajustes partículas para móviles */
-    .particles {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-    
-    /* Mostrar todas las partículas */
-    .particle-1, .particle-2, .particle-3, .particle-4, .particle-5, .particle-6 {
-        display: block;
-    }
-    
-    /* Reposicionar las partículas para que ocupen toda la pantalla */
-    .particle-1 {
-        top: 10%;
-        left: 10%;
-        width: 40px;
-        height: 40px;
-    }
-    
-    .particle-2 {
-        top: 30%;
-        right: 15%;
-        left: auto;
-        width: 60px;
-        height: 60px;
-    }
-    
-    .particle-3 {
-        top: 50%;
-        left: 20%;
-        width: 30px;
-        height: 30px;
-    }
-    
-    .particle-4 {
-        top: 20%;
-        right: 20%;
-        left: auto;
-        width: 35px;
-        height: 35px;
-    }
-    
-    .particle-5 {
-        top: 70%;
-        left: 15%;
-        width: 45px;
-        height: 45px;
-    }
-    
-    .particle-6 {
-        top: 85%;
-        right: 25%;
-        left: auto;
-        width: 30px;
-        height: 30px;
     }
 }
 
@@ -585,88 +531,9 @@
     .logo-text {
         font-size: 12cqw;
         letter-spacing: 0.1rem;
-        width: 100%;
-        padding: 0;
-        box-sizing: border-box;
     }
-    
-    .subtitle {
-        font-size: 0.9rem;
-    }
-    
-    .tagline {
-        font-size: 0.7rem;
-        letter-spacing: 0.05rem;
-    }
-    
-    .content {
-        padding: 1rem 20px;
-        margin: 0;
-        top: 14%;
-        width: 100%;
-    }
-    
-    .fotopgs {
-        max-height: 50vh;
-    }
-    
-    /* Mantener todas las partículas pero hacerlas más pequeñas */
-    .particle-1, .particle-2, .particle-3, .particle-4, .particle-5, .particle-6 {
-        display: block;
-    }
-    
-    .particle-1 {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .particle-2 {
-        width: 45px;
-        height: 45px;
-    }
-    
-    .particle-3, .particle-4, .particle-5, .particle-6 {
-        width: 30px;
-        height: 30px;
-    }
-}
 
-@media (max-width: 320px) {
-    .logo-text {
-        font-size: 14cqw;
-        padding: 0 15px;
+    .hero-kicker {
+        letter-spacing: 0.2em;
     }
-    
-    .subtitle {
-        font-size: 0.8rem;
-    }
-    
-    .tagline {
-        font-size: 0.6rem;
-    }
-    
-    .fotopgs {
-        max-height: 45vh;
-    }
-    
-    /* Mantener al menos 4 partículas en pantallas muy pequeñas */
-    .particle-1, .particle-2, .particle-3, .particle-4 {
-        display: block;
-    }
-    
-    .particle-5, .particle-6 {
-        display: none;
-    }
-    
-    .particle-1, .particle-2, .particle-3, .particle-4 {
-        width: 25px;
-        height: 25px;
-    }
-}
-
-/* El sticky de .parte2 se maneja con CSS puro (position: sticky en .parte2) */
-
-.liquidglassstyle{
-    position: fixed;
-    right: 50%;
 }

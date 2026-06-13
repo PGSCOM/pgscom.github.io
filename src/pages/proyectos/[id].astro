@@ -1,0 +1,224 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/proyecto-detalle.css';
+import { getCollection, render } from 'astro:content';
+import categoriasData from '../../data/categorias.json';
+import { formatFecha } from '../../utils/fechas.js';
+
+// Genera una ruta estática por cada .md de src/content/proyectos/.
+// Cada página es HTML real y rastreable por los bots de Google.
+export async function getStaticPaths() {
+	const cats = categoriasData.categorias;
+	const entradas = await getCollection('proyectos');
+	const proyectos = entradas.map((e) => ({ id: e.id, ...e.data }));
+	return entradas.map((entrada) => {
+		const proyecto = { id: entrada.id, ...entrada.data };
+		const catIds = proyecto.categorias ?? [];
+		// La primera categoría del proyecto actúa como principal
+		const aptitud = cats.find((c) => c.id === catIds[0]) ?? cats[0];
+		const relacionados = proyectos
+			.filter((p) => p.id !== proyecto.id && (p.categorias ?? []).some((c) => catIds.includes(c)))
+			.slice(0, 3);
+		return {
+			params: { id: proyecto.id },
+			props: { entrada, proyecto, aptitud, relacionados },
+		};
+	});
+}
+
+const { entrada, proyecto, aptitud, relacionados } = Astro.props;
+// El cuerpo markdown del .md se convierte en el contenido de la ficha
+const { Content } = await render(entrada);
+
+const fechaTexto = formatFecha(proyecto.fecha);
+// `imagen` viste las tarjetas/relacionados y el og:image; la cabecera usa
+// `trailer` (vídeo) o `portada`, con `imagen` como respaldo
+const imagen = proyecto.imagen || aptitud.logo;
+const portada = proyecto.portada || proyecto.imagen;
+// Sin portada ni imagen, la cabecera muestra el icono de la categoría contenido
+const esIcono = !portada;
+const portadaSrc = portada || aptitud.logo;
+
+const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
+const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;
+
+// Datos estructurados (Schema.org) para enriquecer el resultado en Google
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'CreativeWork',
+	name: proyecto.titulo.trim(),
+	description: descripcionPagina,
+	url: new URL(`/proyectos/${proyecto.id}`, Astro.site).href,
+	image: new URL(imagen, Astro.site).href,
+	genre: aptitud.titulo,
+	keywords: (proyecto.tecnologias ?? []).join(', '),
+	creator: {
+		'@type': 'Person',
+		name: 'Pablo García Santamaría',
+		url: Astro.site?.href,
+	},
+	...(proyecto.premio && {
+		award: proyecto.premio,
+	}),
+	...(proyecto.link && {
+		sameAs: proyecto.link,
+	}),
+};
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: Astro.site?.href },
+		{ '@type': 'ListItem', position: 2, name: 'Proyectos', item: new URL('/#proyectos-mapa', Astro.site).href },
+		{ '@type': 'ListItem', position: 3, name: proyecto.titulo.trim(), item: new URL(`/proyectos/${proyecto.id}`, Astro.site).href },
+	],
+};
+---
+
+<Layout
+	title={tituloPagina}
+	description={descripcionPagina}
+	image={imagen}
+	type="article"
+>
+	<script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+	<script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+
+	<main class="pd-page">
+		<a class="pd-back" href="/?sincarga#proyectos-mapa" aria-label="Volver a proyectos">
+			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<line x1="19" y1="12" x2="5" y2="12"></line>
+				<polyline points="12 19 5 12 12 5"></polyline>
+			</svg>
+			<span>Proyectos</span>
+		</a>
+
+		<!-- Cabecera cinematográfica: trailer o portada a pantalla completa -->
+		<header class="pd-hero">
+			{proyecto.trailer ? (
+				<video
+					class="pd-hero-media"
+					src={proyecto.trailer}
+					poster={portada}
+					autoplay
+					muted
+					loop
+					playsinline
+					aria-hidden="true"
+				></video>
+			) : (
+				<img
+					class:list={['pd-hero-media', { 'pd-hero-media--icono': esIcono }]}
+					src={portadaSrc}
+					alt={proyecto.titulo.trim()}
+					style="view-transition-name: project-hero"
+					loading="eager"
+				/>
+			)}
+
+			<div class="pd-hero-overlay">
+				<!-- Migas de pan rastreables -->
+				<nav class="pd-breadcrumb" aria-label="Migas de pan">
+					<a href="/">Inicio</a>
+					<span aria-hidden="true">/</span>
+					<a href="/?sincarga#proyectos-mapa">Proyectos</a>
+					<span aria-hidden="true">/</span>
+					<span class="pd-breadcrumb-current">{aptitud.titulo}</span>
+				</nav>
+
+				<div class="pd-hero-info">
+					<p class="pd-categoria">
+						<img src={aptitud.logo} alt="" aria-hidden="true" />
+						<span>{aptitud.titulo}</span>
+					</p>
+					<h1 class="pd-titulo">{proyecto.titulo.trim()}</h1>
+
+					<div class="pd-meta">
+						{fechaTexto && <span class="pd-meta-item">📅 {fechaTexto}</span>}
+						{proyecto.premio && <span class="pd-meta-badge">🏆 {proyecto.premio}</span>}
+						{proyecto.tecnologias?.length && (
+							<span class="pd-meta-item">{proyecto.tecnologias.length} tecnologías</span>
+						)}
+					</div>
+
+					{proyecto.descripcion && <p class="pd-tagline">{proyecto.descripcion}</p>}
+
+					<div class="pd-actions">
+						{proyecto.link && (
+							<a class="pd-btn-primary" href={proyecto.link} target="_blank" rel="noopener noreferrer">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+									<polygon points="5 3 19 12 5 21 5 3"></polygon>
+								</svg>
+								<span>Visitar proyecto</span>
+							</a>
+						)}
+						<button class="pd-btn-secondary" id="pdShare" type="button" title="Compartir" aria-label="Compartir">
+							<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="18" cy="5" r="3"></circle>
+								<circle cx="6" cy="12" r="3"></circle>
+								<circle cx="18" cy="19" r="3"></circle>
+								<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+								<line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<article class="pd-wrapper">
+			<div class="pd-body">
+				{proyecto.tecnologias?.length && (
+					<section class="pd-tecnologias" aria-label="Tecnologías">
+						{proyecto.tecnologias.map((tech) => (
+							<span class="pd-tech-tag" data-tech={tech}>{tech}</span>
+						))}
+					</section>
+				)}
+
+				<section class="pd-contenido">
+					<Content />
+				</section>
+
+				{relacionados.length > 0 && (
+					<section class="pd-relacionados">
+						<h2 class="pd-relacionados-titulo">Más de {aptitud.titulo}</h2>
+						<div class="pd-relacionados-grid">
+							{relacionados.map((rel) => (
+								<a class="pd-rel-card" href={`/proyectos/${rel.id}`}>
+									<div class="pd-rel-image">
+										<img src={rel.imagen} alt={rel.titulo.trim()} loading="lazy" />
+									</div>
+									<div class="pd-rel-info">
+										<h3 class="pd-rel-titulo">{rel.titulo.trim()}</h3>
+										{rel.descripcion && <p class="pd-rel-desc">{rel.descripcion}</p>}
+									</div>
+								</a>
+							))}
+						</div>
+					</section>
+				)}
+			</div>
+		</article>
+	</main>
+
+	<script is:inline>
+		(function () {
+			const share = document.getElementById('pdShare');
+			if (!share) return;
+			share.addEventListener('click', async () => {
+				const data = { title: document.title, url: window.location.href };
+				if (navigator.share) {
+					try { await navigator.share(data); } catch {}
+				} else {
+					try {
+						await navigator.clipboard.writeText(window.location.href);
+						share.classList.add('pd-copied');
+						setTimeout(() => share.classList.remove('pd-copied'), 1600);
+					} catch {}
+				}
+			});
+		})();
+	</script>
+</Layout>
