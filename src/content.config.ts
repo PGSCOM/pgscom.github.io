@@ -27,6 +27,9 @@ const proyectos = defineCollection({
 			tecnologias: z.array(z.string()).optional(),
 			link: z.string().optional(),
 			premio: z.string().optional(),
+			// Si está presente, la tarjeta abre esta URL en pestaña nueva
+			// en lugar de la ficha interna /proyectos/<id>
+			enlaceExterno: z.string().optional(),
 			sub: z
 				.array(
 					z.object({

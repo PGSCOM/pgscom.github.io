@@ -125,8 +125,9 @@ const rutaEntries = cronologia.map((p, i) => {
 						class={`hero-card hero-card--${l.size}${l.far ? ' is-far' : ''}`}
 						data-depth={l.depth}
 						data-rot={l.rot}
-						data-proyecto-link
-						href={`/proyectos/${proyecto.id}`}
+						{...(proyecto.enlaceExterno
+							? { href: proyecto.enlaceExterno, target: '_blank', rel: 'noopener noreferrer' }
+							: { href: `/proyectos/${proyecto.id}`, 'data-proyecto-link': true })}
 						style={`left:${l.left};top:${l.top};`}
 						aria-label={`Ver proyecto: ${proyecto.titulo}`}
 					>
@@ -247,7 +248,12 @@ const rutaEntries = cronologia.map((p, i) => {
 							data-cats={proyecto.catIds.join(',')}
 							style={`--cat-color:${proyecto.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
 						>
-							<a class={`ruta-item${proyecto.imagen ? '' : ' sin-imagen'}`} href={`/proyectos/${proyecto.id}`} data-proyecto-link>
+							<a
+								class={`ruta-item${proyecto.imagen ? '' : ' sin-imagen'}`}
+								{...(proyecto.enlaceExterno
+									? { href: proyecto.enlaceExterno, target: '_blank', rel: 'noopener noreferrer' }
+									: { href: `/proyectos/${proyecto.id}`, 'data-proyecto-link': true })}
+							>
 								{proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
 								<div class="ruta-media">
 									{proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
