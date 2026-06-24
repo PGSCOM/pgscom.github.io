@@ -132,7 +132,7 @@ const rutaEntries = cronologia.map((p, i) => {
 					>
 						<span class="hero-card-tilt">
 							<span class="hero-card-media">
-								<img src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />
+								<Image src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />
 								<span class="hero-card-label">
 									<strong>{proyecto.titulo}</strong>
 									<em>{proyecto.aptitudTitulo}</em>
@@ -250,7 +250,7 @@ const rutaEntries = cronologia.map((p, i) => {
 							<a class={`ruta-item${proyecto.imagen ? '' : ' sin-imagen'}`} href={`/proyectos/${proyecto.id}`} data-proyecto-link>
 								{proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
 								<div class="ruta-media">
-									{proyecto.imagen && <img class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
+									{proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
 									<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
 									{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
 									<div class="ruta-info">
@@ -288,7 +288,7 @@ const rutaEntries = cronologia.map((p, i) => {
 											>
 												<div class="ruta-sub-media">
 													{s.cat && <img class="ruta-sub-fallback" src={s.cat.logo} alt="" aria-hidden="true" loading="lazy" />}
-													{s.imagen && <img class="ruta-sub-img" src={s.imagen} alt="" loading="lazy" decoding="async" />}
+													{s.imagen && <Image class="ruta-sub-img" src={s.imagen} alt="" loading="lazy" decoding="async" />}
 													{s.imagen && s.cat && (
 														<span class="ruta-sub-cat" title={s.cat.titulo}>
 															<img src={s.cat.logo} alt={s.cat.titulo} />

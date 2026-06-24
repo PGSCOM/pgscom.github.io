@@ -4,7 +4,7 @@ fecha: "2024-02"
 categorias: [desarrollo-web, video-produccion]
 peso: 60
 destacado: 4
-imagen: /assets/proyectos/PortfolioCortos.png
+imagen: ../../assets/proyectos/PortfolioCortos.png
 descripcion: Galería de proyectos audiovisuales con reproductor de video integrado.
 tecnologias: [HTML5, CSS3, JavaScript, Video.js]
 link: https://cine.pgscom.es

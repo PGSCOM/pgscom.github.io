@@ -3,7 +3,7 @@ titulo: Premio Mácula 2023
 fecha: "2023-05"
 categorias: [video-produccion, programacion]
 peso: 70
-imagen: /assets/proyectos/Macula.png
+imagen: ../../assets/proyectos/Macula.png
 descripcion: Segundo Premio Mácula 2023 - Proyecto audiovisual experimental.
 tecnologias: [DaVinci Resolve, Premiere Pro]
 premio: 2º Premio Mácula 2023

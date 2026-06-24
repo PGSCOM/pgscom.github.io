@@ -4,7 +4,7 @@ fecha: "2022-06"
 categorias: [programacion]
 peso: 75
 destacado: 5
-imagen: /assets/proyectos/Herramientas.png
+imagen: ../../assets/proyectos/Herramientas.png
 descripcion: Scripts de automatización para proyectos audiovisuales. +6 años.
 tecnologias: [Python, NumPy, OpenCV, FFmpeg]
 ---

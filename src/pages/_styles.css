@@ -260,6 +260,9 @@
 .hero-card-media img {
     display: block;
     width: 100%;
+    /* height:auto neutraliza los atributos width/height que <Image> inyecta,
+       para que mande el aspect-ratio y no se estire la tarjeta */
+    height: auto;
     aspect-ratio: 16 / 10;
     object-fit: cover;
 }

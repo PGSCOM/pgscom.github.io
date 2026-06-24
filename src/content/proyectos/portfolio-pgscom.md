@@ -4,7 +4,7 @@ fecha: "2025-03"
 categorias: [desarrollo-web]
 peso: 90
 destacado: 1
-imagen: /assets/proyectos/portfolio.png
+imagen: ../../assets/proyectos/portfolio.png
 descripcion: Sitio web personal desarrollado con Astro, React y animaciones con AnimeJS.
 tecnologias: [Astro, React, TypeScript, AnimeJS, CSS3]
 link: https://pgscom.es

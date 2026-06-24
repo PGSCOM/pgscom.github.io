@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/proyecto-detalle.css';
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import categoriasData from '../../data/categorias.json';
 import { formatFecha } from '../../utils/fechas.js';
 
@@ -31,13 +32,12 @@ const { entrada, proyecto, aptitud, relacionados } = Astro.props;
 const { Content } = await render(entrada);
 
 const fechaTexto = formatFecha(proyecto.fecha);
-// `imagen` viste las tarjetas/relacionados y el og:image; la cabecera usa
-// `trailer` (vídeo) o `portada`, con `imagen` como respaldo
-const imagen = proyecto.imagen || aptitud.logo;
+// La cabecera usa `trailer` (vídeo) o `portada` (ImageMetadata), con `imagen`
+// como respaldo. Sin ninguna, se muestra el icono de la categoría.
 const portada = proyecto.portada || proyecto.imagen;
-// Sin portada ni imagen, la cabecera muestra el icono de la categoría contenido
-const esIcono = !portada;
-const portadaSrc = portada || aptitud.logo;
+// og:image y JSON-LD necesitan una URL string: .src es la ruta del asset
+// optimizado; si el proyecto no tiene imagen, cae al logo (SVG) de la categoría.
+const ogImagen = proyecto.imagen?.src ?? aptitud.logo;
 
 const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
 const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;
@@ -49,7 +49,7 @@ const jsonLd = {
 	name: proyecto.titulo.trim(),
 	description: descripcionPagina,
 	url: new URL(`/proyectos/${proyecto.id}`, Astro.site).href,
-	image: new URL(imagen, Astro.site).href,
+	image: new URL(ogImagen, Astro.site).href,
 	genre: aptitud.titulo,
 	keywords: (proyecto.tecnologias ?? []).join(', '),
 	creator: {
@@ -79,7 +79,7 @@ const breadcrumbLd = {
 <Layout
 	title={tituloPagina}
 	description={descripcionPagina}
-	image={imagen}
+	image={ogImagen}
 	type="article"
 >
 	<script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
@@ -100,17 +100,25 @@ const breadcrumbLd = {
 				<video
 					class="pd-hero-media"
 					src={proyecto.trailer}
-					poster={portada}
+					poster={portada?.src}
 					autoplay
 					muted
 					loop
 					playsinline
 					aria-hidden="true"
 				></video>
+			) : portada ? (
+				<Image
+					class="pd-hero-media"
+					src={portada}
+					alt={proyecto.titulo.trim()}
+					style="view-transition-name: project-hero"
+					loading="eager"
+				/>
 			) : (
 				<img
-					class:list={['pd-hero-media', { 'pd-hero-media--icono': esIcono }]}
-					src={portadaSrc}
+					class="pd-hero-media pd-hero-media--icono"
+					src={aptitud.logo}
 					alt={proyecto.titulo.trim()}
 					style="view-transition-name: project-hero"
 					loading="eager"
@@ -188,7 +196,11 @@ const breadcrumbLd = {
 							{relacionados.map((rel) => (
 								<a class="pd-rel-card" href={`/proyectos/${rel.id}`}>
 									<div class="pd-rel-image">
-										<img src={rel.imagen} alt={rel.titulo.trim()} loading="lazy" />
+										{rel.imagen ? (
+											<Image src={rel.imagen} alt={rel.titulo.trim()} loading="lazy" />
+										) : (
+											<img src={aptitud.logo} alt="" aria-hidden="true" loading="lazy" />
+										)}
 									</div>
 									<div class="pd-rel-info">
 										<h3 class="pd-rel-titulo">{rel.titulo.trim()}</h3>
