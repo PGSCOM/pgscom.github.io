@@ -322,11 +322,36 @@ body:has(.pd-page) {
   max-width: 800px;
 }
 
-.pd-contenido h3 {
-  font-size: 1.4rem;
+.pd-contenido h2 {
+  font-size: 1.5rem;
   font-weight: 700;
+  color: var(--pd-azul);
+  margin: 40px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(147, 197, 253, 0.25);
+}
+
+.pd-contenido h3 {
+  font-size: 1rem;
+  font-weight: 600;
   color: #fff;
-  margin: 0 0 16px;
+  margin: 20px 0 0;
+  padding: 14px 18px;
+  background: rgba(147, 197, 253, 0.07);
+  border: 1px solid rgba(147, 197, 253, 0.2);
+  border-left: 3px solid var(--pd-azul);
+  border-radius: 8px 8px 0 0;
+}
+
+.pd-contenido h3 + p {
+  margin: 0 0 8px;
+  padding: 14px 18px;
+  background: rgba(147, 197, 253, 0.03);
+  border: 1px solid rgba(147, 197, 253, 0.12);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
 }
 
 .pd-contenido h4 {
@@ -334,6 +359,12 @@ body:has(.pd-page) {
   font-weight: 600;
   color: rgba(200, 220, 255, 1);
   margin: 26px 0 12px;
+}
+
+.pd-contenido hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 36px 0;
 }
 
 .pd-contenido p {
