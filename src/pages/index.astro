@@ -122,7 +122,7 @@ const rutaEntries = cronologia.map((p, i) => {
 				const l = heroLayout[i];
 				return (
 					<a
-						class={`hero-card hero-card--${l.size}${l.far ? ' is-far' : ''}`}
+						class={`hero-card hero-card--${l.size}${l.far ? ' is-far' : ''}${proyecto.enlaceExterno ? ' es-externo' : ''}`}
 						data-depth={l.depth}
 						data-rot={l.rot}
 						{...(proyecto.enlaceExterno
@@ -134,6 +134,11 @@ const rutaEntries = cronologia.map((p, i) => {
 						<span class="hero-card-tilt">
 							<span class="hero-card-media">
 								<Image src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />
+								{proyecto.enlaceExterno && (
+									<span class="card-externo-icono" aria-hidden="true">
+										<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+									</span>
+								)}
 								<span class="hero-card-label">
 									<strong>{proyecto.titulo}</strong>
 									<em>{proyecto.aptitudTitulo}</em>
@@ -249,7 +254,7 @@ const rutaEntries = cronologia.map((p, i) => {
 							style={`--cat-color:${proyecto.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
 						>
 							<a
-								class={`ruta-item${proyecto.imagen ? '' : ' sin-imagen'}`}
+								class={`ruta-item${proyecto.imagen ? '' : ' sin-imagen'}${proyecto.enlaceExterno ? ' es-externo' : ''}`}
 								{...(proyecto.enlaceExterno
 									? { href: proyecto.enlaceExterno, target: '_blank', rel: 'noopener noreferrer' }
 									: { href: `/proyectos/${proyecto.id}`, 'data-proyecto-link': true })}
@@ -259,6 +264,11 @@ const rutaEntries = cronologia.map((p, i) => {
 									{proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
 									<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
 									{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
+									{proyecto.enlaceExterno && (
+										<span class="card-externo-icono" aria-hidden="true">
+											<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+										</span>
+									)}
 									<div class="ruta-info">
 										<div class="ruta-cats">
 											{proyecto.cats.map((c) => (
@@ -276,6 +286,11 @@ const rutaEntries = cronologia.map((p, i) => {
 													<span class="ruta-tech">{tech}</span>
 												))}
 											</div>
+										)}
+										{proyecto.enlaceExterno && (
+											<span class="ruta-externo-url">
+												{new URL(proyecto.enlaceExterno).hostname}
+											</span>
 										)}
 									</div>
 								</div>

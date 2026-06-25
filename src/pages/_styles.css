@@ -257,6 +257,18 @@
         0 0 45px rgba(37, 99, 235, 0.1);
 }
 
+.hero-card.es-externo .hero-card-media {
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.12),
+        0 0 0 2px rgba(37, 99, 235, 0.35);
+}
+
+.hero-card.es-externo .card-externo-icono {
+    color: #111;
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
 .hero-card-media img {
     display: block;
     width: 100%;
