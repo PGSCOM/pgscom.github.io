@@ -263,17 +263,15 @@ function initRuta() {
   });
 
   let resizeRaf = 0;
-  let lastW = cuerpo.clientWidth;
-  window.addEventListener('resize', () => {
+  const reflow = () => {
     if (resizeRaf) return;
     resizeRaf = requestAnimationFrame(() => {
       resizeRaf = 0;
-      if (cuerpo.clientWidth !== lastW) {
-        lastW = cuerpo.clientWidth;
-        build();
-      }
+      build();
+      ScrollTrigger.refresh();
     });
-  });
+  };
+  new ResizeObserver(reflow).observe(cuerpo);
 }
 
 if (document.readyState === 'loading') {
