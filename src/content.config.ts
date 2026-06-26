@@ -5,7 +5,7 @@ import { glob } from 'astro/loaders';
 // frontmatter y el contenido de la ficha se escribe en markdown (admite
 // imágenes, listas, citas…). El nombre del archivo es el id/URL del proyecto.
 const proyectos = defineCollection({
-	loader: glob({ pattern: '**/*.md', base: './src/content/proyectos' }),
+	loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/proyectos' }),
 	// `image()` resuelve rutas relativas al .md y entrega un ImageMetadata que
 	// Astro optimiza en el build (ver src/assets/proyectos/).
 	schema: ({ image }) =>
