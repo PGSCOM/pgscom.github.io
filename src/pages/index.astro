@@ -136,7 +136,9 @@ const rutaEntries = cronologia.map((p, i) => {
 					>
 						<span class="hero-card-tilt">
 							<span class="hero-card-media">
-								<Image src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />
+								{proyecto.video
+							? <video class="hero-card-video" data-src={proyecto.video} poster={proyecto.imagen?.src} muted loop playsinline preload="none" aria-hidden="true"></video>
+							: <Image src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />}
 								{proyecto.enlaceExterno && (
 									<span class="card-externo-icono" aria-hidden="true">
 										<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
@@ -264,7 +266,9 @@ const rutaEntries = cronologia.map((p, i) => {
 							>
 								{proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
 								<div class="ruta-media">
-									{proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
+									{proyecto.video
+										? <video class="ruta-video" data-src={proyecto.video} poster={proyecto.imagen?.src} muted loop playsinline preload="none" aria-hidden="true"></video>
+										: proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
 									<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
 									{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
 									{proyecto.enlaceExterno && (
@@ -605,6 +609,7 @@ const rutaEntries = cronologia.map((p, i) => {
 		import '../scripts/hero.js';
 		import '../scripts/proyectos-orbit.js';
 		import '../scripts/proyectos-ruta.js';
+		import '../scripts/card-video.js';
 	</script>
 
 	<!-- Formulario de contacto -->

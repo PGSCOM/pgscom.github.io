@@ -24,6 +24,9 @@ const proyectos = defineCollection({
 			portada: image().optional(),
 			// Vídeo "trailer" (mp4/webm) para la cabecera; sustituye a la portada
 			trailer: z.string().optional(),
+			// Vídeo en bucle para la tarjeta (hero y timeline). Ruta a un archivo en
+			// public/ (p. ej. /vid/blog.mp4). Usa `imagen` como poster; no sustituye a `trailer`.
+			video: z.string().optional(),
 			// Orden en el hero (1 = primero); los proyectos sin destacado no flotan
 			destacado: z.number().optional(),
 			descripcion: z.string().optional(),

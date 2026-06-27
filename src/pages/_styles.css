@@ -249,12 +249,21 @@
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
 }
 
+.hero-card:hover {
+    z-index: 6;
+}
+
 .hero-card:hover .hero-card-media {
     transform: scale(1.05);
     box-shadow:
         0 30px 70px rgba(0, 0, 0, 0.15),
         0 0 0 1px rgba(0, 0, 0, 0.1),
         0 0 45px rgba(37, 99, 235, 0.1);
+}
+
+/* Cuando hay vídeo la tarjeta se amplía más para que se aprecie mejor */
+.hero-card:hover .hero-card-media:has(.hero-card-video) {
+    transform: scale(1.15);
 }
 
 .hero-card.es-externo .hero-card-media {
@@ -269,7 +278,8 @@
     border-color: rgba(0, 0, 0, 0.12);
 }
 
-.hero-card-media img {
+.hero-card-media img,
+.hero-card-media video {
     display: block;
     width: 100%;
     /* height:auto neutraliza los atributos width/height que <Image> inyecta,
