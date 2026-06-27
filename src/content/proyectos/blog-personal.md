@@ -1,6 +1,7 @@
 ---
 titulo: Blog Personal
-fecha: "2023-09"
+fecha: "2025"
+fechaFin: ahora
 categorias: [desarrollo-web]
 peso: 45
 destacado: 6

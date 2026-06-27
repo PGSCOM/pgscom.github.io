@@ -4,7 +4,7 @@ import '../../styles/proyecto-detalle.css';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import categoriasData from '../../data/categorias.json';
-import { formatFecha } from '../../utils/fechas.js';
+import { formatRangoFecha } from '../../utils/fechas.js';
 
 // Genera una ruta estática por cada .md de src/content/proyectos/.
 // Cada página es HTML real y rastreable por los bots de Google.
@@ -31,7 +31,7 @@ const { entrada, proyecto, aptitud, relacionados } = Astro.props;
 // El cuerpo markdown del .md se convierte en el contenido de la ficha
 const { Content } = await render(entrada);
 
-const fechaTexto = formatFecha(proyecto.fecha);
+const fechaTexto = formatRangoFecha(proyecto.fecha, proyecto.fechaFin);
 // La cabecera usa `trailer` (vídeo) o `portada` (ImageMetadata), con `imagen`
 // como respaldo. Sin ninguna, se muestra el icono de la categoría.
 const portada = proyecto.portada || proyecto.imagen;

@@ -13,6 +13,9 @@ const proyectos = defineCollection({
 			titulo: z.string(),
 			// "YYYY", "YYYY-MM" o "YYYY-MM-DD"; coerce por si YAML lo lee como número
 			fecha: z.coerce.string().optional(),
+			// Fin del rango: una fecha o "presente" (en curso). Sin este campo, `fecha`
+			// es un punto único. Las subtarjetas (`sub`) no admiten rango.
+			fechaFin: z.coerce.string().optional(),
 			categorias: z.array(z.string()).default([]),
 			peso: z.number().optional(),
 			// Opcional: sin imagen la tarjeta muestra el icono de su categoría

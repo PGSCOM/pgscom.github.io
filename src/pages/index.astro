@@ -9,7 +9,7 @@ import logo from '../assets/logo.png';
 import { getCollection } from 'astro:content';
 import categoriasData from '../data/categorias.json';
 import contactoData from '../data/contacto.json';
-import { formatFecha } from '../utils/fechas.js';
+import { formatFecha, formatRangoFecha, esEnCurso } from '../utils/fechas.js';
 
 // Forma de la P extraída de public/assets/animlogo/carga.svg (viewBox 600x600)
 const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.19165 c 66.88974,0 121.11609,-54.22597 121.11609,-121.11609 0,-66.88986 -54.22635,-121.114324 -121.11609,-121.114324 v -0.004 z';
@@ -44,13 +44,16 @@ const featured = proyectos
 // ── Ruta cronológica (formato currículum: lo más reciente arriba) ──
 // Las categorías son etiquetas del proyecto (puede tener varias) y las
 // subtarjetas (`sub`) muestran trabajos concretos dentro del proyecto.
+// Los proyectos en curso (fechaFin: "presente") van arriba del todo.
+const claveOrden = (p: { fecha?: string; fechaFin?: string }) =>
+	esEnCurso(p.fechaFin) ? '9999' : String(p.fecha ?? '');
 const cronologia = [...proyectos].sort((a, b) =>
-	String(b.fecha ?? '').localeCompare(String(a.fecha ?? ''))
+	claveOrden(b).localeCompare(claveOrden(a))
 );
 
 let añoAnterior = null;
 const rutaEntries = cronologia.map((p, i) => {
-	const año = String(p.fecha ?? '').slice(0, 4) || 'Otros';
+	const año = esEnCurso(p.fechaFin) ? 'Ahora' : (String(p.fecha ?? '').slice(0, 4) || 'Otros');
 	const nuevoAño = año !== añoAnterior;
 	añoAnterior = año;
 	const peso = p.peso ?? 50;
@@ -65,7 +68,7 @@ const rutaEntries = cronologia.map((p, i) => {
 		...p,
 		año,
 		nuevoAño,
-		fechaTexto: formatFecha(p.fecha),
+		fechaTexto: formatRangoFecha(p.fecha, p.fechaFin),
 		lado: i % 2 === 0 ? 'izq' : 'der',
 		inset: ['0%', '5%', '2%'][i % 3],
 		w: peso >= 75 ? 580 : peso >= 55 ? 500 : 430,
