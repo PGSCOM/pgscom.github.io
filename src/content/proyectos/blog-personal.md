@@ -6,7 +6,7 @@ categorias: [desarrollo-web]
 peso: 45
 destacado: 6
 imagen: ../../assets/proyectos/Blog.png
-trailer: /vid/proy/homero.webm
+trailer: https://github.com/PGSCOM/pgscom.github.io/raw/6b267a36a8de5a8c832794133d38860253f6ea4b/public/vid/proy/homero.webm
 #video: /vid/proy/homero.webm
 descripcion: Experiencias personales en proyectos pequeños.
 tecnologias: [HTML, CSS, JavaScript]
