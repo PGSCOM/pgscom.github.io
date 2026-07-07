@@ -43,8 +43,14 @@ El sistema que tenían anteriormente era muy rudimentario, eran dos ordenadores 
 
 A partir de esa idea, propuse un sistema con OBS Studio y [vdo.ninja](https://github.com/steveseguin/vdo.ninja)
 
+<div class="pd-seccion" data-cat="video">
+
 ### Sistema de cámaras
 A partir del proyecto vdo.ninja que conocía anteriormente, el Streaming podría tener varias cámaras simultaneas y conectadas mediante WebRTC (P2P) a OBS gracias a vdo.ninja. Para tener mayor estabilidad, también puse un router que posteriormente se cambió a una red mesh para mejorar la conexión al ordenador.
+
+</div>
+
+<div class="pd-seccion" data-cat="video">
 
 ### Audio
 El audio produjo muchos problemas en todas las galas. Ya que el sistema de audio del colegio no estaba preparado para tener una salida hacia un ordenador y simultaneamente al altavoz original.
@@ -62,6 +68,8 @@ El audio produjo muchos problemas en todas las galas. Ya que el sistema de audio
 
 </details>
 
+</div>
+
 ## Web
 
 Al ver que no había una manera facil de  acceder a todos los cortometrajes y ver sus nominados, se me ocurrió hacer una página web para poder ver los cortometrajes.
@@ -74,11 +82,23 @@ Esta es la versión actual: https://premiosmacula.es ([Código Fuente](https://g
 
 ## Entradas
 
+<div class="pd-seccion" data-cat="programacion">
+
 ### Generación de entradas
 Para poder generar entradas con QRs únicos he hecho multiples scripts en Python que a partir de un diseño en SVG, se generan varias entradas con los QRs generados a partir de un .txt con IDs generadas aleatoriamente.
+
+<div class="pd-seccion" data-cat="programacion">
 
 #### QRs generados por IA
 Con [ComfyUI](https://comfy.org/) hice un workflow para sustituir la generación de QRs antigua para que cada QR tenga un diseño único.
 
+</div>
+
+</div>
+
+<div class="pd-seccion" data-cat="programacion">
+
 ### Validación
 Hice un sistema muy simple para poder validar las entradas de los asistentes. Consistía en una App programada con App Inventor que se conectaba a una base de datos en Firebase.
+
+</div>

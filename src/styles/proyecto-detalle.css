@@ -322,6 +322,13 @@ body:has(.pd-page) {
   max-width: 800px;
 }
 
+.pd-contenido h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 36px 0 16px;
+}
+
 .pd-contenido h3 {
   font-size: 1.4rem;
   font-weight: 700;
@@ -356,6 +363,32 @@ body:has(.pd-page) {
   color: var(--pd-azul);
   font-weight: 600;
 }
+
+.pd-contenido a {
+  color: var(--pd-azul);
+  text-decoration: underline;
+  text-decoration-color: rgba(147, 197, 253, 0.4);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.pd-contenido a:hover {
+  color: #fff;
+  text-decoration-color: var(--pd-azul);
+}
+
+/* Secciones indentadas con línea de color por categoría */
+.pd-contenido .pd-seccion {
+  --pd-linea: rgba(255, 255, 255, 0.15); /* genérico, sin categoría */
+  margin: 20px 0;
+  padding-left: 22px;
+  border-left: 2px solid var(--pd-linea);
+}
+
+.pd-contenido .pd-seccion[data-cat="programacion"]   { --pd-linea: #0098FF; }
+.pd-contenido .pd-seccion[data-cat="video"]          { --pd-linea: #5A598E; }
+.pd-contenido .pd-seccion[data-cat="vfx"]            { --pd-linea: #e87d0d; }
+.pd-contenido .pd-seccion[data-cat="diseño-grafico"] { --pd-linea: #a7f175; }
 
 .pd-contenido blockquote {
   margin: 22px 0;
