@@ -16,7 +16,7 @@
     },
     {
       "id": "vfx",
-      "titulo": "VFX",
+      "titulo": "VFX y 3D",
       "logo": "/icons/vfx.svg",
       "color": "#e87d0d",
       "descripcion": "Modelado, animación y renders con Blender y Unreal Engine"
