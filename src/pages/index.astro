@@ -68,7 +68,7 @@ const rutaEntries = cronologia.map((p, i) => {
 		...p,
 		año,
 		nuevoAño,
-		fechaTexto: formatRangoFecha(p.fecha, p.fechaFin),
+		fechaTexto: p.ocultarFecha ? null : formatRangoFecha(p.fecha, p.fechaFin),
 		lado: i % 2 === 0 ? 'izq' : 'der',
 		inset: ['0%', '5%', '2%'][i % 3],
 		w: peso >= 75 ? 580 : peso >= 55 ? 500 : 430,

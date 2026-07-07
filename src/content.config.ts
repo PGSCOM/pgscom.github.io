@@ -36,6 +36,8 @@ const proyectos = defineCollection({
 			// Si está presente, la tarjeta abre esta URL en pestaña nueva
 			// en lugar de la ficha interna /proyectos/<id>
 			enlaceExterno: z.string().optional(),
+			// Oculta el badge de fecha en la tarjeta del timeline
+			ocultarFecha: z.boolean().optional(),
 			sub: z
 				.array(
 					z.object({
