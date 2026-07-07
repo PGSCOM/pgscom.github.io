@@ -4,29 +4,29 @@
       "id": "programacion",
       "titulo": "Programación",
       "logo": "/icons/code.svg",
-      "color": "#34d39b",
-      "descripcion": "Aplicaciones y scripts en Python, C++ y más"
+      "color": "#0098FF",
+      "descripcion": "Aplicaciones y scripts en Python..."
     },
     {
       "id": "video",
       "titulo": "Producción Audiovisual",
-      "logo": "/icons/animation.svg",
-      "color": "#ff7a4d",
-      "descripcion": "Cortometrajes, documentales y proyectos cinematográficos"
+      "logo": "/icons/camara.svg",
+      "color": "#5A598E",
+      "descripcion": "Cortometrajes y proyectos de video"
     },
     {
       "id": "vfx",
       "titulo": "VFX",
-      "logo": "/icons/animation.svg",
-      "color": "#9a8cff",
+      "logo": "/icons/vfx.svg",
+      "color": "#e87d0d",
       "descripcion": "Modelado, animación y renders con Blender y Unreal Engine"
     },
     {
       "id": "diseño-grafico",
       "titulo": "Diseño",
-      "logo": "/icons/design.svg",
-      "color": "#ff6fb3",
-      "descripcion": "Identidad visual, carteles y diseño digital"
+      "logo": "/icons/pintar.svg",
+      "color": "#a7f175",
+      "descripcion": "Diseño digital y branding"
     }
   ]
 }
