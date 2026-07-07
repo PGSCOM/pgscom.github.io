@@ -355,13 +355,13 @@ const rutaEntries = cronologia.map((p, i) => {
 			<div class="contacto-container">
 				<div class="contacto-header">
 					<h2 class="contacto-titulo">Contacto</h2>
-					<p class="contacto-subtitulo">¿Tienes un proyecto en mente? ¡Hablemos!</p>
+					<p class="contacto-subtitulo"></p>
 				</div>
 
 				<div class="contacto-grid">
 					<div class="contacto-info">
 						{contactoData.informacion.email && (
-							<div class="info-card">
+							<!--div class="info-card">
 								<div class="info-icon">
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 										<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -372,11 +372,11 @@ const rutaEntries = cronologia.map((p, i) => {
 									<h3>Email</h3>
 									<a href={`mailto:${contactoData.informacion.email}`}>{contactoData.informacion.email}</a>
 								</div>
-							</div>
+							</div-->
 						)}
 
 						<div class="social-links">
-							<h3>Sígueme en redes</h3>
+							<h3>Otros links:</h3>
 							<div class="social-icons">
 								{contactoData.redes.map((red) => (
 									<a href={red.url} target="_blank" rel="noopener noreferrer" class="social-icon" title={red.nombre}>
@@ -397,7 +397,7 @@ const rutaEntries = cronologia.map((p, i) => {
 									type="text" 
 									id="nombre" 
 									name="nombre" 
-									placeholder="Tu nombre completo"
+									placeholder="Nombre"
 									required
 								/>
 								<span class="input-border"></span>
@@ -432,7 +432,7 @@ const rutaEntries = cronologia.map((p, i) => {
 								<textarea 
 									id="mensaje" 
 									name="mensaje" 
-									placeholder="Cuéntame sobre tu proyecto..."
+									placeholder="Cuéntame..."
 									rows="5"
 									required
 								></textarea>
@@ -443,7 +443,7 @@ const rutaEntries = cronologia.map((p, i) => {
 							<div class="cf-turnstile" data-sitekey="0x4AAAAAACGiv6Et8KLomzvb" data-theme="dark"></div>
 
 							<button type="submit" class="submit-btn">
-								<span class="btn-text">Enviar mensaje</span>
+								<span class="btn-text">Enviar :D</span>
 								<span class="btn-icon">
 									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 										<line x1="22" y1="2" x2="11" y2="13"></line>
