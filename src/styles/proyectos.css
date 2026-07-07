@@ -831,12 +831,14 @@
 }
 
 /* Subtarjetas clickeables: sin transform, para que la estación no se
-   despegue del raíl al hacer hover */
+   despegue del raíl al hacer hover. IMPORTANTE: no incluir `transform` en la
+   transición — el hover no mueve la tarjeta y, si se pone, congela la
+   animación de entrada de GSAP en x:±36 (solapamiento con el raíl). */
 .ruta-sub[href] {
   cursor: pointer;
   text-decoration: none;
-  will-change: transform;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-color 0.3s ease, background 0.3s ease;
 }
 
 .ruta-sub[href]:hover,
@@ -873,9 +875,11 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 55%;
-  opacity: 0.9;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  width: 62%;
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 6px color-mix(in srgb, var(--cat-color, #93c5fd) 55%, transparent))
+    drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
 }
 
 .ruta-sub-img {
@@ -899,15 +903,16 @@
 /* Insignia de categoría sobre la esquina de la miniatura */
 .ruta-sub-cat {
   position: absolute;
-  right: 3px;
-  bottom: 3px;
+  right: 4px;
+  bottom: 4px;
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 7px;
-  background: rgba(5, 8, 18, 0.85);
-  border: 1px solid color-mix(in srgb, var(--cat-color, #93c5fd) 55%, transparent);
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: rgba(5, 8, 18, 0.9);
+  border: 1px solid color-mix(in srgb, var(--cat-color, #93c5fd) 70%, transparent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 .modal-btn-secondary {
