@@ -377,6 +377,54 @@ body:has(.pd-page) {
   text-decoration-color: var(--pd-azul);
 }
 
+/* Pestañas para apartados de primer nivel del markdown */
+.pd-tabs {
+  margin: 0 0 28px;
+}
+
+.pd-tabs-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+}
+
+.pd-tab-btn {
+  appearance: none;
+  border: 1px solid rgba(147, 197, 253, 0.25);
+  background: rgba(147, 197, 253, 0.08);
+  color: rgba(212, 227, 255, 0.9);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.pd-tab-btn:hover {
+  background: rgba(147, 197, 253, 0.16);
+  border-color: rgba(147, 197, 253, 0.45);
+}
+
+.pd-tab-btn:focus-visible {
+  outline: 2px solid rgba(147, 197, 253, 0.9);
+  outline-offset: 2px;
+}
+
+.pd-tab-btn.is-active {
+  background: linear-gradient(135deg, rgba(147, 197, 253, 0.25), rgba(196, 181, 253, 0.2));
+  border-color: rgba(147, 197, 253, 0.6);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.pd-tab-panel > h2:first-child {
+  margin-top: 0;
+}
+
 /* Secciones indentadas con línea de color por categoría */
 .pd-contenido .pd-seccion {
   --pd-linea: rgba(255, 255, 255, 0.15); /* genérico, sin categoría */
@@ -581,6 +629,15 @@ body:has(.pd-page) {
 
   .pd-back {
     padding: 10px;
+  }
+
+  .pd-tabs-list {
+    gap: 8px;
+  }
+
+  .pd-tab-btn {
+    padding: 9px 14px;
+    font-size: 0.85rem;
   }
 }
 

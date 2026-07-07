@@ -206,4 +206,14 @@ const breadcrumbLd = {
 		</article>
 	</main>
 
+	<script>
+		import { initProyectoTabs } from '../../scripts/proyecto-tabs.js';
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initProyectoTabs, { once: true });
+		} else {
+			initProyectoTabs();
+		}
+	</script>
+
 </Layout>
