@@ -383,6 +383,53 @@ body:has(.pd-page) {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
+.pd-contenido details {
+  margin: 20px 0;
+  background: linear-gradient(135deg, rgba(147, 197, 253, 0.07), rgba(196, 181, 253, 0.05));
+  border: 1px solid rgba(147, 197, 253, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pd-contenido summary {
+  cursor: pointer;
+  padding: 14px 18px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.pd-contenido summary::-webkit-details-marker {
+  display: none;
+}
+
+.pd-contenido summary::before {
+  content: '▸';
+  color: var(--pd-azul);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.pd-contenido details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.pd-contenido details[open] > summary {
+  border-bottom: 1px solid rgba(147, 197, 253, 0.15);
+}
+
+.pd-contenido details > :not(summary) {
+  padding: 0 18px;
+}
+
+.pd-contenido details > :not(summary):last-child {
+  padding-bottom: 8px;
+}
+
 /* ── Relacionados ────────────────────────────────────── */
 .pd-relacionados {
   margin-top: 64px;
