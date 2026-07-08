@@ -205,6 +205,50 @@ Si un sub-item del frontmatter apunta a `link: /proyectos/slug#seccion`, la secc
 
 ---
 
+## 12. Pestañas (`data-tab`)
+
+Si un proyecto tiene varias secciones con `##`, puedes convertirlas en **pestañas seleccionables** con icono y color de categoría.
+
+En vez de `##`, escribe `<h2 data-tab="id-categoria">`:
+
+```html
+<h2 data-tab="video">Streaming</h2>
+
+Contenido de la pestaña (markdown normal).
+
+<h2 data-tab="programacion">Web</h2>
+
+Contenido de la pestaña.
+
+<h2 data-tab="programacion">Entradas</h2>
+
+Contenido de la pestaña.
+```
+
+| Regla | Detalle |
+|-------|---------|
+| `data-tab` | ID de categoría de `categorias.json` — define el color del underline y el icono |
+| Mínimo | Debe haber al menos **2** `h2` con `data-tab` para que aparezcan las pestañas |
+| Sin `data-tab` | Los `h2` sin `data-tab` se renderizan como títulos normales, no se convierten en pestañas |
+| Anclas | Se generan automáticamente del texto (ej. `Streaming` → `#streaming`), igual que con `##` |
+| Contenido | Todo lo que sigue al `h2` hasta el siguiente pertenece a esa pestaña |
+
+Se usa junto con `pd-seccion` para categorizar el interior de cada pestaña si hace falta:
+
+```html
+<h2 data-tab="video">Streaming</h2>
+
+<div class="pd-seccion" data-cat="video">
+
+### Sistema de cámaras
+
+Texto técnico sobre vídeo.
+
+</div>
+```
+
+---
+
 ## Ejemplo completo
 
 ```markdown
