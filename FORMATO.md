@@ -135,31 +135,71 @@ El inline usa fondo oscuro y color lavanda. Los bloques de código heredan el mi
 
 ## 9. Vídeos
 
-Los vídeos del cuerpo se renderizan con **Plyr**, un reproductor personalizado con controles, barra de progreso, volumen y pantalla completa.
+Los vídeos del cuerpo se renderizan con **Video.js v10**, un reproductor moderno basado en
+Web Components con controles personalizados, barra de progreso, volumen y pantalla completa.
+Solo se admiten dos tipos de fuente: **MP4** (u otro formato que reproduzca el navegador de
+forma nativa) y **HLS fragmentado** (`.m3u8`). **No hay soporte para embeds de YouTube/Vimeo**
+(Video.js v10 todavía no lo implementa en esta beta).
 
-### Vídeo local (archivo MP4)
-
-```html
-<video src="../../assets/proyectos/mi-video.mp4" controls></video>
-```
-
-Coloca el archivo en `src/assets/proyectos/` para que Astro lo procese.
-
-### YouTube / Vimeo (embed automático)
-
-Plyr detecta la URL y carga el iframe automáticamente con su backend:
+Se escribe siempre con una etiqueta `<video>` normal — el script de la página la detecta y la
+convierte automáticamente en el reproductor:
 
 ```html
-<video src="https://www.youtube.com/watch?v=VIDEO_ID" controls></video>
-<video src="https://vimeo.com/VIDEO_ID" controls></video>
+<video src="/videos/mi-video.mp4" controls></video>
 ```
-
-Si prefieres la sintaxis explícita con `data-plyr-provider`:
 
 ```html
-<div data-plyr-provider="youtube" data-plyr-embed-id="dQw4w9WgXcQ"></div>
-<div data-plyr-provider="vimeo" data-plyr-embed-id="76979871"></div>
+<video src="/videos/mi-video/master.m3u8" controls></video>
 ```
+
+El tipo se decide por la URL: si termina en `.m3u8` se reproduce como HLS (fragmentado, vía
+`hls.js`); cualquier otra extensión se trata como vídeo normal.
+
+`controls` no cambia el aspecto (el reproductor siempre pone sus propios controles) pero
+consérvalo: es lo que hace que el `<video>` funcione como vídeo nativo de respaldo si el
+JavaScript no llega a cargar. Atributos opcionales que también se admiten: `poster`,
+`autoplay`, `muted`, `loop`, `playsinline`, `preload`.
+
+### Dónde colocar los archivos
+
+A diferencia de las imágenes (`![](../../assets/...)`), los vídeos **no** se procesan con el
+optimizador de Astro: la etiqueta `<video>` pasa tal cual al HTML final. Colócalos en
+**`public/videos/`** y referencia la ruta absoluta desde ahí:
+
+```
+public/
+└── videos/
+    ├── mi-video.mp4                  → /videos/mi-video.mp4
+    └── mi-video-hls/
+        ├── master.m3u8                → /videos/mi-video-hls/master.m3u8
+        └── seg_000.ts, seg_001.ts...
+```
+
+Un HLS son varios archivos (una playlist `.m3u8` + los segmentos `.ts` que referencia): copia
+la carpeta entera a `public/`.
+
+### Cómo codificar el vídeo
+
+Con [ffmpeg](https://ffmpeg.org/) instalado:
+
+**MP4** (H.264 + AAC, con `faststart` para que empiece a reproducirse antes de descargarse entero):
+
+```bash
+ffmpeg -i entrada.mov -c:v libx264 -crf 20 -preset slow -c:a aac -b:a 160k -movflags +faststart mi-video.mp4
+```
+
+- `-crf 20` — calidad (18–23 es un buen rango; menor = más calidad y más peso).
+- `-preset slow` — mejor compresión a cambio de más tiempo de codificación (`fast`/`medium` si tienes prisa).
+
+**HLS** (segmenta un vídeo ya codificado en una playlist `.m3u8` + trozos `.ts` de 6 segundos):
+
+```bash
+ffmpeg -i homero.webm -c:v libx264 -crf 20 -c:a aac -b:a 128k -hls_time 6 -hls_playlist_type vod -hls_segment_filename "seg_%03d.ts" master.m3u8
+```
+
+Úsalo para vídeos largos (streamings, making-ofs) donde interese que el navegador vaya
+pidiendo trozos en vez de descargar el archivo entero de golpe. Para clips cortos, MP4 normal
+es más simple y suficiente.
 
 Los vídeos se muestran redondeados con sombra, igual que las imágenes.
 

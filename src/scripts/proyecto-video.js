@@ -1,51 +1,66 @@
-import Plyr from 'plyr';
+// Registra los custom elements de Video.js v10 (efecto lateral: customElements.define).
+// Se usa el skin "minimal" (menos botones, más discreto).
+// Ver https://videojs.org/docs/framework/html/concepts/overview
+import '@videojs/html/video/player';
+import '@videojs/html/video/minimal-skin';
+import '@videojs/html/media/hls-video';
 
-const plyrOpts = {
-  controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-  invertTime: false,
-  toggleInvert: false,
-  resetOnEnd: true,
-};
+// Una URL que termina en .m3u8 (con o sin query/hash) es una playlist HLS.
+const HLS_RE = /\.m3u8(?:[?#]|$)/i;
 
-/** Comprueba si un elemento está dentro de un panel oculto (pestaña no activa) */
-function inHiddenPanel(el) {
-  return !!el.closest('.pd-tab-panel[hidden]');
+// Atributos del <video> del autor que se trasladan al elemento de medio real.
+// "controls" se omite a propósito: video-skin siempre pone sus propios controles.
+const ATRIBUTOS_A_COPIAR = ['poster', 'autoplay', 'muted', 'loop', 'playsinline', 'preload', 'crossorigin'];
+
+/** Obtiene la URL del vídeo desde el atributo src o el primer <source> hijo */
+function resolverFuente(video) {
+	const src = video.getAttribute('src');
+	if (src) return src;
+	return video.querySelector('source[src]')?.getAttribute('src') ?? null;
 }
 
-/** Inicializa Plyr en vídeos y embeds (YouTube/Vimeo) dentro de un contenedor */
-function initVideos(container = document) {
-  container.querySelectorAll('video, [data-plyr-provider]').forEach((el) => {
-    if (el.classList.contains('plyr--setup')) return;
-    // En la carga inicial saltamos los que están dentro de pestañas ocultas
-    if (container === document && inHiddenPanel(el)) return;
-    el.classList.add('plyr--setup');
-    new Plyr(el, plyrOpts);
-  });
+/**
+ * Sustituye un <video> escrito a mano en el markdown por la estructura de
+ * Video.js v10 (<video-player><video-skin><video|hls-video slot="media">).
+ * MP4 y cualquier otro formato usan el <video> nativo; los .m3u8 usan el
+ * <hls-video> de Video.js (hls.js por debajo).
+ */
+function envolver(video) {
+	const src = resolverFuente(video);
+	if (!src) return;
+
+	const media = document.createElement(HLS_RE.test(src) ? 'hls-video' : 'video');
+	media.setAttribute('slot', 'media');
+	media.setAttribute('src', src);
+	for (const attr of ATRIBUTOS_A_COPIAR) {
+		if (video.hasAttribute(attr)) media.setAttribute(attr, video.getAttribute(attr));
+	}
+
+	const skin = document.createElement('video-minimal-skin');
+	skin.appendChild(media);
+	const player = document.createElement('video-player');
+	player.appendChild(skin);
+
+	const contenedor = document.createElement('div');
+	contenedor.className = 'pd-video';
+	contenedor.appendChild(player);
+
+	// El skin "minimal" no trae gestos de clic ni icono de play central
+	// (a diferencia del skin completo). Se añaden aquí a mano: clic en el
+	// vídeo alterna reproducción, y una clase CSS muestra/oculta el icono.
+	contenedor.classList.add('is-paused');
+	media.addEventListener('click', () => {
+		if (media.paused) media.play();
+		else media.pause();
+	});
+	media.addEventListener('play', () => contenedor.classList.remove('is-paused'));
+	media.addEventListener('pause', () => contenedor.classList.add('is-paused'));
+
+	video.replaceWith(contenedor);
 }
 
-initVideos();
-
-// Observa cambios en el contenido para capturar vídeos que aparezcan
-// dinámicamente, sobre todo al cambiar de pestaña (hidden → visible).
-const contenido = document.querySelector('.pd-contenido');
-if (contenido) {
-  const obs = new MutationObserver((mutations) => {
-    for (const m of mutations) {
-      // Nuevos nodos añadidos al DOM
-      if (m.type === 'childList' && m.addedNodes.length) {
-        initVideos(m.target);
-        continue;
-      }
-      // Un panel oculto se ha hecho visible → inicializar sus vídeos
-      if (m.type === 'attributes' && m.attributeName === 'hidden' && !m.target.hidden) {
-        initVideos(m.target);
-      }
-    }
-  });
-  obs.observe(contenido, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['hidden'],
-  });
-}
+// Este script se carga después del que convierte los h2[data-tab] en pestañas
+// (ver [id].astro), así que el DOM de .pd-contenido ya está en su forma final
+// -a diferencia de Plyr, no hace falta un MutationObserver para vídeos que
+// "aparecen" al cambiar de pestaña: solo están ocultos con [hidden].
+document.querySelectorAll('.pd-contenido video').forEach(envolver);

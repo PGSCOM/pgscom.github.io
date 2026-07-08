@@ -3,7 +3,7 @@
    Estilo cinematográfico, hermano del modal de proyectos
    ============================================ */
 
-@import 'plyr/dist/plyr.css';
+@import '@videojs/html/video/minimal-skin.css';
 
 :root {
   --pd-azul: #93c5fd;
@@ -670,42 +670,47 @@ body:has(.pd-page) {
   }
 }
 
-/* ── Plyr (reproductor de vídeo) ─────────────────────── */
-.pd-contenido .plyr {
-  border-radius: 12px;
-  overflow: hidden;
+/* ── Video.js v10 (reproductor de vídeo, skin minimal) ─────────── */
+/* El skin ya se recorta y redondea a sí mismo internamente (su shadow DOM
+   tiene overflow:clip + border-radius) y se dimensiona solo a partir del
+   vídeo real. No forzamos aspect-ratio/overflow aquí: al no coincidir con
+   la proporción real del archivo, esa caja quedaba de un tamaño distinto
+   al contenido interno y recortaba la barra de controles fuera de vista. */
+.pd-contenido .pd-video {
+  position: relative;
   margin: 16px 0;
+  border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-}
-
-.pd-contenido .plyr--video {
-  background: #000;
-}
-
-.pd-contenido .plyr__controls {
-  background: linear-gradient(transparent, rgba(5, 7, 13, 0.85));
-  padding-bottom: 8px;
-}
-
-.pd-contenido .plyr__control--overlaid {
-  background: rgba(147, 197, 253, 0.9);
-  border: none;
-}
-
-.pd-contenido .plyr__control--overlaid:hover {
-  background: var(--pd-azul);
-}
-
-.pd-contenido .plyr--full-ui input[type='range'] {
   color: var(--pd-azul);
+  --media-border-radius: 12px;
 }
 
-.pd-contenido .plyr__progress__buffer {
-  background: rgba(255, 255, 255, 0.15);
+/* Icono de play central: el skin minimal no trae uno de fábrica.
+   Solo visible en pausa (clase controlada desde proyecto-video.js). */
+.pd-contenido .pd-video.is-paused::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(5, 7, 13, 0.55);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
 }
 
-.pd-contenido .plyr__tooltip {
-  background: rgba(5, 7, 13, 0.9);
-  color: #fff;
-  font-size: 0.8rem;
+.pd-contenido .pd-video.is-paused::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  margin: auto;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 14px 0 14px 22px;
+  border-color: transparent transparent transparent var(--pd-azul);
+  transform: translateX(3px); /* centra ópticamente el triángulo en el círculo */
+  pointer-events: none;
 }
