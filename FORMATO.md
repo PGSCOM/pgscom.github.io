@@ -133,7 +133,27 @@ El inline usa fondo oscuro y color lavanda. Los bloques de código heredan el mi
 
 ---
 
-## 9. Desplegable `<details>`
+## 9. Vídeos
+
+Los vídeos del cuerpo se renderizan con **Plyr**, un reproductor personalizado con controles, barra de progreso, volumen y pantalla completa. Se integran automáticamente escribiendo HTML estándar de `<video>` en el markdown:
+
+```html
+<video src="../../assets/proyectos/mi-video.mp4" controls></video>
+```
+
+También se aceptan fuentes externas (YouTube, Vimeo) indicando `src` directamente:
+
+```html
+<video src="https://www.youtube.com/watch?v=VIDEO_ID" controls></video>
+```
+
+> **Nota**: el atributo `controls` activa Plyr, pero puedes omitirlo para que el vídeo sea mudo/fondo. Siempre es mejor ponerlo para que Plyr pueda tomar el control.
+
+Los vídeos se muestran redondeados con sombra, igual que las imágenes. Los archivos deben colocarse en `src/assets/proyectos/` para que Astro los procese.
+
+---
+
+## 10. Desplegable `<details>`
 
 Útil para información secundaria o listas largas:
 
@@ -151,7 +171,7 @@ Deja una línea en blanco entre el `<summary>` y el contenido para que el markdo
 
 ---
 
-## 10. Sección con franja de color (`pd-seccion`)
+## 11. Sección con franja de color (`pd-seccion`)
 
 Agrupa contenido relacionado con una categoría concreta mediante una barra lateral de color:
 
@@ -193,7 +213,7 @@ Las secciones se pueden anidar:
 
 ---
 
-## 11. Anclas para sub-items
+## 12. Anclas para sub-items
 
 Si un sub-item del frontmatter apunta a `link: /proyectos/slug#seccion`, la sección debe existir en el cuerpo. Los encabezados generan anclas automáticamente:
 
@@ -205,7 +225,7 @@ Si un sub-item del frontmatter apunta a `link: /proyectos/slug#seccion`, la secc
 
 ---
 
-## 12. Pestañas (`data-tab`)
+## 13. Pestañas (`data-tab`)
 
 Si un proyecto tiene varias secciones con `##`, puedes convertirlas en **pestañas seleccionables** con icono y color de categoría.
 
