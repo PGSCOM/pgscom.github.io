@@ -661,15 +661,6 @@ body:has(.pd-page) {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .pd-rel-card,
-  .pd-rel-image img,
-  .pd-btn-primary,
-  .pd-back {
-    transition: none;
-  }
-}
-
 /* ── Video.js v10 (reproductor de vídeo, skin minimal) ─────────── */
 /* El skin ya se recorta y redondea a sí mismo internamente (su shadow DOM
    tiene overflow:clip + border-radius) y se dimensiona solo a partir del

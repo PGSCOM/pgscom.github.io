@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/proyecto-detalle.css';
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import categoriasData from '../../data/categorias.json';
 import { formatRangoFecha } from '../../utils/fechas.js';
 
@@ -35,6 +35,11 @@ const fechaTexto = formatRangoFecha(proyecto.fecha, proyecto.fechaFin);
 // La cabecera usa `trailer` (vídeo) o `portada` (ImageMetadata), con `imagen`
 // como respaldo. Sin ninguna, se muestra el icono de la categoría.
 const portada = proyecto.portada || proyecto.imagen;
+// Póster del trailer: webp optimizado (el atributo `poster` no pasa por
+// <Image>, así que con `.src` directo cargaría el asset original completo).
+const posterTrailer = proyecto.trailer && portada
+	? (await getImage({ src: portada, format: 'webp', width: 1600 })).src
+	: undefined;
 // og:image y JSON-LD necesitan una URL string: .src es la ruta del asset
 // optimizado; si el proyecto no tiene imagen, cae al logo (SVG) de la categoría.
 const ogImagen = proyecto.imagen?.src ?? aptitud.logo;
@@ -100,7 +105,7 @@ const breadcrumbLd = {
 				<video
 					class="pd-hero-media"
 					src={proyecto.trailer}
-					poster={portada?.src}
+					poster={posterTrailer}
 					autoplay
 					muted
 					loop

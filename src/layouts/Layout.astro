@@ -49,25 +49,24 @@ const ogImage = new URL(image, Astro.site ?? Astro.url.origin).href;
 				navigation: auto;
 			}
 
-			@media (prefers-reduced-motion: no-preference) {
-				::view-transition-old(root) {
-					animation: vt-fade-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
-				}
-				::view-transition-new(root) {
-					animation: vt-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-				}
+			/* Sin @media de prefers-reduced-motion: el sitio anima siempre por diseño */
+			::view-transition-old(root) {
+				animation: vt-fade-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+			}
+			::view-transition-new(root) {
+				animation: vt-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+			}
 
-				/* La imagen del proyecto que "vuela" de la tarjeta a la ficha */
-				::view-transition-group(project-hero) {
-					animation-duration: 0.55s;
-					animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-				}
-				::view-transition-old(project-hero),
-				::view-transition-new(project-hero) {
-					height: 100%;
-					object-fit: cover;
-					overflow: clip;
-				}
+			/* La imagen del proyecto que "vuela" de la tarjeta a la ficha */
+			::view-transition-group(project-hero) {
+				animation-duration: 0.55s;
+				animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+			}
+			::view-transition-old(project-hero),
+			::view-transition-new(project-hero) {
+				height: 100%;
+				object-fit: cover;
+				overflow: clip;
 			}
 
 			@keyframes vt-fade-out {

@@ -1,9 +1,8 @@
-// Registra los custom elements de Video.js v10 (efecto lateral: customElements.define).
-// Se usa el skin "minimal" (menos botones, más discreto).
+// Video.js v10 con skin "minimal" (menos botones, más discreto).
 // Ver https://videojs.org/docs/framework/html/concepts/overview
-import '@videojs/html/video/player';
-import '@videojs/html/video/minimal-skin';
-import '@videojs/html/media/hls-video';
+// Los módulos (que registran los custom elements vía customElements.define)
+// pesan cientos de KB, así que se importan dinámicamente al final del archivo
+// y solo en las fichas que de verdad tienen algún <video> en su contenido.
 
 // Una URL que termina en .m3u8 (con o sin query/hash) es una playlist HLS.
 const HLS_RE = /\.m3u8(?:[?#]|$)/i;
@@ -83,4 +82,16 @@ function envolver(video) {
 // (ver [id].astro), así que el DOM de .pd-contenido ya está en su forma final
 // -a diferencia de Plyr, no hace falta un MutationObserver para vídeos que
 // "aparecen" al cambiar de pestaña: solo están ocultos con [hidden].
-document.querySelectorAll('.pd-contenido video').forEach(envolver);
+const videos = [...document.querySelectorAll('.pd-contenido video')];
+
+if (videos.length > 0) {
+	const cargas = [
+		import('@videojs/html/video/player'),
+		import('@videojs/html/video/minimal-skin'),
+	];
+	// hls.js es la parte más pesada: solo se descarga si hay alguna playlist HLS
+	if (videos.some((v) => HLS_RE.test(resolverFuente(v) ?? ''))) {
+		cargas.push(import('@videojs/html/media/hls-video'));
+	}
+	Promise.all(cargas).then(() => videos.forEach(envolver));
+}

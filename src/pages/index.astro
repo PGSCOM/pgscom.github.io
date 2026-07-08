@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import './_styles.css';
 import '../styles/proyectos.css';
 import '../styles/contacto.css';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import logo from '../assets/logo.png';
 
 import { getCollection } from 'astro:content';
@@ -41,10 +41,19 @@ const featured = proyectos
 	.slice(0, heroLayout.length)
 	.map((p) => ({ ...p, aptitudTitulo: catById[p.categorias?.[0]]?.titulo ?? '' }));
 
+// Póster de las tarjetas con vídeo: el atributo `poster` no pasa por <Image>,
+// así que sin esto se descargaría el PNG original completo en vez del webp.
+const postersVideo = new Map();
+for (const p of proyectos) {
+	if (p.video && p.imagen) {
+		postersVideo.set(p.id, (await getImage({ src: p.imagen, format: 'webp', width: 960 })).src);
+	}
+}
+
 // ── Ruta cronológica (formato currículum: lo más reciente arriba) ──
 // Las categorías son etiquetas del proyecto (puede tener varias) y las
 // subtarjetas (`sub`) muestran trabajos concretos dentro del proyecto.
-// Los proyectos en curso (fechaFin: "presente") van arriba del todo.
+// Los proyectos en curso (fechaFin: "ahora") van arriba del todo.
 const claveOrden = (p: { fecha?: string; fechaFin?: string }) =>
 	esEnCurso(p.fechaFin) ? '9999' : String(p.fecha ?? '');
 const cronologia = [...proyectos].sort((a, b) =>
@@ -137,7 +146,7 @@ const rutaEntries = cronologia.map((p, i) => {
 						<span class="hero-card-tilt">
 							<span class="hero-card-media">
 								{proyecto.video
-							? <video class="hero-card-video" data-src={proyecto.video} poster={proyecto.imagen?.src} muted loop playsinline preload="none" aria-hidden="true"></video>
+							? <video class="hero-card-video" data-src={proyecto.video} poster={postersVideo.get(proyecto.id)} muted loop playsinline preload="none" aria-hidden="true"></video>
 							: <Image src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />}
 								{proyecto.enlaceExterno && (
 									<span class="card-externo-icono" aria-hidden="true">
@@ -267,7 +276,7 @@ const rutaEntries = cronologia.map((p, i) => {
 								{proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
 								<div class="ruta-media">
 									{proyecto.video
-										? <video class="ruta-video" data-src={proyecto.video} poster={proyecto.imagen?.src} muted loop playsinline preload="none" aria-hidden="true"></video>
+										? <video class="ruta-video" data-src={proyecto.video} poster={postersVideo.get(proyecto.id)} muted loop playsinline preload="none" aria-hidden="true"></video>
 										: proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
 									<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
 									{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
