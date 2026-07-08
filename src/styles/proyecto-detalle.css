@@ -3,7 +3,7 @@
    Estilo cinematográfico, hermano del modal de proyectos
    ============================================ */
 
-@import 'plyr/dist/plyr.css';
+@import '@videojs/html/video/skin.css';
 
 :root {
   --pd-azul: #93c5fd;
@@ -670,42 +670,17 @@ body:has(.pd-page) {
   }
 }
 
-/* ── Plyr (reproductor de vídeo) ─────────────────────── */
-.pd-contenido .plyr {
+/* ── Video.js v10 (reproductor de vídeo) ─────────────── */
+.pd-contenido video-player,
+.pd-contenido video-skin {
+  display: block;
+}
+
+.pd-contenido video-skin {
+  --media-border-radius: 12px;
+  --media-color-primary: #93c5fd;
+  margin: 16px 0;
   border-radius: 12px;
   overflow: hidden;
-  margin: 16px 0;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-}
-
-.pd-contenido .plyr--video {
-  background: #000;
-}
-
-.pd-contenido .plyr__controls {
-  background: linear-gradient(transparent, rgba(5, 7, 13, 0.85));
-  padding-bottom: 8px;
-}
-
-.pd-contenido .plyr__control--overlaid {
-  background: rgba(147, 197, 253, 0.9);
-  border: none;
-}
-
-.pd-contenido .plyr__control--overlaid:hover {
-  background: var(--pd-azul);
-}
-
-.pd-contenido .plyr--full-ui input[type='range'] {
-  color: var(--pd-azul);
-}
-
-.pd-contenido .plyr__progress__buffer {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.pd-contenido .plyr__tooltip {
-  background: rgba(5, 7, 13, 0.9);
-  color: #fff;
-  font-size: 0.8rem;
 }

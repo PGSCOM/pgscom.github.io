@@ -135,7 +135,9 @@ El inline usa fondo oscuro y color lavanda. Los bloques de código heredan el mi
 
 ## 9. Vídeos
 
-Los vídeos del cuerpo se renderizan con **Plyr**, un reproductor personalizado con controles, barra de progreso, volumen y pantalla completa.
+Los vídeos del cuerpo se renderizan con **Video.js v10**, un reproductor personalizado con controles, barra de progreso, volumen y pantalla completa.
+
+Escribe directamente `<video>` con el atributo `src` — el script lo envuelve automáticamente en los Web Components de Video.js:
 
 ### Vídeo local (archivo MP4)
 
@@ -147,18 +149,21 @@ Coloca el archivo en `src/assets/proyectos/` para que Astro lo procese.
 
 ### YouTube / Vimeo (embed automático)
 
-Plyr detecta la URL y carga el iframe automáticamente con su backend:
+Video.js detecta la URL y carga el iframe automáticamente:
 
 ```html
 <video src="https://www.youtube.com/watch?v=VIDEO_ID" controls></video>
 <video src="https://vimeo.com/VIDEO_ID" controls></video>
 ```
 
-Si prefieres la sintaxis explícita con `data-plyr-provider`:
+También puedes usar la sintaxis nativa de Web Components si prefieres ser explícito:
 
 ```html
-<div data-plyr-provider="youtube" data-plyr-embed-id="dQw4w9WgXcQ"></div>
-<div data-plyr-provider="vimeo" data-plyr-embed-id="76979871"></div>
+<video-player>
+  <video-skin>
+    <video src="../../assets/proyectos/mi-video.mp4" controls playsinline></video>
+  </video-skin>
+</video-player>
 ```
 
 Los vídeos se muestran redondeados con sombra, igual que las imágenes.
