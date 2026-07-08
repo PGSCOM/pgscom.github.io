@@ -9,6 +9,7 @@ imagen: ../../assets/proyectos/Macula.png
 descripcion: Gala de premios escolar
 tecnologias: [Blender, OBS Studio, App Inventor, Firebase, Web]
 ocultarFecha: true
+link: https://premiosmacula.es
 sub:
   - titulo: Sistema de entradas
     descripcion: Sistema de generación y validación de entradas con QR.
