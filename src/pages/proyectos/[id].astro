@@ -180,6 +180,120 @@ const breadcrumbLd = {
 					<Content />
 				</section>
 
+				<script is:inline define:vars={{ categorias: categoriasData.categorias.map((c) => ({ id: c.id, color: c.color, logo: c.logo })) }}>
+					// Convierte en pestañas los h2 que tengan data-tab="id-categoria".
+					// Se ejecuta de forma síncrona, antes de que el navegador pinte la
+					// página, para que un enlace con ancla abra directamente la pestaña
+					// correcta sin saltos. Si hay menos de dos h2 con data-tab, no hace nada.
+					(function () {
+						const contenido = document.querySelector('.pd-contenido');
+						if (!contenido) return;
+
+						const headings = Array.from(contenido.children).filter(
+							(el) => el.tagName === 'H2' && el.hasAttribute('data-tab')
+						);
+						if (headings.length < 2) return;
+
+						function slugify(texto) {
+							return texto
+								.toLowerCase()
+								.normalize('NFD')
+								.replace(/[̀-ͯ]/g, '')
+								.replace(/[^a-z0-9]+/g, '-')
+								.replace(/^-+|-+$/g, '');
+						}
+
+						// Marca el hueco donde iban los h2: se sustituye al final por la
+						// barra de pestañas y el contenedor de paneles.
+						const marcador = document.createComment('pd-tabs');
+						contenido.insertBefore(marcador, headings[0]);
+
+						const usados = new Set();
+						const paneles = headings.map((h2, i) => {
+							let slug = slugify(h2.textContent) || `seccion-${i + 1}`;
+							while (usados.has(slug)) slug += `-${i + 1}`;
+							usados.add(slug);
+
+							const panel = document.createElement('div');
+							panel.className = 'pd-tab-panel';
+							panel.id = slug;
+							panel.setAttribute('role', 'region');
+							panel.setAttribute('aria-label', h2.textContent);
+
+							// Mueve el h2 y todo lo que le sigue hasta el próximo h2 (o el final)
+							let nodo = h2;
+							while (nodo && nodo !== headings[i + 1]) {
+								const siguiente = nodo.nextSibling;
+								panel.appendChild(nodo);
+								nodo = siguiente;
+							}
+
+							const cat = categorias.find((c) => c.id === h2.dataset.tab) || null;
+							return { slug, etiqueta: h2.textContent, panel, cat };
+						});
+
+						const nav = document.createElement('nav');
+						nav.className = 'pd-tabs';
+						nav.setAttribute('aria-label', 'Secciones del proyecto');
+
+						const lista = document.createElement('div');
+						lista.className = 'pd-tabs-list';
+
+						const enlaces = paneles.map(({ slug, etiqueta, cat }) => {
+							const a = document.createElement('a');
+							a.className = 'pd-tab';
+							a.href = `#${slug}`;
+							if (cat) {
+								a.style.setProperty('--tab-color', cat.color);
+								const img = document.createElement('img');
+								img.src = cat.logo;
+								img.alt = '';
+								img.setAttribute('aria-hidden', 'true');
+								a.appendChild(img);
+							}
+							const span = document.createElement('span');
+							span.textContent = etiqueta;
+							a.appendChild(span);
+							lista.appendChild(a);
+							return a;
+						});
+						nav.appendChild(lista);
+
+						const panelesWrap = document.createElement('div');
+						panelesWrap.className = 'pd-tab-panels';
+						paneles.forEach(({ panel }) => panelesWrap.appendChild(panel));
+
+						marcador.replaceWith(nav, panelesWrap);
+
+						function activar(slug) {
+							const objetivo = paneles.find((p) => p.slug === slug) || paneles[0];
+							paneles.forEach((p) => {
+								p.panel.hidden = p !== objetivo;
+							});
+							enlaces.forEach((a) => {
+								const act = a.getAttribute('href') === `#${objetivo.slug}`;
+								a.classList.toggle('act', act);
+								a.setAttribute('aria-current', act ? 'true' : 'false');
+							});
+						}
+
+						activar(decodeURIComponent(location.hash.slice(1)));
+
+						lista.addEventListener('click', (e) => {
+							const a = e.target.closest('.pd-tab');
+							if (!a) return;
+							e.preventDefault();
+							const slug = a.getAttribute('href').slice(1);
+							activar(slug);
+							history.replaceState(null, '', `#${slug}`);
+						});
+
+						window.addEventListener('hashchange', () => {
+							activar(decodeURIComponent(location.hash.slice(1)));
+						});
+					})();
+				</script>
+
 				{relacionados.length > 0 && (
 					<section class="pd-relacionados">
 						<h2 class="pd-relacionados-titulo">Más de {aptitud.titulo}</h2>

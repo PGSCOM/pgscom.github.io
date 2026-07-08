@@ -329,6 +329,72 @@ body:has(.pd-page) {
   margin: 36px 0 16px;
 }
 
+/* Pestañas: dividen los apartados de primer nivel (h2) de un proyecto.
+   Generadas por un script inline (ver [id].astro) a partir de esos h2;
+   si no hay al menos dos, el script no hace nada y esto queda sin usar. */
+.pd-tabs {
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pd-tabs-list {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.pd-tabs-list::-webkit-scrollbar {
+  display: none;
+}
+
+.pd-tab {
+  --tab-color: var(--pd-azul);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 12px 22px 10px;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.pd-tab img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
+  filter: grayscale(1) brightness(1.6);
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.pd-tab:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pd-tab.act {
+  color: var(--tab-color);
+  border-bottom-color: var(--tab-color);
+}
+
+.pd-tab.act img {
+  opacity: 1;
+  filter: none;
+}
+
+.pd-tab-panels {
+  margin-top: 32px;
+}
+
 .pd-contenido h3 {
   font-size: 1.4rem;
   font-weight: 700;

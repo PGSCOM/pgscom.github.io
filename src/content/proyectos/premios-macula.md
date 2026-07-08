@@ -37,7 +37,7 @@ sub:
 
 Los Premios Mácula son una gala de premios de cortometrajes hechos por los alumnos del Colegio San Agustín de Santander. Yo me ofrecí a ayudar desde 2022 con el streaming en directo junto a un compañero mío. Y desde entonces, fuí añadiendo mis aportaciones al proyecto interno.
 
-## Streaming
+<h2 data-tab="video">Streaming</h2>
 
 El sistema que tenían anteriormente era muy rudimentario, eran dos ordenadores haciendo 2 streaming por separado en YouTube sin conexión de los micrófonos.
 
@@ -70,7 +70,7 @@ El audio produjo muchos problemas en todas las galas. Ya que el sistema de audio
 
 </div>
 
-## Web
+<h2 data-tab="programacion">Web</h2>
 
 Al ver que no había una manera facil de  acceder a todos los cortometrajes y ver sus nominados, se me ocurrió hacer una página web para poder ver los cortometrajes.
 
@@ -80,7 +80,7 @@ Al año siguiente ví que había que hacer que se pueda actualizar de forma faci
 
 Esta es la versión actual: https://premiosmacula.es ([Código Fuente](https://github.com/MaculaCSA/maculacsa.github.io))
 
-## Entradas
+<h2 data-tab="programacion">Entradas</h2>
 
 <div class="pd-seccion" data-cat="programacion">
 
