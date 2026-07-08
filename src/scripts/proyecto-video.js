@@ -12,6 +12,25 @@ const HLS_RE = /\.m3u8(?:[?#]|$)/i;
 // "controls" se omite a propósito: video-skin siempre pone sus propios controles.
 const ATRIBUTOS_A_COPIAR = ['poster', 'autoplay', 'muted', 'loop', 'playsinline', 'preload', 'crossorigin'];
 
+/**
+ * El skin minimal muestra sus controles (y el degradado oscuro tras ellos)
+ * mientras el vídeo está en pausa, no solo al pasar el ratón (ver
+ * controlsFeature en @videojs/core: computeVisible = userActive || media.paused).
+ * En reposo eso se suma al icono de play central que añadimos más abajo y
+ * oscurece más vídeo del necesario. El degradado (.media-overlay) vive en el
+ * shadow root del componente -abierto, pero sin CSS var ni ::part()-, así que
+ * la única forma de atenuarlo es inyectar un <style> ahí dentro.
+ */
+function atenuarDegradadoControles(skin) {
+	const estilo = document.createElement('style');
+	estilo.textContent = `
+		.media-overlay {
+			background-image: linear-gradient(to top, oklch(0 0 0 / 0.55), oklch(0 0 0 / 0.32) 4rem, oklch(0 0 0 / 0) 5.5rem) !important;
+		}
+	`;
+	skin.shadowRoot.appendChild(estilo);
+}
+
 /** Obtiene la URL del vídeo desde el atributo src o el primer <source> hijo */
 function resolverFuente(video) {
 	const src = video.getAttribute('src');
@@ -38,6 +57,7 @@ function envolver(video) {
 
 	const skin = document.createElement('video-minimal-skin');
 	skin.appendChild(media);
+	atenuarDegradadoControles(skin);
 	const player = document.createElement('video-player');
 	player.appendChild(skin);
 
