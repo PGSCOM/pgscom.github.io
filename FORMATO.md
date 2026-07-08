@@ -135,21 +135,33 @@ El inline usa fondo oscuro y color lavanda. Los bloques de código heredan el mi
 
 ## 9. Vídeos
 
-Los vídeos del cuerpo se renderizan con **Plyr**, un reproductor personalizado con controles, barra de progreso, volumen y pantalla completa. Se integran automáticamente escribiendo HTML estándar de `<video>` en el markdown:
+Los vídeos del cuerpo se renderizan con **Plyr**, un reproductor personalizado con controles, barra de progreso, volumen y pantalla completa.
+
+### Vídeo local (archivo MP4)
 
 ```html
 <video src="../../assets/proyectos/mi-video.mp4" controls></video>
 ```
 
-También se aceptan fuentes externas (YouTube, Vimeo) indicando `src` directamente:
+Coloca el archivo en `src/assets/proyectos/` para que Astro lo procese.
+
+### YouTube / Vimeo (embed automático)
+
+Plyr detecta la URL y carga el iframe automáticamente con su backend:
 
 ```html
 <video src="https://www.youtube.com/watch?v=VIDEO_ID" controls></video>
+<video src="https://vimeo.com/VIDEO_ID" controls></video>
 ```
 
-> **Nota**: el atributo `controls` activa Plyr, pero puedes omitirlo para que el vídeo sea mudo/fondo. Siempre es mejor ponerlo para que Plyr pueda tomar el control.
+Si prefieres la sintaxis explícita con `data-plyr-provider`:
 
-Los vídeos se muestran redondeados con sombra, igual que las imágenes. Los archivos deben colocarse en `src/assets/proyectos/` para que Astro los procese.
+```html
+<div data-plyr-provider="youtube" data-plyr-embed-id="dQw4w9WgXcQ"></div>
+<div data-plyr-provider="vimeo" data-plyr-embed-id="76979871"></div>
+```
+
+Los vídeos se muestran redondeados con sombra, igual que las imágenes.
 
 ---
 
