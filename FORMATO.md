@@ -194,7 +194,7 @@ ffmpeg -i entrada.mov -c:v libx264 -crf 20 -preset slow -c:a aac -b:a 160k -movf
 **HLS** (segmenta un vídeo ya codificado en una playlist `.m3u8` + trozos `.ts` de 6 segundos):
 
 ```bash
-ffmpeg -i homero.webm -c:v libx264 -crf 20 -c:a aac -b:a 128k -hls_time 6 -hls_playlist_type vod -hls_segment_filename "seg_%03d.ts" master.m3u8
+ffmpeg -i entrada.mov -vf scale=1920:1080 -c:v libx264 -crf 20 -preset slow -force_key_frames "expr:gte(t,n_forced*6)" -c:a aac -b:a 128k -hls_time 6 -hls_playlist_type vod -hls_segment_filename "seg_%03d.ts" master.m3u8
 ```
 
 Úsalo para vídeos largos (streamings, making-ofs) donde interese que el navegador vaya
