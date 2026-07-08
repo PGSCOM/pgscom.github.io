@@ -136,18 +136,11 @@ const breadcrumbLd = {
 				</nav>
 
 				<div class="pd-hero-info">
-					<p class="pd-categoria">
-						<img src={aptitud.logo} alt="" aria-hidden="true" />
-						<span>{aptitud.titulo}</span>
-					</p>
 					<h1 class="pd-titulo">{proyecto.titulo.trim()}</h1>
 
 					<div class="pd-meta">
 						{fechaTexto && <span class="pd-meta-item">📅 {fechaTexto}</span>}
 						{proyecto.premio && <span class="pd-meta-badge">🏆 {proyecto.premio}</span>}
-						{proyecto.tecnologias?.length && (
-							<span class="pd-meta-item">{proyecto.tecnologias.length} tecnologías</span>
-						)}
 					</div>
 
 					{proyecto.descripcion && <p class="pd-tagline">{proyecto.descripcion}</p>}
@@ -168,13 +161,6 @@ const breadcrumbLd = {
 
 		<article class="pd-wrapper">
 			<div class="pd-body">
-				{proyecto.tecnologias?.length && (
-					<section class="pd-tecnologias" aria-label="Tecnologías">
-						{proyecto.tecnologias.map((tech) => (
-							<span class="pd-tech-tag" data-tech={tech}>{tech}</span>
-						))}
-					</section>
-				)}
 
 				<section class="pd-contenido">
 					<Content />
