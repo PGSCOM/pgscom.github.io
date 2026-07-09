@@ -10,3 +10,15 @@ export function formatFecha(f) {
 	if (d) return `${Number(d)} de ${mes} de ${y}`;
 	return `${mes.charAt(0).toUpperCase()}${mes.slice(1)} ${y}`;
 }
+
+// `fechaFin` "abierto": el proyecto sigue en curso.
+export function esEnCurso(fin) {
+	return String(fin ?? '').trim().toLowerCase() === 'ahora';
+}
+
+// Etiqueta de fecha: punto único, rango cerrado o "inicio – ahora".
+export function formatRangoFecha(inicio, fin) {
+	if (!fin) return formatFecha(inicio);
+	if (esEnCurso(fin)) return `${formatFecha(inicio)} – Ahora`;
+	return `${formatFecha(inicio)} – ${formatFecha(fin)}`;
+}

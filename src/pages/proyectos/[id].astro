@@ -2,9 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/proyecto-detalle.css';
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import categoriasData from '../../data/categorias.json';
-import { formatFecha } from '../../utils/fechas.js';
+import { formatRangoFecha } from '../../utils/fechas.js';
 
 // Genera una ruta estática por cada .md de src/content/proyectos/.
 // Cada página es HTML real y rastreable por los bots de Google.
@@ -31,10 +31,15 @@ const { entrada, proyecto, aptitud, relacionados } = Astro.props;
 // El cuerpo markdown del .md se convierte en el contenido de la ficha
 const { Content } = await render(entrada);
 
-const fechaTexto = formatFecha(proyecto.fecha);
+const fechaTexto = formatRangoFecha(proyecto.fecha, proyecto.fechaFin);
 // La cabecera usa `trailer` (vídeo) o `portada` (ImageMetadata), con `imagen`
 // como respaldo. Sin ninguna, se muestra el icono de la categoría.
 const portada = proyecto.portada || proyecto.imagen;
+// Póster del trailer: webp optimizado (el atributo `poster` no pasa por
+// <Image>, así que con `.src` directo cargaría el asset original completo).
+const posterTrailer = proyecto.trailer && portada
+	? (await getImage({ src: portada, format: 'webp', width: 1600 })).src
+	: undefined;
 // og:image y JSON-LD necesitan una URL string: .src es la ruta del asset
 // optimizado; si el proyecto no tiene imagen, cae al logo (SVG) de la categoría.
 const ogImagen = proyecto.imagen?.src ?? aptitud.logo;
@@ -100,7 +105,7 @@ const breadcrumbLd = {
 				<video
 					class="pd-hero-media"
 					src={proyecto.trailer}
-					poster={portada?.src}
+					poster={posterTrailer}
 					autoplay
 					muted
 					loop
@@ -136,18 +141,11 @@ const breadcrumbLd = {
 				</nav>
 
 				<div class="pd-hero-info">
-					<p class="pd-categoria">
-						<img src={aptitud.logo} alt="" aria-hidden="true" />
-						<span>{aptitud.titulo}</span>
-					</p>
 					<h1 class="pd-titulo">{proyecto.titulo.trim()}</h1>
 
 					<div class="pd-meta">
 						{fechaTexto && <span class="pd-meta-item">📅 {fechaTexto}</span>}
 						{proyecto.premio && <span class="pd-meta-badge">🏆 {proyecto.premio}</span>}
-						{proyecto.tecnologias?.length && (
-							<span class="pd-meta-item">{proyecto.tecnologias.length} tecnologías</span>
-						)}
 					</div>
 
 					{proyecto.descripcion && <p class="pd-tagline">{proyecto.descripcion}</p>}
@@ -168,17 +166,126 @@ const breadcrumbLd = {
 
 		<article class="pd-wrapper">
 			<div class="pd-body">
-				{proyecto.tecnologias?.length && (
-					<section class="pd-tecnologias" aria-label="Tecnologías">
-						{proyecto.tecnologias.map((tech) => (
-							<span class="pd-tech-tag" data-tech={tech}>{tech}</span>
-						))}
-					</section>
-				)}
 
 				<section class="pd-contenido">
 					<Content />
 				</section>
+
+				<script is:inline define:vars={{ categorias: categoriasData.categorias.map((c) => ({ id: c.id, color: c.color, logo: c.logo })) }}>
+					// Convierte en pestañas los h2 que tengan data-tab="id-categoria".
+					// Se ejecuta de forma síncrona, antes de que el navegador pinte la
+					// página, para que un enlace con ancla abra directamente la pestaña
+					// correcta sin saltos. Si hay menos de dos h2 con data-tab, no hace nada.
+					(function () {
+						const contenido = document.querySelector('.pd-contenido');
+						if (!contenido) return;
+
+						const headings = Array.from(contenido.children).filter(
+							(el) => el.tagName === 'H2' && el.hasAttribute('data-tab')
+						);
+						if (headings.length < 2) return;
+
+						function slugify(texto) {
+							return texto
+								.toLowerCase()
+								.normalize('NFD')
+								.replace(/[̀-ͯ]/g, '')
+								.replace(/[^a-z0-9]+/g, '-')
+								.replace(/^-+|-+$/g, '');
+						}
+
+						// Marca el hueco donde iban los h2: se sustituye al final por la
+						// barra de pestañas y el contenedor de paneles.
+						const marcador = document.createComment('pd-tabs');
+						contenido.insertBefore(marcador, headings[0]);
+
+						const usados = new Set();
+						const paneles = headings.map((h2, i) => {
+							let slug = slugify(h2.textContent) || `seccion-${i + 1}`;
+							while (usados.has(slug)) slug += `-${i + 1}`;
+							usados.add(slug);
+
+							const panel = document.createElement('div');
+							panel.className = 'pd-tab-panel';
+							panel.id = slug;
+							panel.setAttribute('role', 'region');
+							panel.setAttribute('aria-label', h2.textContent);
+
+							// Mueve el h2 y todo lo que le sigue hasta el próximo h2 (o el final)
+							let nodo = h2;
+							while (nodo && nodo !== headings[i + 1]) {
+								const siguiente = nodo.nextSibling;
+								panel.appendChild(nodo);
+								nodo = siguiente;
+							}
+
+							const cat = categorias.find((c) => c.id === h2.dataset.tab) || null;
+							return { slug, etiqueta: h2.textContent, panel, cat };
+						});
+
+						const nav = document.createElement('nav');
+						nav.className = 'pd-tabs';
+						nav.setAttribute('aria-label', 'Secciones del proyecto');
+
+						const lista = document.createElement('div');
+						lista.className = 'pd-tabs-list';
+
+						const enlaces = paneles.map(({ slug, etiqueta, cat }) => {
+							const a = document.createElement('a');
+							a.className = 'pd-tab';
+							a.href = `#${slug}`;
+							if (cat) {
+								a.style.setProperty('--tab-color', cat.color);
+								const img = document.createElement('img');
+								img.src = cat.logo;
+								img.alt = '';
+								img.setAttribute('aria-hidden', 'true');
+								a.appendChild(img);
+							}
+							const span = document.createElement('span');
+							span.textContent = etiqueta;
+							a.appendChild(span);
+							lista.appendChild(a);
+							return a;
+						});
+						nav.appendChild(lista);
+
+						const panelesWrap = document.createElement('div');
+						panelesWrap.className = 'pd-tab-panels';
+						paneles.forEach(({ panel }) => panelesWrap.appendChild(panel));
+
+						marcador.replaceWith(nav, panelesWrap);
+
+						function activar(slug) {
+							const objetivo = paneles.find((p) => p.slug === slug) || paneles[0];
+							paneles.forEach((p) => {
+								p.panel.hidden = p !== objetivo;
+							});
+							enlaces.forEach((a) => {
+								const act = a.getAttribute('href') === `#${objetivo.slug}`;
+								a.classList.toggle('act', act);
+								a.setAttribute('aria-current', act ? 'true' : 'false');
+							});
+						}
+
+						activar(decodeURIComponent(location.hash.slice(1)));
+
+						lista.addEventListener('click', (e) => {
+							const a = e.target.closest('.pd-tab');
+							if (!a) return;
+							e.preventDefault();
+							const slug = a.getAttribute('href').slice(1);
+							activar(slug);
+							history.replaceState(null, '', `#${slug}`);
+						});
+
+						window.addEventListener('hashchange', () => {
+							activar(decodeURIComponent(location.hash.slice(1)));
+						});
+					})();
+				</script>
+
+				<script src="../../scripts/proyecto-video.js"></script>
 
 				{relacionados.length > 0 && (
 					<section class="pd-relacionados">

@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { esEnCurso } from '../utils/fechas.js';
 
 // Sitemap generado proceduralmente: portada + una URL por cada proyecto con lastmod.
 export const GET: APIRoute = async ({ site }) => {
@@ -19,7 +20,8 @@ export const GET: APIRoute = async ({ site }) => {
 ${proyectos
 	.map((p) => {
 		const fecha = p.data.fecha ?? '';
-		const lastmod = fecha ? `${fecha.slice(0, 7)}-01` : ahora;
+		// Proyecto en curso → lastmod = hoy (sigue activo); punto único → su fecha; sin fecha → hoy.
+		const lastmod = esEnCurso(p.data.fechaFin) ? ahora : (fecha ? `${fecha.slice(0, 7)}-01` : ahora);
 		return `  <url>
     <loc>${base}/proyectos/${p.id}</loc>
     <lastmod>${lastmod}</lastmod>

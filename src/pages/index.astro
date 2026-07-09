@@ -3,13 +3,13 @@ import Layout from '../layouts/Layout.astro';
 import './_styles.css';
 import '../styles/proyectos.css';
 import '../styles/contacto.css';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import logo from '../assets/logo.png';
 
 import { getCollection } from 'astro:content';
 import categoriasData from '../data/categorias.json';
 import contactoData from '../data/contacto.json';
-import { formatFecha } from '../utils/fechas.js';
+import { formatFecha, formatRangoFecha, esEnCurso } from '../utils/fechas.js';
 
 // Forma de la P extraída de public/assets/animlogo/carga.svg (viewBox 600x600)
 const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.19165 c 66.88974,0 121.11609,-54.22597 121.11609,-121.11609 0,-66.88986 -54.22635,-121.114324 -121.11609,-121.114324 v -0.004 z';
@@ -41,16 +41,28 @@ const featured = proyectos
 	.slice(0, heroLayout.length)
 	.map((p) => ({ ...p, aptitudTitulo: catById[p.categorias?.[0]]?.titulo ?? '' }));
 
+// Póster de las tarjetas con vídeo: el atributo `poster` no pasa por <Image>,
+// así que sin esto se descargaría el PNG original completo en vez del webp.
+const postersVideo = new Map();
+for (const p of proyectos) {
+	if (p.video && p.imagen) {
+		postersVideo.set(p.id, (await getImage({ src: p.imagen, format: 'webp', width: 960 })).src);
+	}
+}
+
 // ── Ruta cronológica (formato currículum: lo más reciente arriba) ──
 // Las categorías son etiquetas del proyecto (puede tener varias) y las
 // subtarjetas (`sub`) muestran trabajos concretos dentro del proyecto.
+// Los proyectos en curso (fechaFin: "ahora") van arriba del todo.
+const claveOrden = (p: { fecha?: string; fechaFin?: string }) =>
+	esEnCurso(p.fechaFin) ? '9999' : String(p.fecha ?? '');
 const cronologia = [...proyectos].sort((a, b) =>
-	String(b.fecha ?? '').localeCompare(String(a.fecha ?? ''))
+	claveOrden(b).localeCompare(claveOrden(a))
 );
 
 let añoAnterior = null;
 const rutaEntries = cronologia.map((p, i) => {
-	const año = String(p.fecha ?? '').slice(0, 4) || 'Otros';
+	const año = esEnCurso(p.fechaFin) ? 'Ahora' : (String(p.fecha ?? '').slice(0, 4) || 'Otros');
 	const nuevoAño = año !== añoAnterior;
 	añoAnterior = año;
 	const peso = p.peso ?? 50;
@@ -65,7 +77,7 @@ const rutaEntries = cronologia.map((p, i) => {
 		...p,
 		año,
 		nuevoAño,
-		fechaTexto: formatFecha(p.fecha),
+		fechaTexto: p.ocultarFecha ? null : formatRangoFecha(p.fecha, p.fechaFin),
 		lado: i % 2 === 0 ? 'izq' : 'der',
 		inset: ['0%', '5%', '2%'][i % 3],
 		w: peso >= 75 ? 580 : peso >= 55 ? 500 : 430,
@@ -133,7 +145,9 @@ const rutaEntries = cronologia.map((p, i) => {
 					>
 						<span class="hero-card-tilt">
 							<span class="hero-card-media">
-								<Image src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />
+								{proyecto.video
+							? <video class="hero-card-video" data-src={proyecto.video} poster={postersVideo.get(proyecto.id)} muted loop playsinline preload="none" aria-hidden="true"></video>
+							: <Image src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />}
 								{proyecto.enlaceExterno && (
 									<span class="card-externo-icono" aria-hidden="true">
 										<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
@@ -261,7 +275,9 @@ const rutaEntries = cronologia.map((p, i) => {
 							>
 								{proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
 								<div class="ruta-media">
-									{proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
+									{proyecto.video
+										? <video class="ruta-video" data-src={proyecto.video} poster={postersVideo.get(proyecto.id)} muted loop playsinline preload="none" aria-hidden="true"></video>
+										: proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
 									<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
 									{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
 									{proyecto.enlaceExterno && (
@@ -348,13 +364,13 @@ const rutaEntries = cronologia.map((p, i) => {
 			<div class="contacto-container">
 				<div class="contacto-header">
 					<h2 class="contacto-titulo">Contacto</h2>
-					<p class="contacto-subtitulo">¿Tienes un proyecto en mente? ¡Hablemos!</p>
+					<p class="contacto-subtitulo"></p>
 				</div>
 
 				<div class="contacto-grid">
 					<div class="contacto-info">
 						{contactoData.informacion.email && (
-							<div class="info-card">
+							<!--div class="info-card">
 								<div class="info-icon">
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 										<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -365,11 +381,11 @@ const rutaEntries = cronologia.map((p, i) => {
 									<h3>Email</h3>
 									<a href={`mailto:${contactoData.informacion.email}`}>{contactoData.informacion.email}</a>
 								</div>
-							</div>
+							</div-->
 						)}
 
 						<div class="social-links">
-							<h3>Sígueme en redes</h3>
+							<h3>Otros links:</h3>
 							<div class="social-icons">
 								{contactoData.redes.map((red) => (
 									<a href={red.url} target="_blank" rel="noopener noreferrer" class="social-icon" title={red.nombre}>
@@ -390,7 +406,7 @@ const rutaEntries = cronologia.map((p, i) => {
 									type="text" 
 									id="nombre" 
 									name="nombre" 
-									placeholder="Tu nombre completo"
+									placeholder="Nombre"
 									required
 								/>
 								<span class="input-border"></span>
@@ -425,7 +441,7 @@ const rutaEntries = cronologia.map((p, i) => {
 								<textarea 
 									id="mensaje" 
 									name="mensaje" 
-									placeholder="Cuéntame sobre tu proyecto..."
+									placeholder="Cuéntame..."
 									rows="5"
 									required
 								></textarea>
@@ -436,7 +452,7 @@ const rutaEntries = cronologia.map((p, i) => {
 							<div class="cf-turnstile" data-sitekey="0x4AAAAAACGiv6Et8KLomzvb" data-theme="dark"></div>
 
 							<button type="submit" class="submit-btn">
-								<span class="btn-text">Enviar mensaje</span>
+								<span class="btn-text">Enviar :D</span>
 								<span class="btn-icon">
 									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 										<line x1="22" y1="2" x2="11" y2="13"></line>
@@ -602,6 +618,7 @@ const rutaEntries = cronologia.map((p, i) => {
 		import '../scripts/hero.js';
 		import '../scripts/proyectos-orbit.js';
 		import '../scripts/proyectos-ruta.js';
+		import '../scripts/card-video.js';
 	</script>
 
 	<!-- Formulario de contacto -->
