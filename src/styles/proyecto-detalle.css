@@ -57,7 +57,7 @@ body:has(.pd-page) {
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 24px 56px;
+  padding: 0 24px 5px;
   background: linear-gradient(
     180deg,
     rgba(5, 7, 13, 0.55) 0%,
@@ -275,6 +275,24 @@ body:has(.pd-page) {
   border-radius: 6px;
   background: rgba(147, 197, 253, 0.9);
   color: #0a0a14;
+}
+
+/* ── Indicador de scroll: el hero ocupa casi toda la pantalla y, sin
+   esto, no queda claro que hay más ficha debajo. La flecha se dibuja con
+   GSAP (stroke-dashoffset) en proyecto-scroll-hint.js ──────────────── */
+.pd-scroll-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+.pd-scroll-hint-svg {
+  width: 22px;
+  height: 28px;
+  overflow: visible;
 }
 
 /* ── Cuerpo ──────────────────────────────────────────── */
@@ -627,7 +645,7 @@ body:has(.pd-page) {
   }
 
   .pd-hero-overlay {
-    padding-bottom: 40px;
+    padding-bottom: 24px;
   }
 
   .pd-hero-media--icono {
@@ -648,6 +666,15 @@ body:has(.pd-page) {
 
   .pd-back {
     padding: 10px;
+  }
+
+  .pd-scroll-hint {
+    margin-top: 18px;
+  }
+
+  .pd-scroll-hint-svg {
+    width: 18px;
+    height: 22px;
   }
 }
 
