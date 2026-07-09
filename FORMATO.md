@@ -105,6 +105,27 @@ Los enlaces aparecen en azul claro con subrayado. El ID del ancla lo genera Astr
 
 Las imágenes del contenido se muestran redondeadas con sombra. Coloca siempre los archivos en `src/assets/proyectos/` para que Astro los optimice.
 
+### Galería de imágenes (lightbox)
+
+Para mostrar varias fotos en una cuadrícula que se amplíe a pantalla completa al hacer clic, envuélvelas en un `<div class="pd-galeria">` con imágenes markdown normales dentro:
+
+```html
+<div class="pd-galeria">
+
+![Descripción foto 1](../../assets/proyectos/mi-foto-1.jpg)
+
+![Descripción foto 2](../../assets/proyectos/mi-foto-2.jpg)
+
+![Descripción foto 3](../../assets/proyectos/mi-foto-3.jpg)
+
+</div>
+```
+
+Deja siempre una línea en blanco después del `<div>`, entre cada imagen y antes del `</div>`, igual que con `pd-seccion` (sección 11), para que Astro procese el markdown interior.
+
+- Coloca las imágenes en **`src/assets/proyectos/`** y referéncialas con ruta relativa (`../../assets/proyectos/...`), igual que cualquier otra imagen del cuerpo — así Astro las optimiza en el build. **No** uses `public/` ni una etiqueta `<img>` cruda: quedaría sin optimizar y el lightbox no tendría las dimensiones para maquetar bien.
+- La cuadrícula recorta las miniaturas a 4:3. Al hacer clic se abren a pantalla completa (con [PhotoSwipe](https://photoswipe.com/)) y se puede navegar entre las fotos de esa misma galería con flechas o gestos táctiles.
+
 ---
 
 ## 7. Cita destacada (blockquote)

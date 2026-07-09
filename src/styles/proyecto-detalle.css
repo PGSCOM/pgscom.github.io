@@ -500,6 +500,28 @@ body:has(.pd-page) {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
+/* Galería de imágenes con lightbox — ver proyecto-galeria.js */
+.pd-contenido .pd-galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+/* cada imagen markdown viene envuelta en un <p>; que no rompa la cuadrícula */
+.pd-contenido .pd-galeria p {
+  display: contents;
+}
+
+.pd-contenido .pd-galeria img {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  cursor: zoom-in;
+}
+
 .pd-contenido details {
   margin: 20px 0;
   background: linear-gradient(135deg, rgba(147, 197, 253, 0.07), rgba(196, 181, 253, 0.05));
