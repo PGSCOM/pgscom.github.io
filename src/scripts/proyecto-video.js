@@ -2,8 +2,7 @@
 // cientos de KB, así que se importan dinámicamente al final y solo si la
 // ficha tiene algún <video>. https://videojs.org/docs/framework/html/concepts/overview
 
-// Una URL que termina en .m3u8 (con o sin query/hash) es una playlist HLS.
-const HLS_RE = /\.m3u8(?:[?#]|$)/i;
+import { esHLS, montarFuente } from './hls-media.js';
 
 // Atributos del <video> del autor que se trasladan al elemento de medio real.
 // "controls" se omite a propósito: video-skin siempre pone sus propios controles.
@@ -36,7 +35,7 @@ function envolver(video) {
 	const src = resolverFuente(video);
 	if (!src) return;
 
-	const media = document.createElement(HLS_RE.test(src) ? 'hls-video' : 'video');
+	const media = document.createElement(esHLS(src) ? 'hls-video' : 'video');
 	media.setAttribute('slot', 'media');
 	media.setAttribute('src', src);
 	for (const attr of ATRIBUTOS_A_COPIAR) {
@@ -79,8 +78,17 @@ if (videos.length > 0) {
 		import('@videojs/html/video/minimal-skin'),
 	];
 	// hls.js es la parte más pesada: solo se descarga si hay alguna playlist HLS
-	if (videos.some((v) => HLS_RE.test(resolverFuente(v) ?? ''))) {
+	if (videos.some((v) => esHLS(resolverFuente(v) ?? ''))) {
 		cargas.push(import('@videojs/html/media/hls-video'));
 	}
 	Promise.all(cargas).then(() => videos.forEach(envolver));
+}
+
+// El trailer de cabecera es un <video> nativo con `data-src` (mp4/webm de
+// respaldo, o HLS): se monta con el mismo helper que las tarjetas de la
+// home, no con Video.js (no lleva controles). Nativo en Safari/iOS, hls.js
+// en el resto.
+const trailer = document.querySelector('.pd-hero-media[data-src]');
+if (trailer) {
+	montarFuente(trailer).then(() => trailer.play?.().catch(() => {}));
 }

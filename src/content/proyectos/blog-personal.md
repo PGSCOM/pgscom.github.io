@@ -6,9 +6,9 @@ categorias: [desarrollo-web]
 peso: 45
 destacado: 6
 imagen: ../../assets/proyectos/Blog.png
-trailer: https://github.com/PGSCOM/pgscom.github.io/raw/6b267a36a8de5a8c832794133d38860253f6ea4b/public/vid/proy/homero.webm
+trailer: https://elfumadonapoteosico3d5kultra5d.pages.dev/master.m3u8
 #video: /vid/proy/homero.webm
-video: https://github.com/PGSCOM/pgscom.github.io/raw/6b267a36a8de5a8c832794133d38860253f6ea4b/public/vid/proy/homero.webm
+video: https://elfumadonapoteosico3d5kultra5d.pages.dev/master.m3u8
 descripcion: Experiencias personales en proyectos pequeños.
 tecnologias: [HTML, CSS, JavaScript]
 link: https://blog.pgscom.es

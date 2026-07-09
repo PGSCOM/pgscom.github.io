@@ -194,17 +194,15 @@ function initRuta() {
   });
 
   // ── Imágenes que no existen: fondo tintado + icono de la categoría ──
-  cuerpo.querySelectorAll('.ruta-img').forEach((img) => {
-    const fallar = () => img.closest('.ruta-item')?.classList.add('sin-imagen');
-    if (img.complete && img.naturalWidth === 0) fallar();
-    else img.addEventListener('error', fallar, { once: true });
-  });
-
-  cuerpo.querySelectorAll('.ruta-sub-img').forEach((img) => {
-    const fallar = () => img.closest('.ruta-sub')?.classList.add('sin-imagen');
-    if (img.complete && img.naturalWidth === 0) fallar();
-    else img.addEventListener('error', fallar, { once: true });
-  });
+  function marcarSinImagen(imgSel, contenedorSel) {
+    cuerpo.querySelectorAll(imgSel).forEach((img) => {
+      const fallar = () => img.closest(contenedorSel)?.classList.add('sin-imagen');
+      if (img.complete && img.naturalWidth === 0) fallar();
+      else img.addEventListener('error', fallar, { once: true });
+    });
+  }
+  marcarSinImagen('.ruta-img', '.ruta-item');
+  marcarSinImagen('.ruta-sub-img', '.ruta-sub');
 
   // ── Filtro por disciplina: atenúa y desatura, no oculta ──
   const filtros = mapa.querySelectorAll('.ruta-filtro');
@@ -213,17 +211,15 @@ function initRuta() {
 
   function setFiltro(cat) {
     filtroActual = cat;
+    const aplicarFuera = (datosEl, targetEl) => {
+      const cats = (datosEl.dataset.cats || '').split(',');
+      targetEl.classList.toggle('fuera', cat !== 'all' && !cats.includes(cat));
+    };
     entries.forEach((entry) => {
-      const cats = (entry.dataset.cats || '').split(',');
       const item = entry.querySelector('.ruta-item');
-      if (item) {
-        item.classList.toggle('fuera', cat !== 'all' && !cats.includes(cat));
-      }
+      if (item) aplicarFuera(entry, item);
     });
-    cuerpo.querySelectorAll('.ruta-sub').forEach((sub) => {
-      const cats = (sub.dataset.cats || '').split(',');
-      sub.classList.toggle('fuera', cat !== 'all' && !cats.includes(cat));
-    });
+    cuerpo.querySelectorAll('.ruta-sub').forEach((sub) => aplicarFuera(sub, sub));
     filtros.forEach((f) => {
       const act = f.dataset.cat === cat;
       f.classList.toggle('act', act);

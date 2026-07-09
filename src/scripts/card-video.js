@@ -1,19 +1,17 @@
 // Los <video> usan `data-src` (no `src`) para no descargar nada hasta el primer play.
 
+import { montarFuente } from './hls-media.js';
+
+function reproducir(video) {
+	montarFuente(video).then(() => video.play().catch(() => {}));
+}
+
 document.querySelectorAll('.hero-card').forEach((card) => {
 	const video = card.querySelector('.hero-card-video');
 	if (!video) return;
 
-	card.addEventListener('mouseenter', () => {
-		if (!video.src && video.dataset.src) {
-			video.src = video.dataset.src;
-		}
-		video.play().catch(() => {});
-	});
-
-	card.addEventListener('mouseleave', () => {
-		video.pause();
-	});
+	card.addEventListener('mouseenter', () => reproducir(video));
+	card.addEventListener('mouseleave', () => video.pause());
 });
 
 const rutaVideos = document.querySelectorAll('.ruta-video');
@@ -23,14 +21,8 @@ if (rutaVideos.length > 0) {
 		(entries) => {
 			entries.forEach((entry) => {
 				const video = entry.target;
-				if (entry.isIntersecting) {
-					if (!video.src && video.dataset.src) {
-						video.src = video.dataset.src;
-					}
-					video.play().catch(() => {});
-				} else {
-					video.pause();
-				}
+				if (entry.isIntersecting) reproducir(video);
+				else video.pause();
 			});
 		},
 		{ threshold: 0.25 },
