@@ -436,7 +436,6 @@ body:has(.pd-page) {
 .pd-contenido ul,
 .pd-contenido ol {
   margin: 0 0 16px;
-  padding-left: 24px;
 }
 
 .pd-contenido li {
@@ -546,6 +545,11 @@ body:has(.pd-page) {
 
 .pd-contenido details > :not(summary):last-child {
   padding-bottom: 8px;
+}
+
+.pd-contenido details > :not(summary):is(ul, ol) {
+  padding-left: 32px;
+  padding-top: 16px;
 }
 
 /* ── Relacionados ────────────────────────────────────── */
