@@ -3,11 +3,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import lenis from './smooth-scroll.js';
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Ruta cronológica de proyectos ─────────────────────────────────────────────
-// Una línea luminosa baja por la cronología (lo más reciente arriba) pasando
-// por cada marcador de año y cada tarjeta, y se traza con el scroll. Las
-// subtarjetas aparecen "conectándose" a su tarjeta principal. Los filtros por
-// disciplina atenúan y desaturan lo que no encaja, sin ocultarlo.
+// Una línea luminosa baja por la cronología pasando por cada marcador de año y
+// cada tarjeta, y se traza con el scroll. Los filtros por disciplina atenúan
+// y desaturan lo que no encaja, sin ocultarlo.
 
 function initRuta() {
   const mapa = document.getElementById('proyectos-mapa');

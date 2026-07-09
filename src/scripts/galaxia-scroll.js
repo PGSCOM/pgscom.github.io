@@ -3,12 +3,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Zoom de galaxia con scroll ────────────────────────────────────────────────
-// Durante los dos primeros viewports de scroll, el logo enmascara un vídeo que
-// se escala hasta llenar la pantalla mientras el vídeo avanza al ritmo del
-// scroll (scrub). Al completar el zoom se cambia a un vídeo de intro completo
-// y después a una playlist en bucle, con doble búfer para que el corte entre
-// vídeos no se note.
+// Durante los dos primeros viewports de scroll, el logo enmascara un vídeo que se
+// escala hasta llenar la pantalla mientras el vídeo avanza al ritmo del scroll
+// (scrub). Al completar el zoom se pasa a un vídeo de intro y luego a una
+// playlist en bucle, con doble búfer para que el corte entre vídeos no se note.
 
 function init() {
 	const logoEl = document.querySelector('#logoanimar');
@@ -52,7 +50,7 @@ function init() {
 	let activeReady = false; // metadatos del vídeo de scrub disponibles
 	let nextReady   = null;  // promesa de la precarga del búfer
 
-	// ── Scrub: como mucho un seek por frame, y nunca antes de tener metadatos ──
+	// Scrub: como mucho un seek por frame, y nunca antes de tener metadatos
 	let pendingScrubT = null;
 	let scrubRafId    = 0;
 

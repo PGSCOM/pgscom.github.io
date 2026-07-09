@@ -2,10 +2,8 @@ import gsap from 'gsap';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin.js';
 gsap.registerPlugin(DrawSVGPlugin);
 
-// ── Preloader: la P de carga.svg se construye trazándose con DrawSVG ─────────
 // El overlay viene renderizado desde el servidor (index.astro) para que cubra
-// la pantalla desde el primer paint. El trazo avanza con la carga real y, al
-// completar, el relleno con el degradado aparece y la P hace zoom de salida.
+// la pantalla desde el primer paint; el trazo de la P avanza con DrawSVG al ritmo de la carga real.
 
 function dispatchDone() {
   document.documentElement.style.overflow = '';
@@ -49,14 +47,11 @@ function initPreloader() {
   ready.then(() => {
     crawl.kill();
     gsap.timeline()
-      // El trazo se cierra del todo…
       .to(state, { p: 100, duration: 0.5, ease: 'power2.out', onUpdate: render })
-      // …y la P se rellena con el degradado mientras los trazos se apagan
       .to(fill, { opacity: 1, duration: 0.45, ease: 'power2.inOut' }, '-=0.1')
       .to([draw, outline], { opacity: 0, duration: 0.35, ease: 'power1.out' }, '<0.15')
       // El hero arranca su entrada debajo mientras la P hace zoom
       .add(dispatchDone, '+=0.1')
-      // Zoom a través de la P: transform compositado sobre el propio <svg>
       .to(svg, { scale: 30, duration: 1.1, ease: 'power3.in' })
       .to(pre, { autoAlpha: 0, duration: 0.4, ease: 'power1.out' }, '-=0.4')
       .call(() => pre.remove());

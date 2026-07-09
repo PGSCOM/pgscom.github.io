@@ -1,8 +1,6 @@
-// Video.js v10 con skin "minimal" (menos botones, más discreto).
-// Ver https://videojs.org/docs/framework/html/concepts/overview
-// Los módulos (que registran los custom elements vía customElements.define)
-// pesan cientos de KB, así que se importan dinámicamente al final del archivo
-// y solo en las fichas que de verdad tienen algún <video> en su contenido.
+// Video.js v10, skin "minimal". Los módulos (customElements.define) pesan
+// cientos de KB, así que se importan dinámicamente al final y solo si la
+// ficha tiene algún <video>. https://videojs.org/docs/framework/html/concepts/overview
 
 // Una URL que termina en .m3u8 (con o sin query/hash) es una playlist HLS.
 const HLS_RE = /\.m3u8(?:[?#]|$)/i;
@@ -11,15 +9,10 @@ const HLS_RE = /\.m3u8(?:[?#]|$)/i;
 // "controls" se omite a propósito: video-skin siempre pone sus propios controles.
 const ATRIBUTOS_A_COPIAR = ['poster', 'autoplay', 'muted', 'loop', 'playsinline', 'preload', 'crossorigin'];
 
-/**
- * El skin minimal muestra sus controles (y el degradado oscuro tras ellos)
- * mientras el vídeo está en pausa, no solo al pasar el ratón (ver
- * controlsFeature en @videojs/core: computeVisible = userActive || media.paused).
- * En reposo eso se suma al icono de play central que añadimos más abajo y
- * oscurece más vídeo del necesario. El degradado (.media-overlay) vive en el
- * shadow root del componente -abierto, pero sin CSS var ni ::part()-, así que
- * la única forma de atenuarlo es inyectar un <style> ahí dentro.
- */
+// El skin muestra controles y degradado también en pausa, no solo al hover
+// (controlsFeature en @videojs/core: computeVisible = userActive || media.paused),
+// lo que se suma a nuestro icono de play central. Vive en el shadow root sin
+// CSS var ni ::part(), así que solo se puede atenuar inyectando un <style> ahí.
 function atenuarDegradadoControles(skin) {
 	const estilo = document.createElement('style');
 	estilo.textContent = `
@@ -37,12 +30,8 @@ function resolverFuente(video) {
 	return video.querySelector('source[src]')?.getAttribute('src') ?? null;
 }
 
-/**
- * Sustituye un <video> escrito a mano en el markdown por la estructura de
- * Video.js v10 (<video-player><video-skin><video|hls-video slot="media">).
- * MP4 y cualquier otro formato usan el <video> nativo; los .m3u8 usan el
- * <hls-video> de Video.js (hls.js por debajo).
- */
+// Sustituye el <video> del markdown por la estructura de Video.js v10;
+// .m3u8 usa <hls-video>, el resto <video> nativo.
 function envolver(video) {
 	const src = resolverFuente(video);
 	if (!src) return;
