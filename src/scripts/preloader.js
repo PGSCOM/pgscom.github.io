@@ -36,11 +36,22 @@ function initPreloader() {
   // El trazo avanza hasta 90 mientras carga de verdad; el 100 llega con el load real
   const crawl = gsap.to(state, { p: 90, duration: 2.6, ease: 'power1.inOut', onUpdate: render });
 
+  // El vídeo del zoom de scroll (galaxia-scroll.js) se precarga en paralelo;
+  // se espera a que tenga buffer suficiente, pero con tope para no colgar la
+  // pantalla de carga si la red va lenta o el vídeo falla.
+  const scrubReady = Promise.race([
+    window.__galaxiaScrubDone
+      ? Promise.resolve()
+      : new Promise(r => window.addEventListener('galaxia-scrub-ready', r, { once: true })),
+    new Promise(r => setTimeout(r, 4000)),
+  ]);
+
   const ready = Promise.all([
     document.readyState === 'complete'
       ? Promise.resolve()
       : new Promise(r => window.addEventListener('load', r, { once: true })),
     document.fonts?.ready ?? Promise.resolve(),
+    scrubReady,
     new Promise(r => setTimeout(r, 1700)), // duración mínima para que la intro respire
   ]);
 

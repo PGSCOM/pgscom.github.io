@@ -141,6 +141,20 @@ function init() {
 		nextReady = prepareNext(PLAYLIST[playlistIndex]);
 	}
 
+	// Señal para el preloader: se resuelve cuando el vídeo de scrub tiene
+	// suficiente buffer para reproducirse sin cortes (o si falla su carga,
+	// para no colgar la pantalla de carga).
+	window.__galaxiaScrubReady = new Promise((resolve) => {
+		function done() {
+			window.__galaxiaScrubDone = true;
+			window.dispatchEvent(new CustomEvent('galaxia-scrub-ready'));
+			resolve();
+		}
+		if (activeVideo.readyState >= 3 || activeVideo.error) { done(); return; }
+		activeVideo.addEventListener('canplaythrough', done, { once: true });
+		activeVideo.addEventListener('error', done, { once: true });
+	});
+
 	// El vídeo de scrub se carga en el elemento activo; si llega tarde, aplica
 	// el seek que hubiera quedado pendiente de scrolls anteriores
 	setVideoSource(activeVideo, VIDEO_SCRUB, 0, false).then(() => {
