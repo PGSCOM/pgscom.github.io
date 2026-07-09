@@ -173,8 +173,16 @@ convierte automáticamente en el reproductor:
 <video src="/videos/mi-video/master.m3u8" controls></video>
 ```
 
-El tipo se decide por la URL: si termina en `.m3u8` se reproduce como HLS (fragmentado, vía
-`hls.js`); cualquier otra extensión se trata como vídeo normal.
+El tipo se decide por la URL: si termina en `.m3u8` se reproduce como HLS (con el reproductor
+HLS integrado de Video.js); cualquier otra extensión se trata como vídeo normal.
+
+### Selector de calidad
+
+Si el `.m3u8` es un *master playlist* con varias resoluciones (ver "Cómo codificar el vídeo"
+más abajo), el reproductor añade automáticamente un selector de calidad al menú de ajustes (⚙️):
+"Auto" más una entrada por cada resolución disponible. Con un HLS de una sola calidad, o con
+MP4, esa entrada no aparece (solo queda la de velocidad de reproducción) — no hace falta marcar
+nada a mano, se detecta solo según cuántas resoluciones traiga el vídeo.
 
 `controls` no cambia el aspecto (el reproductor siempre pone sus propios controles) pero
 consérvalo: es lo que hace que el `<video>` funcione como vídeo nativo de respaldo si el
@@ -193,11 +201,21 @@ public/
     ├── mi-video.mp4                  → /videos/mi-video.mp4
     └── mi-video-hls/
         ├── master.m3u8                → /videos/mi-video-hls/master.m3u8
-        └── seg_000.ts, seg_001.ts...
+        ├── 1080p/
+        │   ├── prog.m3u8
+        │   └── seg_000.ts, seg_001.ts...
+        ├── 720p/
+        │   ├── prog.m3u8
+        │   └── seg_000.ts, seg_001.ts...
+        └── 480p/
+            ├── prog.m3u8
+            └── seg_000.ts, seg_001.ts...
 ```
 
 Un HLS son varios archivos (una playlist `.m3u8` + los segmentos `.ts` que referencia): copia
-la carpeta entera a `public/`.
+la carpeta entera a `public/`. Si el master agrupa varias resoluciones (una subcarpeta por
+calidad, como arriba) aparece el selector de calidad; con un solo `.m3u8` sin subcarpetas
+(HLS de una única calidad) funciona igual, solo que sin selector.
 
 ### Cómo codificar el vídeo
 
@@ -221,6 +239,30 @@ ffmpeg -i entrada.mov -vf scale=1920:1080 -c:v libx264 -crf 20 -preset slow -for
 Úsalo para vídeos largos (streamings, making-ofs) donde interese que el navegador vaya
 pidiendo trozos en vez de descargar el archivo entero de golpe. Para clips cortos, MP4 normal
 es más simple y suficiente.
+
+**HLS con varias calidades** (genera varias resoluciones más el `master.m3u8` que las agrupa,
+en un solo comando — es lo que hace falta para que aparezca el selector de calidad):
+
+```bash
+ffmpeg -i entrada.mov -filter_complex \
+  "[0:v]split=3[v1][v2][v3]; \
+   [v1]scale=w=1920:h=1080[v1out]; \
+   [v2]scale=w=1280:h=720[v2out]; \
+   [v3]scale=w=854:h=480[v3out]" \
+  -map "[v1out]" -c:v:0 libx264 -crf 20 -preset slow -b:v:0 5000k \
+  -map "[v2out]" -c:v:1 libx264 -crf 20 -preset slow -b:v:1 2800k \
+  -map "[v3out]" -c:v:2 libx264 -crf 20 -preset slow -b:v:2 1400k \
+  -map a:0 -map a:0 -map a:0 -c:a aac -b:a 128k \
+  -f hls -hls_time 6 -hls_playlist_type vod \
+  -var_stream_map "v:0,a:0,name:1080p v:1,a:1,name:720p v:2,a:2,name:480p" \
+  -master_pl_name master.m3u8 \
+  -hls_segment_filename "%v/seg_%03d.ts" "%v/prog.m3u8"
+```
+
+Genera las subcarpetas `1080p/`, `720p/` y `480p/` (cada una con su `prog.m3u8` y sus
+segmentos) más el `master.m3u8` que las agrupa — la estructura de la sección anterior. Ajusta
+resoluciones y bitrates al vídeo de origen (no subas de su resolución nativa); añade o quita
+variantes cambiando el número en `split=N` y repitiendo el patrón `scale`/`-map`/`-c:v:N`.
 
 Los vídeos se muestran redondeados con sombra, igual que las imágenes.
 

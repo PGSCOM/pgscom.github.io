@@ -30,12 +30,15 @@ function resolverFuente(video) {
 }
 
 // Sustituye el <video> del markdown por la estructura de Video.js v10;
-// .m3u8 usa <hls-video>, el resto <video> nativo.
+// .m3u8 usa <simple-hls-video> (motor HLS propio de Video.js: a diferencia
+// de hls.js, reporta las calidades disponibles al store y habilita el
+// selector de calidad nativo del skin cuando hay más de una), el resto
+// <video> nativo.
 function envolver(video) {
 	const src = resolverFuente(video);
 	if (!src) return;
 
-	const media = document.createElement(esHLS(src) ? 'hls-video' : 'video');
+	const media = document.createElement(esHLS(src) ? 'simple-hls-video' : 'video');
 	media.setAttribute('slot', 'media');
 	media.setAttribute('src', src);
 	for (const attr of ATRIBUTOS_A_COPIAR) {
@@ -77,9 +80,9 @@ if (videos.length > 0) {
 		import('@videojs/html/video/player'),
 		import('@videojs/html/video/minimal-skin'),
 	];
-	// hls.js es la parte más pesada: solo se descarga si hay alguna playlist HLS
+	// El motor HLS es la parte más pesada: solo se descarga si hay alguna playlist HLS
 	if (videos.some((v) => esHLS(resolverFuente(v) ?? ''))) {
-		cargas.push(import('@videojs/html/media/hls-video'));
+		cargas.push(import('@videojs/html/media/simple-hls-video'));
 	}
 	Promise.all(cargas).then(() => videos.forEach(envolver));
 }
