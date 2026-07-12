@@ -73,7 +73,8 @@ function envolver(video) {
 // (ver [id].astro), así que el DOM de .pd-contenido ya está en su forma final
 // -a diferencia de Plyr, no hace falta un MutationObserver para vídeos que
 // "aparecen" al cambiar de pestaña: solo están ocultos con [hidden].
-const videos = [...document.querySelectorAll('.pd-contenido video')];
+const videos = [...document.querySelectorAll('.pd-contenido video')]
+	.filter((v) => !v.closest('.pd-galeria'));
 
 if (videos.length > 0) {
 	const cargas = [

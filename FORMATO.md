@@ -105,9 +105,9 @@ Los enlaces aparecen en azul claro con subrayado. El ID del ancla lo genera Astr
 
 Las imágenes del contenido se muestran redondeadas con sombra. Coloca siempre los archivos en `src/assets/proyectos/` para que Astro los optimice.
 
-### Galería de imágenes (lightbox)
+### Galería de imágenes / vídeo (lightbox)
 
-Para mostrar varias fotos en una cuadrícula que se amplíe a pantalla completa al hacer clic, envuélvelas en un `<div class="pd-galeria">` con imágenes markdown normales dentro:
+Para mostrar varias fotos o vídeos en una cuadrícula que se amplíe a pantalla completa al hacer clic, envuélvelos en un `<div class="pd-galeria">`:
 
 ```html
 <div class="pd-galeria">
@@ -116,15 +116,19 @@ Para mostrar varias fotos en una cuadrícula que se amplíe a pantalla completa 
 
 ![Descripción foto 2](../../assets/proyectos/mi-foto-2.jpg)
 
+<video src="/videos/mi-clip.mp4" poster="/videos/poster.jpg" muted></video>
+
 ![Descripción foto 3](../../assets/proyectos/mi-foto-3.jpg)
 
 </div>
 ```
 
-Deja siempre una línea en blanco después del `<div>`, entre cada imagen y antes del `</div>`, igual que con `pd-seccion` (sección 11), para que Astro procese el markdown interior.
+Deja siempre una línea en blanco después del `<div>`, entre cada elemento y antes del `</div>`, igual que con `pd-seccion` (sección 11), para que Astro procese el markdown interior.
 
-- Coloca las imágenes en **`src/assets/proyectos/`** y referéncialas con ruta relativa (`../../assets/proyectos/...`), igual que cualquier otra imagen del cuerpo — así Astro las optimiza en el build. **No** uses `public/` ni una etiqueta `<img>` cruda: quedaría sin optimizar y el lightbox no tendría las dimensiones para maquetar bien.
-- La cuadrícula recorta las miniaturas a 4:3. Al hacer clic se abren a pantalla completa (con [PhotoSwipe](https://photoswipe.com/)) y se puede navegar entre las fotos de esa misma galería con flechas o gestos táctiles.
+- **Imágenes**: colócalas en `src/assets/proyectos/` y referéncialas con ruta relativa (`../../assets/proyectos/...`) — así Astro las optimiza. **No** uses `public/` ni una etiqueta `<img>` cruda: quedaría sin optimizar y el lightbox no tendría las dimensiones para maquetar bien.
+- **Vídeos**: coloca el archivo en `public/videos/` y referéncialo con ruta absoluta (`/videos/...`), igual que los vídeos del cuerpo (sección 9). Pon siempre un `poster` (también en `public/videos/`) para que se vea bien como thumbnail. El vídeo se abre en el lightbox con controles nativos.
+
+La cuadrícula recorta las miniaturas a 4:3. Al hacer clic se abren a pantalla completa (con [PhotoSwipe](https://photoswipe.com/)) y se puede navegar entre fotos y vídeos de esa misma galería con flechas o gestos táctiles.
 
 ---
 

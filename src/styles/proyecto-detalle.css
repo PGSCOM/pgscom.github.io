@@ -513,13 +513,15 @@ body:has(.pd-page) {
   display: contents;
 }
 
-.pd-contenido .pd-galeria img {
+.pd-contenido .pd-galeria img,
+.pd-contenido .pd-galeria video {
   margin: 0;
   width: 100%;
   height: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   cursor: zoom-in;
+  display: block;
 }
 
 .pd-contenido details {
