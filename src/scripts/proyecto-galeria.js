@@ -95,6 +95,11 @@ if (galerias.length > 0) {
 					content.onLoaded();
 				});
 
+				// PhotoSwipe precarga (y añade al DOM) las diapositivas vecinas a la
+				// activa, no solo la visible, así que `contentAppend` no implica que el
+				// vídeo se vea: aquí solo lo insertamos. Reproducir/pausar se gestiona
+				// en `contentActivate`/`contentDeactivate`, que sí reflejan qué
+				// diapositiva es la que está realmente visible.
 				lightbox.on('contentAppend', (e) => {
 					const { content } = e;
 					if (content.type !== 'video') return;
@@ -102,6 +107,20 @@ if (galerias.length > 0) {
 
 					e.preventDefault();
 					content.slide.container.appendChild(content.element);
+				});
+
+				lightbox.on('contentActivate', (e) => {
+					const { content } = e;
+					if (content.type !== 'video' || !content.element) return;
+
+					content.element.play().catch(() => {});
+				});
+
+				lightbox.on('contentDeactivate', (e) => {
+					const { content } = e;
+					if (content.type !== 'video' || !content.element) return;
+
+					content.element.pause();
 				});
 
 				lightbox.on('contentRemove', (e) => {
