@@ -62,6 +62,9 @@ function envolver(video) {
 
 		const contenedor = document.createElement('div');
 		contenedor.className = 'pd-video';
+		if (video.hasAttribute('style')) {
+			contenedor.setAttribute('style', video.getAttribute('style'));
+		}
 		contenedor.appendChild(player);
 
 		// Icono de play central propio del estado de pausa (el skin minimal no

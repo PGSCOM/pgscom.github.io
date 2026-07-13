@@ -495,6 +495,7 @@ body:has(.pd-page) {
 
 .pd-contenido img {
   max-width: 100%;
+  height: auto;
   border-radius: 12px;
   margin: 16px 0;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
@@ -729,6 +730,16 @@ body:has(.pd-page) {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   color: var(--pd-azul);
   --media-border-radius: 12px;
+}
+
+/* host del skin rellena el contenedor para que un `style="height:…"` (o
+   max-width) traspasado desde el <video> original escale el reproductor: el
+   host adopta el tamaño de .pd-video y el vídeo hace object-fit:contain
+   dentro. Sin altura explícita en .pd-video, height:100% colapsa a auto y
+   se mantiene el comportamiento intrínseco. */
+.pd-contenido .pd-video video-minimal-skin {
+  width: 100%;
+  height: 100%;
 }
 
 /* Icono de play central: el skin minimal no trae uno de fábrica.
