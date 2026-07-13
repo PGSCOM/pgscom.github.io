@@ -11,18 +11,21 @@
 
 const galerias = [...document.querySelectorAll('.pd-contenido .pd-galeria')];
 
+/** Crea el <a> que envuelve cada miniatura y que PhotoSwipe usa como item de la galería. */
+function crearEnlace(href, ancho, alto) {
+	const a = document.createElement('a');
+	a.href = href;
+	a.target = '_blank';
+	a.rel = 'noopener';
+	if (ancho) a.dataset.pswpWidth = ancho;
+	if (alto) a.dataset.pswpHeight = alto;
+	return a;
+}
+
 if (galerias.length > 0) {
 	for (const galeria of galerias) {
 		for (const img of galeria.querySelectorAll('img')) {
-			const enlace = document.createElement('a');
-			enlace.href = img.currentSrc || img.src;
-			enlace.target = '_blank';
-			enlace.rel = 'noopener';
-			const ancho = img.getAttribute('width');
-			const alto = img.getAttribute('height');
-			if (ancho) enlace.dataset.pswpWidth = ancho;
-			if (alto) enlace.dataset.pswpHeight = alto;
-
+			const enlace = crearEnlace(img.currentSrc || img.src, img.getAttribute('width'), img.getAttribute('height'));
 			img.replaceWith(enlace);
 			enlace.appendChild(img);
 		}
@@ -31,22 +34,10 @@ if (galerias.length > 0) {
 			const src = video.getAttribute('src');
 			if (!src) continue;
 
-			const enlace = document.createElement('a');
-			enlace.href = src;
-			enlace.target = '_blank';
-			enlace.rel = 'noopener';
+			const enlace = crearEnlace(src, video.videoWidth || 1920, video.videoHeight || 1080);
 			enlace.dataset.pswpType = 'video';
-
 			const poster = video.getAttribute('poster');
 			if (poster) enlace.dataset.pswpVideoPoster = poster;
-
-			if (video.videoWidth && video.videoHeight) {
-				enlace.dataset.pswpWidth = video.videoWidth;
-				enlace.dataset.pswpHeight = video.videoHeight;
-			} else {
-				enlace.dataset.pswpWidth = '1920';
-				enlace.dataset.pswpHeight = '1080';
-			}
 
 			video.removeAttribute('controls');
 			video.removeAttribute('autoplay');

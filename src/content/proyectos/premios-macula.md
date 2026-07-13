@@ -40,6 +40,8 @@ Los Premios Mácula son una gala de premios de cortometrajes hechos por los alum
 
 <h2 data-tab="video">Streaming</h2>
 
+<video src="https://pgscom-media-web.pages.dev/detrasmacula2025/master.m3u8" controls></video>
+
 El sistema que tenían anteriormente era muy rudimentario, eran dos ordenadores haciendo 2 streaming por separado en YouTube sin conexión de los micrófonos.
 
 A partir de esa idea, propuse un sistema con OBS Studio y [vdo.ninja](https://github.com/steveseguin/vdo.ninja)
@@ -72,6 +74,8 @@ El audio produjo muchos problemas en todas las galas. Ya que el sistema de audio
 </div>
 
 <h2 data-tab="programacion">Web</h2>
+
+[Visitar premiosmacula.es →](https://premiosmacula.es)
 
 Al ver que no había una manera facil de  acceder a todos los cortometrajes y ver sus nominados, se me ocurrió hacer una página web para poder ver los cortometrajes.
 

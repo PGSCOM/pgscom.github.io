@@ -1,18 +1,27 @@
-// Video.js v10, skin "minimal". Los módulos (customElements.define) pesan
-// cientos de KB, así que se importan dinámicamente al final y solo si la
-// ficha tiene algún <video>. https://videojs.org/docs/framework/html/concepts/overview
-
 import { esHLS, montarFuente } from './hls-media.js';
 
-// Atributos del <video> del autor que se trasladan al elemento de medio real.
-// "controls" se omite a propósito: video-skin siempre pone sus propios controles.
-const ATRIBUTOS_A_COPIAR = ['poster', 'autoplay', 'muted', 'loop', 'playsinline', 'preload', 'crossorigin'];
+// Atributos del <video> original que se traspasan al reproductor. `controls`
+// no se copia: el skin de Video.js aporta los suyos. Ver FORMATO.md §9.
+const ATRIBUTOS_A_COPIAR = ['poster', 'autoplay', 'muted', 'loop', 'playsinline', 'preload'];
 
-// El skin muestra controles y degradado también en pausa, no solo al hover
-// (controlsFeature en @videojs/core: computeVisible = userActive || media.paused),
-// lo que se suma a nuestro icono de play central. Vive en el shadow root sin
-// CSS var ni ::part(), así que solo se puede atenuar inyectando un <style> ahí.
+// Ajuste de hls.js para los vídeos del cuerpo. El buffer de lectura por
+// delante por defecto de hls.js son 30 s: si el CDN entrega los segmentos con
+// margen variable, ese margen tan justo provoca micro-cortes ("trabado") en
+// VOD al vaciarse el buffer entre peticiones. Lo ampliamos para dar más
+// colchón. El reproductor ya activa capLevelToPlayerSize y backBufferLength,
+// así que aquí solo tocamos el buffer futuro. (PhotoSwipe/lightbox no entra
+// aquí: esos vídeos los gestiona proyecto-galeria.js, no Video.js.)
+const CONFIG_HLS = {
+	hlsJs: { maxBufferLength: 60 },
+};
+
+// El skin minimal muestra controles y degradado también en pausa, no solo al
+// hover (controlsFeature en @videojs/core: computeVisible = userActive ||
+// media.paused), lo que se suma a nuestro icono de play central. Vive en el
+// shadow root sin CSS var ni ::part(), así que solo se puede atenuar inyectando
+// un <style> ahí dentro.
 function atenuarDegradadoControles(skin) {
+	if (!skin.shadowRoot) return;
 	const estilo = document.createElement('style');
 	estilo.textContent = `
 		.media-overlay {
@@ -22,76 +31,82 @@ function atenuarDegradadoControles(skin) {
 	skin.shadowRoot.appendChild(estilo);
 }
 
-/** Obtiene la URL del vídeo desde el atributo src o el primer <source> hijo */
+/** URL del vídeo desde el atributo `src` o el primer `<source>` hijo. */
 function resolverFuente(video) {
 	const src = video.getAttribute('src');
 	if (src) return src;
 	return video.querySelector('source[src]')?.getAttribute('src') ?? null;
 }
 
-// Sustituye el <video> del markdown por la estructura de Video.js v10;
-// .m3u8 usa <simple-hls-video> (motor HLS propio de Video.js: a diferencia
-// de hls.js, reporta las calidades disponibles al store y habilita el
-// selector de calidad nativo del skin cuando hay más de una), el resto
-// <video> nativo.
+/** Reemplaza un `<video>` nativo por el reproductor Video.js (player > skin > media). */
 function envolver(video) {
-	const src = resolverFuente(video);
-	if (!src) return;
+	try {
+		const src = resolverFuente(video);
+		if (!src) return;
 
-	const media = document.createElement(esHLS(src) ? 'simple-hls-video' : 'video');
-	media.setAttribute('slot', 'media');
-	media.setAttribute('src', src);
-	for (const attr of ATRIBUTOS_A_COPIAR) {
-		if (video.hasAttribute(attr)) media.setAttribute(attr, video.getAttribute(attr));
+		const esHls = esHLS(src);
+		const media = document.createElement(esHls ? 'hlsjs-video' : 'video');
+		media.setAttribute('slot', 'media');
+		media.setAttribute('src', src);
+		if (esHls) media.config = CONFIG_HLS;
+		for (const attr of ATRIBUTOS_A_COPIAR) {
+			if (video.hasAttribute(attr)) media.setAttribute(attr, video.getAttribute(attr));
+		}
+
+		const skin = document.createElement('video-minimal-skin');
+		skin.appendChild(media);
+		atenuarDegradadoControles(skin);
+
+		const player = document.createElement('video-player');
+		player.appendChild(skin);
+
+		const contenedor = document.createElement('div');
+		contenedor.className = 'pd-video';
+		contenedor.appendChild(player);
+
+		// Icono de play central propio del estado de pausa (el skin minimal no
+		// trae uno de fábrica); el clic para alternar reproducción ya lo aporta
+		// el <media-gesture> del skin, así que aquí solo reflejamos el estado.
+		contenedor.classList.add('is-paused');
+		media.addEventListener('play', () => contenedor.classList.remove('is-paused'));
+		media.addEventListener('pause', () => contenedor.classList.add('is-paused'));
+
+		video.replaceWith(contenedor);
+	} catch (err) {
+		console.error('[video] Error al envolver un vídeo:', err, video);
 	}
-
-	const skin = document.createElement('video-minimal-skin');
-	skin.appendChild(media);
-	atenuarDegradadoControles(skin);
-	const player = document.createElement('video-player');
-	player.appendChild(skin);
-
-	const contenedor = document.createElement('div');
-	contenedor.className = 'pd-video';
-	contenedor.appendChild(player);
-
-	// El skin "minimal" no trae gestos de clic ni icono de play central
-	// (a diferencia del skin completo). Se añaden aquí a mano: clic en el
-	// vídeo alterna reproducción, y una clase CSS muestra/oculta el icono.
-	contenedor.classList.add('is-paused');
-	media.addEventListener('click', () => {
-		if (media.paused) media.play();
-		else media.pause();
-	});
-	media.addEventListener('play', () => contenedor.classList.remove('is-paused'));
-	media.addEventListener('pause', () => contenedor.classList.add('is-paused'));
-
-	video.replaceWith(contenedor);
 }
 
 // Este script se carga después del que convierte los h2[data-tab] en pestañas
-// (ver [id].astro), así que el DOM de .pd-contenido ya está en su forma final
-// -a diferencia de Plyr, no hace falta un MutationObserver para vídeos que
-// "aparecen" al cambiar de pestaña: solo están ocultos con [hidden].
+// (ver [id].astro), así que el DOM de .pd-contenido ya está en su forma final.
+// A diferencia de reproductores anteriores, no hace falta un MutationObserver
+// para vídeos que "aparecen" al cambiar de pestaña: solo están ocultos con
+// [hidden]. Se excluyen los <video> de las galerías (los gestiona el lightbox).
 const videos = [...document.querySelectorAll('.pd-contenido video')]
 	.filter((v) => !v.closest('.pd-galeria'));
 
 if (videos.length > 0) {
+	// Cada import se tolera por separado: si uno falla, los demás pueden seguir
+	// cargándose (degradación graceful). Luego comprobamos que los custom
+	// elements imprescindibles estén definidos antes de envolver nada.
 	const cargas = [
-		import('@videojs/html/video/player'),
-		import('@videojs/html/video/minimal-skin'),
+		import('@videojs/html/video/player').catch(() => null),
+		import('@videojs/html/video/minimal-skin').catch(() => null),
 	];
-	// El motor HLS es la parte más pesada: solo se descarga si hay alguna playlist HLS
+	// El motor HLS es la parte más pesada: solo se descarga si hay alguna playlist HLS.
 	if (videos.some((v) => esHLS(resolverFuente(v) ?? ''))) {
-		cargas.push(import('@videojs/html/media/simple-hls-video'));
+		cargas.push(import('@videojs/html/media/hlsjs-video').catch(() => null));
 	}
-	Promise.all(cargas).then(() => videos.forEach(envolver));
+	Promise.all(cargas).then(() => {
+		if (!customElements.get('video-player') || !customElements.get('video-minimal-skin')) return;
+		videos.forEach(envolver);
+	});
 }
 
 // El trailer de cabecera es un <video> nativo con `data-src` (mp4/webm de
-// respaldo, o HLS): se monta con el mismo helper que las tarjetas de la
-// home, no con Video.js (no lleva controles). Nativo en Safari/iOS, hls.js
-// en el resto.
+// respaldo, o HLS): se monta con el mismo helper que las tarjetas de la home,
+// no con Video.js (no lleva controles). Nativo en Safari/iOS, hls.js en el
+// resto.
 const trailer = document.querySelector('.pd-hero-media[data-src]');
 if (trailer) {
 	montarFuente(trailer).then(() => trailer.play?.().catch(() => {}));
