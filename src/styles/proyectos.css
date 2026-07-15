@@ -694,6 +694,11 @@
   opacity: 1;
 }
 
+.ruta-desc--fija {
+  max-height: 5.5em;
+  opacity: 1;
+}
+
 .ruta-item:hover .ruta-techs,
 .ruta-item:focus-visible .ruta-techs {
   max-height: 4em;

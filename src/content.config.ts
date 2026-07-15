@@ -30,6 +30,9 @@ const proyectos = defineCollection({
 			// Orden en el hero (1 = primero); los proyectos sin destacado no flotan
 			destacado: z.number().optional(),
 			descripcion: z.string().optional(),
+			// true: muestra `descripcion` siempre visible bajo el título de la tarjeta.
+			// string: usa ese texto (solo en la tarjeta). Ausente/false: se revela al hover.
+			descripcionexterior: z.union([z.boolean(), z.string()]).optional(),
 			tecnologias: z.array(z.string()).optional(),
 			link: z.string().optional(),
 			premio: z.string().optional(),

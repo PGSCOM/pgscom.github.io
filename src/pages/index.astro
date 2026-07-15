@@ -86,6 +86,10 @@ const rutaEntries = cronologia.map((p, i) => {
 		catIds: catsProyecto,
 		cats: catsProyecto.map((id) => catById[id]).filter(Boolean),
 		subs,
+		descExterior:
+			p.descripcionexterior === true ? p.descripcion
+			: typeof p.descripcionexterior === 'string' ? p.descripcionexterior
+			: null,
 	};
 });
 ---
@@ -295,7 +299,9 @@ const rutaEntries = cronologia.map((p, i) => {
 											))}
 										</div>
 										<h4 class="ruta-titulo">{proyecto.titulo.trim()}</h4>
-										{proyecto.descripcion && <p class="ruta-desc">{proyecto.descripcion}</p>}
+										{proyecto.descExterior
+											? <p class="ruta-desc ruta-desc--fija">{proyecto.descExterior}</p>
+											: proyecto.descripcion && <p class="ruta-desc">{proyecto.descripcion}</p>}
 										{proyecto.tecnologias && (
 											<div class="ruta-techs">
 												{proyecto.tecnologias.slice(0, 4).map((tech) => (
