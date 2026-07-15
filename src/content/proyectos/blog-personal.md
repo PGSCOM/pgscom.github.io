@@ -5,11 +5,12 @@ fechaFin: ahora
 categorias: [desarrollo-web]
 peso: 45
 destacado: 6
-imagen: ../../assets/proyectos/Blog.png
+imagen: ../../assets/proyectos/experimentos.png
 trailer: https://elfumadonapoteosico3d5kultra5d.pages.dev/master.m3u8
 #video: /vid/proy/homero.webm
 video: https://elfumadonapoteosico3d5kultra5d.pages.dev/master.m3u8
-descripcion: Experiencias personales en proyectos pequeños.
+descripcion: Experimentaciones personales en proyectos pequeños.
+descripcionexterior: true
 tecnologias: [HTML, CSS, JavaScript]
 link: https://blog.pgscom.es
 ---
