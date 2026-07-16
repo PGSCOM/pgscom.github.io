@@ -1,0 +1,508 @@
+/* ============================================
+   MULTIGUERRAS — Micrositio de ficha técnica
+   Capa adicional sobre proyecto-detalle.css: reutiliza su tema oscuro
+   (--pd-azul, --pd-bg, tipografía Chakra Petch, fondo de body) y añade
+   únicamente los bloques .mg-* propios de esta página (dashboard, mapa
+   del ecosistema, línea temporal, índice lateral + capítulos).
+   No se toca nada bajo .pd-contenido ni ningún .pd-* existente.
+
+   Línea visual: superficies planas y líneas finas, sin blur ni glows de
+   color; los números de capítulo (01, 02…) sustituyen a cualquier
+   iconografía decorativa; el color de categoría se usa con moderación
+   (un borde, un punto), nunca como relleno grande.
+   ============================================ */
+
+.mg-page {
+  --mg-max: 1180px;
+  --mg-pad: 32px;
+  --mg-linea: rgba(255, 255, 255, 0.12);
+  --mg-linea-suave: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Cabecera cinematográfica: la aporta el componente compartido
+   ProyectoHero (mismo .pd-hero que el resto de fichas, ver
+   proyecto-detalle.css). Aquí solo el dashboard de cifras que va justo
+   debajo. ─────────────────────────────────────────────────────────── */
+.mg-dashboard-wrap {
+  max-width: var(--mg-max);
+  margin: 0 auto;
+  padding: 48px var(--mg-pad) 0;
+}
+
+.mg-dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-top: 1px solid var(--mg-linea);
+}
+
+.mg-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 28px 0 0;
+  margin-right: 28px;
+}
+
+.mg-stat + .mg-stat {
+  border-left: 1px solid var(--mg-linea-suave);
+  padding-left: 28px;
+}
+
+.mg-stat-valor {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.mg-stat-etiqueta {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Título de sección (línea temporal) ───────────────────────────── */
+.mg-seccion-titulo {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--mg-linea);
+}
+
+/* ── Línea temporal ────────────────────────────────────────────── */
+.mg-timeline-wrap {
+  max-width: var(--mg-max);
+  margin: 64px auto;
+  padding: 0 var(--mg-pad);
+}
+
+.mg-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 640px;
+}
+
+.mg-timeline-item {
+  position: relative;
+  padding: 0 0 28px 28px;
+}
+
+.mg-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+/* Línea conectora, de punto a punto */
+.mg-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  bottom: -28px;
+  width: 1px;
+  background: var(--mg-linea);
+}
+
+.mg-timeline-item:last-child::before {
+  display: none;
+}
+
+/* Punto de la línea temporal */
+.mg-timeline-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--pd-bg);
+  border: 2px solid var(--pd-azul);
+}
+
+.mg-timeline-fecha {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--pd-azul);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.mg-timeline-titulo {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.mg-timeline-desc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+/* ── Cuerpo: índice lateral + capítulos ───────────────────────────
+   Grid de dos columnas en escritorio; la barra lateral es sticky y
+   con scroll propio si el listado de 17 capítulos no cabe. ──────── */
+.mg-body {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 56px;
+  max-width: var(--mg-max);
+  margin: 0 auto;
+  padding: 40px var(--mg-pad) 14vh;
+  border-top: 1px solid var(--mg-linea);
+  align-items: start;
+}
+
+.mg-sidebar {
+  position: sticky;
+  top: 40px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.mg-indice {
+  display: flex;
+  flex-direction: column;
+}
+
+.mg-indice-grupo {
+  --cat-color: var(--pd-azul); /* respaldo si el estilo inline no fija una categoría */
+}
+
+.mg-indice-fila {
+  display: flex;
+  align-items: center;
+}
+
+.mg-indice-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0 7px 12px;
+  border-left: 2px solid transparent;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-size: 0.84rem;
+  font-weight: 500;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.mg-indice-item:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Elemento activo (marcado por el scroll-spy de un compañero) */
+.mg-indice-item.act {
+  border-left-color: var(--cat-color);
+  color: #fff;
+  font-weight: 700;
+}
+
+.mg-indice-num {
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.mg-indice-item.act .mg-indice-num {
+  color: var(--cat-color);
+}
+
+.mg-indice-titulo {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Acordeón de subtítulos (H2) de cada capítulo ─────────────────
+   Se despliega solo el del capítulo activo (scroll-spy) o el que se
+   abra a mano con el chevrón; el resto quedan plegados. ─────────── */
+.mg-indice-toggle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.15s ease;
+}
+
+.mg-indice-toggle:hover {
+  color: #fff;
+}
+
+.mg-indice-toggle svg {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.25s ease;
+}
+
+.mg-indice-grupo.abierta .mg-indice-toggle svg {
+  transform: rotate(180deg);
+}
+
+/* Plegado animado: truco de grid-template-rows 0fr -> 1fr */
+.mg-indice-sub {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.mg-indice-grupo.abierta .mg-indice-sub {
+  grid-template-rows: 1fr;
+}
+
+.mg-indice-sublista {
+  overflow: hidden;
+  min-height: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mg-indice-subitem {
+  display: block;
+  padding: 5px 0 5px 34px;
+  border-left: 2px solid transparent;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.mg-indice-subitem:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.mg-indice-subitem.act {
+  border-left-color: var(--cat-color);
+  color: #fff;
+}
+
+.mg-capitulos {
+  min-width: 0; /* evita que el contenido ancho reviente la columna del grid */
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.mg-capitulo {
+  position: relative;
+  padding-top: 28px;
+  border-top: 1px solid var(--mg-linea);
+  scroll-margin-top: 40px; /* que el anchor/scroll-spy no quede tapado */
+}
+
+.mg-capitulo:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+/* Respaldo de --cat-color por si el estilo inline no llegara a fijarse */
+.mg-capitulo[data-categoria="programacion"] { --cat-color: #0098FF; }
+.mg-capitulo[data-categoria="video"]        { --cat-color: #5A598E; }
+.mg-capitulo[data-categoria="vfx"]          { --cat-color: #e87d0d; }
+
+.mg-capitulo-cabecera {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 14px;
+  margin-bottom: 8px;
+}
+
+.mg-capitulo-num {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--cat-color);
+}
+
+.mg-capitulo-titulo {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.mg-capitulo-resumen {
+  flex-basis: 100%;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* Que el scroll a un subtítulo del acordeón no quede pegado al borde.
+   (Única regla sobre contenido de .pd-contenido: solo scroll-margin,
+   sin estilo visual.) */
+.mg-capitulo :is(h2, h3)[id] {
+  scroll-margin-top: 40px;
+}
+
+/* ── Cabecera con imagen de fondo (bajo demanda) ──────────────────
+   Solo cuando el capítulo define `imagen` en su frontmatter: la
+   cabecera pasa a ser un banner con la foto de fondo oscurecida y el
+   número del capítulo como marca de agua grande dentro del propio
+   fondo. Sin `imagen`, la cabecera plana de siempre. ────────────── */
+.mg-capitulo.con-fondo .mg-capitulo-cabecera {
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  align-content: flex-end;
+  padding: 24px 28px;
+  margin-bottom: 28px;
+}
+
+/* El texto de la cabecera queda por encima del fondo */
+.mg-capitulo.con-fondo .mg-capitulo-titulo,
+.mg-capitulo.con-fondo .mg-capitulo-resumen {
+  position: relative;
+  z-index: 1;
+}
+
+.mg-capitulo-fondo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.mg-capitulo-fondo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Velo oscuro para que el título siga leyéndose sobre la foto */
+.mg-capitulo-fondo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(5, 7, 13, 0.92) 0%,
+    rgba(5, 7, 13, 0.45) 55%,
+    rgba(5, 7, 13, 0.2) 100%
+  );
+}
+
+.mg-capitulo-fondo-num {
+  position: absolute;
+  right: 16px;
+  bottom: 4px;
+  z-index: 1;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: clamp(4.5rem, 9vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.16);
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .mg-body {
+    display: block;
+    padding: 32px 20px 10vh;
+  }
+
+  .mg-sidebar {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    margin-bottom: 32px;
+  }
+
+  /* La barra lateral pasa a ser una franja horizontal con scroll;
+     los acordeones no caben en ese formato, así que se ocultan */
+  .mg-indice {
+    flex-direction: row;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mg-indice-grupo {
+    flex-shrink: 0;
+  }
+
+  .mg-indice-toggle,
+  .mg-indice-sub {
+    display: none;
+  }
+
+  .mg-indice-item {
+    flex-shrink: 0;
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    padding: 8px 12px;
+  }
+
+  .mg-indice-item.act {
+    border-bottom-color: var(--cat-color);
+  }
+
+  .mg-capitulos {
+    gap: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mg-hero {
+    padding: 84px 20px 40px;
+  }
+
+  .mg-titulo {
+    font-size: 1.9rem;
+  }
+
+  .mg-timeline-wrap {
+    margin: 48px auto;
+    padding: 0 20px;
+  }
+
+  .mg-capitulo-titulo {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mg-titulo {
+    font-size: 1.6rem;
+  }
+
+  .mg-stat {
+    padding-right: 20px;
+    margin-right: 20px;
+  }
+
+  .mg-stat + .mg-stat {
+    padding-left: 20px;
+  }
+}

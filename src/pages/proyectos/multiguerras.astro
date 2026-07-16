@@ -1,0 +1,207 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProyectoHero from '../../components/ProyectoHero.astro';
+import { Image } from 'astro:assets';
+import '../../styles/proyecto-detalle.css';
+import '../../styles/multiguerras.css';
+import { getCollection, getEntry, render } from 'astro:content';
+import categoriasData from '../../data/categorias.json';
+import multiguerrasData from '../../data/multiguerras.json';
+import { formatRangoFecha } from '../../utils/fechas.js';
+
+// La ficha de portada (frontmatter-only) sigue viviendo en
+// src/content/proyectos/multiguerras.md; de ahí sale el SEO/JSON-LD de este
+// micrositio. El contenido en sí se lee de la colección `multiguerras`
+// (un .md por capítulo, ver src/content.config.ts).
+const cats = categoriasData.categorias;
+const entradaProyecto = await getEntry('proyectos', 'multiguerras');
+const proyecto = { id: entradaProyecto.id, ...entradaProyecto.data };
+const aptitud = cats.find((c) => c.id === (proyecto.categorias ?? [])[0]) ?? cats[0];
+const fechaTexto = formatRangoFecha(proyecto.fecha, proyecto.fechaFin);
+// La cabecera usa `trailer` (vídeo) o `portada` (ImageMetadata), con `imagen`
+// como respaldo; sin ninguna todavía, ProyectoHero cae al icono de la
+// categoría (mismo comportamiento que el resto de fichas, ver [id].astro).
+const portada = proyecto.portada || proyecto.imagen;
+
+// Capítulos ordenados: gobiernan el índice lateral y el scroll continuo.
+const capitulosCollection = await getCollection('multiguerras');
+const capitulos = capitulosCollection
+	.map((entrada) => ({ entrada, id: entrada.id, ...entrada.data }))
+	.sort((a, b) => a.orden - b.orden);
+
+// Un <Content/> por capítulo (no se puede reutilizar un solo `render()`).
+// `headings` alimenta el acordeón de subtítulos del índice lateral (solo H2;
+// los H3 son demasiado detalle para la navegación).
+const capitulosRenderizados = await Promise.all(
+	capitulos.map(async (capitulo) => {
+		const { Content, headings } = await render(capitulo.entrada);
+		return { ...capitulo, Content, subtitulos: headings.filter((h) => h.depth === 2) };
+	}),
+);
+
+// og:image y JSON-LD necesitan una URL string; sin `imagen`/`portada` propios
+// todavía, se cae al logo (SVG) de la categoría principal, igual que en [id].astro.
+const ogImagen = aptitud.logo;
+
+const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
+const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;
+
+// Datos estructurados (Schema.org), igual patrón que [id].astro pero apuntando
+// a la ruta fija de este micrositio.
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'CreativeWork',
+	name: proyecto.titulo.trim(),
+	description: descripcionPagina,
+	url: new URL('/proyectos/multiguerras', Astro.site).href,
+	image: new URL(ogImagen, Astro.site).href,
+	genre: aptitud.titulo,
+	keywords: (proyecto.tecnologias ?? []).join(', '),
+	creator: {
+		'@type': 'Person',
+		name: 'Pablo García Santamaría',
+		url: Astro.site?.href,
+	},
+	...(proyecto.premio && {
+		award: proyecto.premio,
+	}),
+	...(proyecto.link && {
+		sameAs: proyecto.link,
+	}),
+};
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: Astro.site?.href },
+		{ '@type': 'ListItem', position: 2, name: 'Proyectos', item: new URL('/#proyectos-mapa', Astro.site).href },
+		{ '@type': 'ListItem', position: 3, name: proyecto.titulo.trim(), item: new URL('/proyectos/multiguerras', Astro.site).href },
+	],
+};
+---
+
+<Layout
+	title={tituloPagina}
+	description={descripcionPagina}
+	image={ogImagen}
+	type="article"
+>
+	<script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+	<script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+
+	<main class="pd-page mg-page">
+		<a class="pd-back" href="/?sincarga#proyectos-mapa" aria-label="Volver a proyectos">
+			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<line x1="19" y1="12" x2="5" y2="12"></line>
+				<polyline points="12 19 5 12 12 5"></polyline>
+			</svg>
+			<span>Proyectos</span>
+		</a>
+
+		<!-- Cabecera cinematográfica compartida con el resto de fichas de
+		     proyecto: mismo componente que [id].astro, así un cambio de
+		     diseño ahí se refleja aquí también. -->
+		<ProyectoHero
+			titulo={proyecto.titulo.trim()}
+			breadcrumbActual={proyecto.titulo.trim()}
+			descripcion={proyecto.descripcion}
+			fechaTexto={fechaTexto}
+			premio={proyecto.premio}
+			link={proyecto.link}
+			portada={portada}
+			trailer={proyecto.trailer}
+			logoFallback={aptitud.logo}
+		/>
+
+		<section class="mg-dashboard-wrap">
+			<!-- Rellenado en runtime por multiguerras-timeline.js a partir de
+			     #mg-datos-multiguerras (stats). No hardcodear tiles aquí. -->
+			<section id="mg-dashboard" class="mg-dashboard" aria-label="Cifras clave del proyecto"></section>
+		</section>
+
+		<section class="mg-timeline-wrap">
+			<h2 class="mg-seccion-titulo">Línea temporal</h2>
+			<!-- Rellenado en runtime por multiguerras-timeline.js a partir de
+			     #mg-datos-multiguerras (timeline). No hardcodear items aquí. -->
+			<ol id="mg-timeline" class="mg-timeline" aria-label="Evolución cronológica del proyecto"></ol>
+		</section>
+
+		<div class="mg-body">
+			<aside class="mg-sidebar">
+				<nav id="mg-indice" class="mg-indice" aria-label="Índice de capítulos">
+					{capitulosRenderizados.map((c) => (
+						<div class="mg-indice-grupo" style={`--cat-color:${(cats.find((x) => x.id === c.categoria) ?? cats[0]).color}`}>
+							<div class="mg-indice-fila">
+								<a class="mg-indice-item" href={`#${c.id}`} data-slug={c.id}>
+									<span class="mg-indice-num" aria-hidden="true">{String(c.orden).padStart(2, '0')}</span>
+									<span class="mg-indice-titulo">{c.titulo}</span>
+								</a>
+								{c.subtitulos.length > 0 && (
+									<button class="mg-indice-toggle" type="button" aria-expanded="false" aria-label={`Mostrar apartados de ${c.titulo}`}>
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+											<polyline points="6 9 12 15 18 9"></polyline>
+										</svg>
+									</button>
+								)}
+							</div>
+							{c.subtitulos.length > 0 && (
+								<!-- Los slugs de los H2 se repiten entre capítulos ("Organización"
+								     existe en varios), así que el clic se resuelve en JS buscando
+								     data-heading DENTRO de la sección data-capitulo, nunca con el
+								     id global (el href queda como respaldo sin JS). -->
+								<div class="mg-indice-sub">
+									<ul class="mg-indice-sublista">
+										{c.subtitulos.map((h) => (
+											<li>
+												<a class="mg-indice-subitem" href={`#${h.slug}`} data-capitulo={c.id} data-heading={h.slug}>{h.text}</a>
+											</li>
+										))}
+									</ul>
+								</div>
+							)}
+						</div>
+					))}
+				</nav>
+			</aside>
+
+			<main class="mg-capitulos">
+				{capitulosRenderizados.map(({ id, titulo, categoria, orden, resumen, imagen, Content }) => {
+					const cat = cats.find((x) => x.id === categoria) ?? cats[0];
+					const num = String(orden).padStart(2, '0');
+					return (
+						<section id={id} class:list={['mg-capitulo', { 'con-fondo': Boolean(imagen) }]} data-categoria={categoria} style={`--cat-color:${cat.color}`}>
+							<!-- Fondo bajo demanda: solo si el capítulo define `imagen` en su
+							     frontmatter la cabecera pasa a ser un banner con la foto de
+							     fondo y el número como marca de agua grande. Sin imagen, la
+							     cabecera plana de siempre. -->
+							<div class="mg-capitulo-cabecera">
+								{imagen ? (
+									<div class="mg-capitulo-fondo" aria-hidden="true">
+										<Image class="mg-capitulo-fondo-img" src={imagen} alt="" loading="lazy" widths={[640, 1080, 1600]} sizes="(max-width: 900px) 100vw, 900px" />
+										<span class="mg-capitulo-fondo-num">{num}</span>
+									</div>
+								) : (
+									<span class="mg-capitulo-num" aria-hidden="true">{num}</span>
+								)}
+								<h2 class="mg-capitulo-titulo">{titulo}</h2>
+								{resumen && <p class="mg-capitulo-resumen">{resumen}</p>}
+							</div>
+							<div class="pd-contenido">
+								<Content />
+							</div>
+						</section>
+					);
+				})}
+			</main>
+		</div>
+
+		<script type="application/json" id="mg-datos-multiguerras" set:html={JSON.stringify(multiguerrasData)} />
+
+		<script src="../../scripts/multiguerras-nav.js"></script>
+		<script src="../../scripts/multiguerras-timeline.js"></script>
+		<script src="../../scripts/proyecto-galeria.js"></script>
+		<script src="../../scripts/proyecto-video.js"></script>
+		<script src="../../scripts/proyecto-scroll-hint.js"></script>
+	</main>
+</Layout>

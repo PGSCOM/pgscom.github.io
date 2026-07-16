@@ -56,4 +56,24 @@ const proyectos = defineCollection({
 		}),
 });
 
-export const collections = { proyectos };
+// Capítulos del micrositio de "El Periodo de Multiguerras". Cada .md es un
+// apartado independiente (Infraestructura, Blender, Render distribuido…);
+// src/pages/proyectos/multiguerras.astro los lee todos, genera el índice
+// lateral y renderiza cada uno como una sección del scroll continuo.
+const multiguerras = defineCollection({
+	loader: glob({ pattern: '*.md', base: './src/content/multiguerras' }),
+	schema: ({ image }) =>
+		z.object({
+			titulo: z.string(),
+			// Orden en el índice lateral y el scroll del contenido
+			orden: z.number(),
+			// Categoría dueña del capítulo (ver src/data/categorias.json):
+			// da color al capítulo y al ítem del índice
+			categoria: z.enum(['programacion', 'video', 'vfx']),
+			// Texto corto: subtítulo del capítulo
+			resumen: z.string().optional(),
+			imagen: image().optional(),
+		}),
+});
+
+export const collections = { proyectos, multiguerras };

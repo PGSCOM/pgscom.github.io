@@ -1,8 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import ProyectoHero from '../../components/ProyectoHero.astro';
 import '../../styles/proyecto-detalle.css';
 import { getCollection, render } from 'astro:content';
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import categoriasData from '../../data/categorias.json';
 import { formatRangoFecha } from '../../utils/fechas.js';
 
@@ -10,8 +11,13 @@ import { formatRangoFecha } from '../../utils/fechas.js';
 // Cada página es HTML real y rastreable por los bots de Google.
 export async function getStaticPaths() {
 	const cats = categoriasData.categorias;
-	const entradas = await getCollection('proyectos');
-	const proyectos = entradas.map((e) => ({ id: e.id, ...e.data }));
+	const todasLasEntradas = await getCollection('proyectos');
+	const proyectos = todasLasEntradas.map((e) => ({ id: e.id, ...e.data }));
+	// "multiguerras" tiene su propio micrositio a medida en
+	// src/pages/proyectos/multiguerras.astro (demasiados subproyectos para
+	// esta plantilla genérica de pestañas); se excluye aquí para que no
+	// colisionen ambas rutas en /proyectos/multiguerras.
+	const entradas = todasLasEntradas.filter((e) => e.id !== 'multiguerras');
 	return entradas.map((entrada) => {
 		const proyecto = { id: entrada.id, ...entrada.data };
 		const catIds = proyecto.categorias ?? [];
@@ -35,11 +41,6 @@ const fechaTexto = formatRangoFecha(proyecto.fecha, proyecto.fechaFin);
 // La cabecera usa `trailer` (vídeo) o `portada` (ImageMetadata), con `imagen`
 // como respaldo. Sin ninguna, se muestra el icono de la categoría.
 const portada = proyecto.portada || proyecto.imagen;
-// Póster del trailer: webp optimizado (el atributo `poster` no pasa por
-// <Image>, así que con `.src` directo cargaría el asset original completo).
-const posterTrailer = proyecto.trailer && portada
-	? (await getImage({ src: portada, format: 'webp', width: 1600 })).src
-	: undefined;
 // og:image y JSON-LD necesitan una URL string: .src es la ruta del asset
 // optimizado; si el proyecto no tiene imagen, cae al logo (SVG) de la categoría.
 const ogImagen = proyecto.imagen?.src ?? aptitud.logo;
@@ -100,73 +101,17 @@ const breadcrumbLd = {
 		</a>
 
 		<!-- Cabecera cinematográfica: trailer o portada a pantalla completa -->
-		<header class="pd-hero">
-			{proyecto.trailer ? (
-				<video
-					class="pd-hero-media"
-					data-src={proyecto.trailer}
-					poster={posterTrailer}
-					muted
-					loop
-					playsinline
-					aria-hidden="true"
-				></video>
-			) : portada ? (
-				<Image
-					class="pd-hero-media"
-					src={portada}
-					alt={proyecto.titulo.trim()}
-					style="view-transition-name: project-hero"
-					loading="eager"
-				/>
-			) : (
-				<img
-					class="pd-hero-media pd-hero-media--icono"
-					src={aptitud.logo}
-					alt={proyecto.titulo.trim()}
-					style="view-transition-name: project-hero"
-					loading="eager"
-				/>
-			)}
-
-			<div class="pd-hero-overlay">
-				<!-- Migas de pan rastreables -->
-				<nav class="pd-breadcrumb" aria-label="Migas de pan">
-					<a href="/">Inicio</a>
-					<span aria-hidden="true">/</span>
-					<a href="/?sincarga#proyectos-mapa">Proyectos</a>
-					<span aria-hidden="true">/</span>
-					<span class="pd-breadcrumb-current">{aptitud.titulo}</span>
-				</nav>
-
-				<div class="pd-hero-info">
-					<h1 class="pd-titulo">{proyecto.titulo.trim()}</h1>
-
-					<div class="pd-meta">
-						{fechaTexto && <span class="pd-meta-item">📅 {fechaTexto}</span>}
-						{proyecto.premio && <span class="pd-meta-badge">🏆 {proyecto.premio}</span>}
-					</div>
-
-					{proyecto.descripcion && <p class="pd-tagline">{proyecto.descripcion}</p>}
-
-					<div class="pd-actions">
-						{proyecto.link && (
-							<a class="pd-btn-primary" href={proyecto.link} target="_blank" rel="noopener noreferrer">
-								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-									<polygon points="5 3 19 12 5 21 5 3"></polygon>
-								</svg>
-								<span>Visitar proyecto</span>
-							</a>
-						)}
-					</div>
-					<div class="pd-scroll-hint" aria-hidden="true">
-						<svg class="pd-scroll-hint-svg" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path class="pd-scroll-hint-path" d="M12 2 V22 M4 14 L12 22 L20 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-						</svg>
-					</div>
-				</div>
-			</div>
-		</header>
+		<ProyectoHero
+			titulo={proyecto.titulo.trim()}
+			breadcrumbActual={aptitud.titulo}
+			descripcion={proyecto.descripcion}
+			fechaTexto={fechaTexto}
+			premio={proyecto.premio}
+			link={proyecto.link}
+			portada={portada}
+			trailer={proyecto.trailer}
+			logoFallback={aptitud.logo}
+		/>
 
 		<article class="pd-wrapper">
 			<div class="pd-body">

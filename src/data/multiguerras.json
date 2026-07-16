@@ -1,0 +1,19 @@
+{
+  "stats": [
+    { "valor": "2 años", "etiqueta": "de desarrollo" },
+    { "valor": "17", "etiqueta": "sistemas del pipeline" },
+    { "valor": "5", "etiqueta": "servidores y servicios" },
+    { "valor": "3", "etiqueta": "disciplinas: código, VFX y producción" }
+  ],
+  "timeline": [
+    { "fecha": "2023", "titulo": "Idea", "descripcion": "Nace el guion y la idea de Multiguerras." },
+    { "fecha": "2023", "titulo": "Servidor", "descripcion": "Primera Raspberry Pi como servidor del proyecto." },
+    { "fecha": "2023", "titulo": "Git y Gitea", "descripcion": "Control de versiones y repositorios propios." },
+    { "fecha": "2024", "titulo": "Flamenco", "descripcion": "Puesta en marcha del render distribuido." },
+    { "fecha": "2024", "titulo": "Render Farm", "descripcion": "Workers de render coordinados desde la Raspberry Pi." },
+    { "fecha": "2024", "titulo": "Producción virtual", "descripcion": "Unreal Engine, cámara virtual y tracking." },
+    { "fecha": "2024", "titulo": "Rodaje", "descripcion": "Grabación con el pipeline ya en marcha." },
+    { "fecha": "2025", "titulo": "Edición", "descripcion": "Montaje colaborativo en DaVinci Resolve." },
+    { "fecha": "2025", "titulo": "Estreno", "descripcion": "Estreno del cortometraje." }
+  ]
+}

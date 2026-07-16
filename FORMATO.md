@@ -388,6 +388,102 @@ Texto técnico sobre vídeo.
 
 ---
 
+## 14. Micrositio de capítulos (Multiguerras)
+
+El proyecto **Multiguerras** no usa una ficha normal: en vez de un único `.md`, su
+contenido se reparte en varios capítulos independientes dentro de
+`src/content/multiguerras/*.md`. La página `src/pages/proyectos/multiguerras.astro`
+los lee todos, genera el índice lateral con acordeones y los renderiza uno tras otro
+en scroll continuo. Esta sección explica cómo escribir esos capítulos; el resto de la
+guía (secciones 1–13: negrita, listas, galerías, vídeos, `pd-seccion`, `details`...)
+sigue aplicando igual dentro del cuerpo de cada capítulo.
+
+### Frontmatter de un capítulo
+
+```yaml
+---
+titulo: Render distribuido            # OBLIGATORIO — título del capítulo (h2 e índice)
+orden: 11                             # OBLIGATORIO — posición en el índice y el scroll
+categoria: programacion               # OBLIGATORIO — programacion | video | vfx
+resumen: Cómo se coordina el render entre Raspberry Pi y workers.  # Opcional
+imagen: ../../assets/proyectos/multiguerras/render.jpg            # Opcional
+---
+```
+
+- **`titulo`**, **`orden`** y **`categoria`** son obligatorios; `categoria` solo admite
+  `programacion`, `video` o `vfx` (colorea el número del capítulo, el punto del índice
+  y el borde activo).
+- **`resumen`** es una frase corta que aparece bajo el título del capítulo, en la
+  cabecera de la sección.
+- **`imagen`** es opcional y activa un fondo bajo demanda: si se define, la cabecera
+  del capítulo pasa a ser un banner con esa foto de fondo (oscurecida con un
+  degradado) y el número del capítulo como marca de agua grande sobre la imagen. Sin
+  `imagen`, la cabecera es plana, con el número pequeño de siempre. Colócala en
+  `src/assets/proyectos/` como cualquier otra imagen de proyecto (sección 6) para que
+  Astro la optimice.
+
+### Nombre de archivo y orden
+
+El nombre del archivo (`render-distribuido.md`) es el slug (`#render-distribuido`)
+que usa el índice y las anclas internas — no tiene por qué coincidir con `orden`, pero
+conviene que sea descriptivo. `orden` es el número que decide dónde aparece el
+capítulo en el índice y en el scroll; dos capítulos no deberían compartir `orden`.
+
+### Subtítulos del índice (acordeón)
+
+Cada `##` (h2) que uses en el cuerpo del capítulo aparece automáticamente como
+subtítulo plegable bajo ese capítulo en el índice lateral (un acordeón con chevrón,
+que se despliega solo al hacer scroll a ese capítulo o al pulsar el chevrón a mano).
+No hace falta marcarlo con ningún atributo especial — a diferencia de las pestañas
+`data-tab` (sección 13), que no se usan aquí:
+
+```markdown
+## Flamenco
+
+Texto del apartado.
+
+### ¿Qué es?
+
+Los `###` (h3) no aparecen en el acordeón — solo estructuran el texto dentro del
+apartado, igual que en una ficha normal.
+
+## SheepIt
+
+Otro apartado, otro subtítulo en el acordeón.
+```
+
+Los `##` de capítulos distintos pueden repetir el mismo texto (p. ej. varios
+capítulos tienen un apartado "Organización") sin conflicto: el enlace de cada
+subtítulo se resuelve siempre dentro de su propio capítulo, nunca por un id global.
+
+### Ejemplo de capítulo completo
+
+```markdown
+---
+titulo: Render distribuido
+orden: 11
+categoria: programacion
+resumen: Cómo se coordina el render entre Raspberry Pi y workers.
+imagen: ../../assets/proyectos/multiguerras/render.jpg
+---
+
+## Flamenco
+
+### ¿Qué es?
+
+Explicación breve.
+
+### Instalación
+
+Pasos de instalación, con código inline: `pip install flamenco`.
+
+## SheepIt
+
+¿Por qué se usó como alternativa? Ventajas y economía de puntos.
+```
+
+---
+
 ## Ejemplo completo
 
 ```markdown
