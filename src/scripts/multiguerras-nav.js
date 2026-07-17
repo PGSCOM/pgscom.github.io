@@ -47,6 +47,22 @@ if (indice && secciones.length) {
 		subenlaces.forEach((a) => a.classList.toggle('act', a === enlace));
 	}
 
+	// Clic en el índice → scroll suave que atraviesa capítulos intermedios;
+	// sin este bloqueo, el scroll-spy los iría resaltando de paso. Se libera
+	// con `scrollend`, o por el timeout si el destino ya estaba a la vista y
+	// ese evento nunca llega.
+	let spyBloqueado = false;
+	let bloqueoTimer;
+	function bloquearSpy() {
+		spyBloqueado = true;
+		clearTimeout(bloqueoTimer);
+		bloqueoTimer = setTimeout(() => { spyBloqueado = false; }, 1200);
+	}
+	window.addEventListener('scrollend', () => {
+		clearTimeout(bloqueoTimer);
+		spyBloqueado = false;
+	});
+
 	// El capítulo cuenta como "activo" en cuanto cruza una franja cercana a
 	// la parte superior del viewport, no solo cuando está totalmente visible.
 	const opcionesObserver = {
@@ -55,6 +71,7 @@ if (indice && secciones.length) {
 	};
 
 	const observer = new IntersectionObserver((entries) => {
+		if (spyBloqueado) return;
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
 				marcarActivo(entry.target.id);
@@ -67,6 +84,7 @@ if (indice && secciones.length) {
 	// Segundo scroll-spy, este sobre los H2: resalta el subtítulo activo
 	// dentro del acordeón desplegado.
 	const observerSub = new IntersectionObserver((entries) => {
+		if (spyBloqueado) return;
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
 				marcarSubActivo(subenlaces.get(entry.target));
@@ -96,6 +114,7 @@ if (indice && secciones.length) {
 			if (!destino) return;
 
 			e.preventDefault();
+			bloquearSpy();
 			destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
 			history.replaceState(null, '', `#${sub.dataset.heading}`);
 			marcarSubActivo(sub);
@@ -110,6 +129,7 @@ if (indice && secciones.length) {
 		if (!destino) return;
 
 		e.preventDefault();
+		bloquearSpy();
 		destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		history.replaceState(null, '', `#${slug}`);
 		marcarActivo(slug);
