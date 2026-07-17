@@ -133,6 +133,14 @@ const breadcrumbLd = {
 					{capitulosRenderizados.map((c) => (
 						<div class="mg-indice-grupo" style={`--cat-color:${(cats.find((x) => x.id === c.categoria) ?? cats[0]).color}`}>
 							<div class="mg-indice-fila">
+								{c.imagen && (
+									<!-- Fondo bajo demanda del índice: la misma `imagen` del capítulo,
+									     fundida hacia la izquierda para que número y título sigan
+									     leyéndose sobre el fondo oscuro de la página. -->
+									<div class="mg-indice-fondo" aria-hidden="true">
+										<Image class="mg-indice-fondo-img" src={c.imagen} alt="" loading="lazy" widths={[240, 480]} sizes="240px" />
+									</div>
+								)}
 								<a class="mg-indice-item" href={`#${c.id}`} data-slug={c.id}>
 									<span class="mg-indice-num" aria-hidden="true">{String(c.orden).padStart(2, '0')}</span>
 									<span class="mg-indice-titulo">{c.titulo}</span>

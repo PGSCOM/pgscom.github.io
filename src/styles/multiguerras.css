@@ -184,8 +184,67 @@
 }
 
 .mg-indice-fila {
+  position: relative; /* ancla del fondo bajo demanda */
+  overflow: hidden;
+  border-radius: 6px;
   display: flex;
   align-items: center;
+}
+
+/* ── Fondo bajo demanda del índice ────────────────────────────────
+   La `imagen` del capítulo llena la fila y se funde (máscara sobre
+   los píxeles de la propia foto, fundido largo y con muchas paradas)
+   hacia la izquierda, donde viven número y título. ──────────────── */
+.mg-indice-fondo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mg-indice-fondo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.1) 10%,
+    rgba(0, 0, 0, 0.14) 20%,
+    rgba(0, 0, 0, 0.2) 30%,
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.44) 50%,
+    rgba(0, 0, 0, 0.6) 60%,
+    rgba(0, 0, 0, 0.76) 70%,
+    rgba(0, 0, 0, 0.9) 82%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.1) 10%,
+    rgba(0, 0, 0, 0.14) 20%,
+    rgba(0, 0, 0, 0.2) 30%,
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.44) 50%,
+    rgba(0, 0, 0, 0.6) 60%,
+    rgba(0, 0, 0, 0.76) 70%,
+    rgba(0, 0, 0, 0.9) 82%,
+    #000 100%
+  );
+}
+
+/* Enlace y chevrón por encima del fondo; sombra fina para que el
+   chevrón no se pierda sobre la zona más clara de la foto. */
+.mg-indice-item,
+.mg-indice-toggle {
+  position: relative;
+  z-index: 1;
+}
+
+.mg-indice-toggle svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
 }
 
 .mg-indice-item {
