@@ -15,6 +15,11 @@ body:has(.pd-page) {
 }
 
 .pd-page {
+  /* El alto del hero sale de aquí (antes era height + min-height, que da
+     el mismo resultado) porque el modo claro necesita saber dónde acaba
+     la cabecera para colocar ahí el fundido al cuerpo, sin repetir el
+     valor en dos sitios y arriesgarse a que se descuadren. */
+  --pd-hero-alto: max(94vh, 560px);
   position: relative;
   min-height: 100vh;
   color: rgba(255, 255, 255, 0.85);
@@ -27,9 +32,13 @@ body:has(.pd-page) {
 .pd-hero {
   position: relative;
   width: 100%;
-  height: 94vh;
-  min-height: 560px;
+  height: var(--pd-hero-alto);
   overflow: hidden;
+  /* Fondo propio y fijo (no la variable de tema): la cabecera es una
+     foto/vídeo con velo oscuro en los dos modos, no cambia con --pd-bg.
+     Sin esto, el respaldo sin portada (el icono) queda flotando sobre el
+     fondo claro del cuerpo en vez de sobre un fondo oscuro. */
+  background: #05070d;
 }
 
 .pd-hero-media {
@@ -58,13 +67,18 @@ body:has(.pd-page) {
   justify-content: flex-end;
   align-items: center;
   padding: 0 24px 5px;
+  /* El velo cierra en el negro propio de la cabecera (#05070d), no en
+     var(--pd-bg): en modo claro la variable vale azul pálido y el velo
+     interpolaba de casi negro a pálido en el último tramo, dejando un
+     borrón gris enorme bajo el título. La cabecera es un fotograma con su
+     propio suelo oscuro; el cuerpo de lectura empieza en su borde. */
   background: linear-gradient(
     180deg,
     rgba(5, 7, 13, 0.55) 0%,
     rgba(5, 7, 13, 0) 22%,
     rgba(5, 7, 13, 0) 48%,
     rgba(5, 7, 13, 0.78) 82%,
-    var(--pd-bg) 100%
+    #05070d 100%
   );
 }
 
@@ -448,7 +462,12 @@ body:has(.pd-page) {
   font-weight: 600;
 }
 
-.pd-contenido a {
+/* La barra de pestañas la inyecta el script de [id].astro DENTRO de
+   .pd-contenido, así que sus enlaces caen aquí: sin el :not(), esta regla
+   (más específica que .pd-tab) pisaba el color y el text-decoration:none
+   de las pestañas y las pintaba a todas de azul subrayado, borrando la
+   diferencia entre la activa y las demás. */
+.pd-contenido a:not(.pd-tab) {
   color: var(--pd-azul);
   text-decoration: underline;
   text-decoration-color: rgba(147, 197, 253, 0.4);
@@ -456,7 +475,7 @@ body:has(.pd-page) {
   transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
-.pd-contenido a:hover {
+.pd-contenido a:not(.pd-tab):hover {
   color: #fff;
   text-decoration-color: var(--pd-azul);
 }
@@ -668,9 +687,8 @@ body:has(.pd-page) {
     padding: 32px 20px 10vh;
   }
 
-  .pd-hero {
-    height: 80vh;
-    min-height: 480px;
+  .pd-page {
+    --pd-hero-alto: max(80vh, 480px);
   }
 
   .pd-hero-overlay {
@@ -715,6 +733,264 @@ body:has(.pd-page) {
   .pd-relacionados-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   MODO CLARO (opcional)
+   El modo oscuro de siempre es el de por defecto: es todo lo de arriba y
+   no depende de este bloque. El botón de tema (TemaToggle.astro) pone
+   data-theme="claro" en .pd-page y activa esto, que reviste el cuerpo de
+   lectura (.pd-wrapper y lo que hay dentro) para textos largos.
+   La cabecera cinematográfica (.pd-hero) no cambia de tema: es una foto o
+   vídeo con velo oscuro para que el título se lea, no una superficie.
+   ══════════════════════════════════════════════════════════════════ */
+:root:has(.pd-page[data-theme="claro"]) {
+  --pd-bg: #eef3fb;
+}
+
+.pd-page[data-theme="claro"] {
+  --pd-claro-ink: #10182b;
+  --pd-claro-accento: #1c4fc2;
+  /* Largo del fundido de la cabecera al cuerpo (ver justo debajo). */
+  --pd-fundido: 260px;
+}
+
+/* ── Fundido de la cabecera al cuerpo ─────────────────────────────
+   El contenido del hero (título, fecha, tagline, botón y pista de scroll)
+   ocupa desde el 65% hasta el 100% de su alto, así que el velo tiene que
+   seguir siendo oscuro justo en el borde de abajo: dentro del hero no hay
+   hueco donde desvanecerlo, y bajar ahí el velo sería dejar el texto
+   blanco sin fondo. Por eso el degradado no termina en el hero: sigue
+   FUERA, en esta tira sobre el propio .pd-page, que arranca justo donde
+   cierra el velo y en su mismo negro (#05070d), y muere en el color de la
+   página. Así la cabecera y el cuerpo son una sola superficie continua,
+   sin la línea dura de un corte ni el borrón de un velo oscuro
+   interpolado a bocajarro contra un fondo pálido.
+   Las paradas siguen una curva suave (smoothstep: lenta al empezar y al
+   acabar, rápida en medio) y son muchas a propósito, para que no se vea
+   dónde empieza ni dónde acaba la tira. El hueco lo abre el padding de
+   más que se da abajo al primer bloque del cuerpo. */
+.pd-page[data-theme="claro"] {
+  background-image: linear-gradient(
+    180deg,
+    #05070d 0%,
+    color-mix(in srgb, var(--pd-bg) 3%, #05070d) 10%,
+    color-mix(in srgb, var(--pd-bg) 10%, #05070d) 20%,
+    color-mix(in srgb, var(--pd-bg) 22%, #05070d) 30%,
+    color-mix(in srgb, var(--pd-bg) 35%, #05070d) 40%,
+    color-mix(in srgb, var(--pd-bg) 50%, #05070d) 50%,
+    color-mix(in srgb, var(--pd-bg) 65%, #05070d) 60%,
+    color-mix(in srgb, var(--pd-bg) 78%, #05070d) 70%,
+    color-mix(in srgb, var(--pd-bg) 90%, #05070d) 80%,
+    color-mix(in srgb, var(--pd-bg) 97%, #05070d) 90%,
+    var(--pd-bg) 100%
+  );
+  background-repeat: no-repeat;
+  background-position: 0 var(--pd-hero-alto);
+  background-size: 100% var(--pd-fundido);
+}
+
+/* El primer bloque del cuerpo se aparta para dejar respirar al fundido:
+   su contenido empieza donde la tira ya ha llegado al color de la página.
+   (El de multiguerras, .mg-dashboard-wrap, en multiguerras.css.) */
+.pd-page[data-theme="claro"] .pd-wrapper {
+  padding-top: var(--pd-fundido);
+}
+
+/* Los dos botones flotantes son fijos: pasan la mayor parte del scroll
+   sobre el cuerpo, así que en claro se les da la vuelta al cristal
+   (tinta oscura sobre vidrio claro). Sobre la cabecera oscura, en lo alto
+   de la página, siguen leyéndose igual de bien. El de tema vive en
+   TemaToggle.astro, pero su <style> está scopeado y no alcanza a un
+   selector con .pd-page de ancestro; por eso los dos se visten aquí. */
+.pd-page[data-theme="claro"] .pd-back,
+.pd-page[data-theme="claro"] .pd-tema {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(16, 24, 43, 0.14);
+  color: var(--pd-claro-ink);
+}
+
+.pd-page[data-theme="claro"] .pd-back:hover,
+.pd-page[data-theme="claro"] .pd-tema:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(28, 79, 194, 0.45);
+}
+
+.pd-page[data-theme="claro"] .pd-tech-tag {
+  background: rgba(16, 24, 43, 0.06);
+  border-color: rgba(16, 24, 43, 0.16);
+  color: var(--pd-claro-ink);
+}
+
+.pd-page[data-theme="claro"] .pd-tech-tag:hover {
+  background: rgba(16, 24, 43, 0.1);
+  border-color: rgba(16, 24, 43, 0.28);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido {
+  color: rgba(16, 24, 43, 0.96);
+  border-top-color: rgba(16, 24, 43, 0.12);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido h2,
+.pd-page[data-theme="claro"] .pd-contenido h3 {
+  color: var(--pd-claro-ink);
+}
+
+/* El h4 va en azul claro sobre negro (contraste 14,5): su equivalente
+   tonal en claro es el mismo azul de marca hundido hacia la tinta, no un
+   azul medio, que se quedaba en 8,7. */
+.pd-page[data-theme="claro"] .pd-contenido h4 {
+  color: color-mix(in srgb, var(--pd-claro-accento) 35%, var(--pd-claro-ink));
+}
+
+/* Las opacidades de este bloque NO son las del oscuro con la tinta
+   cambiada: el blanco sobre casi negro rinde mucho más contraste que la
+   tinta oscura sobre azul pálido con el mismo alfa, así que copiarlas
+   dejaba el modo claro lavado. Cada alfa está subido hasta igualar el
+   contraste que ese mismo elemento tiene en oscuro. */
+.pd-page[data-theme="claro"] .pd-contenido p,
+.pd-page[data-theme="claro"] .pd-contenido li {
+  color: rgba(16, 24, 43, 0.92);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido strong {
+  color: var(--pd-claro-accento);
+}
+
+.pd-page[data-theme="claro"] .pd-tabs {
+  border-color: rgba(16, 24, 43, 0.12);
+}
+
+/* Las barras de sección van por categoría (--pd-linea). Teñirlas todas de
+   un gris común, como se hacía aquí, borraba en claro el código de color
+   que sí tiene el modo oscuro: solo se retoca el respaldo sin categoría
+   (nace en blanco al 15%, invisible sobre la página clara) y se hunde el
+   color de las demás hacia la tinta, como en las pestañas. */
+.pd-page[data-theme="claro"] .pd-contenido .pd-seccion:not([data-cat]) {
+  --pd-linea: rgba(16, 24, 43, 0.18);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido .pd-seccion[data-cat] {
+  border-left-color: color-mix(in srgb, var(--pd-linea) 70%, var(--pd-claro-ink));
+}
+
+.pd-page[data-theme="claro"] .pd-tab {
+  /* Solo el respaldo sin categoría: cuando el capítulo tiene una, el
+     script fija --tab-color en el propio elemento y manda ese. */
+  --tab-color: var(--pd-claro-accento);
+  color: rgba(16, 24, 43, 0.6);
+}
+
+.pd-page[data-theme="claro"] .pd-tab:hover {
+  color: rgba(16, 24, 43, 0.85);
+  background: rgba(16, 24, 43, 0.04);
+}
+
+/* La pestaña activa conserva el color de su categoría, hundido hacia la
+   tinta igual que los números de capítulo: crudos sobre fondo claro el
+   azul y el naranja se quedaban en 2,6-2,7:1. Hace falta repetir el
+   selector con .act porque la regla de arriba, más específica que el
+   .pd-tab.act de base, le estaba borrando el color a la activa y dejaba
+   toda la barra del mismo gris. */
+.pd-page[data-theme="claro"] .pd-tab.act {
+  color: color-mix(in srgb, var(--tab-color) 65%, var(--pd-claro-ink));
+  border-bottom-color: color-mix(in srgb, var(--tab-color) 65%, var(--pd-claro-ink));
+}
+
+/* Los logos de categoría son SVG de relleno blanco plano, y el filtro de
+   base los aclara aún más (brightness 1.6) para que brillen sobre negro.
+   Aquí hay que entintarlos, no aclararlos: brightness(0) los lleva a negro
+   respetando el alfa del trazo. Un brightness < 1 NO vale, porque sobre
+   blanco solo da un gris claro (0,75 dejaba el icono a 191 sobre un fondo
+   de 243: invisible). Cubre también la activa, que de base pide
+   `filter: none` y en claro se quedaría blanca sobre blanco; la diferencia
+   entre activa e inactiva la sigue marcando la opacidad (1 frente a 0,5),
+   igual que en oscuro. */
+.pd-page[data-theme="claro"] .pd-tab img {
+  filter: brightness(0);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido a:not(.pd-tab) {
+  color: var(--pd-claro-accento);
+  text-decoration-color: rgba(28, 79, 194, 0.4);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido a:not(.pd-tab):hover {
+  color: var(--pd-claro-ink);
+  text-decoration-color: var(--pd-claro-accento);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido blockquote {
+  background: linear-gradient(135deg, rgba(28, 79, 194, 0.08), rgba(90, 89, 142, 0.06));
+  border-left-color: rgba(28, 79, 194, 0.5);
+  color: var(--pd-claro-ink);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido code {
+  background: rgba(16, 24, 43, 0.06);
+  color: #5a3fa0;
+}
+
+.pd-page[data-theme="claro"] .pd-contenido details {
+  background: linear-gradient(135deg, rgba(28, 79, 194, 0.05), rgba(90, 89, 142, 0.04));
+  border-color: rgba(28, 79, 194, 0.18);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido summary {
+  color: var(--pd-claro-ink);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido summary::before {
+  color: var(--pd-claro-accento);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido details[open] > summary {
+  border-bottom-color: rgba(28, 79, 194, 0.14);
+}
+
+.pd-page[data-theme="claro"] .pd-relacionados {
+  border-top-color: rgba(16, 24, 43, 0.1);
+}
+
+.pd-page[data-theme="claro"] .pd-relacionados-titulo {
+  color: var(--pd-claro-ink);
+}
+
+.pd-page[data-theme="claro"] .pd-rel-card {
+  background: linear-gradient(135deg, #ffffff, #e7edf8);
+  border-color: rgba(16, 24, 43, 0.1);
+}
+
+.pd-page[data-theme="claro"] .pd-rel-card:hover {
+  border-color: rgba(28, 79, 194, 0.4);
+  box-shadow: 0 20px 40px rgba(16, 24, 43, 0.12), 0 0 30px rgba(28, 79, 194, 0.1);
+}
+
+.pd-page[data-theme="claro"] .pd-rel-image {
+  border-bottom-color: rgba(16, 24, 43, 0.06);
+}
+
+/* Cuando el proyecto no tiene imagen, la tarjeta cae al logo de su
+   categoría, que es un SVG de relleno blanco plano: sobre la tarjeta
+   clara desaparecía. Se invierte para que sea la misma marca rotunda que
+   en oscuro, pero en tinta. Solo alcanza al respaldo (aria-hidden), nunca
+   a una foto real. */
+.pd-page[data-theme="claro"] .pd-rel-image img[aria-hidden="true"] {
+  filter: invert(1);
+  opacity: 0.9;
+}
+
+.pd-page[data-theme="claro"] .pd-rel-titulo {
+  color: var(--pd-claro-ink);
+}
+
+.pd-page[data-theme="claro"] .pd-rel-card:hover .pd-rel-titulo {
+  color: var(--pd-claro-accento);
+}
+
+.pd-page[data-theme="claro"] .pd-rel-desc {
+  color: rgba(16, 24, 43, 0.88);
 }
 
 /* ── Video.js v10 (reproductor de vídeo, skin minimal) ─────────── */

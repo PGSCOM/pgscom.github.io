@@ -1,0 +1,114 @@
+---
+// Botón que reviste el cuerpo de la ficha en modo claro, pensado para leer
+// textos largos. El modo oscuro cinematográfico de siempre es el de por
+// defecto: es el CSS base y no necesita atributo. Este botón pone o quita
+// data-theme="claro" en el .pd-page más cercano; todo el color del cuerpo
+// se lee de ahí (ver el bloque "MODO CLARO" al final de
+// proyecto-detalle.css y multiguerras.css). La cabecera (.pd-hero) no
+// cambia en ningún modo: es una foto/vídeo con velo oscuro, no un tema.
+//
+// El script que evita el parpadeo (aplica data-theme="claro" desde
+// localStorage antes de pintar) vive aparte, como primer hijo de
+// .pd-page, en cada página que usa este componente.
+//
+// El aspecto del botón sobre fondo claro se define en proyecto-detalle.css
+// (hoja global): el selector necesita el .pd-page como ancestro y el
+// <style> de este componente está scopeado, así que no llegaría.
+---
+<button type="button" class="pd-tema" data-pd-tema aria-label="Cambiar a modo claro">
+	<svg class="pd-tema-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+		<circle cx="12" cy="12" r="8"></circle>
+		<!-- Media luna cortada en diagonal (no por el eje vertical del icono
+		     de contraste de siempre): los extremos son los puntos del círculo
+		     a 135° y -45°, así el corte cae exacto sobre el trazo. -->
+		<path d="M6.34 6.34a8 8 0 0 0 11.32 11.32z" fill="currentColor" stroke="none"></path>
+	</svg>
+	<span data-pd-tema-label>Modo claro</span>
+</button>
+
+<script>
+	const CLAVE = 'pd-tema';
+
+	document.querySelectorAll('[data-pd-tema]').forEach((boton) => {
+		const pagina = boton.closest('.pd-page');
+		const etiqueta = boton.querySelector('[data-pd-tema-label]');
+		if (!pagina || !etiqueta) return;
+
+		function sincronizar() {
+			// Sin atributo = el modo oscuro de siempre, así que el botón
+			// ofrece lo contrario de lo que hay puesto.
+			const enClaro = pagina.getAttribute('data-theme') === 'claro';
+			etiqueta.textContent = enClaro ? 'Modo oscuro' : 'Modo claro';
+			boton.setAttribute('aria-label', enClaro ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro');
+		}
+
+		boton.addEventListener('click', () => {
+			const enClaro = pagina.getAttribute('data-theme') === 'claro';
+			if (enClaro) {
+				pagina.removeAttribute('data-theme');
+				localStorage.setItem(CLAVE, 'oscuro');
+			} else {
+				pagina.setAttribute('data-theme', 'claro');
+				localStorage.setItem(CLAVE, 'claro');
+			}
+			sincronizar();
+		});
+
+		sincronizar();
+	});
+</script>
+
+<style>
+	/* Hermano del botón "Proyectos" (.pd-back, en proyecto-detalle.css):
+	   misma píldora de cristal en la esquina opuesta. Sin desplazamiento al
+	   pasar por encima: el de .pd-back se mueve a la izquierda porque señala
+	   hacia atrás; aquí no hay dirección que indicar. */
+	.pd-tema {
+		position: fixed;
+		top: 24px;
+		right: 24px;
+		z-index: 50;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 18px 10px 14px;
+		border-radius: 999px;
+		background: rgba(8, 10, 18, 0.6);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		color: rgba(255, 255, 255, 0.9);
+		font-family: inherit;
+		font-size: 0.9rem;
+		font-weight: 600;
+		line-height: 1;
+		cursor: pointer;
+		transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+	}
+
+	.pd-tema:hover {
+		background: rgba(255, 255, 255, 0.12);
+		border-color: rgba(147, 197, 253, 0.5);
+	}
+
+	.pd-tema:focus-visible {
+		outline: 2px solid var(--pd-azul);
+		outline-offset: 3px;
+	}
+
+	.pd-tema-icono {
+		width: 18px;
+		height: 18px;
+		flex-shrink: 0;
+	}
+
+	@media (max-width: 768px) {
+		.pd-tema span {
+			display: none;
+		}
+
+		.pd-tema {
+			padding: 10px;
+		}
+	}
+</style>

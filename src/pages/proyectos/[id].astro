@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ProyectoHero from '../../components/ProyectoHero.astro';
+import TemaToggle from '../../components/TemaToggle.astro';
 import '../../styles/proyecto-detalle.css';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -92,6 +93,14 @@ const breadcrumbLd = {
 	<script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
 
 	<main class="pd-page">
+		<script is:inline>
+			// Antes de pintar: si el usuario ya eligió el modo claro en otra
+			// ficha, se respeta aquí también (si no, el cuerpo nace en oscuro).
+			if (localStorage.getItem('pd-tema') === 'claro') {
+				document.currentScript.closest('.pd-page').setAttribute('data-theme', 'claro');
+			}
+		</script>
+
 		<a class="pd-back" href="/?sincarga#proyectos-mapa" aria-label="Volver a proyectos">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 				<line x1="19" y1="12" x2="5" y2="12"></line>
@@ -99,6 +108,8 @@ const breadcrumbLd = {
 			</svg>
 			<span>Proyectos</span>
 		</a>
+
+		<TemaToggle />
 
 		<!-- Cabecera cinematográfica: trailer o portada a pantalla completa -->
 		<ProyectoHero
