@@ -61,7 +61,7 @@ const proyectos = defineCollection({
 // src/pages/proyectos/multiguerras.astro los lee todos, genera el índice
 // lateral y renderiza cada uno como una sección del scroll continuo.
 const multiguerras = defineCollection({
-	loader: glob({ pattern: '*.md', base: './src/content/multiguerras' }),
+	loader: glob({ pattern: '*.{md,mdx}', base: './src/content/multiguerras' }),
 	schema: ({ image }) =>
 		z.object({
 			titulo: z.string(),
