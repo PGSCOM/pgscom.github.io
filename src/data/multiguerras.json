@@ -1,10 +1,4 @@
 {
-  "stats": [
-    { "valor": "2 años", "etiqueta": "de desarrollo" },
-    { "valor": "17", "etiqueta": "sistemas del pipeline" },
-    { "valor": "5", "etiqueta": "servidores y servicios" },
-    { "valor": "3", "etiqueta": "disciplinas: código, VFX y producción" }
-  ],
   "timeline": [
     { "fecha": "2023", "titulo": "Idea", "descripcion": "Nace el guion y la idea de Multiguerras." },
     { "fecha": "2023", "titulo": "Servidor", "descripcion": "Primera Raspberry Pi como servidor del proyecto." },

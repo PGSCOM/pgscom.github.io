@@ -2,8 +2,8 @@
    MULTIGUERRAS — Micrositio de ficha técnica
    Capa adicional sobre proyecto-detalle.css: reutiliza su tema oscuro
    (--pd-azul, --pd-bg, tipografía Chakra Petch, fondo de body) y añade
-   únicamente los bloques .mg-* propios de esta página (dashboard, mapa
-   del ecosistema, línea temporal, índice lateral + capítulos).
+   únicamente los bloques .mg-* propios de esta página (mapa del
+   ecosistema, línea temporal, índice lateral + capítulos).
    No se toca nada bajo .pd-contenido ni ningún .pd-* existente.
 
    Línea visual: superficies planas y líneas finas, sin blur ni glows de
@@ -19,52 +19,6 @@
   --mg-linea-suave: rgba(255, 255, 255, 0.08);
 }
 
-/* ── Cabecera cinematográfica: la aporta el componente compartido
-   ProyectoHero (mismo .pd-hero que el resto de fichas, ver
-   proyecto-detalle.css). Aquí solo el dashboard de cifras que va justo
-   debajo. ─────────────────────────────────────────────────────────── */
-.mg-dashboard-wrap {
-  max-width: var(--mg-max);
-  margin: 0 auto;
-  padding: 96px var(--mg-pad) 0;
-}
-
-.mg-dashboard {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-  border-top: 1px solid var(--mg-linea);
-}
-
-.mg-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 20px 28px 0 0;
-  margin-right: 28px;
-}
-
-.mg-stat + .mg-stat {
-  border-left: 1px solid var(--mg-linea-suave);
-  padding-left: 28px;
-}
-
-.mg-stat-valor {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: #fff;
-  font-variant-numeric: tabular-nums;
-}
-
-.mg-stat-etiqueta {
-  font-size: 0.74rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.45);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
 /* ── Título de sección (línea temporal) ───────────────────────────── */
 .mg-seccion-titulo {
   font-family: 'Chakra Petch', sans-serif;
@@ -76,11 +30,13 @@
   border-bottom: 1px solid var(--mg-linea);
 }
 
-/* ── Línea temporal ────────────────────────────────────────────── */
+/* ── Línea temporal: la aporta el componente compartido ProyectoHero
+   (mismo .pd-hero que el resto de fichas, ver proyecto-detalle.css) justo
+   encima. ─────────────────────────────────────────────────────────── */
 .mg-timeline-wrap {
   max-width: var(--mg-max);
-  margin: 64px auto;
-  padding: 0 var(--mg-pad);
+  margin: 0 auto 64px;
+  padding: 96px var(--mg-pad) 0;
 }
 
 .mg-timeline {
@@ -558,15 +514,6 @@
   .mg-titulo {
     font-size: 1.6rem;
   }
-
-  .mg-stat {
-    padding-right: 20px;
-    margin-right: 20px;
-  }
-
-  .mg-stat + .mg-stat {
-    padding-left: 20px;
-  }
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -585,14 +532,6 @@
 .mg-page[data-theme="claro"] {
   --mg-linea: rgba(16, 24, 43, 0.14);
   --mg-linea-suave: rgba(16, 24, 43, 0.08);
-}
-
-.mg-page[data-theme="claro"] .mg-stat-valor {
-  color: #10182b;
-}
-
-.mg-page[data-theme="claro"] .mg-stat-etiqueta {
-  color: rgba(16, 24, 43, 0.6);
 }
 
 .mg-page[data-theme="claro"] .mg-seccion-titulo {
@@ -618,7 +557,7 @@
 
 /* El primer bloque del cuerpo se aparta para dejar sitio al fundido de la
    cabecera (la tira vive en .pd-page, ver proyecto-detalle.css). */
-.mg-page[data-theme="claro"] .mg-dashboard-wrap {
+.mg-page[data-theme="claro"] .mg-timeline-wrap {
   padding-top: var(--pd-fundido);
 }
 

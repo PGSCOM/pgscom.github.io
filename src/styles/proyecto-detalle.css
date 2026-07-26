@@ -792,7 +792,7 @@ body:has(.pd-page) {
 
 /* El primer bloque del cuerpo se aparta para dejar respirar al fundido:
    su contenido empieza donde la tira ya ha llegado al color de la página.
-   (El de multiguerras, .mg-dashboard-wrap, en multiguerras.css.) */
+   (El de multiguerras, .mg-timeline-wrap, en multiguerras.css.) */
 .pd-page[data-theme="claro"] .pd-wrapper {
   padding-top: var(--pd-fundido);
 }
