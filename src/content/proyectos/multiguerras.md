@@ -5,6 +5,7 @@ fechaFin: 2025
 categorias: [programacion, video, vfx]
 peso: 100
 destacado: 1
+imagen: ../../assets/proyectos/multiguerras.png
 descripcion: Desarrollo de un pipeline completo de producción virtual para un cortometraje de ciencia ficción, combinando programación, servidores, render distribuido, Unreal Engine 5, Blender y DaVinci Resolve.
 tecnologias: [Blender, OBS Studio, App Inventor, Firebase, Web]
 link: https://premiosmacula.es
