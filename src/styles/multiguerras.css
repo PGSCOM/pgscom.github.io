@@ -622,96 +622,17 @@
   padding-top: var(--pd-fundido);
 }
 
-/* Miniatura del capítulo bajo su fila del índice. La máscara base solo se
-   funde por la IZQUIERDA (donde va el texto) y llega a opacidad total en
-   el borde derecho, porque en oscuro ese borde recto se pierde contra el
-   negro de la página. En claro no se pierde: queda como una losa de foto
-   oscura con un corte recto flotando sobre la página pálida. Bajar la
-   opacidad entera de forma plana (lo que había antes) no arregla eso,
-   solo aplasta la foto entera hasta dejarla invisible incluso donde
-   tendría que verse — a 31px de alto real un tinte por debajo de 0.5 no
-   se lee como foto, solo como una mancha gris. La máscara correcta funde
-   los DOS bordes (sube igual que en oscuro por la izquierda, baja otra
-   vez antes del borde derecho) pero con un techo alto (0.88, no 0.46)
-   para que el matraz y su color se reconozcan a tamaño real. */
-.mg-page[data-theme="claro"] .mg-indice-fondo-img {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.04) 0%,
-    rgba(0, 0, 0, 0.06) 10%,
-    rgba(0, 0, 0, 0.09) 20%,
-    rgba(0, 0, 0, 0.14) 30%,
-    rgba(0, 0, 0, 0.22) 40%,
-    rgba(0, 0, 0, 0.34) 50%,
-    rgba(0, 0, 0, 0.48) 60%,
-    rgba(0, 0, 0, 0.64) 70%,
-    rgba(0, 0, 0, 0.8) 80%,
-    rgba(0, 0, 0, 0.88) 86%,
-    rgba(0, 0, 0, 0.55) 94%,
-    rgba(0, 0, 0, 0.15) 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.04) 0%,
-    rgba(0, 0, 0, 0.06) 10%,
-    rgba(0, 0, 0, 0.09) 20%,
-    rgba(0, 0, 0, 0.14) 30%,
-    rgba(0, 0, 0, 0.22) 40%,
-    rgba(0, 0, 0, 0.34) 50%,
-    rgba(0, 0, 0, 0.48) 60%,
-    rgba(0, 0, 0, 0.64) 70%,
-    rgba(0, 0, 0, 0.8) 80%,
-    rgba(0, 0, 0, 0.88) 86%,
-    rgba(0, 0, 0, 0.55) 94%,
-    rgba(0, 0, 0, 0.15) 100%
-  );
-}
-
-/* El chevrón cae justo donde la máscara llega a su pico (0.88): ahí el
-   fondo real no es la página pálida, es el tono más oscuro de la propia
-   foto, y contra eso la tinta oscura del texto normal se queda en ~2:1.
-   Como el fondo real varía según la foto de cada capítulo, no hay una
-   sola tinta que valga: se le da un halo claro (el mismo truco que el
-   halo oscuro del chevrón en oscuro, pero al revés), que aporta contraste
-   tanto si cae sobre la foto oscura como si cae sobre la página lisa. */
-.mg-page[data-theme="claro"] .mg-indice-toggle svg {
-  filter: drop-shadow(0 0 1.5px var(--pd-bg)) drop-shadow(0 0 1.5px var(--pd-bg));
-}
-
-.mg-page[data-theme="claro"] .mg-indice-item {
-  color: rgba(16, 24, 43, 0.66);
-}
-
-.mg-page[data-theme="claro"] .mg-indice-item:hover {
-  color: rgba(16, 24, 43, 0.9);
-}
-
-.mg-page[data-theme="claro"] .mg-indice-item.act {
-  color: #10182b;
-}
-
-.mg-page[data-theme="claro"] .mg-indice-num {
-  color: rgba(16, 24, 43, 0.48);
-}
-
-.mg-page[data-theme="claro"] .mg-indice-toggle {
-  color: rgba(16, 24, 43, 0.48);
-}
-
-.mg-page[data-theme="claro"] .mg-indice-toggle:hover {
-  color: #10182b;
-}
-
-.mg-page[data-theme="claro"] .mg-indice-subitem {
-  color: rgba(16, 24, 43, 0.54);
-}
-
-.mg-page[data-theme="claro"] .mg-indice-subitem:hover {
-  color: rgba(16, 24, 43, 0.9);
-}
-
-.mg-page[data-theme="claro"] .mg-indice-subitem.act {
-  color: #10182b;
+/* El índice entero pasa a panel oscuro en modo claro (misma tinta que el
+   texto, --pd-claro-ink) en vez de re-tintar cada pieza para pelear con la
+   foto de fondo sobre página pálida. Así la foto cae sobre fondo oscuro
+   igual que en modo oscuro — misma máscara, cero capas nuevas encima — y
+   número/título/chevrón/subítems heredan tal cual sus colores de oscuro,
+   ya pensados para leerse sobre esta misma tinta. */
+.mg-page[data-theme="claro"] .mg-sidebar {
+  background: var(--pd-claro-ink);
+  border-radius: 12px;
+  padding: 12px 10px;
+  scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
 }
 
 /* Solo los capítulos sin foto: cuando hay `imagen`, la cabecera es un
@@ -731,7 +652,6 @@
    pasar de 4,5:1; las barras de acento, al no ser texto, siguen crudas.
    (`--cat-color` llega como estilo inline desde la plantilla, así que no
    se puede redefinir la variable: se corrige al usarla.) */
-.mg-page[data-theme="claro"] .mg-capitulo-num,
-.mg-page[data-theme="claro"] .mg-indice-item.act .mg-indice-num {
+.mg-page[data-theme="claro"] .mg-capitulo-num {
   color: color-mix(in srgb, var(--cat-color) 65%, var(--pd-claro-ink));
 }
