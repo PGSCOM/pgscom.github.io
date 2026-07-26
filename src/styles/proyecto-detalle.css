@@ -752,7 +752,7 @@ body:has(.pd-page) {
   --pd-claro-ink: #10182b;
   --pd-claro-accento: #1c4fc2;
   /* Largo del fundido de la cabecera al cuerpo (ver justo debajo). */
-  --pd-fundido: 260px;
+  --pd-fundido: 240px;
 }
 
 /* ── Fundido de la cabecera al cuerpo ─────────────────────────────

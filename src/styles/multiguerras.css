@@ -556,7 +556,9 @@
 }
 
 /* El primer bloque del cuerpo se aparta para dejar sitio al fundido de la
-   cabecera (la tira vive en .pd-page, ver proyecto-detalle.css). */
+   cabecera (la tira vive en .pd-page, ver proyecto-detalle.css). Aquí con
+   menos margen que en el resto de fichas: la timeline es un bloque corto y
+   no necesita todo el largo de --pd-fundido para despegarse del degradado. */
 .mg-page[data-theme="claro"] .mg-timeline-wrap {
   padding-top: var(--pd-fundido);
 }
