@@ -542,6 +542,7 @@ body:has(.pd-page) {
   object-fit: cover;
   cursor: zoom-in;
   display: block;
+  border-radius: 12px;
 }
 
 .pd-contenido details {
