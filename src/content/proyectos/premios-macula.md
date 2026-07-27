@@ -80,7 +80,7 @@ El audio produjo muchos problemas en todas las galas. Ya que el sistema de audio
 <div class="pd-seccion" data-cat="video">
 
 ### Video sistemas 2025
-<video src="https://pgscom-media-web.pages.dev/detrasmacula2025/master.m3u8" poster="https://pgscom-media-web.pages.dev/detrasmacula2025/miniatura.png" controls></video>
+<video src="https://pgscom-media-web.pages.dev/detrasmacula2025/master.m3u8" poster="https://pgscom-media-web.pages.dev/detrasmacula2025/miniatura.png" controls preload="none"></video>
 
 </div>
 
@@ -89,9 +89,9 @@ El audio produjo muchos problemas en todas las galas. Ya que el sistema de audio
 ### Galería
 <div class="pd-galeria">
 
-<video src="/proyvid/macula/tomageneral2024.mp4" muted></video>
+<video src="/proyvid/macula/tomageneral2024.mp4" muted preload="none"></video>
 
-<video src="/proyvid/macula/tomageneral2025.mp4" muted></video>
+<video src="/proyvid/macula/tomageneral2025.mp4" muted preload="none"></video>
 
 ![alt text](../../assets/proyectos/macula/bereal1.jpg)
 ![alt text](../../assets/proyectos/macula/bereal2.jpg)
@@ -147,7 +147,7 @@ Con [ComfyUI](https://comfy.org/) hice un workflow para sustituir [la generació
 ### Validación
 Hice un sistema muy simple para poder validar las entradas de los asistentes. Consistía en una App programada con App Inventor que se conectaba a una base de datos en Firebase.
 
-<video src="/proyvid/macula/entrada-escaneada.mp4" style="height: 70vh" controls></video>
+<video src="/proyvid/macula/entrada-escaneada.mp4" style="height: 70vh" controls preload="none"></video>
 
 </div>
 
@@ -155,14 +155,14 @@ Hice un sistema muy simple para poder validar las entradas de los asistentes. Co
 Animación de introducción para el streaming.
 
 <div class="pd-seccion" data-cat="vfx">
-<video src="https://pgscom-media-web.pages.dev/intro-macula/master.m3u8" poster="https://pgscom-media-web.pages.dev/intro-macula/miniatura.png" controls></video>
+<video src="https://pgscom-media-web.pages.dev/intro-macula/master.m3u8" poster="https://pgscom-media-web.pages.dev/intro-macula/miniatura.png" controls preload="none"></video>
 </div>
 
 <div class="pd-seccion" data-cat="vfx">
 
 ## Detrás de cámaras
 
-<video src="/proyvid/macula/btsintromacula.mp4" controls></video>
+<video src="/proyvid/macula/btsintromacula.mp4" controls preload="none"></video>
 Son varias escenas en donde se copian los parámetros del material del fondo y la posición de la cámara para que no se note el corte.
 
 El fondo está hecho con un generador de ruido conectado al color pasando por un filtro dorado y también conectado al nodo de desplazamiento.
