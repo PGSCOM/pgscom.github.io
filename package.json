@@ -3,11 +3,14 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "predev": "node scripts/generate-posters.mjs",
     "dev": "astro dev",
+    "prebuild": "node scripts/generate-posters.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "posters": "node scripts/generate-posters.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.14",
@@ -24,6 +27,8 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@cloudflare/workers-types": "^5.20260727.1",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "sharp": "^0.35.3",
     "typescript": "^5.9.3"
   }
 }

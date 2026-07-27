@@ -38,6 +38,13 @@ function resolverFuente(video) {
 	return video.querySelector('source[src]')?.getAttribute('src') ?? null;
 }
 
+// Si el autor no puso `poster`, se deriva del propio vídeo: scripts/generate-posters.mjs
+// genera un .webp con el mismo nombre junto a cada vídeo LOCAL antes de dev/build (ver
+// FORMATO.md). No aplica a streams remotos (HLS ya traen su miniatura subida a mano).
+function derivarPoster(src) {
+	return /^https?:\/\//i.test(src) ? null : src.replace(/\.\w+$/, '.webp');
+}
+
 /** Reemplaza un `<video>` nativo por el reproductor Video.js (player > skin > media). */
 function envolver(video) {
 	try {
@@ -49,6 +56,10 @@ function envolver(video) {
 		media.setAttribute('slot', 'media');
 		media.setAttribute('src', src);
 		if (esHls) media.config = CONFIG_HLS;
+		if (!video.hasAttribute('poster')) {
+			const poster = derivarPoster(src);
+			if (poster) video.setAttribute('poster', poster);
+		}
 		for (const attr of ATRIBUTOS_A_COPIAR) {
 			if (video.hasAttribute(attr)) media.setAttribute(attr, video.getAttribute(attr));
 		}

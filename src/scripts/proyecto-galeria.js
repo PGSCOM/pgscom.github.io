@@ -11,6 +11,13 @@
 
 const galerias = [...document.querySelectorAll('.pd-contenido .pd-galeria')];
 
+// Si el autor no puso `poster`, se deriva del propio vídeo: scripts/generate-posters.mjs
+// genera un .webp con el mismo nombre junto a cada vídeo LOCAL antes de dev/build (ver
+// FORMATO.md). No aplica a streams remotos.
+function derivarPoster(src) {
+	return /^https?:\/\//i.test(src) ? null : src.replace(/\.\w+$/, '.webp');
+}
+
 /** Crea el <a> que envuelve cada miniatura y que PhotoSwipe usa como item de la galería. */
 function crearEnlace(href, ancho, alto) {
 	const a = document.createElement('a');
@@ -42,7 +49,12 @@ if (galerias.length > 0) {
 			const alto = video.getAttribute('height') || video.videoHeight || 1080;
 			const enlace = crearEnlace(src, ancho, alto);
 			enlace.dataset.pswpType = 'video';
-			const poster = video.getAttribute('poster');
+			let poster = video.getAttribute('poster');
+			if (!poster) {
+				poster = derivarPoster(src);
+				// También se aplica a la miniatura del grid, no solo al lightbox.
+				if (poster) video.setAttribute('poster', poster);
+			}
 			if (poster) enlace.dataset.pswpVideoPoster = poster;
 
 			// El lightbox construye un <video> nuevo en `contentLoad` (más abajo); esta

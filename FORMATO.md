@@ -116,7 +116,7 @@ Para mostrar varias fotos o vídeos en una cuadrícula que se amplíe a pantalla
 
 ![Descripción foto 2](../../assets/proyectos/mi-foto-2.jpg)
 
-<video src="/videos/mi-clip.mp4" poster="/videos/poster.jpg" muted></video>
+<video src="/videos/mi-clip.mp4" muted></video>
 
 ![Descripción foto 3](../../assets/proyectos/mi-foto-3.jpg)
 
@@ -126,7 +126,7 @@ Para mostrar varias fotos o vídeos en una cuadrícula que se amplíe a pantalla
 Deja siempre una línea en blanco después del `<div>`, entre cada elemento y antes del `</div>`, igual que con `pd-seccion` (sección 11), para que Astro procese el markdown interior.
 
 - **Imágenes**: colócalas en `src/assets/proyectos/` y referéncialas con ruta relativa (`../../assets/proyectos/...`) — así Astro las optimiza. **No** uses `public/` ni una etiqueta `<img>` cruda: quedaría sin optimizar y el lightbox no tendría las dimensiones para maquetar bien.
-- **Vídeos**: coloca el archivo en `public/videos/` y referéncialo con ruta absoluta (`/videos/...`), igual que los vídeos del cuerpo (sección 9). Pon siempre un `poster` (también en `public/videos/`) para que se vea bien como thumbnail. Añade también `width`/`height` con las dimensiones reales del clip: el lightbox los usa para maquetar el vídeo con el aspecto correcto antes de que carguen sus metadatos (sin ellos, cae a 1920×1080 y un clip vertical sale mal encajado). El vídeo se abre en el lightbox con controles nativos.
+- **Vídeos**: coloca el archivo en `public/videos/` y referéncialo con ruta absoluta (`/videos/...`), igual que los vídeos del cuerpo (sección 9). **No hace falta poner `poster` a mano**: `npm run dev`/`build` genera automáticamente una miniatura junto al vídeo (mismo nombre, `.webp`) — ver "Miniaturas automáticas" al final de la sección 9. Si quieres una miniatura distinta a la que sale sola, pon tu propio `poster="/videos/mi-clip.jpg"` (cualquier formato de imagen vale para una puesta a mano) y se respeta. Añade también `width`/`height` con las dimensiones reales del clip: el lightbox los usa para maquetar el vídeo con el aspecto correcto antes de que carguen sus metadatos (sin ellos, cae a 1920×1080 y un clip vertical sale mal encajado). El vídeo se abre en el lightbox con controles nativos.
 
 La cuadrícula recorta las miniaturas a 4:3. Al hacer clic se abren a pantalla completa (con [PhotoSwipe](https://photoswipe.com/)) y se puede navegar entre fotos y vídeos de esa misma galería con flechas o gestos táctiles.
 
@@ -192,6 +192,15 @@ nada a mano, se detecta solo según cuántas resoluciones traiga el vídeo.
 consérvalo: es lo que hace que el `<video>` funcione como vídeo nativo de respaldo si el
 JavaScript no llega a cargar. Atributos opcionales que también se admiten: `poster`,
 `autoplay`, `muted`, `loop`, `playsinline`, `preload`.
+
+### Miniaturas automáticas
+
+No hace falta escribir `poster` a mano para un vídeo **local** (uno servido desde `public/`,
+no un stream remoto): `npm run dev` y `npm run build` generan solos una miniatura junto a cada
+vídeo sin miniatura (mismo nombre, extensión `.webp`, extraída del propio clip con ffmpeg y
+comprimida con Sharp — ver `scripts/generate-posters.mjs`). Si ya existe un fichero con ese
+nombre, o si el `<video>` trae su propio `poster`, no se toca. Para forzar la generación sin
+arrancar el servidor: `npm run posters`.
 
 ### Dónde colocar los archivos
 
