@@ -1,0 +1,45 @@
+---
+titulo: Producción Virtual
+orden: 4
+categoria: video
+resumen: Unreal Engine 5, cámara virtual, tracking de cámara.
+imagen: ../../assets/proyectos/multiguerras/prodvirt.jpg
+---
+
+import { Image } from 'astro:assets';
+import renderImg from '../../assets/proyectos/multiguerras/render.jpg';
+
+El proyecto empezó a partir de la idea de hacer un cortometraje de producción virtual siguiendo casi la misma idea del [set de la serie Mandalorian](https://youtu.be/Ufp8weYYDE8). Pero en vez de con pantallas, con un chroma, y con menos presupuesto.
+
+## Tracking de cámara
+
+Al pensar como hacer tracking de cámara, se me ocurrió hacerlo con un mando de realidad virtual y conectarlo a Unreal Engine 5 con [Live Link](https://dev.epicgames.com/documentation/unreal-engine/live-link-hub-quick-start-in-unreal-engine). Se podría haber hecho con una pieza personalizada que anclara el mando a nuestra jaula de cámara.
+
+Pero el mando dependería de que las gafas VR estuvieran encendidas, y para eso se necesitaba que las gafas estuvieran en movimiento y con alguien con las gafas puestas. Vi que podría ser más sencillo usar un iPhone con [Unreal VCam](https://apps.apple.com/us/app/unreal-vcam/id1547309663), que es una app que usa ARKit de iOS para hacer tracking de la cámara.
+
+![Foto jaula cámara con dos iPhones](../../assets/proyectos/multiguerras/fotocamara.jpg)
+
+Como se puede ver en la foto, la cámara de abajo estaría dedicada a grabar a los actores y la cámara de arriba sería la cámara virtual con Unreal VCam que capturaría el movimiento de la cámara. Este es el resultado de la primera prueba de tracking de cámara.
+
+<video src="/proyvid/multiguerras/testtracking.mp4" controls></video>
+
+Ese pequeño giro fue porque aún no había pensado en cómo sincronizar las cámaras. Después se me ocurrió que podría sincronizarlo con timecode. Pero no había ninguna aplicación que grabara video con timecode en iOS. Dejé de pensar en ello y dos meses después salió [Blackmagic Camera](https://www.blackmagicdesign.com/es/products/blackmagiccamera), que para mi sorpresa sí que era posible insertar timecode.
+
+## Grabación
+En cuanto a la producción virtual, se tenía un ordenador portatil con Unreal Engine 5 conectado a una red Wifi el iPhone con Unreal VCam. Y en ese ordenador se grababa en un Sequencer de Unreal el movimiento de la cámara virtual para posteriormente revisar si en algún punto la cámara virtual se desconectó y también añadir animaciones adicionales a la escena.
+![Setup de grabación](../../assets/proyectos/multiguerras/prodvirt.jpg)
+![Captura del sequencer de Unreal Engine donde se ven todos los keyframes de la cámara](../../assets/proyectos/multiguerras/Sequencer.png)
+
+### Emparejamiento de tomas reales y virtuales
+Las tomas se emparejan a partir de los metadatos escena y toma. (La ID de la escena que se graba en Unreal se empareja con la escena que tiene la misma escena en el iPhone) y se sincronizan a partir del timecode en el cual para Unreal Engine se tuvo que hacer un [script](https://github.com/multiguerras/TimecodeUnreal) que generara un CSV con todos los metadatos para importarlos a DaVinci Resolve para montarlos.
+
+
+
+## Movie Render Queue
+
+Todos estas escenas de sequencer, para renderizarlas, se añaden varias a una Render Queue de Unreal con una configuración especial que renderiza los EXR con los metadatos necesarios en el nombre del frame (Escena, Toma y Timecode) para luego [el script](https://github.com/multiguerras/TimecodeUnreal) pueda trabajar.
+
+<Image src={renderImg} alt="Proceso Render de Unreal Engine" width={400} />
+
+### Render Farm de Unreal
+Al principio pensé en ejecutar una renderfarm de Unreal Engine para renderizar el proyecto, pero al final no fue necesario porque conseguí un ordenador mejor y pudo renderizar todo el proyecto en 20 horas. Modifiqué un [programa exsistente](https://github.com/leixingyu/unrealRenderFarm) para que pudiera funcionar en Unreal Engine 5. Este es [el fork](https://github.com/multiguerras/unrealRenderFarmMultiguerras).
