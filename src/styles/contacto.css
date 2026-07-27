@@ -141,68 +141,6 @@
   gap: 1rem;
 }
 
-.info-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(0, 180, 216, 0.05);
-  border: 1px solid rgba(0, 180, 216, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  will-change: transform;
-  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.info-card:hover {
-  background: rgba(0, 180, 216, 0.1);
-  border-color: rgba(0, 180, 216, 0.4);
-  transform: translateX(10px);
-  box-shadow: 0 8px 32px rgba(0, 180, 216, 0.2);
-}
-
-.info-icon {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #0096c7, #00b4d8);
-  border-radius: 10px;
-  color: white;
-}
-
-.info-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.info-content {
-  flex: 1;
-}
-
-.info-content h3 {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 0.25rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.info-content a,
-.info-content p {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.info-content a:hover {
-  color: #48cae4;
-}
-
 /* Redes sociales */
 .social-links {
   margin-top: 0.5rem;
@@ -497,34 +435,6 @@
 
   .contacto-info {
     gap: 0.65rem;
-  }
-
-  .info-card {
-    padding: 0.75rem;
-    gap: 0.65rem;
-  }
-
-  .info-card:hover {
-    transform: translateX(5px);
-  }
-
-  .info-icon {
-    width: 32px;
-    height: 32px;
-  }
-
-  .info-icon svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .info-content h3 {
-    font-size: 0.7rem;
-  }
-
-  .info-content a,
-  .info-content p {
-    font-size: 0.85rem;
   }
 
   .social-links {

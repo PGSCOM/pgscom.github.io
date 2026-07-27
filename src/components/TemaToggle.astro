@@ -34,21 +34,24 @@
 		const etiqueta = boton.querySelector('[data-pd-tema-label]');
 		if (!pagina || !etiqueta) return;
 
+		// El guard de arriba ya garantiza que no son null; el `!` es solo para
+		// que TS lo sepa también dentro de estos closures (no propaga el
+		// estrechamiento de tipo de un guard a funciones anidadas).
 		function sincronizar() {
 			// Sin atributo = el modo oscuro de siempre, así que el botón
 			// ofrece lo contrario de lo que hay puesto.
-			const enClaro = pagina.getAttribute('data-theme') === 'claro';
-			etiqueta.textContent = enClaro ? 'Modo oscuro' : 'Modo claro';
+			const enClaro = pagina!.getAttribute('data-theme') === 'claro';
+			etiqueta!.textContent = enClaro ? 'Modo oscuro' : 'Modo claro';
 			boton.setAttribute('aria-label', enClaro ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro');
 		}
 
 		boton.addEventListener('click', () => {
-			const enClaro = pagina.getAttribute('data-theme') === 'claro';
+			const enClaro = pagina!.getAttribute('data-theme') === 'claro';
 			if (enClaro) {
-				pagina.removeAttribute('data-theme');
+				pagina!.removeAttribute('data-theme');
 				localStorage.setItem(CLAVE, 'oscuro');
 			} else {
-				pagina.setAttribute('data-theme', 'claro');
+				pagina!.setAttribute('data-theme', 'claro');
 				localStorage.setItem(CLAVE, 'claro');
 			}
 			sincronizar();

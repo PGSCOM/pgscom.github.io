@@ -268,8 +268,6 @@ function initRuta() {
   new ResizeObserver(reflow).observe(cuerpo);
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initRuta);
-} else {
-  initRuta();
-}
+// Astro emite este bloque como <script type="module">, ya diferido por el
+// navegador: se ejecuta tras parsear el HTML, sin esperar a DOMContentLoaded.
+initRuta();

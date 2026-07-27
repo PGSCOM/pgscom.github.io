@@ -126,7 +126,7 @@ Para mostrar varias fotos o vídeos en una cuadrícula que se amplíe a pantalla
 Deja siempre una línea en blanco después del `<div>`, entre cada elemento y antes del `</div>`, igual que con `pd-seccion` (sección 11), para que Astro procese el markdown interior.
 
 - **Imágenes**: colócalas en `src/assets/proyectos/` y referéncialas con ruta relativa (`../../assets/proyectos/...`) — así Astro las optimiza. **No** uses `public/` ni una etiqueta `<img>` cruda: quedaría sin optimizar y el lightbox no tendría las dimensiones para maquetar bien.
-- **Vídeos**: coloca el archivo en `public/videos/` y referéncialo con ruta absoluta (`/videos/...`), igual que los vídeos del cuerpo (sección 9). Pon siempre un `poster` (también en `public/videos/`) para que se vea bien como thumbnail. El vídeo se abre en el lightbox con controles nativos.
+- **Vídeos**: coloca el archivo en `public/videos/` y referéncialo con ruta absoluta (`/videos/...`), igual que los vídeos del cuerpo (sección 9). Pon siempre un `poster` (también en `public/videos/`) para que se vea bien como thumbnail. Añade también `width`/`height` con las dimensiones reales del clip: el lightbox los usa para maquetar el vídeo con el aspecto correcto antes de que carguen sus metadatos (sin ellos, cae a 1920×1080 y un clip vertical sale mal encajado). El vídeo se abre en el lightbox con controles nativos.
 
 La cuadrícula recorta las miniaturas a 4:3. Al hacer clic se abren a pantalla completa (con [PhotoSwipe](https://photoswipe.com/)) y se puede navegar entre fotos y vídeos de esa misma galería con flechas o gestos táctiles.
 

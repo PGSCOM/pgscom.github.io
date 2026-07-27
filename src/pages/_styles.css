@@ -157,17 +157,6 @@
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
 }
 
-.hero-cta--ghost {
-    background: transparent;
-    color: rgba(0, 0, 0, 0.8);
-    border-color: rgba(0, 0, 0, 0.25);
-}
-
-.hero-cta--ghost:hover {
-    border-color: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
-}
-
 /* Indicador de scroll */
 .hero-scroll-hint {
     position: absolute;

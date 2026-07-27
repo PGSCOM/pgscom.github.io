@@ -56,8 +56,6 @@ function initOrbit() {
   });
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initOrbit);
-} else {
-  initOrbit();
-}
+// Astro emite este bloque como <script type="module">, ya diferido por el
+// navegador: se ejecuta tras parsear el HTML, sin esperar a DOMContentLoaded.
+initOrbit();

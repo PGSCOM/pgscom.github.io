@@ -83,8 +83,10 @@ function init() {
 	async function setVideoSource(el, src, startTime = 0, autoplay = false) {
 		try {
 			el.loop = false;
-			if (el.src !== location.origin + src && el.src !== src) el.src = src;
-			el.load();
+			// Si el <video> ya trae este `src` desde el HTML (caso del vídeo de scrub,
+			// que arranca a descargar en el parseo), no reiniciar la descarga en curso.
+			const yaTieneSrc = el.src === location.origin + src || el.src === src;
+			if (!yaTieneSrc) { el.src = src; el.load(); }
 			await waitForMetadata(el);
 
 			const t = Math.max(0, Math.min(startTime, el.duration || Infinity));
@@ -141,27 +143,30 @@ function init() {
 		nextReady = prepareNext(PLAYLIST[playlistIndex]);
 	}
 
-	// Señal para el preloader: se resuelve cuando el vídeo de scrub tiene
-	// suficiente buffer para reproducirse sin cortes (o si falla su carga,
-	// para no colgar la pantalla de carga).
-	window.__galaxiaScrubReady = new Promise((resolve) => {
-		function done() {
-			window.__galaxiaScrubDone = true;
-			window.dispatchEvent(new CustomEvent('galaxia-scrub-ready'));
-			resolve();
-		}
-		if (activeVideo.readyState >= 3 || activeVideo.error) { done(); return; }
-		activeVideo.addEventListener('canplaythrough', done, { once: true });
+	// Señal para el preloader: se resuelve cuando el vídeo de scrub puede
+	// arrancar (no hace falta el buffer completo de canplaythrough, solo se
+	// scrubea, nunca se reproduce), o si falla su carga, para no colgar la
+	// pantalla de carga.
+	function done() {
+		window.__galaxiaScrubDone = true;
+		window.dispatchEvent(new CustomEvent('galaxia-scrub-ready'));
+	}
+	if (activeVideo.readyState >= 3 || activeVideo.error) done();
+	else {
+		activeVideo.addEventListener('canplay', done, { once: true });
 		activeVideo.addEventListener('error', done, { once: true });
-	});
+	}
 
-	// El vídeo de scrub se carga en el elemento activo; si llega tarde, aplica
-	// el seek que hubiera quedado pendiente de scrolls anteriores
+	// El vídeo de scrub se carga en el elemento activo (ya trae `src` desde el
+	// HTML, así que la descarga empieza en el parseo); si llega tarde, aplica
+	// el seek que hubiera quedado pendiente de scrolls anteriores. El vídeo de
+	// intro no hace falta hasta pasado el zoom, así que no compite por ancho
+	// de banda con el de scrub: se precarga después.
 	setVideoSource(activeVideo, VIDEO_SCRUB, 0, false).then(() => {
 		activeReady = true;
 		if (pendingScrubT != null && !afterZoomStarted) scheduleScrub(pendingScrubT);
+		nextReady = prepareNext(VIDEO_INTRO);
 	});
-	nextReady = prepareNext(VIDEO_INTRO);
 
 	function onProgress(progress) {
 		tl.progress(progress);
@@ -186,7 +191,22 @@ function init() {
 		onUpdate: (self) => onProgress(self.progress),
 		onRefresh: (self) => onProgress(self.progress),
 	});
+
+	// La playlist en bucle no tiene condición de parada propia: sin esto,
+	// los vídeos remotos seguirían descargando y decodificando aunque la
+	// sección lleve mucho tiempo fuera de pantalla. Solo aplica una vez
+	// arrancada la playlist (antes, el scrub ya mantiene el vídeo en pausa).
+	ScrollTrigger.create({
+		trigger: '.parte2-wrapper',
+		start: 'top bottom', end: 'bottom top',
+		onToggle: (self) => {
+			if (!afterZoomStarted) return;
+			try { self.isActive ? activeVideo.play() : activeVideo.pause(); } catch {}
+		},
+	});
 }
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-else init();
+// Astro emite este bloque como <script type="module">, que ya es diferido
+// por el navegador: se ejecuta después de parsear el HTML, así que `init()`
+// puede llamarse directamente sin esperar a DOMContentLoaded.
+init();

@@ -31,18 +31,23 @@ function initHero() {
   gsap.set(fadeEls, { autoAlpha: 0, y: 26 });
 
   let entered = false;
+  let heroVisible = true;
+  // Flotación orgánica: tweens repeat:-1, se pausan fuera de pantalla (más
+  // abajo) para que el hero no siga animando main thread tras hacer scroll.
+  const idleTweens = [];
 
   function startIdleFloat() {
     cards.forEach(card => {
       const tilt = card.querySelector('.hero-card-tilt');
       const d    = parseFloat(card.dataset.depth) || 1;
-      gsap.to(tilt, {
+      idleTweens.push(gsap.to(tilt, {
         y: gsap.utils.random(10, 20) * (Math.random() < 0.5 ? -1 : 1) * d,
         rotation: `+=${gsap.utils.random(-3, 3)}`,
         duration: gsap.utils.random(3, 5),
         yoyo: true, repeat: -1, ease: 'sine.inOut',
         delay: gsap.utils.random(0, 1.5),
-      });
+        paused: !heroVisible,
+      }));
     });
   }
 
@@ -79,9 +84,18 @@ function initHero() {
     tl.call(startIdleFloat);
   }
 
+  // ── Visibilidad del hero: pausa la flotación fuera de pantalla ──────────
+  ScrollTrigger.create({
+    trigger: '.main-container',
+    start: 'top top', end: 'bottom top',
+    onToggle: self => {
+      heroVisible = self.isActive;
+      idleTweens.forEach(t => (heroVisible ? t.play() : t.pause()));
+    },
+  });
+
   // ── Parallax de ratón (solo puntero fino, fuera del hero se pausa) ───────
   if (window.matchMedia('(pointer: fine)').matches && cards.length) {
-    let heroVisible = true;
     const setters = cards.map(card => ({
       x: gsap.quickTo(card, 'x', { duration: 0.9, ease: 'power3' }),
       y: gsap.quickTo(card, 'y', { duration: 0.9, ease: 'power3' }),
@@ -94,12 +108,6 @@ function initHero() {
       const ny = e.clientY / window.innerHeight - 0.5;
       for (const s of setters) { s.x(nx * 46 * s.d); s.y(ny * 28 * s.d); }
     }, { passive: true });
-
-    ScrollTrigger.create({
-      trigger: '.main-container',
-      start: 'top top', end: 'bottom top',
-      onToggle: self => { heroVisible = self.isActive; },
-    });
   }
 
   // ── Salida con scroll: cada profundidad sube a distinta velocidad ────────
@@ -143,8 +151,6 @@ function initHero() {
   }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initHero);
-} else {
-  initHero();
-}
+// Astro emite este bloque como <script type="module">, ya diferido por el
+// navegador: se ejecuta tras parsear el HTML, sin esperar a DOMContentLoaded.
+initHero();

@@ -3,7 +3,19 @@ interface TurnstileResponse {
   'error-codes'?: string[];
 }
 
-export const onRequestPost: PagesFunction = async ({ request, env }) => {
+interface TelegramResponse {
+  ok: boolean;
+  description?: string;
+}
+
+// Variables de entorno / secretos configurados en Cloudflare Pages.
+interface Env {
+  TURNSTILE_SECRET_KEY?: string;
+  TELEGRAM_BOT_TOKEN?: string;
+  TELEGRAM_CHAT_ID?: string;
+}
+
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     const contentType = request.headers.get('content-type') || '';
     let data: Record<string, string> = {};
@@ -107,7 +119,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       }),
     });
 
-    const tgData = await tgResp.json();
+    const tgData: TelegramResponse = await tgResp.json();
 
     if (!tgResp.ok || !tgData.ok) {
       console.error('❌ Error de Telegram:', JSON.stringify(tgData));

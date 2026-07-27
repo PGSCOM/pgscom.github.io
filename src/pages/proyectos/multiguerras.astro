@@ -16,6 +16,7 @@ import { formatRangoFecha } from '../../utils/fechas.js';
 // (un .md por capítulo, ver src/content.config.ts).
 const cats = categoriasData.categorias;
 const entradaProyecto = await getEntry('proyectos', 'multiguerras');
+if (!entradaProyecto) throw new Error('Falta src/content/proyectos/multiguerras.md');
 const proyecto = { id: entradaProyecto.id, ...entradaProyecto.data };
 const aptitud = cats.find((c) => c.id === (proyecto.categorias ?? [])[0]) ?? cats[0];
 const fechaTexto = formatRangoFecha(proyecto.fecha, proyecto.fechaFin);
@@ -40,9 +41,10 @@ const capitulosRenderizados = await Promise.all(
 	}),
 );
 
-// og:image y JSON-LD necesitan una URL string; sin `imagen`/`portada` propios
-// todavía, se cae al logo (SVG) de la categoría principal, igual que en [id].astro.
-const ogImagen = aptitud.logo;
+// og:image y JSON-LD necesitan una URL string: .src es la ruta del asset
+// optimizado; si no hay imagen, cae al logo (SVG) de la categoría, igual
+// que en [id].astro.
+const ogImagen = proyecto.imagen?.src ?? aptitud.logo;
 
 const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
 const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;

@@ -158,27 +158,6 @@ body:has(.pd-page) {
   max-width: 820px;
 }
 
-.pd-categoria {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 14px;
-  padding: 6px 14px 6px 10px;
-  background: rgba(147, 197, 253, 0.12);
-  border: 1px solid rgba(147, 197, 253, 0.25);
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(200, 220, 255, 0.95);
-}
-
-.pd-categoria img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.4));
-}
-
 .pd-titulo {
   font-size: clamp(2.1rem, 5.5vw, 3.6rem);
   font-weight: 700;
@@ -253,44 +232,6 @@ body:has(.pd-page) {
   box-shadow: 0 8px 30px rgba(255, 255, 255, 0.25);
 }
 
-.pd-btn-secondary {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  color: #fff;
-  cursor: pointer;
-  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
-}
-
-.pd-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: scale(1.1);
-}
-
-.pd-btn-secondary.pd-copied::after {
-  content: '¡Copiado!';
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: rgba(147, 197, 253, 0.9);
-  color: #0a0a14;
-}
-
 /* ── Indicador de scroll: el hero ocupa casi toda la pantalla y, sin
    esto, no queda claro que hay más ficha debajo. La flecha se dibuja con
    GSAP (stroke-dashoffset) en proyecto-scroll-hint.js ──────────────── */
@@ -313,38 +254,6 @@ body:has(.pd-page) {
 .pd-body {
   position: relative;
 }
-
-.pd-tecnologias {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.pd-tech-tag {
-  font-size: 0.82rem;
-  font-weight: 500;
-  padding: 8px 16px;
-  background: rgba(147, 197, 253, 0.15);
-  border: 1px solid rgba(147, 197, 253, 0.3);
-  border-radius: 20px;
-  color: rgba(200, 220, 255, 0.95);
-  letter-spacing: 0.02em;
-  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
-}
-
-.pd-tech-tag:hover {
-  background: rgba(147, 197, 253, 0.25);
-  border-color: rgba(147, 197, 253, 0.5);
-  transform: translateY(-2px);
-}
-
-.pd-tech-tag[data-tech="React"],
-.pd-tech-tag[data-tech="Next.js"]    { background: rgba(97, 218, 251, 0.18); color: #61dafb; border-color: rgba(97, 218, 251, 0.35); }
-.pd-tech-tag[data-tech="Blender"]    { background: rgba(234, 106, 32, 0.18); color: #f08a4b; border-color: rgba(234, 106, 32, 0.35); }
-.pd-tech-tag[data-tech="Python"]     { background: rgba(55, 118, 171, 0.22); color: #7cb3e8; border-color: rgba(55, 118, 171, 0.4); }
-.pd-tech-tag[data-tech="TypeScript"] { background: rgba(49, 120, 198, 0.22); color: #6fa8e8; border-color: rgba(49, 120, 198, 0.4); }
-.pd-tech-tag[data-tech="Astro"]      { background: rgba(255, 90, 40, 0.18);  color: #ff8a66; border-color: rgba(255, 90, 40, 0.35); }
 
 /* ── Contenido HTML ──────────────────────────────────── */
 .pd-contenido {
@@ -504,7 +413,7 @@ body:has(.pd-page) {
 }
 
 .pd-contenido code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: monospace;
   font-size: 0.85em;
   background: rgba(0, 0, 0, 0.4);
   padding: 2px 8px;
@@ -815,17 +724,6 @@ body:has(.pd-page) {
 .pd-page[data-theme="claro"] .pd-tema:hover {
   background: rgba(255, 255, 255, 0.92);
   border-color: rgba(28, 79, 194, 0.45);
-}
-
-.pd-page[data-theme="claro"] .pd-tech-tag {
-  background: rgba(16, 24, 43, 0.06);
-  border-color: rgba(16, 24, 43, 0.16);
-  color: var(--pd-claro-ink);
-}
-
-.pd-page[data-theme="claro"] .pd-tech-tag:hover {
-  background: rgba(16, 24, 43, 0.1);
-  border-color: rgba(16, 24, 43, 0.28);
 }
 
 .pd-page[data-theme="claro"] .pd-contenido {

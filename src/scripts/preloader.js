@@ -46,13 +46,19 @@ function initPreloader() {
     new Promise(r => setTimeout(r, 4000)),
   ]);
 
-  const ready = Promise.all([
-    document.readyState === 'complete'
-      ? Promise.resolve()
-      : new Promise(r => window.addEventListener('load', r, { once: true })),
-    document.fonts?.ready ?? Promise.resolve(),
-    scrubReady,
-    new Promise(r => setTimeout(r, 1700)), // duración mínima para que la intro respire
+  // Tope duro sobre TODA la espera: si algún subrecurso se cuelga (p. ej.
+  // `load` nunca dispara porque una fuente externa no responde), la pantalla
+  // de carga no debe quedarse bloqueando el scroll para siempre.
+  const ready = Promise.race([
+    Promise.all([
+      document.readyState === 'complete'
+        ? Promise.resolve()
+        : new Promise(r => window.addEventListener('load', r, { once: true })),
+      document.fonts?.ready ?? Promise.resolve(),
+      scrubReady,
+      new Promise(r => setTimeout(r, 1700)), // duración mínima para que la intro respire
+    ]),
+    new Promise(r => setTimeout(r, 8000)),
   ]);
 
   ready.then(() => {
@@ -76,8 +82,6 @@ window.addEventListener('pageshow', (e) => {
   document.documentElement.style.overflow = '';
 });
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPreloader);
-} else {
-  initPreloader();
-}
+// Astro emite este bloque como <script type="module">, ya diferido por el
+// navegador: se ejecuta tras parsear el HTML, sin esperar a DOMContentLoaded.
+initPreloader();

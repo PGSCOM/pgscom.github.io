@@ -34,15 +34,19 @@ if (galerias.length > 0) {
 			const src = video.getAttribute('src');
 			if (!src) continue;
 
-			const enlace = crearEnlace(src, video.videoWidth || 1920, video.videoHeight || 1080);
+			// `videoWidth`/`videoHeight` valen 0 hasta que cargan los metadatos (y con
+			// preload="none" nunca han cargado aquí), así que se usan los atributos
+			// declarados en el <video> si existen; 1920x1080 es solo el último
+			// recurso para clips sin dimensiones anotadas.
+			const ancho = video.getAttribute('width') || video.videoWidth || 1920;
+			const alto = video.getAttribute('height') || video.videoHeight || 1080;
+			const enlace = crearEnlace(src, ancho, alto);
 			enlace.dataset.pswpType = 'video';
 			const poster = video.getAttribute('poster');
 			if (poster) enlace.dataset.pswpVideoPoster = poster;
 
-			video.removeAttribute('controls');
-			video.removeAttribute('autoplay');
-			video.muted = false;
-
+			// El lightbox construye un <video> nuevo en `contentLoad` (más abajo); esta
+			// miniatura nunca se reproduce, así que no hace falta tocar sus atributos.
 			video.replaceWith(enlace);
 			enlace.appendChild(video);
 		}

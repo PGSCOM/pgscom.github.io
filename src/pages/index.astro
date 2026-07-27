@@ -21,7 +21,7 @@ const proyectos = (await getCollection('proyectos')).map((e) => ({ id: e.id, ...
 const catById = Object.fromEntries(categorias.map((c) => [c.id, c]));
 // Color cuando un proyecto no tiene categoría (o esta no existe en el JSON)
 const COLOR_NEUTRO = '#9bb4d0';
-const colorDe = (catId) => catById[catId]?.color ?? COLOR_NEUTRO;
+const colorDe = (catId: string | undefined) => (catId ? catById[catId]?.color : undefined) ?? COLOR_NEUTRO;
 
 // Posición, profundidad (parallax) y rotación de cada card del hero.
 // Los proyectos con `destacado: N` en su frontmatter flotan aquí (ordenados
@@ -37,7 +37,7 @@ const heroLayout = [
 
 const featured = proyectos
 	.filter((p) => p.destacado != null && p.imagen)
-	.sort((a, b) => a.destacado - b.destacado)
+	.sort((a, b) => (a.destacado ?? 0) - (b.destacado ?? 0))
 	.slice(0, heroLayout.length)
 	.map((p) => ({ ...p, aptitudTitulo: catById[p.categorias?.[0]]?.titulo ?? '' }));
 
@@ -60,7 +60,7 @@ const cronologia = [...proyectos].sort((a, b) =>
 	claveOrden(b).localeCompare(claveOrden(a))
 );
 
-let añoAnterior = null;
+let añoAnterior: string | null = null;
 const rutaEntries = cronologia.map((p, i) => {
 	const año = esEnCurso(p.fechaFin) ? 'Ahora' : (String(p.fecha ?? '').slice(0, 4) || 'Otros');
 	const nuevoAño = año !== añoAnterior;
@@ -98,7 +98,15 @@ const rutaEntries = cronologia.map((p, i) => {
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <Layout>
-	<script is:inline>document.documentElement.style.overflow = 'hidden';</script>
+	<!-- Familias de display solo para la rotación tipográfica del logo (más
+	     abajo): Montserrat y Chakra Petch ya las carga Layout.astro en toda la web. -->
+	<link slot="head" rel="preload" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Bungee+Inline&family=Kranky&family=Limelight&family=Meow+Script&family=Modak&family=Monoton&family=Offside&family=Pacifico&family=Permanent+Marker&family=Rampart+One&family=Solway:wght@500&family=Tapestry&family=Tiny5&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<script is:inline>
+		document.documentElement.style.overflow = 'hidden';
+		// Red de seguridad: si el bundle de preloader.js no llega a ejecutarse
+		// (404, error de red, fallo de parseo), nada más quita este bloqueo.
+		setTimeout(() => { document.documentElement.style.overflow = ''; }, 9000);
+	</script>
 
 	<!-- Preloader: la P se construye trazándose (DrawSVG) y se rellena -->
 	<div id="preloader" aria-hidden="true">
@@ -151,7 +159,7 @@ const rutaEntries = cronologia.map((p, i) => {
 							<span class="hero-card-media">
 								{proyecto.video
 							? <video class="hero-card-video" data-src={proyecto.video} poster={postersVideo.get(proyecto.id)} muted loop playsinline preload="none" aria-hidden="true"></video>
-							: <Image src={proyecto.imagen} alt={proyecto.titulo} loading="eager" decoding="async" />}
+							: <Image src={proyecto.imagen!} alt={proyecto.titulo} loading="eager" decoding="async" />}
 								{proyecto.enlaceExterno && (
 									<span class="card-externo-icono" aria-hidden="true">
 										<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
@@ -187,7 +195,7 @@ const rutaEntries = cronologia.map((p, i) => {
 	<section class="parte2-wrapper">
 		<div class="parte2">
 			<div class="galaxiamask">
-				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia" style="opacity: 1;"></video>
+				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia" src="/vid/empezar_scroll.mp4" style="opacity: 1;"></video>
 				<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity: 0;"></video>
 			</div>
 			<img id="logoanimar" style="width: auto; height: 32.3%;" src="/assets/animlogo/logo.svg" alt="" />
@@ -375,21 +383,6 @@ const rutaEntries = cronologia.map((p, i) => {
 
 				<div class="contacto-grid">
 					<div class="contacto-info">
-						{contactoData.informacion.email && (
-							<!--div class="info-card">
-								<div class="info-icon">
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-										<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-										<polyline points="22,6 12,13 2,6"></polyline>
-									</svg>
-								</div>
-								<div class="info-content">
-									<h3>Email</h3>
-									<a href={`mailto:${contactoData.informacion.email}`}>{contactoData.informacion.email}</a>
-								</div>
-							</div-->
-						)}
-
 						<div class="social-links">
 							<h3>Otros links:</h3>
 							<div class="social-icons">
