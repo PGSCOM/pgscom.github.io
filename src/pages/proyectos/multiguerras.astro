@@ -137,7 +137,7 @@ const breadcrumbLd = {
 			<aside class="mg-sidebar">
 				<nav id="mg-indice" class="mg-indice" aria-label="Índice de capítulos">
 					{capitulosRenderizados.map((c) => (
-						<div class="mg-indice-grupo" style={`--cat-color:${(cats.find((x) => x.id === c.categoria) ?? cats[0]).color}`}>
+						<div class="mg-indice-grupo" style={`--cat-color:${(cats.find((x) => x.id === c.categoria) ?? cats[0]).color};--velo-indice:${c.opacidadindice ?? 1}`}>
 							<div class="mg-indice-fila">
 								{c.imagen && (
 									<!-- Fondo bajo demanda del índice: la misma `imagen` del capítulo,
@@ -180,11 +180,11 @@ const breadcrumbLd = {
 			</aside>
 
 			<main class="mg-capitulos">
-				{capitulosRenderizados.map(({ id, titulo, categoria, orden, resumen, imagen, Content }) => {
+				{capitulosRenderizados.map(({ id, titulo, categoria, orden, resumen, imagen, opacidadtarjeta, Content }) => {
 					const cat = cats.find((x) => x.id === categoria) ?? cats[0];
 					const num = String(orden).padStart(2, '0');
 					return (
-						<section id={id} class:list={['mg-capitulo', { 'con-fondo': Boolean(imagen) }]} data-categoria={categoria} style={`--cat-color:${cat.color}`}>
+						<section id={id} class:list={['mg-capitulo', { 'con-fondo': Boolean(imagen) }]} data-categoria={categoria} style={`--cat-color:${cat.color};--velo:${opacidadtarjeta ?? 1}`}>
 							<!-- Fondo bajo demanda: solo si el capítulo define `imagen` en su
 							     frontmatter la cabecera pasa a ser un banner con la foto de
 							     fondo y el número como marca de agua grande. Sin imagen, la

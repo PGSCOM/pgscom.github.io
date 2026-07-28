@@ -166,32 +166,24 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  -webkit-mask-image: linear-gradient(
+  /* `--velo-indice` (0–1, desde el frontmatter `opacidadindice`) escala cuánto
+     negro se come la foto: 1 = fundido de siempre, 0 = foto entera sin fundir. */
+  --k: var(--velo-indice, 1);
+  --fundido: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.08) 0%,
-    rgba(0, 0, 0, 0.1) 10%,
-    rgba(0, 0, 0, 0.14) 20%,
-    rgba(0, 0, 0, 0.2) 30%,
-    rgba(0, 0, 0, 0.3) 40%,
-    rgba(0, 0, 0, 0.44) 50%,
-    rgba(0, 0, 0, 0.6) 60%,
-    rgba(0, 0, 0, 0.76) 70%,
-    rgba(0, 0, 0, 0.9) 82%,
+    rgba(0, 0, 0, calc(1 - 0.92 * var(--k))) 0%,
+    rgba(0, 0, 0, calc(1 - 0.9 * var(--k))) 10%,
+    rgba(0, 0, 0, calc(1 - 0.86 * var(--k))) 20%,
+    rgba(0, 0, 0, calc(1 - 0.8 * var(--k))) 30%,
+    rgba(0, 0, 0, calc(1 - 0.7 * var(--k))) 40%,
+    rgba(0, 0, 0, calc(1 - 0.56 * var(--k))) 50%,
+    rgba(0, 0, 0, calc(1 - 0.4 * var(--k))) 60%,
+    rgba(0, 0, 0, calc(1 - 0.24 * var(--k))) 70%,
+    rgba(0, 0, 0, calc(1 - 0.1 * var(--k))) 82%,
     #000 100%
   );
-  mask-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.08) 0%,
-    rgba(0, 0, 0, 0.1) 10%,
-    rgba(0, 0, 0, 0.14) 20%,
-    rgba(0, 0, 0, 0.2) 30%,
-    rgba(0, 0, 0, 0.3) 40%,
-    rgba(0, 0, 0, 0.44) 50%,
-    rgba(0, 0, 0, 0.6) 60%,
-    rgba(0, 0, 0, 0.76) 70%,
-    rgba(0, 0, 0, 0.9) 82%,
-    #000 100%
-  );
+  -webkit-mask-image: var(--fundido);
+  mask-image: var(--fundido);
 }
 
 /* Enlace y chevrón por encima del fondo; sombra fina para que el
@@ -415,16 +407,18 @@
   object-fit: cover;
 }
 
-/* Velo oscuro para que el título siga leyéndose sobre la foto */
+/* Velo oscuro para que el título siga leyéndose sobre la foto.
+   `--velo` (0–1, desde el frontmatter `opacidadtarjeta`) escala su fuerza:
+   1 o ausente = aspecto de siempre, 0 = foto sin velo. */
 .mg-capitulo-fondo::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(5, 7, 13, 0.92) 0%,
-    rgba(5, 7, 13, 0.45) 55%,
-    rgba(5, 7, 13, 0.2) 100%
+    rgba(5, 7, 13, calc(0.92 * var(--velo, 1))) 0%,
+    rgba(5, 7, 13, calc(0.45 * var(--velo, 1))) 55%,
+    rgba(5, 7, 13, calc(0.2 * var(--velo, 1))) 100%
   );
 }
 

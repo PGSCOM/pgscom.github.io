@@ -73,6 +73,10 @@ const multiguerras = defineCollection({
 			// Texto corto: subtítulo del capítulo
 			resumen: z.string().optional(),
 			imagen: image().optional(),
+			// Multiplicadores 0–1 del negro que se superpone a `imagen`.
+			// 1 o ausente = aspecto por defecto; 0 = foto limpia.
+			opacidadtarjeta: z.number().min(0).max(1).optional(), // velo del banner
+			opacidadindice: z.number().min(0).max(1).optional(), // fundido de la fila del índice
 		}),
 });
 
