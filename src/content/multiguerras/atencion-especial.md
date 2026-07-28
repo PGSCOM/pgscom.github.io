@@ -1,0 +1,40 @@
+---
+titulo: Atención especial
+orden: 6
+categoria: vfx
+resumen: Escenas destacadas
+imagen: ../../assets/proyectos/multiguerras/bolacorriendo.webp
+opacidadtarjeta: 0.25
+opacidadindice: 0.6
+---
+
+Internamente yo categorizaba aquellas escenas que requerían cambiar el flujo de trabajo común de otras escenas las categorizaba como “Atención especial”. 
+
+Estás son las que más relevantes han sido para mí:
+
+## Escena corriendo
+
+Esta escena fue construida con nodos de shading en Blender.
+
+<video src="/proyvid/multiguerras/escenas/bolacorriendo.mp4" muted preload="none"></video>
+
+## Escena explosión muro
+Hay una escena donde un muro explota. Y en esa escena lo que hice fue simular la explosión y humos en Blender y luego renderizar esa escena en dos:
+
+- En Blender: se renderiza humo y partículas con los otros elementos como shadow catcher
+(TODO IMAGEN BLENDER)
+- En Unreal se importaron los movimientos de las piezas como un FBX animado (convertido y exportado desde Blender) y se renderizó la escena sin más cambios
+(TODO IMAGEN UNREAL)
+
+## Primer plano cárcel
+Se compone de dos tomas del jefe en las que se quita el fondo y se meten dentro de la jaula.
+
+<video src="/proyvid/multiguerras/escenas/carcelprimer.mp4" muted preload="none"></video>
+
+## Final del jefe volando
+
+Esta escena hubo que hacerla en Blender porque incluía un escaneo de Gaussian Splatting que se tenía que renderizar en Eevee. Así que se hizo esa escena renderizando primero una parte en cycles y luego se superponía la parte de Eevee para meter el Gaussian Splatting. 
+
+(TODO IMAGEN)
+
+(Aunque hubiera sido más fácil haber importado el modelo de Gaussian splatting a Unreal y trabajar desde ahí)
