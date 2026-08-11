@@ -95,9 +95,10 @@ function envolver(video) {
 // (ver [id].astro), así que el DOM de .pd-contenido ya está en su forma final.
 // A diferencia de reproductores anteriores, no hace falta un MutationObserver
 // para vídeos que "aparecen" al cambiar de pestaña: solo están ocultos con
-// [hidden]. Se excluyen los <video> de las galerías (los gestiona el lightbox).
+// [hidden]. Se excluyen: las galerías (las gestiona el lightbox) y los
+// comparadores [data-vcs] (vídeos nativos sincronizados, ver VideoCompareSlider).
 const videos = [...document.querySelectorAll('.pd-contenido video')]
-	.filter((v) => !v.closest('.pd-galeria'));
+	.filter((v) => !v.closest('.pd-galeria') && !v.closest('[data-vcs]'));
 
 if (videos.length > 0) {
 	// Cada import se tolera por separado: si uno falla, los demás pueden seguir

@@ -1,0 +1,140 @@
+---
+export interface Props {
+  beforeSrc: string;
+  afterSrc: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+  poster?: string;
+}
+
+const {
+  beforeSrc,
+  afterSrc,
+  beforeLabel,
+  afterLabel,
+  poster,
+} = Astro.props;
+---
+
+<!-- Comparador antes/después de vídeo. Los dos <video> son nativos (sin
+     Video.js) y ocupan el cuadro entero a tamaño fijo (width/height 100%,
+     object-fit: cover); el "before" se recorta con clip-path:
+     inset(0 (100-pos)% 0 0), así sólo se ve la franja izquierda y el vídeo
+     NUNCA se redimensiona al mover la barra (a diferencia de la técnica del
+     clipper por ancho con ancho inverso). La interacción (arrastre, teclado
+     y sincronización) vive en src/scripts/video-compare.js. Para que estos
+     <video> no los envuelva Video.js, proyecto-video.js ignora los [data-vcs]. -->
+<div class="vcs" data-vcs>
+  <video class="vcs__video vcs__video--after" src={afterSrc} poster={poster} muted autoplay loop playsinline preload="auto"></video>
+  <video class="vcs__video vcs__video--before" src={beforeSrc} poster={poster} muted autoplay loop playsinline preload="auto"></video>
+
+  {beforeLabel && <span class="vcs__label vcs__label--left">{beforeLabel}</span>}
+  {afterLabel && <span class="vcs__label vcs__label--right">{afterLabel}</span>}
+
+  <div
+    class="vcs__handle"
+    tabindex="0"
+    role="slider"
+    aria-label="Comparador antes y después"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="50"
+  >
+    <div class="vcs__line"></div>
+    <div class="vcs__circle">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 6 L3 12 L9 18" />
+        <path d="M15 6 L21 12 L15 18" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<style>
+  .vcs {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 12px;
+    isolation: isolate;
+    user-select: none;
+    touch-action: pan-y;
+    background: #000;
+    cursor: ew-resize;
+  }
+
+  /* Ambos vídeos a tamaño fijo (100% del contenedor), apilados con position:
+     absolute. El "before" queda encima (va después en el DOM) y JS lo recorta
+     por la derecha con clip-path según la posición de la barra. */
+  .vcs__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+  .vcs__video--before {
+    clip-path: inset(0 50% 0 0);
+  }
+
+  .vcs__label {
+    position: absolute;
+    top: 14px;
+    padding: 5px 11px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 999px;
+    pointer-events: none;
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(4px);
+    z-index: 5;
+  }
+  .vcs__label--left { left: 14px; }
+  .vcs__label--right { right: 14px; }
+
+  .vcs__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 6;
+    outline: none;
+  }
+  .vcs__handle:focus-visible .vcs__circle {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .vcs__line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: #fff;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
+  }
+
+  .vcs__circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #fff;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  }
+</style>

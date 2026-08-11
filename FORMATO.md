@@ -279,6 +279,50 @@ variantes cambiando el número en `split=N` y repitiendo el patrón `scale`/`-ma
 
 Los vídeos se muestran redondeados con sombra, igual que las imágenes.
 
+### Comparador antes/después (`VideoCompareSlider`)
+
+Para comparar dos vídeos del mismo plano con una barra que se arrastra (p. ej.
+original vs. editado), usa el componente `VideoCompareSlider`. A diferencia de
+los vídeos del cuerpo, **no** pasa por Video.js: sus dos `<video>` son nativos,
+van a tamaño fijo (100% del contenedor) y el de la izquierda se recorta con
+`clip-path`, así que ningún vídeo se redimensiona al mover la barra.
+
+El archivo tiene que ser **`.mdx`** (un `.md` no puede importar componentes). El
+import va arriba del todo, y el componente se escribe donde vaya la comparación:
+
+```mdx
+import VideoCompareSlider from '../../components/VideoCompareSlider.astro';
+
+<VideoCompareSlider
+  beforeSrc="/videos/mi-clip/antes.mp4"
+  afterSrc="/videos/mi-clip/despues.mp4"
+  beforeLabel="Original"
+  afterLabel="Editado"
+/>
+```
+
+| Prop | Obligatorio | Descripción |
+|------|-------------|-------------|
+| `beforeSrc` | ✅ | URL del vídeo que se ve a la izquierda de la barra |
+| `afterSrc` | ✅ | URL del vídeo que se ve a la derecha de la barra |
+| `beforeLabel` | — | Etiqueta superior izquierda; si se omite, no se dibuja ninguna |
+| `afterLabel` | — | Etiqueta superior derecha; si se omite, no se dibuja ninguna |
+| `poster` | — | Miniatura para ambos vídeos antes de que carguen (opcional: arrancan en autoplay mudo) |
+
+Comportamiento:
+
+- **Sincronizados y en bucle**: ambos arrancan juntos en `currentTime = 0`, van
+  con `loop` y un temporizador corrige la deriva si se desfasan más de 0,4 s.
+- **La barra solo se mueve al clicar y arrastrar** (no en hover). También
+  responde al teclado si el asa está enfocada: `←`/`→` (2 en 2, `Shift` = 10),
+  `Inicio`/`Fin` para ir a los extremos.
+- Los archivos van en `public/` y se referencian con ruta absoluta, igual que
+  los vídeos normales de esta sección. Es el autor quien debe garantizar que
+  ambos clips tengan la misma duración y arranquen en el mismo instante: el
+  componente sincroniza la reproducción, no los contenidos.
+- Se usa dentro de los capítulos de Multiguerras (`src/content/multiguerras/*.mdx`),
+  donde el import es exactamente el del ejemplo.
+
 ---
 
 ## 10. Desplegable `<details>`
