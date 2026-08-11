@@ -37,7 +37,7 @@ Los assets que requerían simulación de humos (excepto el portal en su mayoría
 <video src="/proyvid/multiguerras/escenas/bolaportal.mp4" muted preload="none"></video>
 </div>
 
-También hay escenas con simulaciones más grandes que estas, como la [Escena de la explosión del muro de Berlín](TODO ENLACE A SECCIÓN)
+También hay escenas con simulaciones más grandes que estas, como la [escena de la explosión del muro de Berlín](#escena-explosión-muro)
 
 
 ## Render
