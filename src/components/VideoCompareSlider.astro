@@ -5,6 +5,8 @@ export interface Props {
   beforeLabel?: string;
   afterLabel?: string;
   poster?: string;
+  /** "auto" sólo para el comparador visible al cargar; el resto, "metadata". */
+  preload?: 'none' | 'metadata' | 'auto';
 }
 
 const {
@@ -13,20 +15,25 @@ const {
   beforeLabel,
   afterLabel,
   poster,
+  preload = 'metadata',
 } = Astro.props;
 ---
 
 <!-- Comparador antes/después de vídeo. Los dos <video> son nativos (sin
      Video.js) y ocupan el cuadro entero a tamaño fijo (width/height 100%,
-     object-fit: cover); el "before" se recorta con clip-path:
-     inset(0 (100-pos)% 0 0), así sólo se ve la franja izquierda y el vídeo
-     NUNCA se redimensiona al mover la barra (a diferencia de la técnica del
+     object-fit: cover); el "before" se recorta con clip-path según la
+     variable --vcs-pos, así sólo se ve la franja izquierda y el vídeo NUNCA
+     se redimensiona al mover la barra (a diferencia de la técnica del
      clipper por ancho con ancho inverso). La interacción (arrastre, teclado
      y sincronización) vive en src/scripts/video-compare.js. Para que estos
-     <video> no los envuelva Video.js, proyecto-video.js ignora los [data-vcs]. -->
+     <video> no los envuelva Video.js, proyecto-video.js ignora los [data-vcs].
+
+     Ojo: no llevan `autoplay`. La reproducción la arranca el script cuando el
+     comparador entra en pantalla, para no decodificar dos vídeos a la vez en
+     bloques que el usuario todavía no ha visto. Sin JS sólo se ve el poster. -->
 <div class="vcs" data-vcs>
-  <video class="vcs__video vcs__video--after" src={afterSrc} poster={poster} muted autoplay loop playsinline preload="auto"></video>
-  <video class="vcs__video vcs__video--before" src={beforeSrc} poster={poster} muted autoplay loop playsinline preload="auto"></video>
+  <video class="vcs__video vcs__video--after" src={afterSrc} poster={poster} muted loop playsinline preload={preload}></video>
+  <video class="vcs__video vcs__video--before" src={beforeSrc} poster={poster} muted loop playsinline preload={preload}></video>
 
   {beforeLabel && <span class="vcs__label vcs__label--left">{beforeLabel}</span>}
   {afterLabel && <span class="vcs__label vcs__label--right">{afterLabel}</span>}
@@ -42,7 +49,7 @@ const {
   >
     <div class="vcs__line"></div>
     <div class="vcs__circle">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M9 6 L3 12 L9 18" />
         <path d="M15 6 L21 12 L15 18" />
       </svg>
@@ -52,12 +59,17 @@ const {
 
 <style>
   .vcs {
+    /* Única fuente de verdad de la posición: la escribe el script una vez por
+       frame y de aquí cuelgan el recorte del vídeo y la barra. */
+    --vcs-pos: 50%;
+
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: 12px;
     isolation: isolate;
+    contain: layout paint;
     user-select: none;
     touch-action: pan-y;
     background: #000;
@@ -65,8 +77,8 @@ const {
   }
 
   /* Ambos vídeos a tamaño fijo (100% del contenedor), apilados con position:
-     absolute. El "before" queda encima (va después en el DOM) y JS lo recorta
-     por la derecha con clip-path según la posición de la barra. */
+     absolute. El "before" queda encima (va después en el DOM) y se recorta
+     por la derecha según --vcs-pos. */
   .vcs__video {
     position: absolute;
     inset: 0;
@@ -77,7 +89,7 @@ const {
     pointer-events: none;
   }
   .vcs__video--before {
-    clip-path: inset(0 50% 0 0);
+    clip-path: inset(0 calc(100% - var(--vcs-pos)) 0 0);
   }
 
   .vcs__label {
@@ -97,15 +109,23 @@ const {
   .vcs__label--left { left: 14px; }
   .vcs__label--right { right: 14px; }
 
+  /* El handle ocupa todo el ancho y se desplaza con transform (sin layout):
+     translateX en % va referido a su propio ancho, que aquí es el del
+     contenedor, así que --vcs-pos se puede usar tal cual. Sus hijos se
+     colocan sobre el borde izquierdo del handle, que es la posición real. */
   .vcs__handle {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    width: 100%;
+    transform: translateX(var(--vcs-pos));
     pointer-events: none;
     z-index: 6;
     outline: none;
+  }
+  .vcs--dragging .vcs__handle {
+    will-change: transform;
   }
   .vcs__handle:focus-visible .vcs__circle {
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
@@ -115,7 +135,7 @@ const {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 50%;
+    left: 0;
     width: 2px;
     transform: translateX(-50%);
     background: #fff;
@@ -125,7 +145,7 @@ const {
   .vcs__circle {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 0;
     width: 42px;
     height: 42px;
     border-radius: 50%;
