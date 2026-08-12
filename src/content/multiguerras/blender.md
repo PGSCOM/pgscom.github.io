@@ -40,30 +40,15 @@ Los assets que requerían simulación de humos (excepto el portal en su mayoría
 También hay escenas con simulaciones más grandes que estas, como la [escena de la explosión del muro de Berlín](#escena-explosión-muro)
 
 
-## Render
+## Render Farm (De Flamenco a SheepIt)
+Al principio, para renderizar todas las simulaciones de Blender configuré un servidor de [Flamenco](https://flamenco.blender.org/) en una RPI4.
 
-## Flamenco
-
-### ¿Qué es?
-
-### Instalación
+![Setup Flamenco en la RPI4](../../assets/proyectos/multiguerras/flamenco.jpg)
 
 ### Compilación
+Tuve que compilar el servidor de Flamenco en la RPI4 (ARM) lidiando con varias dependencias del makefile. Consulté a la comunidad de Blender y me ayudaron a ello.
 
-### Raspberry Pi
+### Por qué no se utilizó
+Flamenco funciona de tal manera que cada Worker (PC renderizador) tiene que tener acceso con VPN a la RPI4 y acceso a un servidor de samba.
 
-### Workers
-
-### Funcionamiento
-
-Poner esquema.
-
-## SheepIt
-
-¿Por qué cambiar?
-
-Ventajas.
-
-Economía de puntos.
-
-Google Colab.
+Todo esto lo conseguí, incluso hice un script para ejecutar el worker de Flamenco, pero el problema fue que no capte suficientes personas para renderizar. Así que al final opté por [Sheepit Renderfarm](https://www.sheepit-renderfarm.com/), en la que hace tiempo rendericé para otra gente y ahora tengo puntos para que otros rendericen por mí y los que me quieren apoyar pueden renderizar con las Render Keys.
