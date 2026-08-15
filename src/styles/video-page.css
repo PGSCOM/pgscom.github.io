@@ -1,0 +1,79 @@
+/* ============================================
+   PÁGINA DE VISIONADO DE VÍDEO (Video.js)
+   ============================================ */
+
+@import '@videojs/html/video/minimal-skin.css';
+
+:root {
+  --pd-azul: #93c5fd;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #05070d;
+}
+
+/* El reproductor vive en un contenedor .pd-contenido para que
+   proyecto-video.js lo envuelva igual que en las fichas; aquí se anulan
+   el ancho, el tapete y la regla de las fichas (proyecto-detalle.css):
+   ocupa toda la ventana, sin márgenes. */
+.pd-contenido {
+  max-width: none;
+  padding: 0;
+  border: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* El vídeo rellena todo el contenedor: sin márgenes, sin esquinas y con
+   object-fit: cover para que llene la pantalla entera recortando los
+   extremos en lugar de dejar franjas negras (el skin lo hereda vía
+   --media-object-fit). */
+.pd-contenido .pd-video {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  color: var(--pd-azul);
+  --media-border-radius: 0;
+  --media-object-fit: cover;
+}
+
+.pd-contenido .pd-video video-minimal-skin {
+  width: 100%;
+  height: 100%;
+}
+
+/* Icono de play central: el skin minimal no trae uno de fábrica.
+   Solo visible en pausa (clase controlada desde proyecto-video.js).
+   Copiado del mismo bloque de proyecto-detalle.css. */
+.pd-contenido .pd-video.is-paused::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(5, 7, 13, 0.55);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+.pd-contenido .pd-video.is-paused::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  margin: auto;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 14px 0 14px 22px;
+  border-color: transparent transparent transparent var(--pd-azul);
+  transform: translateX(3px); /* centra ópticamente el triángulo en el círculo */
+  pointer-events: none;
+}

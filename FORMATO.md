@@ -22,6 +22,7 @@ tecnologias: [Python, Blender]       # Etiquetas de tech mostradas en la ficha
 link: https://...                    # Botón "Visitar proyecto" en el hero
 txtboton: "Ver la demo"              # Texto de ese botón (defecto: "Visitar proyecto")
 enlaceExterno: https://...           # La card enlaza fuera en vez de a la ficha interna
+urlvideopage: https://cdn/master.m3u8 # Genera /proyectos/<id>/video (página solo con el vídeo, Video.js)
 ocultarFecha: true                   # Oculta el rango de fechas en la card
 premio: "Mejor cortometraje"         # Badge dorado en el hero (🏆)
 sub:                                 # Sub-items anidados en la línea de tiempo

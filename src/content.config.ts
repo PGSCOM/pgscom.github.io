@@ -41,6 +41,10 @@ const proyectos = defineCollection({
 			// Si está presente, la tarjeta abre esta URL en pestaña nueva
 			// en lugar de la ficha interna /proyectos/<id>
 			enlaceExterno: z.string().optional(),
+			// Si está presente, genera /proyectos/<id>/video: página solo con el
+			// vídeo del proyecto en el reproductor Video.js (ver
+			// src/pages/proyectos/[id]/video.astro). `link` suele apuntar ahí.
+			urlvideopage: z.string().optional(),
 			// Oculta el badge de fecha en la tarjeta del timeline
 			ocultarFecha: z.boolean().optional(),
 			sub: z

@@ -1,0 +1,44 @@
+---
+// Página de visionado del vídeo de un proyecto: solo el reproductor Video.js
+// a pantalla, sin nav ni animaciones. Se genera una ruta /proyectos/<id>/video
+// por cada proyecto cuyo frontmatter defina `urlvideopage`
+// (ver src/content.config.ts). `link` de la ficha suele apuntar a esta página.
+import '../../../styles/video-page.css';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const entradas = await getCollection('proyectos');
+	return entradas
+		.filter((e) => e.data.urlvideopage)
+		.map((entrada) => ({
+			params: { id: entrada.id },
+			props: { proyecto: { id: entrada.id, ...entrada.data } },
+		}));
+}
+
+const { proyecto } = Astro.props;
+const urlVideopage = proyecto.urlvideopage;
+// Póster por convención del CDN de medios: junto a cada master.m3u8 hay una
+// miniatura.png en el mismo directorio. (Si algún día un proyecto usa otro
+// nombre de póster, se añade un campo `postervideopage` al schema.)
+const poster = urlVideopage.endsWith('.m3u8')
+	? urlVideopage.replace(/[^/]+$/, 'miniatura.png')
+	: undefined;
+---
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
+	<title>{proyecto.titulo.trim()} · Vídeo — PGSCOM</title>
+</head>
+<body>
+	<div class="pd-contenido">
+		<!-- proyecto-video.js envuelve este <video> en el reproductor Video.js
+		     (player > minimal-skin > hlsjs-video) y le copia poster/preload. -->
+		<video src={urlVideopage} poster={poster} preload="none" playsinline autoplay></video>
+	</div>
+	<script src="../../../scripts/proyecto-video.js"></script>
+</body>
+</html>

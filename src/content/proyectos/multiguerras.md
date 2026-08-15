@@ -10,7 +10,8 @@ portada: ../../assets/proyectos/multiguerras.png
 descripcion: Desarrollo de un pipeline completo de producción virtual para un cortometraje de ciencia ficción, combinando programación, servidores, render distribuido, Unreal Engine 5, Blender y DaVinci Resolve.
 tecnologias: [Blender, OBS Studio, App Inventor, Firebase, Web]
 txtboton: Ver cortometraje
-link: https://premiosmacula.es
+link: /proyectos/multiguerras/video
+urlvideopage: https://pgscom-media-web.pages.dev/periodomultiguerras/master.m3u8
 ---
 
 <!--
