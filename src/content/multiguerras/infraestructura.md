@@ -28,6 +28,8 @@ Esta carcasa fue diseñada en FreeCAD y impresa en 3D.
 ![Carcasa RPI4](../../assets/proyectos/multiguerras/rpi0.png)
 ![Carcasa RPI4](../../assets/proyectos/multiguerras/rpi1.png)
 
+<video src="/proyvid/multiguerras/rpi4carcasa.mp4" muted preload="none"></video>
+
 </div>
 
 ### Inicio remoto
