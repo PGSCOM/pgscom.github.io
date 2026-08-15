@@ -1,9 +1,9 @@
 ---
-titulo: Audio
+titulo: Sonido
 orden: 9
 categoria: video
 resumen: Banda sonora original y diseño sonoro del cortometraje.
-imagen: ../../assets/proyectos/experimentos.png
+imagen: ../../assets/proyectos/multiguerras/sonido.png
 ---
 
 ## Banda sonora

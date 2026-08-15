@@ -429,6 +429,12 @@ body:has(.pd-page) {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
+.pd-contenido iframe {
+  border-radius: 12px;
+  margin: 16px 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
 /* Galería de imágenes con lightbox — ver proyecto-galeria.js */
 .pd-contenido .pd-galeria {
   display: grid;
