@@ -20,6 +20,7 @@ trailer: /videos/mi-trailer.mp4      # Vídeo en el hero (reemplaza a portada)
 descripcion: "Frase breve"           # Subtítulo en el hero y og:description
 tecnologias: [Python, Blender]       # Etiquetas de tech mostradas en la ficha
 link: https://...                    # Botón "Visitar proyecto" en el hero
+txtboton: "Ver la demo"              # Texto de ese botón (defecto: "Visitar proyecto")
 enlaceExterno: https://...           # La card enlaza fuera en vez de a la ficha interna
 ocultarFecha: true                   # Oculta el rango de fechas en la card
 premio: "Mejor cortometraje"         # Badge dorado en el hero (🏆)

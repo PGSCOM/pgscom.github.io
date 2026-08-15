@@ -35,6 +35,8 @@ const proyectos = defineCollection({
 			descripcionexterior: z.union([z.boolean(), z.string()]).optional(),
 			tecnologias: z.array(z.string()).optional(),
 			link: z.string().optional(),
+			// Texto del botón de enlace externo del hero; sin este campo, "Visitar proyecto"
+			txtboton: z.string().optional(),
 			premio: z.string().optional(),
 			// Si está presente, la tarjeta abre esta URL en pestaña nueva
 			// en lugar de la ficha interna /proyectos/<id>
