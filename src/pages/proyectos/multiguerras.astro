@@ -141,9 +141,6 @@ const breadcrumbLd = {
 						<div class="mg-indice-grupo" style={`--cat-color:${(cats.find((x) => x.id === c.categoria) ?? cats[0]).color};--velo-indice:${c.opacidadindice ?? 1}`}>
 							<div class="mg-indice-fila">
 								{c.imagen && (
-									<!-- Fondo bajo demanda del índice: la misma `imagen` del capítulo,
-									     fundida hacia la izquierda para que número y título sigan
-									     leyéndose sobre el fondo oscuro de la página. -->
 									<div class="mg-indice-fondo" aria-hidden="true">
 										<Image class="mg-indice-fondo-img" src={c.imagen} alt="" loading="lazy" widths={[240, 480]} sizes="240px" />
 									</div>
@@ -161,10 +158,6 @@ const breadcrumbLd = {
 								)}
 							</div>
 							{c.subtitulos.length > 0 && (
-								<!-- Los slugs de los H2 se repiten entre capítulos ("Organización"
-								     existe en varios), así que el clic se resuelve en JS buscando
-								     data-heading DENTRO de la sección data-capitulo, nunca con el
-								     id global (el href queda como respaldo sin JS). -->
 								<div class="mg-indice-sub">
 									<ul class="mg-indice-sublista">
 										{c.subtitulos.map((h) => (
