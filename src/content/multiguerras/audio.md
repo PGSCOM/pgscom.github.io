@@ -6,7 +6,7 @@ resumen: Banda sonora original y diseño sonoro del cortometraje.
 imagen: ../../assets/proyectos/multiguerras/sonido.png
 ---
 
-Después de montar todo el cortometraje, tocó editar el sonido. Casi todo el sonido fue hecho con Ableton Live donde importé una previsualización de cada grupo de escenas del cortometraje.
+Después de montar todo el cortometraje, tocó editar el sonido. Casi todo el sonido fue hecho con [Ableton Live](https://www.ableton.com/es/live/) donde importé una previsualización de cada grupo de escenas del cortometraje.
 
 ## Banda sonora y efectos de sonido
 En cuanto a la Banda Sonora Original, se hizo con diversos VSTs como Kontakt y demás. Ahí yo apenas participé, ya que la música fue compuesta y tocada mayoritariamente por Encarnación Arce. Yo contribuí con la mezcla y ayuda técnica.
