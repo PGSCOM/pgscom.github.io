@@ -16,7 +16,7 @@ Se publicó cada canción en Spotify y demás plataformas, se puede escuchar tam
 
 ![Setup Banda Sonora](../../assets/proyectos/multiguerras/setupbandasonora.png)
 ![alt text](../../assets/proyectos/multiguerras/musica1.png)
-<video src="/proyvid/multiguerras/bandasonora.mp4" controls preload="none"></video>
+<video src="/proyvid/multiguerras/bandasonora.mp4" preload="none"></video>
 
 </div>
 
