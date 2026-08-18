@@ -26,7 +26,7 @@ El portal primero se hizo en Blender con simulación de humos y los modifier “
 ![Portal en Blender](../../assets/proyectos/multiguerras/portalBlender.png)
 
 Esta versión fue traspasada a Unreal que se puede ver
-[aquí](TODO SECCIÓN PORTAL EN UNREAL).
+[aquí](#portales).
 
 ## Simulaciones
 

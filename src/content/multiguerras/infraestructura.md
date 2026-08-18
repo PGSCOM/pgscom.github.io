@@ -42,21 +42,6 @@ Como la RPI4 se inicia nada más enchufarla a la corriente, le metí un [enchufe
 - [Gitea](https://about.gitea.com/) para gestión de repositorios
 - Servidor de archivos SAMBA
 
-## Git en Gitea
-
-<div class="pd-galeria" style="grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));">
-
-![Captura pantalla principal Gitea](../../assets/proyectos/multiguerras/gitea.png)
-![Captura organización instancia Gitea](../../assets/proyectos/multiguerras/gitea1.png)
-![Repos organización instancia Gitea](../../assets/proyectos/multiguerras/gitea2.png)
-![Repo principal Unreal](../../assets/proyectos/multiguerras/gitea3.png)
-![Ramas Repo principal Unreal](../../assets/proyectos/multiguerras/gitea4.png)
-![Historial Repo principal Unreal](../../assets/proyectos/multiguerras/gitea5.png)
-
-</div>
-
-<iframe src="/graphgiteamultiguerras.html" width="100%" height="450" frameborder="0"></iframe>
-
 ## VPNs
 
 ### [Hamachi](https://vpn.net/)

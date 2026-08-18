@@ -8,6 +8,7 @@ imagen: ../../assets/proyectos/multiguerras/prodvirt.jpg
 
 import { Image } from 'astro:assets';
 import renderImg from '../../assets/proyectos/multiguerras/render.jpg';
+import VideoCompareSlider from '../../components/VideoCompareSlider.astro';
 
 El proyecto empezó a partir de la idea de hacer un cortometraje de producción virtual siguiendo casi la misma idea del [set de la serie Mandalorian](https://youtu.be/Ufp8weYYDE8). Pero en vez de con pantallas, con un chroma, y con menos presupuesto.
 
@@ -23,17 +24,37 @@ Como se puede ver en la foto, la cámara de abajo estaría dedicada a grabar a l
 
 <video src="/proyvid/multiguerras/testtracking.mp4" controls preload="none"></video>
 
-Ese pequeño giro fue porque aún no había pensado en cómo sincronizar las cámaras. Después se me ocurrió que podría sincronizarlo con timecode. Pero no había ninguna aplicación que grabara video con timecode en iOS. Dejé de pensar en ello y dos meses después salió [Blackmagic Camera](https://www.blackmagicdesign.com/es/products/blackmagiccamera), que para mi sorpresa sí que era posible insertar timecode.
+Ese pequeño giro fue porque aún no había pensado en cómo sincronizar las cámaras.
+
+Después se me ocurrió que podría sincronizarlo con timecode. Pero no había ninguna aplicación que grabara video con timecode en iOS. Dejé de pensar en ello y dos meses después salió [Blackmagic Camera](https://www.blackmagicdesign.com/es/products/blackmagiccamera), que para mi sorpresa sí que era posible insertar timecode.
+
+### Problemas de tracking
+La razón principal de los problemas del tracking fue que la conexión entre el iPhone y el ordenador con Unreal no era estable, lo que hacía que en medio de la toma se perdieran keyframes de la cámara.
+
+Como se detecto en postproducción, tuve que investigar cómo recuperar la toma, y encontré un modelo de Facebook llamado [CoTracker3](https://cotracker3.github.io/) que trackea puntos mediante IA.
+
+[Modifiqué la demo oficial](https://huggingface.co/spaces/PGSCOM/cotracker/commits/main) para que admitiera mejor calidad y la ejecuté en mi ordenador, y luego, importé el video a Blender y trackee los puntos que generó el video de la demo.
+
+> Esto no fue la manera más profesional de hacerlo, se podría haber sustituido el motor de tracking de Blender directamente, pero no tenía mucho tiempo para las dos tomas que lo necesitaban.
+
+<VideoCompareSlider beforeSrc="/proyvid/multiguerras/escenas/cotracker/después.mp4" afterSrc="/proyvid/multiguerras/escenas/cotracker/antes.mp4"/>
 
 ## Grabación
-En cuanto a la producción virtual, se tenía un ordenador portatil con Unreal Engine 5 conectado a una red Wifi el iPhone con Unreal VCam. Y en ese ordenador se grababa en un Sequencer de Unreal el movimiento de la cámara virtual para posteriormente revisar si en algún punto la cámara virtual se desconectó y también añadir animaciones adicionales a la escena.
+En cuanto a la producción virtual, se tenía un ordenador portátil con Unreal Engine 5 conectado a una red Wifi el iPhone con Unreal VCam. Y en ese ordenador se grababa en un Sequencer de Unreal el movimiento de la cámara virtual para posteriormente revisar si en algún punto la cámara virtual se desconectó y también añadir animaciones adicionales a la escena.
 ![Setup de grabación](../../assets/proyectos/multiguerras/prodvirt.jpg)
 ![Captura del sequencer de Unreal Engine donde se ven todos los keyframes de la cámara](../../assets/proyectos/multiguerras/Sequencer.png)
 
 ### Emparejamiento de tomas reales y virtuales
 Las tomas se emparejan a partir de los metadatos escena y toma. (La ID de la escena que se graba en Unreal se empareja con la escena que tiene la misma escena en el iPhone) y se sincronizan a partir del timecode en el cual para Unreal Engine se tuvo que hacer un [script](https://github.com/multiguerras/TimecodeUnreal) que generara un CSV con todos los metadatos para importarlos a DaVinci Resolve para montarlos.
 
-
+| File Name                         | Scene | Take | Start TC    |
+|-----------------------------------|-------|------|-------------|
+| Scene_G1_02.[1416805-1418152].exr | G1    | 02   | 13:07:06:25 |
+| Scene_H1_01.[1184728-1187235].exr | H1    | 01   | 10:58:10:28 |
+| Scene_H2_02.[1198679-1199668].exr | H2    | 02   | 11:05:55:29 |
+| Scene_H3_01.[1205949-1207010].exr | H3    | 01   | 11:09:58:09 |
+| Scene_H4_01.[1211621-1213227].exr | H4    | 01   | 11:13:07:11 |
+| Scene_H5_01.[1221223-1226111].exr | H5    | 01   | 11:18:27:13 |
 
 ## Movie Render Queue
 
@@ -42,13 +63,13 @@ Todos estas escenas de sequencer, para renderizarlas, se añaden varias a una Re
 <Image src={renderImg} alt="Proceso Render de Unreal Engine" width={400} />
 
 ### Render Farm de Unreal
-Al principio pensé en ejecutar una renderfarm de Unreal Engine para renderizar el proyecto, pero al final no fue necesario porque conseguí un ordenador mejor y pudo renderizar todo el proyecto en 20 horas. Modifiqué un [programa exsistente](https://github.com/leixingyu/unrealRenderFarm) para que pudiera funcionar en Unreal Engine 5. Este es [el fork](https://github.com/multiguerras/unrealRenderFarmMultiguerras).
+Al principio pensé en ejecutar una renderfarm de Unreal Engine para renderizar el proyecto, pero al final no fue necesario porque conseguí un ordenador mejor y pudo renderizar todo el proyecto en 20 horas. Modifiqué un [programa existente](https://github.com/leixingyu/unrealRenderFarm) para que pudiera funcionar en Unreal Engine 5. Este es [el fork](https://github.com/multiguerras/unrealRenderFarmMultiguerras).
 
 ## Galería primer rodaje
 
 En el primer rodaje se usó un ordenador potente y una red con un router externo para que el iPhone se conectara directamente al PC.
 
-Al ser un sistema tan dificil de montar y desmontar se decidió simplificarlo para tener un set más sencillo con el inconveniente de que la grabación de movimiento sea más inestable.
+Al ser un sistema tan difícil de montar y desmontar se decidió simplificarlo para tener un set más sencillo con el inconveniente de que la grabación de movimiento sea más inestable.
 
 <div class="pd-galeria">
 
