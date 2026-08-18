@@ -258,10 +258,22 @@ body:has(.pd-page) {
 /* ── Contenido HTML ──────────────────────────────────── */
 .pd-contenido {
   color: rgba(255, 255, 255, 0.85);
+  font-size: 1.0625rem;
   line-height: 1.7;
   padding-top: 32px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   max-width: 800px;
+}
+
+/* Medida de lectura: el texto corrido corta más estrecho que la columna
+   (~74 caracteres a 17px); imágenes, galerías, tablas, vídeos e iframes
+   siguen a los 800px de arriba y sangran más ancho, como en cualquier
+   maquetación editorial. :has() excluye los <p> que solo envuelven una
+   imagen de markdown; sin soporte de :has() ese compuesto se descarta y el
+   resto de :is() sigue aplicando, nunca desaparece nada. px y no em: en em
+   cada nivel de encabezado resolvería contra su propio tamaño. */
+.pd-contenido :is(h2, h3, h4, p:not(:has(img, video, iframe)), ul, ol, blockquote) {
+  max-width: 620px;
 }
 
 .pd-contenido h2 {
@@ -345,7 +357,7 @@ body:has(.pd-page) {
 }
 
 .pd-contenido h4 {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: rgba(200, 220, 255, 1);
   margin: 26px 0 12px;
@@ -433,6 +445,8 @@ body:has(.pd-page) {
    dato. display:block + overflow-x hace que la propia tabla sea su
    contenedor con scroll en móvil, sin wrapper extra. */
 .pd-contenido table {
+  display: block;
+  width: fit-content;
   overflow-x: auto;
   max-width: 100%;
   margin: 20px 0;
@@ -462,6 +476,7 @@ body:has(.pd-page) {
 }
 
 .pd-contenido iframe {
+  max-width: 100%;
   border-radius: 12px;
   margin: 16px 0;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);

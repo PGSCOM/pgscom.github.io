@@ -82,95 +82,6 @@
   }
 }
 
-/* ── Título de sección (línea temporal) ───────────────────────────── */
-.mg-seccion-titulo {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 28px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--mg-linea);
-}
-
-/* ── Línea temporal: la aporta el componente compartido ProyectoHero
-   (mismo .pd-hero que el resto de fichas, ver proyecto-detalle.css) justo
-   encima. ─────────────────────────────────────────────────────────── */
-.mg-timeline-wrap {
-  max-width: var(--mg-max);
-  margin: 0 auto 64px;
-  padding: 96px var(--mg-pad) 0;
-}
-
-.mg-timeline {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-width: 640px;
-}
-
-.mg-timeline-item {
-  position: relative;
-  padding: 0 0 28px 28px;
-}
-
-.mg-timeline-item:last-child {
-  padding-bottom: 0;
-}
-
-/* Línea conectora, de punto a punto */
-.mg-timeline-item::before {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  bottom: -28px;
-  width: 1px;
-  background: var(--mg-linea);
-}
-
-.mg-timeline-item:last-child::before {
-  display: none;
-}
-
-/* Punto de la línea temporal */
-.mg-timeline-item::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 4px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--pd-bg);
-  border: 2px solid var(--pd-azul);
-}
-
-.mg-timeline-fecha {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--pd-azul);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.mg-timeline-titulo {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 4px;
-}
-
-.mg-timeline-desc {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
 /* ── Cuerpo: índice lateral + capítulos ───────────────────────────
    Grid de dos columnas en escritorio; la barra lateral es sticky y
    con scroll propio si el listado de 17 capítulos no cabe. ──────── */
@@ -288,10 +199,10 @@
 }
 
 .mg-indice-num {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.45);
   flex-shrink: 0;
 }
 
@@ -550,20 +461,32 @@
     padding: 32px 20px 10vh;
   }
 
+  /* La barra lateral pasa a ser una franja horizontal fija, con el mismo
+     material que las píldoras flotantes (.pd-back / .pd-tema): así hay
+     navegación a mano durante toda la lectura de los 10 capítulos, no
+     solo en la primera pantalla. top:74px la deja justo debajo de esas
+     píldoras (fixed a top:24px, ~42px de alto), sin pisarlas. */
   .mg-sidebar {
-    position: static;
+    position: sticky;
+    top: 74px;
+    z-index: 20;
     max-height: none;
     overflow: visible;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
+    padding: 8px 4px;
+    background: rgba(8, 10, 18, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
   }
 
-  /* La barra lateral pasa a ser una franja horizontal con scroll;
-     los acordeones no caben en ese formato, así que se ocultan */
+  /* Los acordeones no caben en el formato de franja, así que se ocultan */
   .mg-indice {
     flex-direction: row;
     gap: 4px;
     overflow-x: auto;
-    padding-bottom: 10px;
+    padding-bottom: 4px;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -581,7 +504,8 @@
     white-space: nowrap;
     border-left: none;
     border-bottom: 2px solid transparent;
-    padding: 8px 12px;
+    padding: 11px 14px;
+    font-size: 0.9rem;
   }
 
   .mg-indice-item.act {
@@ -591,30 +515,49 @@
   .mg-capitulos {
     gap: 48px;
   }
+
+  /* Que un salto de ancla (clic en el índice) no deje el título de destino
+     tapado bajo la franja fija. 160px con margen real: el panel mide 64px
+     en oscuro y 72px en claro (más padding, ver override de tema más abajo),
+     con top:74px su borde inferior llega a 138px/146px — 160px deja hueco
+     de sobra en los dos temas, no el mínimo justo. */
+  .mg-capitulo,
+  .mg-capitulo :is(h2, h3)[id] {
+    scroll-margin-top: 160px;
+  }
 }
 
-@media (max-width: 768px) {
-  .mg-hero {
-    padding: 84px 20px 40px;
-  }
-
-  .mg-titulo {
-    font-size: 1.9rem;
-  }
-
-  .mg-timeline-wrap {
-    margin: 48px auto;
-    padding: 0 20px;
-  }
-
+@media (max-width: 600px) {
   .mg-capitulo-titulo {
     font-size: 1.3rem;
   }
-}
 
-@media (max-width: 480px) {
-  .mg-titulo {
-    font-size: 1.6rem;
+  /* Los `minmax(%, 1fr)` en línea de varios capítulos no colapsan nunca a
+     una columna (el % se resuelve contra el contenedor, no el viewport):
+     sin esto quedan 3 columnas de ~100px con capturas ilegibles. El
+     !important es la única forma de ganar a un atributo `style`, y cubre
+     también los capítulos que se escriban mañana. */
+  .mg-page .pd-contenido .pd-galeria {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+  }
+
+  /* Mismo problema con los vídeos a los que un capítulo les fija un ancho
+     en línea (proyecto-video.js copia ese `style` al contenedor .pd-video). */
+  .mg-page .pd-contenido .pd-video[style] {
+    width: 100% !important;
+  }
+
+  /* El banner con foto de fondo del capítulo se queda con el mismo alto
+     fijo que en escritorio y se come ~250px antes de la primera palabra
+     en 8 de los 10 capítulos. Y el número-marca de agua no puede encoger:
+     su clamp() nunca baja del suelo (9vw no lo alcanza bajo 800px). */
+  .mg-capitulo.con-fondo .mg-capitulo-cabecera {
+    min-height: 150px;
+    padding: 18px;
+  }
+
+  .mg-capitulo-fondo-num {
+    font-size: 3.5rem;
   }
 }
 
@@ -636,32 +579,14 @@
   --mg-linea-suave: rgba(16, 24, 43, 0.08);
 }
 
-.mg-page[data-theme="claro"] .mg-seccion-titulo {
-  color: #10182b;
-}
-
-.mg-page[data-theme="claro"] .mg-timeline-fecha {
-  color: #1c4fc2;
-}
-
-.mg-page[data-theme="claro"] .mg-timeline-titulo {
-  color: #10182b;
-}
-
-.mg-page[data-theme="claro"] .mg-timeline-desc {
-  color: rgba(16, 24, 43, 0.75);
-}
-
-/* El relleno del punto ya sale de var(--pd-bg), que sigue al tema. */
-.mg-page[data-theme="claro"] .mg-timeline-item::after {
-  border-color: #1c4fc2;
-}
-
-/* El primer bloque del cuerpo se aparta para dejar sitio al fundido de la
-   cabecera (la tira vive en .pd-page, ver proyecto-detalle.css). Aquí con
-   menos margen que en el resto de fichas: la timeline es un bloque corto y
-   no necesita todo el largo de --pd-fundido para despegarse del degradado. */
-.mg-page[data-theme="claro"] .mg-timeline-wrap {
+/* El fundido cabecera→cuerpo (--pd-fundido, ver proyecto-detalle.css) mide
+   240px; en el resto de fichas lo despeja .pd-wrapper. Aquí el cuerpo es
+   .mg-body, no .pd-wrapper, así que necesita su propio despeje — si no, el
+   índice y el capítulo 1 se pintan sobre el degradado casi negro, tinta
+   oscura sobre negro, ilegible. El margin: 0 quita el 6.5% de arriba (cae
+   dentro del propio fundido, redundante con el padding). */
+.mg-page[data-theme="claro"] .mg-body {
+  margin-top: 0;
   padding-top: var(--pd-fundido);
 }
 

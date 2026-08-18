@@ -41,6 +41,23 @@ if (indice && secciones.length) {
 		subenlaces.forEach((a) => {
 			if (a.dataset.capitulo !== slug) a.classList.remove('act');
 		});
+		centrarActivo(slug);
+	}
+
+	// En la franja horizontal de móvil, el capítulo activo se centra solo:
+	// sin esto no hay forma de saber en qué capítulo va el índice a partir del
+	// tercero. `scrollWidth > clientWidth` ES la detección de móvil (en
+	// escritorio el índice es una columna que no desborda en horizontal, así
+	// que aquí no hace nada); getBoundingClientRect y no offsetLeft porque
+	// .mg-indice-fila es position:relative y offsetLeft no mediría contra
+	// #mg-indice. scrollBy en el propio índice, no scrollIntoView: ese
+	// desplazaría también el documento y pelearía con el scroll del usuario.
+	function centrarActivo(slug) {
+		const activo = enlaces.get(slug);
+		if (!activo || indice.scrollWidth <= indice.clientWidth) return;
+		const r = activo.getBoundingClientRect();
+		const ri = indice.getBoundingClientRect();
+		indice.scrollBy({ left: r.left - ri.left - (ri.width - r.width) / 2, behavior: 'smooth' });
 	}
 
 	function marcarSubActivo(enlace) {

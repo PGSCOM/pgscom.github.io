@@ -15,7 +15,7 @@ Se hizo con el sistema de físicas Niagara Fluids importando la mesh que montaba
 <video controls src="/proyvid/multiguerras/portalunreal.mp4"></video>
 
 
-<div class="pd-galería" style="grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));">
+<div class="pd-galeria" style="grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));">
 
 ![Captura humo Niagara](../../assets/proyectos/multiguerras/humo1.png)
 ![Captura Blueprint Humo](../../assets/proyectos/multiguerras/humo2.png)
@@ -58,7 +58,7 @@ En algunas ocasiones pensé en hacer dobles digitales de los actores, al final n
 La cámara virtual se tenía que encajar con la cámara real. Para ello tenía unos presets para la cámara de Unreal con los parámetros de cada cámara de mi iPhone.
 
 ## Renderizado
-Después se renderizaban las escenas de Unreal como secuencias EXR y se importaban a Resolve junto a los metadatos generados (Todo esto explicado en [su sección de Producción Virtual](emparejamiento-de-tomas-reales-y-virtuales)).
+Después se renderizaban las escenas de Unreal como secuencias EXR y se importaban a Resolve junto a los metadatos generados (Todo esto explicado en [su sección de Producción Virtual](#emparejamiento-de-tomas-reales-y-virtuales)).
 
 ## Control de versiones
 

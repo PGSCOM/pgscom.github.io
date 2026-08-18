@@ -12,4 +12,4 @@ Me ha gustado más el proceso de creación que el resultado final, y he descubie
 
 ## Directo completo detrás de las cámaras
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Qo3fxtazZl0?amp;start=365" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="100%" style="aspect-ratio:16/9;height:auto;" src="https://www.youtube.com/embed/Qo3fxtazZl0?amp;start=365" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
