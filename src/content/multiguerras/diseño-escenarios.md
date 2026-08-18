@@ -13,7 +13,7 @@ Antes de la grabación, se modelaron los escenarios en Blender y luego se import
 
 </div>
 
-## Diseñados en Blender:
+## Diseñados en Blender
 
 <div class="pd-galeria">
 
@@ -24,7 +24,7 @@ Antes de la grabación, se modelaron los escenarios en Blender y luego se import
 
 </div>
 
-## Diseñados en Unreal:
+## Diseñados en Unreal
 
 Algunos escenarios fueron mayoritariamente montados en Unreal usando sus herramientas como modificadores de terreno.
 
