@@ -19,7 +19,7 @@ Antes de la grabación, se modelaron los escenarios en Blender y luego se import
 
 ![Escena Biblioteca](../../assets/proyectos/multiguerras/escenabiblioteca.png)
 ![Escena sala entrenamiento](../../assets/proyectos/multiguerras/escenaentrenamiento.png)
-![Escena de carcel](../../assets/proyectos/multiguerras/gifcarcel.gif)
+![Escena de cárcel](../../assets/proyectos/multiguerras/gifcarcel.gif)
 ![Escena central](../../assets/proyectos/multiguerras/escenacentral.png)
 
 </div>

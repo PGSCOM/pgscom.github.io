@@ -16,7 +16,7 @@ Se usó la claqueta virtual de la cámara para determinar la escena y toma que s
 Y también, gracias al metadato del objetivo se podía saber qué cámara había que configurar en Unreal.
 
 ### Composición
-Con los metadatos extraídos desde Unreal a CSV (proceso explicado [aquí](#emparejamiento-de-tomas-reales-y-virtuales)) se metían las dos tomas con el mismo metadato de escena en una secuencia multicamara y luego se copia a una timeline donde se aplica la pantalla verde, corrección de color y VFX que necesite esa escena.
+Con los metadatos extraídos desde Unreal a CSV (proceso explicado [aquí](#emparejamiento-de-tomas-reales-y-virtuales)) se metían las dos tomas con el mismo metadato de escena en una secuencia multicámara y luego se copia a una timeline donde se aplica la pantalla verde, corrección de color y VFX que necesite esa escena.
 
 ![Captura Workflow Composición](../../assets/proyectos/multiguerras/resolvecomposicion.png)
 

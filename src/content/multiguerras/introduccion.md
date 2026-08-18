@@ -39,4 +39,4 @@ El notion lo usé para organizar cada toma que se iba a grabar. Cada una tenía 
 ### FPS
 Los FPS del proyecto son 30, en vez de 24. Creo que esa decisión fue un error.
 ### SDR vs HDR
-Por el momento Blender no soportaba facilmente espacios de color, y por eso se decidió que el proyecto fuera SDR.
+Por el momento Blender no soportaba fácilmente espacios de color, y por eso se decidió que el proyecto fuera SDR.
