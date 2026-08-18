@@ -2,6 +2,7 @@
 titulo: Unreal
 orden: 9
 categoria: vfx
+imagen: ../../assets/proyectos/multiguerras/unreal.png
 ---
 
 Como Unreal Engine fue el núcleo de la [producción virtual](#produccion-virtual) del cortometraje, se tuvo que desarrollar muchas cosas a parte de ello.
