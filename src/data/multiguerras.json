@@ -7,7 +7,7 @@
     { "fecha": "2024", "titulo": "Render Farm", "descripcion": "Workers de render coordinados desde la Raspberry Pi." },
     { "fecha": "2024", "titulo": "Producción virtual", "descripcion": "Unreal Engine, cámara virtual y tracking." },
     { "fecha": "2024", "titulo": "Rodaje", "descripcion": "Grabación con el pipeline ya en marcha." },
-    { "fecha": "2025", "titulo": "Edición", "descripcion": "Montaje colaborativo en DaVinci Resolve." },
+    { "fecha": "2025", "titulo": "Edición", "descripcion": "Montaje + VFX colaborativo en DaVinci Resolve." },
     { "fecha": "2025", "titulo": "Estreno", "descripcion": "Estreno del cortometraje." }
   ]
 }
