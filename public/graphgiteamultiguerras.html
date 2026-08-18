@@ -17,6 +17,22 @@
 	<link rel="alternate icon" href="http://rpi4.local:3000/assets/img/favicon.png" type="image/png">
 	<link rel="stylesheet" href="./graphgiteamultiguerras/index.css">
 	<link rel="stylesheet" href="./graphgiteamultiguerras/theme-arc-green.css">
+	<style>
+		@media (max-width: 750px) {
+			#git-graph-container {
+				min-width: 750px;
+				overflow-x: auto;
+			}
+			#git-graph-container li {
+				height: auto;
+			}
+			#git-graph-container li .message {
+				flex: 1 1 auto;
+				min-width: 0;
+				white-space: normal !important;
+			}
+		}
+	</style>
 </head>
 <body>
 	<div class="ui container" style="margin-top: 25px;">
