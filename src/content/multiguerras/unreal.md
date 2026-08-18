@@ -40,7 +40,7 @@ Este sistema se usó en las escenas del Muro de Berlín y las de la central.
 ### Multitud estática
 Para las últimas escenas del Muro de Berlín, se usó el sistema anterior como base pero modificando la animación y fue insertado el blueprint en un PCG Graph con ayuda de [otro tutorial](https://youtu.be/CVBJN4fTzUo).
 
-<video src="https://pgscom-media-web.pages.dev/crowdmuroberlin/master.m3u8" poster="https://pgscom-media-web.pages.dev/crowdmuroberlin/miniatura.png" controls preload="none" style="width: 40%;"></video>
+<video src="https://pgscom-media-web.pages.dev/crowdmuroberlin/playlist.m3u8" poster="https://pgscom-media-web.pages.dev/crowdmuroberlin/miniatura.png" controls preload="none" style="width: 40%;"></video>
 
 Gracias a esto hice que la multitud se generara proceduralmente en un area concreta con rotación y posición variada y también con animaciones diferentes.
 
@@ -48,7 +48,7 @@ Gracias a esto hice que la multitud se generara proceduralmente en un area concr
 
 En algunas ocasiones pensé en hacer dobles digitales de los actores, al final no hizo falta, pero sí que se hicieron los MetaHuman mediante los datos de profundidad de LiveLink Face.
 
-<video src="https://pgscom-media-web.pages.dev/metahumanfreiheit/master.m3u8" poster="https://pgscom-media-web.pages.dev/metahumanfreiheit/miniatura.png" controls preload="none"></video>
+<video src="https://pgscom-media-web.pages.dev/metahumanfreiheit/playlist.m3u8" poster="https://pgscom-media-web.pages.dev/metahumanfreiheit/miniatura.png" controls preload="none"></video>
 
 
 ## Cámara virtual y tracking
