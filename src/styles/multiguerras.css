@@ -116,7 +116,7 @@
   grid-template-columns: 240px 1fr;
   gap: 56px;
   max-width: var(--mg-max);
-  margin: 0 auto;
+  margin: 6.5% auto;
   padding: 40px var(--mg-pad) 14vh;
   border-top: 1px solid var(--mg-linea);
   align-items: start;
