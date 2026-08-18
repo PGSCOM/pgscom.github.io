@@ -372,6 +372,51 @@
   scroll-margin-top: 40px;
 }
 
+/* ── Tablas ────────────────────────────────────────────────
+   La única del micrositio vive dentro de un .mg-capitulo, así que tiene a
+   mano --cat-color (inline desde la plantilla) y se tiñe con la categoría
+   del capítulo en vez de inventar paleta. */
+.mg-capitulo .pd-contenido table {
+  border: 1px solid color-mix(in srgb, var(--cat-color) 35%, transparent);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.mg-capitulo .pd-contenido thead th {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--cat-color) 26%, transparent), color-mix(in srgb, var(--cat-color) 10%, transparent));
+  border-bottom: 2px solid color-mix(in srgb, var(--cat-color) 55%, rgba(255, 255, 255, 0.08));
+  color: #fff;
+}
+
+/* Esquinas de la cabecera: el degradado asomaría cuadrado dentro del
+   borde redondeado; la base usa border-spacing 0 para que estas valgan. */
+.mg-capitulo .pd-contenido thead th:first-child { border-top-left-radius: 11px; }
+.mg-capitulo .pd-contenido thead th:last-child { border-top-right-radius: 11px; }
+
+/* El nombre de archivo es el dato principal: más presente que el resto. */
+.mg-capitulo .pd-contenido tbody td:first-child { color: rgba(255, 255, 255, 0.95); }
+
+/* La columna de escena va en el color del capítulo. */
+.mg-capitulo .pd-contenido tbody td:nth-child(2) {
+  color: color-mix(in srgb, var(--cat-color) 75%, #fff);
+  font-weight: 600;
+}
+
+/* El timecode a la derecha, como un reloj: es un dato, no una columna de
+   texto. */
+.mg-capitulo .pd-contenido td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.mg-capitulo .pd-contenido tbody td {
+  transition: background 0.2s ease;
+}
+
+.mg-capitulo .pd-contenido tbody tr:hover td {
+  background: color-mix(in srgb, var(--cat-color) 8%, transparent);
+}
+
 /* ── Cabecera con imagen de fondo (bajo demanda) ──────────────────
    Solo cuando el capítulo define `imagen` en su frontmatter: la
    cabecera pasa a ser un banner con la foto de fondo oscurecida y el
@@ -589,4 +634,28 @@
    se puede redefinir la variable: se corrige al usarla.) */
 .mg-page[data-theme="claro"] .mg-capitulo-num {
   color: color-mix(in srgb, var(--cat-color) 65%, var(--pd-claro-ink));
+}
+
+/* Tabla en claro: mismos colores de categoría hundidos hacia la tinta
+   (crudos se quedan en 2,6-2,7:1 sobre página pálida). */
+.mg-page[data-theme="claro"] .mg-capitulo .pd-contenido table {
+  background: rgba(16, 24, 43, 0.03);
+}
+
+.mg-page[data-theme="claro"] .mg-capitulo .pd-contenido thead th {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--cat-color) 22%, transparent), color-mix(in srgb, var(--cat-color) 8%, transparent));
+  border-bottom-color: color-mix(in srgb, var(--cat-color) 45%, var(--pd-claro-ink));
+  color: var(--pd-claro-ink);
+}
+
+.mg-page[data-theme="claro"] .mg-capitulo .pd-contenido tbody td:first-child {
+  color: var(--pd-claro-ink);
+}
+
+.mg-page[data-theme="claro"] .mg-capitulo .pd-contenido tbody td:nth-child(2) {
+  color: color-mix(in srgb, var(--cat-color) 65%, var(--pd-claro-ink));
+}
+
+.mg-page[data-theme="claro"] .mg-capitulo .pd-contenido tbody tr:hover td {
+  background: color-mix(in srgb, var(--cat-color) 10%, transparent);
 }

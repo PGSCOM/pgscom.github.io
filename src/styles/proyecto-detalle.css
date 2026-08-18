@@ -429,6 +429,38 @@ body:has(.pd-page) {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
+/* Tablas (metadatos de tomas, timecodes): mono porque todo su contenido es
+   dato. display:block + overflow-x hace que la propia tabla sea su
+   contenedor con scroll en móvil, sin wrapper extra. */
+.pd-contenido table {
+  overflow-x: auto;
+  max-width: 100%;
+  margin: 20px 0;
+  font-family: monospace;
+  font-size: 0.85rem;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.pd-contenido th,
+.pd-contenido td {
+  padding: 10px 16px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pd-contenido thead th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 600;
+  color: #fff;
+}
+
+.pd-contenido tbody tr:last-child td {
+  border-bottom: none;
+}
+
 .pd-contenido iframe {
   border-radius: 12px;
   margin: 16px 0;
@@ -835,6 +867,17 @@ body:has(.pd-page) {
 .pd-page[data-theme="claro"] .pd-contenido code {
   background: rgba(16, 24, 43, 0.06);
   color: #5a3fa0;
+}
+
+.pd-page[data-theme="claro"] .pd-contenido th,
+.pd-page[data-theme="claro"] .pd-contenido td {
+  border-bottom-color: rgba(16, 24, 43, 0.1);
+  color: rgba(16, 24, 43, 0.92);
+}
+
+.pd-page[data-theme="claro"] .pd-contenido thead th {
+  background: rgba(16, 24, 43, 0.05);
+  color: var(--pd-claro-ink);
 }
 
 .pd-page[data-theme="claro"] .pd-contenido details {
