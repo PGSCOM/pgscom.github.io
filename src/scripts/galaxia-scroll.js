@@ -48,7 +48,6 @@ function init() {
 	let activeVideo = videoA;
 	let bufferVideo = videoB;
 	let activeReady = false; // metadatos del vídeo de scrub disponibles
-	let nextReady   = null;  // promesa de la precarga del búfer
 
 	// Scrub: como mucho un seek por frame, y nunca antes de tener metadatos
 	let pendingScrubT = null;
@@ -162,10 +161,23 @@ function init() {
 	// el seek que hubiera quedado pendiente de scrolls anteriores. El vídeo de
 	// intro no hace falta hasta pasado el zoom, así que no compite por ancho
 	// de banda con el de scrub: se precarga después.
-	setVideoSource(activeVideo, VIDEO_SCRUB, 0, false).then(() => {
+	//
+	// `nextReady` se asigna aquí de forma síncrona (en vez de dentro del then)
+	// para que siempre sea una promesa real: si la página entra ya pasada la
+	// zona de zoom (deep-link a #proyectos-mapa), el primer refresh del
+	// ScrollTrigger llama a startAfterZoom() antes de que esto resuelva, y un
+	// `await null` dejaría el búfer sin vídeo asignado (fondo negro).
+	let nextReady = setVideoSource(activeVideo, VIDEO_SCRUB, 0, false).then(() => {
 		activeReady = true;
 		if (pendingScrubT != null && !afterZoomStarted) scheduleScrub(pendingScrubT);
-		nextReady = prepareNext(VIDEO_INTRO);
+		if (!afterZoomStarted) return prepareNext(VIDEO_INTRO);
+		// Entrada directa pasada la zona de zoom: el vídeo de intro ya no
+		// encaja con el scroll, se salta directo al bucle. El scrub se deja en
+		// su último frame para que lo que se vea mientras carga sea el final
+		// del zoom y no el frame 0.
+		try { activeVideo.currentTime = SCRUB_DURATION_S; } catch {}
+		playlistIndex = 1; // el bucle 0 va al búfer aquí; el siguiente es el 1
+		return prepareNext(PLAYLIST[0]);
 	});
 
 	function onProgress(progress) {

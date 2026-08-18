@@ -125,13 +125,17 @@ const rutaEntries = cronologia.map((p, i) => {
 
 	</div>
 
-	<!-- ?sincarga o volver atrás: se quita el preloader antes del primer paint -->
+	<!-- ?sincarga, volver atrás, o entrada directa por ancla (p. ej.
+	     #proyectos-mapa): se quita el preloader antes del primer paint. Sin
+	     esto, el scrollTo(0,0) y el overflow:hidden del preloader pelean con
+	     el salto nativo al fragmento y la posición final queda indeterminista. -->
 	<script is:inline>
 		(function () {
 			var nav = performance.getEntriesByType('navigation')[0];
 			var sinCarga = new URLSearchParams(location.search).has('sincarga');
 			var esVuelta = nav && nav.type === 'back_forward';
-			if (!sinCarga && !esVuelta) return;
+			var conAncla = location.hash.length > 1;
+			if (!sinCarga && !esVuelta && !conAncla) return;
 			var pre = document.getElementById('preloader');
 			if (pre) pre.remove();
 			document.documentElement.style.overflow = '';
