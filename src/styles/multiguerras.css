@@ -19,6 +19,69 @@
   --mg-linea-suave: rgba(255, 255, 255, 0.08);
 }
 
+/* El título ocupa dos líneas aquí (más alto que en el resto de fichas), así
+   que el bloque queda flush contra el borde del hero (.pd-hero-overlay,
+   justify-content: flex-end) con el título asomando por encima de la parte
+   oscura del degradado. Se aprieta el ritmo vertical bajo el título para que
+   todo el bloque baje hacia esa sombra, sin tocar el resto de fichas. */
+.mg-page .pd-titulo {
+  margin-bottom: 10px;
+}
+
+.mg-page .pd-meta {
+  margin-bottom: 10px;
+}
+
+.mg-page .pd-tagline {
+  margin-bottom: 14px;
+}
+
+.mg-page .pd-scroll-hint {
+  margin-top: 14px;
+}
+
+/* ── Título del hero: mismo tratamiento que cine.pgscom.es ────────── */
+.mg-page .pd-titulo {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-shadow: none;
+  -webkit-text-stroke: 1px #fff;
+  text-stroke: 1px #fff;
+}
+
+/* Una palabra por bloque (white-space: nowrap): así la línea solo puede
+   partirse entre palabras. Sin esto, cada letra (inline-block suelto) es un
+   punto de corte válido y el navegador parte por mitad de palabra. */
+.mg-page .pd-titulo .mg-titulo-palabra {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Cada letra con su propio degradado (las spans las crea el script inline
+   de multiguerras.astro). 1.125em = la proporción 4.5rem/4rem del original. */
+.mg-page .pd-titulo .mg-titulo-palabra > span {
+  display: inline-block;
+  font-size: 1.125em;
+  background: linear-gradient(145deg, hsl(262, 40%, 50%) 30%, #96b6ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.25px #fff;
+  text-stroke: 0.25px #fff;
+}
+
+/* Fallback del original para navegadores sin background-clip: text */
+@supports not (-webkit-background-clip: text) {
+  .mg-page .pd-titulo .mg-titulo-palabra > span {
+    -webkit-text-fill-color: currentColor;
+    color: #3f1f76;
+    -webkit-text-stroke: 2px #fff;
+    text-stroke: 2px #fff;
+  }
+}
+
 /* ── Título de sección (línea temporal) ───────────────────────────── */
 .mg-seccion-titulo {
   font-family: 'Chakra Petch', sans-serif;

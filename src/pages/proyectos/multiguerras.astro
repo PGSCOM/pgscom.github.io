@@ -92,6 +92,8 @@ const breadcrumbLd = {
 >
 	<script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 	<script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+	<!-- Open Sans 800: solo la usa el título degradado de este micrositio (ver multiguerras.css) -->
+	<link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" />
 
 	<main class="pd-page mg-page">
 		<script is:inline>
@@ -127,6 +129,29 @@ const breadcrumbLd = {
 			trailer={proyecto.trailer}
 			logoFallback={aptitud.logo}
 		/>
+
+		<script is:inline>
+			// El degradado del título va letra a letra (una <span> por carácter),
+			// igual que en cine.pgscom.es (ver multiguerras.css). Si esto no llega
+			// a ejecutarse el título sigue siendo legible: queda blanco con su
+			// contorno, nunca invisible.
+			// Las letras se agrupan por palabra (.mg-titulo-palabra, white-space:
+			// nowrap en el CSS) para que la línea solo pueda partirse entre
+			// palabras, nunca a mitad de una: cada letra es un inline-block y sin
+			// agrupar el navegador corta por cualquier letra.
+			{
+				const h1 = document.currentScript.closest('.mg-page').querySelector('.pd-titulo');
+				if (h1 && !h1.querySelector('span')) {
+					h1.innerHTML = h1.textContent
+						.split(' ')
+						.map((palabra) => {
+							const letras = palabra.split('').map((c) => `<span>${c}</span>`).join('');
+							return `<span class="mg-titulo-palabra">${letras}</span>`;
+						})
+						.join(' ');
+				}
+			}
+		</script>
 
 		<!--section class="mg-timeline-wrap"-->
 			<!-- Rellenado en runtime por multiguerras-timeline.js a partir de

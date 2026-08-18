@@ -1,5 +1,5 @@
 ---
-titulo: El Periodo de Multiguerras
+titulo: El Periodo De Multiguerras
 fecha: 2023-05
 fechaFin: 2025
 categorias: [programacion, video, vfx]
