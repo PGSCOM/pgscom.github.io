@@ -20,6 +20,15 @@
 //    (IntersectionObserver); fuera de vista se pausan.
 //  - La corrección de deriva va sobre `timeupdate` (~4 Hz y sólo mientras hay
 //    reproducción) en vez de un setInterval que corre siempre.
+//  - preload="none" de fábrica y descarga bajo demanda con dos observers
+//    (prefetch con margen amplio, play sin margen): con hasta 3 comparadores
+//    por página, cargar los 6 vídeos desde el principio era la causa
+//    principal de la lentitud. Ver VideoCompareSlider.astro.
+//
+// ponytail: explosion/antes.mp4 y despues.mp4 pesan 1.6 y 3.5 MB a
+// 3414x1920/11 Mbps para una caja que en móvil mide ~360 px de ancho: sin
+// recomprimir, el primer play en datos móviles puede tardar. El poster tapa
+// la espera. Subir cuando moleste: recodificar esos dos a 1920x1080.
 
 /** Limpiezas pendientes, ejecutadas al navegar con View Transitions. */
 const teardowns = new Set();
@@ -110,7 +119,25 @@ function setupSlider(root) {
 	handle.addEventListener('keydown', onKeyDown);
 	disposers.push(() => handle.removeEventListener('keydown', onKeyDown));
 
+	// --- Precarga: empieza a bufferizar bastante antes de entrar en pantalla ---
+	// Con preload="none" de fábrica (ver VideoCompareSlider.astro) nada
+	// descarga hasta que lo pedimos aquí explícitamente.
+	let prefetched = false;
+	const prefetch = () => {
+		if (prefetched) return;
+		prefetched = true;
+		for (const v of videos) {
+			v.preload = 'auto';
+			v.load();
+		}
+	};
+
 	// --- Reproducción: sólo cuando el comparador está en pantalla ---
+	// `play()` ya fuerza la descarga si hace falta (los dos son muted +
+	// playsinline, así que iOS lo permite sin gesto del usuario), así que no
+	// hay que esperar a ningún evento de carga antes de llamarlo: esperar a
+	// `loadeddata` con preload="metadata" podía no llegar nunca en iOS y dejar
+	// el comparador parado para siempre.
 	const playAll = () => {
 		for (const v of videos) {
 			const p = v.play();
@@ -119,49 +146,22 @@ function setupSlider(root) {
 	};
 	const pauseAll = () => { for (const v of videos) v.pause(); };
 
-	// Resuelve también con `error` para que un vídeo roto no deje al otro
-	// esperando para siempre.
-	const decoded = (v) =>
-		v.readyState >= 2
-			? Promise.resolve()
-			: new Promise((resolve) => {
-					const done = () => {
-						v.removeEventListener('loadeddata', done);
-						v.removeEventListener('error', done);
-						resolve();
-					};
-					v.addEventListener('loadeddata', done);
-					v.addEventListener('error', done);
-				});
-
-	let visible = false;
-	let pending = true; // queda por hacer el arranque sincronizado inicial
-	const start = () => {
-		if (!pending) { playAll(); return; }
-		pending = false;
-		Promise.all(videos.map(decoded)).then(() => {
-			if (!visible) return;
-			for (const v of videos) v.currentTime = 0;
-			playAll();
-		});
-	};
-
 	if ('IntersectionObserver' in window) {
-		const io = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					visible = entry.isIntersecting;
-					if (visible) start();
-					else pauseAll();
-				}
-			},
-			{ rootMargin: '200px 0px' },
+		const ioPrefetch = new IntersectionObserver(
+			(entries) => { if (entries.some((e) => e.isIntersecting)) prefetch(); },
+			{ rootMargin: '800px 0px' },
 		);
-		io.observe(root);
-		disposers.push(() => io.disconnect());
+		ioPrefetch.observe(root);
+		disposers.push(() => ioPrefetch.disconnect());
+
+		const ioPlay = new IntersectionObserver(
+			(entries) => { for (const entry of entries) (entry.isIntersecting ? playAll : pauseAll)(); },
+		);
+		ioPlay.observe(root);
+		disposers.push(() => ioPlay.disconnect());
 	} else {
-		visible = true;
-		start();
+		prefetch();
+		playAll();
 	}
 
 	// --- Corrección de deriva ---

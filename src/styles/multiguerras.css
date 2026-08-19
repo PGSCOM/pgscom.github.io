@@ -19,9 +19,8 @@
   --mg-linea-suave: rgba(255, 255, 255, 0.08);
 }
 
-/* El título ocupa dos líneas aquí (más alto que en el resto de fichas), así
-   que el bloque queda flush contra el borde del hero (.pd-hero-overlay,
-   justify-content: flex-end) con el título asomando por encima de la parte
+/* El bloque queda flush contra el borde del hero (.pd-hero-inner,
+   align-items: flex-end) con el título asomando por encima de la parte
    oscura del degradado. Se aprieta el ritmo vertical bajo el título para que
    todo el bloque baje hacia esa sombra, sin tocar el resto de fichas. */
 .mg-page .pd-titulo {
@@ -36,19 +35,28 @@
   margin-bottom: 14px;
 }
 
-.mg-page .pd-scroll-hint {
-  margin-top: 14px;
+/* La portada (multiguerras.png) es una escena 16:9 con el portal — el
+   elemento más reconocible — en el tercio derecho. En una cabecera muy
+   alta y estrecha (móvil, hero a pantalla completa) el object-fit: cover
+   recorta por los lados y un object-position centrado se lo comía. */
+.mg-page .pd-hero-media {
+  object-position: 68% center;
 }
 
 /* ── Título del hero: mismo tratamiento que cine.pgscom.es ────────── */
 .mg-page .pd-titulo {
   font-family: 'Open Sans', sans-serif;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.15;
   letter-spacing: normal;
   text-shadow: none;
   -webkit-text-stroke: 1px #fff;
   text-stroke: 1px #fff;
+  /* Las letras se renderizan a 1.125em (ver más abajo): el ancho real en
+     pantalla es un 12.5% mayor que el que calcularía un `15ch` medido
+     contra el tamaño del propio h1. Se compensa aquí para que el título
+     siga cabiendo en dos líneas como en el resto de fichas. */
+  max-width: 13ch;
 }
 
 /* Una palabra por bloque (white-space: nowrap): así la línea solo puede

@@ -1,8 +1,10 @@
 import { esHLS, montarFuente } from './hls-media.js';
 
 // Atributos del <video> original que se traspasan al reproductor. `controls`
-// no se copia: el skin de Video.js aporta los suyos. Ver FORMATO.md §9.
-const ATRIBUTOS_A_COPIAR = ['poster', 'autoplay', 'muted', 'loop', 'playsinline', 'preload'];
+// no se copia: el skin de Video.js aporta los suyos. `playsinline` tampoco:
+// se fuerza siempre en envolver(), no depende de que el capítulo lo declare.
+// Ver FORMATO.md §9.
+const ATRIBUTOS_A_COPIAR = ['poster', 'autoplay', 'muted', 'loop', 'preload'];
 
 // Ajuste de hls.js para los vídeos del cuerpo. El buffer de lectura por
 // delante por defecto de hls.js son 30 s: si el CDN entrega los segmentos con
@@ -20,7 +22,16 @@ const CONFIG_HLS = {
 // media.paused), lo que se suma a nuestro icono de play central. Vive en el
 // shadow root sin CSS var ni ::part(), así que solo se puede atenuar inyectando
 // un <style> ahí dentro.
-function atenuarDegradadoControles(skin) {
+//
+// Además, el <media-gesture> táctil de fábrica del skin solo alterna la
+// visibilidad de los controles (pointer="touch" → action="toggleControls"); el
+// play/pausa con un toque es action="togglePaused" y en el skin solo está
+// ligado a pointer="mouse". En iPhone, tocar el vídeo no hacía nada. Se
+// corrige el atributo tras el render (es una propiedad reactiva, así que el
+// gesto se vuelve a registrar solo). Los toques sobre la propia barra de
+// controles se siguen ignorando: el coordinador de gestos ya descarta los
+// objetivos interactivos.
+function ajustarSkin(skin) {
 	if (!skin.shadowRoot) return;
 	const estilo = document.createElement('style');
 	estilo.textContent = `
@@ -29,6 +40,9 @@ function atenuarDegradadoControles(skin) {
 		}
 	`;
 	skin.shadowRoot.appendChild(estilo);
+
+	const gestoTactil = skin.shadowRoot.querySelector('media-gesture[type="tap"][pointer="touch"]');
+	if (gestoTactil) gestoTactil.setAttribute('action', 'togglePaused');
 }
 
 /** URL del vídeo desde el atributo `src` o el primer `<source>` hijo. */
@@ -55,6 +69,10 @@ function envolver(video) {
 		const media = document.createElement(esHls ? 'hlsjs-video' : 'video');
 		media.setAttribute('slot', 'media');
 		media.setAttribute('src', src);
+		// Siempre en línea, nunca por atributo del <video> original: sin esto
+		// Safari iOS se lleva la reproducción a su pantalla completa nativa en
+		// cuanto arranca, incluso si el capítulo no puso playsinline.
+		media.setAttribute('playsinline', '');
 		if (esHls) media.config = CONFIG_HLS;
 		if (!video.hasAttribute('poster')) {
 			const poster = derivarPoster(src);
@@ -66,7 +84,7 @@ function envolver(video) {
 
 		const skin = document.createElement('video-minimal-skin');
 		skin.appendChild(media);
-		atenuarDegradadoControles(skin);
+		ajustarSkin(skin);
 
 		const player = document.createElement('video-player');
 		player.appendChild(skin);

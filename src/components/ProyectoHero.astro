@@ -5,6 +5,12 @@
 // genérica (src/pages/proyectos/[id].astro) como los micrositios a medida
 // (p.ej. src/pages/proyectos/multiguerras.astro) para que un cambio de
 // diseño aquí se refleje en todas las fichas a la vez.
+//
+// Composición: el bloque de texto se ancla abajo a la izquierda, sobre el
+// mismo margen que usa .pd-wrapper para el cuerpo (ver .pd-hero-inner en
+// proyecto-detalle.css) — no es la pila centrada por defecto. La pista de
+// scroll pasa a la esquina opuesta, abajo a la derecha, como segunda pieza
+// de la misma fila en vez de cerrar la pila.
 import { Image, getImage } from 'astro:assets';
 
 interface Props {
@@ -47,6 +53,10 @@ const posterTrailer = trailer && portada
 			alt={titulo}
 			style="view-transition-name: project-hero"
 			loading="eager"
+			fetchpriority="high"
+			format="webp"
+			widths={[640, 1080, 1600, 2000]}
+			sizes="100vw"
 		/>
 	) : (
 		<img
@@ -59,35 +69,39 @@ const posterTrailer = trailer && portada
 	)}
 
 	<div class="pd-hero-overlay">
-		<!-- Migas de pan rastreables -->
-		<nav class="pd-breadcrumb" aria-label="Migas de pan">
-			<a href="/">Inicio</a>
-			<span aria-hidden="true">/</span>
-			<a href="/?sincarga#proyectos-mapa">Proyectos</a>
-			<span aria-hidden="true">/</span>
-			<span class="pd-breadcrumb-current">{breadcrumbActual}</span>
-		</nav>
+		<div class="pd-hero-inner">
+			<div class="pd-hero-info">
+				<!-- Migas de pan: sobre el mismo margen que el título, no centradas
+				     arriba por su cuenta. -->
+				<nav class="pd-breadcrumb" aria-label="Migas de pan">
+					<a href="/">Inicio</a>
+					<span aria-hidden="true">/</span>
+					<a href="/?sincarga#proyectos-mapa">Proyectos</a>
+					<span aria-hidden="true">/</span>
+					<span class="pd-breadcrumb-current">{breadcrumbActual}</span>
+				</nav>
 
-		<div class="pd-hero-info">
-			<h1 class="pd-titulo">{titulo}</h1>
+				<h1 class="pd-titulo">{titulo}</h1>
 
-			<div class="pd-meta">
-				{fechaTexto && <span class="pd-meta-item">📅 {fechaTexto}</span>}
-				{premio && <span class="pd-meta-badge">🏆 {premio}</span>}
+				<div class="pd-meta">
+					{fechaTexto && <span class="pd-meta-item">{fechaTexto}</span>}
+					{premio && <span class="pd-meta-item pd-meta-item--premio">{premio}</span>}
+				</div>
+
+				{descripcion && <p class="pd-tagline">{descripcion}</p>}
+
+				<div class="pd-actions">
+					{link && (
+						<a class="pd-btn-primary" href={link} target="_blank" rel="noopener noreferrer">
+							<svg class="pd-btn-primary-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+								<polygon points="5 3 19 12 5 21 5 3"></polygon>
+							</svg>
+							<span>{txtboton ?? 'Visitar proyecto'}</span>
+						</a>
+					)}
+				</div>
 			</div>
 
-			{descripcion && <p class="pd-tagline">{descripcion}</p>}
-
-			<div class="pd-actions">
-				{link && (
-					<a class="pd-btn-primary" href={link} target="_blank" rel="noopener noreferrer">
-						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-							<polygon points="5 3 19 12 5 21 5 3"></polygon>
-						</svg>
-						<span>{txtboton ?? 'Visitar proyecto'}</span>
-					</a>
-				)}
-			</div>
 			<div class="pd-scroll-hint" aria-hidden="true">
 				<svg class="pd-scroll-hint-svg" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path class="pd-scroll-hint-path" d="M12 2 V22 M4 14 L12 22 L20 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />

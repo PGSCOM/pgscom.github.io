@@ -5,8 +5,6 @@ export interface Props {
   beforeLabel?: string;
   afterLabel?: string;
   poster?: string;
-  /** "auto" sólo para el comparador visible al cargar; el resto, "metadata". */
-  preload?: 'none' | 'metadata' | 'auto';
 }
 
 const {
@@ -14,8 +12,11 @@ const {
   afterSrc,
   beforeLabel,
   afterLabel,
-  poster,
-  preload = 'metadata',
+  // Sin poster explícito, se deriva del propio vídeo: scripts/generate-posters.mjs
+  // genera un .webp con el mismo nombre junto a cada clip local (misma
+  // convención que derivarPoster() en proyecto-video.js). Sin esto la caja es
+  // negra hasta que decodifica el primer fotograma.
+  poster = afterSrc.replace(/\.\w+$/, '.webp'),
 } = Astro.props;
 ---
 
@@ -28,12 +29,15 @@ const {
      y sincronización) vive en src/scripts/video-compare.js. Para que estos
      <video> no los envuelva Video.js, proyecto-video.js ignora los [data-vcs].
 
-     Ojo: no llevan `autoplay`. La reproducción la arranca el script cuando el
-     comparador entra en pantalla, para no decodificar dos vídeos a la vez en
-     bloques que el usuario todavía no ha visto. Sin JS sólo se ve el poster. -->
+     Ojo: no llevan `autoplay`. preload="none" a propósito: con 3 comparadores
+     por página (6 vídeos de 1-4 MB) cargarlos todos de fábrica es justo el
+     motivo por el que tardaban tanto. El script pide la descarga (preload
+     'auto' + load()) con antelación cuando el comparador se acerca a la
+     pantalla, y reproduce cuando ya está a la vista. Sin JS sólo se ve el
+     poster. -->
 <div class="vcs" data-vcs>
-  <video class="vcs__video vcs__video--after" src={afterSrc} poster={poster} muted loop playsinline preload={preload}></video>
-  <video class="vcs__video vcs__video--before" src={beforeSrc} poster={poster} muted loop playsinline preload={preload}></video>
+  <video class="vcs__video vcs__video--after" src={afterSrc} poster={poster} muted loop playsinline preload="none"></video>
+  <video class="vcs__video vcs__video--before" src={beforeSrc} poster={poster} muted loop playsinline preload="none"></video>
 
   {beforeLabel && <span class="vcs__label vcs__label--left">{beforeLabel}</span>}
   {afterLabel && <span class="vcs__label vcs__label--right">{afterLabel}</span>}
