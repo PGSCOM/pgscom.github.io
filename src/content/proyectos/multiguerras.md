@@ -12,6 +12,7 @@ tecnologias: [Blender, OBS Studio, App Inventor, Firebase, Web]
 txtboton: Ver cortometraje
 link: https://youtu.be/BZoJm4YVCpo
 urlvideopage: https://pgscom-media-web.pages.dev/periodomultiguerras/master.m3u8
+trailer: https://pgscom-media-web.pages.dev/previewmultiguerras/master.m3u8
 ---
 
 <!--
