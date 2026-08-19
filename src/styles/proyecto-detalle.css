@@ -37,8 +37,12 @@ body:has(.pd-page) {
   /* Fondo propio y fijo (no la variable de tema): la cabecera es una
      foto/vídeo con velo oscuro en los dos modos, no cambia con --pd-bg.
      Sin esto, el respaldo sin portada (el icono) queda flotando sobre el
-     fondo claro del cuerpo en vez de sobre un fondo oscuro. */
-  background: #05070d;
+     fondo claro del cuerpo en vez de sobre un fondo oscuro. Cuando hay
+     trailer, el póster se pinta aquí (background-image inline) para que el
+     <video> pueda fundirse encima sin llevarse su propio póster consigo. */
+  background-color: #05070d;
+  background-size: cover;
+  background-position: center;
 }
 
 .pd-hero-media {
@@ -48,6 +52,19 @@ body:has(.pd-page) {
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+/* Fundido de entrada del trailer: el póster vive en el fondo de .pd-hero,
+   así que el vídeo puede aparecer encima sin corte. Si la reproducción
+   nunca arranca (autoplay bloqueado), la cabecera se queda en el póster:
+   nunca en negro. */
+video.pd-hero-media {
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+video.pd-hero-media.is-playing {
+  opacity: 1;
 }
 
 /* Respaldo sin portada: el icono de la categoría, contenido y tenue */

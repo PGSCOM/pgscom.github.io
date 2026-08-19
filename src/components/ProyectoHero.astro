@@ -35,12 +35,11 @@ const posterTrailer = trailer && portada
 	: undefined;
 ---
 
-<header class="pd-hero">
+<header class="pd-hero" style={posterTrailer ? `background-image:url("${posterTrailer}")` : undefined}>
 	{trailer ? (
 		<video
 			class="pd-hero-media"
 			data-src={trailer}
-			poster={posterTrailer}
 			muted
 			loop
 			playsinline

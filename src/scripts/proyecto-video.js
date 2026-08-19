@@ -142,5 +142,8 @@ if (videos.length > 0) {
 // resto.
 const trailer = document.querySelector('.pd-hero-media[data-src]');
 if (trailer) {
+	// `playing` (no `play`): garantiza que ya hay fotograma pintado, así el
+	// fundido no arranca sobre un vídeo aún en negro.
+	trailer.addEventListener('playing', () => trailer.classList.add('is-playing'), { once: true });
 	montarFuente(trailer).then(() => trailer.play?.().catch(() => {}));
 }
