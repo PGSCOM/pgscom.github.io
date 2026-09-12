@@ -1,6 +1,6 @@
 ---
 titulo: DaVinci Resolve
-orden: 7
+orden: 10
 categoria: video
 resumen: Servidor colaborativo con PostgreSQL, organización de escenas y metadatos.
 imagen: ../../assets/proyectos/multiguerras/resolve.png

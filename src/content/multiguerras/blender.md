@@ -1,6 +1,6 @@
 ---
 titulo: Blender
-orden: 5
+orden: 8
 categoria: vfx
 resumen: Modelado, el portal, simulaciones y composición final.
 imagen: ../../assets/proyectos/multiguerras/blender.png
