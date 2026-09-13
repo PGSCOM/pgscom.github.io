@@ -13,7 +13,12 @@ const lenis = new Lenis({ autoRaf: false });
 
 lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add((time) => lenis.raf(time * 1000));
-gsap.ticker.lagSmoothing(0);
+// Lenis recomienda lagSmoothing(0), pero desactivarlo del todo hace que un
+// frame perdido se aplique íntegro y la animación salte: con un parón de
+// 600 ms, la intro del preloader se saltaba de 1x a 4x sin verse. Estos son
+// los valores por defecto de GSAP: solo recorta parones >500 ms, muy por
+// encima de los 16-33 ms de un scroll normal, así que Lenis no se entera.
+gsap.ticker.lagSmoothing(500, 33);
 
 // Enlaces de ancla: scroll animado con la misma inercia.
 // Si otro handler ya gestionó el click (CTA del hero, órbita), no se duplica.

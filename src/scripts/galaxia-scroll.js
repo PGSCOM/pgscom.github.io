@@ -34,8 +34,8 @@ function init() {
 	.to(logoEl, { opacity: 0, duration: 0.001, ease: 'none' }, 1.8);
 
 	const VIDEO_SCRUB = '/vid/empezar_scroll.mp4';
-	const VIDEO_INTRO = 'https://pgscom.github.io/webvid/empezar.mp4';
-	const PLAYLIST    = ['https://pgscom.github.io/webvid/loopinversed.mp4', 'https://pgscom.github.io/webvid/loop.mp4'];
+	const VIDEO_INTRO = '/vid/empezar.mp4';
+	const PLAYLIST    = ['/vid/loopinversed.mp4', '/vid/loop.mp4'];
 
 	// El zoom ocupa el tramo [1s, 2s] de la timeline y recorre los 2s del vídeo
 	const ZOOM_START_S     = 1;
