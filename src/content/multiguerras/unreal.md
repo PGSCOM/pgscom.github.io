@@ -8,7 +8,7 @@ imagen: ../../assets/proyectos/multiguerras/unreal.png
 Como Unreal Engine fue el núcleo de la [producción virtual](#produccion-virtual) del cortometraje, tuve que desarrollar muchas cosas aparte de ello.
 
 ## Portales
-Como en Blender es demasiado pesado renderizar el portal, hubo que hacer una versión de él en Unreal.
+Como en Blender es demasiado pesado renderizar el portal, tuve que hacer una versión de él en Unreal.
 
 Lo hice con el sistema de físicas Niagara Fluids importando la mesh que montaba el [portal de Blender](#portal-en-blender). Y después lo metí en un Blueprint Class junto a su iluminación para crear un Blueprint instanciable.
 
@@ -51,7 +51,7 @@ Gracias a esto hice que la multitud se generara proceduralmente en un area concr
 
 En algunas ocasiones pensé en hacer dobles digitales de los actores, al final no hizo falta, pero sí que hice los MetaHuman mediante los datos de profundidad de LiveLink Face.
 
-Cada MetaHuman pesaba unos 7 GB y al final casi no se usaron.
+Cada MetaHuman pesaba unos 7 GB y al final casi no los usé.
 
 <video src="https://pgscom-media-web.pages.dev/metahumanfreiheit/playlist.m3u8" poster="https://pgscom-media-web.pages.dev/metahumanfreiheit/miniatura.png" controls preload="none"></video>
 
@@ -68,7 +68,7 @@ Después se renderizaban las escenas de Unreal como secuencias EXR y las importa
 
 Para colaborar con otra gente y tener un control de versiones metí el proyecto entero en un repositorio de Git con Git LFS en la RPI4 con Gitea (Mencionado en [la sección de infraestructura](#servicios)).
 
-Llegué a acumular 241 commits y el proyecto ocupaba 34 GB aprox. Esto me hizo darme cuenta de que Git no era la mejor opción para proyectos de Unreal, y que opciones como Perforce se usan más en la industria por esa razón. Pero como fue un proyecto que no se colaboró mucho, cumplió su función como control de versiones y también como backup del proyecto al estar clonado en todos los ordenadores.
+Llegué a acumular 241 commits y el proyecto ocupaba 34 GB aprox. Esto me hizo darme cuenta de que Git no era la mejor opción para proyectos de Unreal, y que opciones como Perforce se usan más en la industria por esa razón. Pero como fue un proyecto en el que no colaboré mucho con otras personas, cumplió su función como control de versiones y también como backup del proyecto al estar clonado en todos los ordenadores.
 
 <div class="pd-galeria" style="grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));">
 

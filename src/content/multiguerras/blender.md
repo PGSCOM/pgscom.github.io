@@ -50,7 +50,7 @@ Al principio, para renderizar todas las simulaciones de Blender configuré un se
 ### Compilación
 Tuve que compilar el servidor de Flamenco en la RPI4 (ARM) lidiando con varias dependencias del makefile. Consulté a la comunidad de Blender y me ayudaron a ello.
 
-### Por qué no se utilizó
+### Por qué no lo usé
 Flamenco funciona de tal manera que cada Worker (PC renderizador) tiene que tener acceso con VPN a la RPI4 y acceso a un servidor de samba.
 
 Todo esto lo conseguí, incluso hice un script para ejecutar el worker de Flamenco, pero el problema fue que no capté suficientes personas para renderizar (3 personas). Así que al final opté por [Sheepit Renderfarm](https://www.sheepit-renderfarm.com/), en la que hace tiempo rendericé para otra gente y ahora tengo puntos para que otros rendericen por mí y los que me quieren apoyar pueden renderizar con las Render Keys.

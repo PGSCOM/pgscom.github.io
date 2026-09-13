@@ -53,7 +53,7 @@ que Resolve gestionara los proyectos en modo colaborativo.
 ### [Hamachi](https://vpn.net/)
 
 - Usado en primeras pruebas
-- No se usó por limitación de 5 dispositivos/red.
+- No lo usé por limitación de 5 dispositivos/red.
 
 ### [ZeroTier](https://www.zerotier.com/)
 
@@ -61,5 +61,5 @@ que Resolve gestionara los proyectos en modo colaborativo.
 
 ## Automatizaciones
 
-Se han usado diversos scripts de python para automatizar tareas repetitivas.
+He usado diversos scripts de Python para automatizar tareas repetitivas.
 Un ejemplo bastante importante es el script encargado de generar el CSV con los metadatos de las escenas de Unreal. Su repo es [este](https://github.com/multiguerras/TimecodeUnreal).
