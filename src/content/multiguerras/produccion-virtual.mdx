@@ -26,18 +26,13 @@ Como se puede ver en la foto, la cámara de abajo estaría dedicada a grabar a l
 
 Ese pequeño giro fue porque aún no había pensado en cómo sincronizar las cámaras.
 
-Después se me ocurrió que podría sincronizarlo con timecode. Pero no había ninguna aplicación que grabara video con timecode en iOS. Dejé de pensar en ello y dos meses después salió [Blackmagic Camera](https://www.blackmagicdesign.com/es/products/blackmagiccamera), que para mi sorpresa sí que era posible insertar timecode.
+Después se me ocurrió que podría sincronizarlo con timecode. Pero no había ninguna aplicación que grabara video con timecode en iOS. Dejé de pensar en ello y dos meses después salió [Blackmagic Camera](https://www.blackmagicdesign.com/es/products/blackmagiccamera), que para mi sorpresa sí que era posible insertar timecode. Además la app permite controlar la cámara en remoto desde otro teléfono y sincronizar/configurar varias cámaras a la vez.
 
-### Problemas de tracking
-La razón principal de los problemas del tracking fue que la conexión entre el iPhone y el ordenador con Unreal no era estable, lo que hacía que en medio de la toma se perdieran keyframes de la cámara.
+### Calibración de cámaras
 
-Como se detecto en postproducción, tuve que investigar cómo recuperar la toma, y encontré un modelo de Facebook llamado [CoTracker3](https://cotracker3.github.io/) que trackea puntos mediante IA.
+Para que la cámara virtual de Unreal tuviera el mismo campo de visión que el iPhone 12 real, hice una hoja de cálculo con el ancho y alto real del sensor de cada lente (principal, 0.5x y 2.5x). Esos valores de sensor se copian y pegan directamente en los parámetros de la cámara de Unreal, así el encuadre virtual coincide con el de la cámara que graba a los actores.
 
-[Modifiqué la demo oficial](https://huggingface.co/spaces/PGSCOM/cotracker/commits/main) para que admitiera mejor calidad y la ejecuté en mi ordenador, y luego, importé el video a Blender y trackee los puntos que generó el video de la demo.
-
-> Esto no fue la manera más profesional de hacerlo, se podría haber sustituido el motor de tracking de Blender directamente, pero no tenía mucho tiempo para las dos tomas que lo necesitaban.
-
-<VideoCompareSlider beforeSrc="/proyvid/multiguerras/escenas/cotracker/despues.mp4" afterSrc="/proyvid/multiguerras/escenas/cotracker/antes.mp4"/>
+El sistema de tracking no siempre funcionó bien: hubo tomas donde se perdían keyframes de cámara en pleno rodaje. Cómo detecté el problema y lo recuperé con IA está contado como caso aparte en [Atención especial](#atencion-especial).
 
 ## Grabación
 En cuanto a la producción virtual, se tenía un ordenador portátil con Unreal Engine 5 conectado a una red Wifi el iPhone con Unreal VCam. Y en ese ordenador se grababa en un Sequencer de Unreal el movimiento de la cámara virtual para posteriormente revisar si en algún punto la cámara virtual se desconectó y también añadir animaciones adicionales a la escena.

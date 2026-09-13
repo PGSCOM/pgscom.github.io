@@ -7,7 +7,7 @@ imagen: ../../assets/proyectos/multiguerras/resolve.png
 ---
 ## PostgreSQL
 
-Para colaborar en el mismo proyecto metí en la RPI4 una base de datos PostgreSQL que guarde el proyecto de Resolve.
+Varias personas tenían que trabajar sobre el mismo proyecto de Resolve, así que monté PostgreSQL + pgAdmin en la RPI4, accesible por VPN (ver [detalles en Infraestructura](infraestructura#postgresql)).
 
 ## VFX
 

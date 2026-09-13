@@ -13,6 +13,20 @@ Internamente yo categorizaba aquellas escenas que requerían cambiar el flujo de
 
 Estás son las que más relevantes han sido para mí:
 
+## Recuperación del tracking con IA (CoTracker)
+
+La razón principal de los problemas del tracking fue que la conexión entre el iPhone y el ordenador con Unreal no era estable, lo que hacía que en medio de la toma se perdieran keyframes de la cámara.
+
+Fue el mayor problema de todo elrodaje, y en las escenas se nota bastante.
+
+Como se detecto en postproducción, tuve que investigar cómo recuperar la toma, y encontré un modelo de Facebook llamado [CoTracker3](https://cotracker3.github.io/) que trackea puntos mediante IA.
+
+[Modifiqué la demo oficial](https://huggingface.co/spaces/PGSCOM/cotracker/commits/main) para que admitiera mejor calidad y la ejecuté en mi ordenador, y luego, importé el video a Blender y trackee los puntos que generó el video de la demo.
+
+> Esto no fue la manera más profesional de hacerlo, se podría haber sustituido el motor de tracking de Blender directamente, pero no tenía mucho tiempo para las dos tomas que lo necesitaban.
+
+<VideoCompareSlider beforeSrc="/proyvid/multiguerras/escenas/cotracker/despues.mp4" afterSrc="/proyvid/multiguerras/escenas/cotracker/antes.mp4"/>
+
 ## Escena corriendo
 
 Esta escena fue construida con nodos de shading en Blender.
@@ -20,6 +34,9 @@ Esta escena fue construida con nodos de shading en Blender.
 <video src="/proyvid/multiguerras/escenas/bolacorriendo.mp4" muted preload="none"></video>
 
 ![Escena corriendo en Blender](../../assets/proyectos/multiguerras/blendbolacorr.png)
+
+### Referencia
+En el entorno me inspiré en una escena del final de la película "Flow". Ver [aquí](/assets/flow.png)
 
 ## Escena explosión muro
 Hay una escena donde un muro explota. Y en esa escena lo que hice fue simular la explosión y humos en Blender y luego renderizar esa escena en dos:
@@ -38,6 +55,14 @@ Se compone de dos tomas del jefe en las que se quita el fondo y se meten dentro 
 </div>
 
 <video src="/proyvid/multiguerras/escenas/carcelprimer.mp4" muted preload="none"></video>
+
+<br/>
+
+### Referencia
+
+Usé como referencia para esta escena el efecto de carcel de Spider-Man Across the Spider-Verse:
+
+<iframe data-yt-loop-start="76" width="100%" style="aspect-ratio:16/9;height:auto;max-width:480px" src="https://www.youtube.com/embed/b_yMOiRgMmQ?start=76&end=78&mute=1" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Final del jefe volando
 

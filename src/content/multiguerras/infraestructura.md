@@ -37,10 +37,16 @@ Como la RPI4 se inicia nada más enchufarla a la corriente, le metí un [enchufe
 
 ### Servicios
 
-- PostgreSQL (Para gestionar los proyectos de Resolve)
+- [PostgreSQL](#postgresql) (Para gestionar los proyectos de Resolve)
 - [Flamenco](https://flamenco.blender.org/) (Renderfarm antigua)
 - [Gitea](https://about.gitea.com/) para gestión de repositorios
 - Servidor de archivos SAMBA
+
+### PostgreSQL
+
+Varias personas tenían que trabajar sobre el mismo proyecto de Resolve. La
+solución fue montar PostgreSQL con pgAdmin en la RPI4, accesible por VPN, para
+que Resolve gestionara los proyectos en modo colaborativo.
 
 ## VPNs
 

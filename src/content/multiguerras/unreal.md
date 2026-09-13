@@ -36,6 +36,8 @@ Pero eso no era escalable, así que investigando un poco más, vi que [una demo 
 Lo chulo del sistema es que a parte de que el movimiento es procedural (Trazando rutas en el editor), también la vestimenta de los personajes lo es, así que ningún personaje es igual.
 Este sistema se usó en las escenas del Muro de Berlín y las de la central.
 
+> Durante el proyecto me encontré con un bug real del motor: en Unreal Engine 5.3 los extras caían atravesando el suelo, y en la 5.4 (sin cambiar nada más) funcionaba correctamente. Por este motivo, parte del corto quedó renderizada en 5.3 y otra en 5.4.
+
 <video controls src="/proyvid/multiguerras/crowdv1.mp4"></video>
 
 ### Multitud estática
@@ -47,7 +49,9 @@ Gracias a esto hice que la multitud se generara proceduralmente en un area concr
 
 ## MetaHuman
 
-En algunas ocasiones pensé en hacer dobles digitales de los actores, al final no hizo falta, pero sí que se hicieron los MetaHuman mediante los datos de profundidad de LiveLink Face.
+En algunas ocasiones pensé en hacer dobles digitales de los actores, al final no hizo falta, pero sí que hice los MetaHuman mediante los datos de profundidad de LiveLink Face.
+
+Cada MetaHuman pesaba unos 7 GB y al final casi no se usaron; también se probó una versión más ligera de MetaHuman que tampoco llegó a usarse.
 
 <video src="https://pgscom-media-web.pages.dev/metahumanfreiheit/playlist.m3u8" poster="https://pgscom-media-web.pages.dev/metahumanfreiheit/miniatura.png" controls preload="none"></video>
 
@@ -64,7 +68,7 @@ Después se renderizaban las escenas de Unreal como secuencias EXR y se importab
 
 Para colaborar con otra gente y tener un control de versiones metí el proyecto entero en un repositorio de Git con Git LFS en la RPI4 con Gitea (Mencionado en [la sección de infraestructura](#servicios)).
 
-Se llegó a acumular 241 commits y el proyecto ocupaba 34 GB aprox. Esto me hizo darme cuenta de que Git no era la mejor opción para proyectos de Unreal, y que opciones como Perforce se usan más en la industria por esa razón. Pero como fue un proyecto que no se colaboró mucho, cumplió su función como control de versiones.
+Se llegó a acumular 241 commits y el proyecto ocupaba 34 GB aprox. Esto me hizo darme cuenta de que Git no era la mejor opción para proyectos de Unreal, y que opciones como Perforce se usan más en la industria por esa razón. Pero como fue un proyecto que no se colaboró mucho, cumplió su función como control de versiones y también como backup del proyecto al estar clonado en todos los ordenadores.
 
 <div class="pd-galeria" style="grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));">
 
@@ -78,3 +82,11 @@ Se llegó a acumular 241 commits y el proyecto ocupaba 34 GB aprox. Esto me hizo
 </div>
 
 <iframe src="/graphgiteamultiguerras.html" width="100%" height="450" frameborder="0"></iframe>
+
+## Assets y referencias
+
+- Quixel Megascans: texturas/rocas escaneadas (cajas eléctricas, etc.)
+- Ciudad de Berlín: pack descargado (el muro sí es modelado propio, ver Blender)
+- Mapa de bosque y VFX de la "bola de teletransporte": reutilizados de tech-demos oficiales de Unreal
+- Crowd procedural: adaptado de una demo pública de Unreal + tutoriales
+- Personajes/animaciones base: Mixamo

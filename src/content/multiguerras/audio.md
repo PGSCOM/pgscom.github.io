@@ -6,10 +6,10 @@ resumen: Banda sonora original y diseño sonoro del cortometraje.
 imagen: ../../assets/proyectos/multiguerras/sonido.png
 ---
 
-Después de montar todo el cortometraje, tocó editar el sonido. Casi todo el sonido fue hecho con [Ableton Live](https://www.ableton.com/es/live/) donde importé una previsualización de cada grupo de escenas del cortometraje.
+Esperé a montar todo el cortometraje para editar el sonido. Casi todo el sonido fue hecho con [Ableton Live](https://www.ableton.com/es/live/) donde importé una previsualización de cada grupo de escenas del cortometraje.
 
 ## Banda sonora y efectos de sonido
-En cuanto a la Banda Sonora Original, se hizo con diversos VSTs como Kontakt y demás. Ahí yo apenas participé, ya que la música fue compuesta y tocada mayoritariamente por Encarnación Arce. Yo contribuí con la mezcla y ayuda técnica.
+En cuanto a la Banda Sonora Original, se hizo con diversos VSTs como Kontakt y demás. La mayor parte de las canciones fueron compuestas e interpretadas por Encarnación Arce; yo ejercí de productor y la guié en Ableton, que ella no había utilizado antes. La canción final fue la única que compuse íntegramente yo, que está construida a base de configurar sintetizadores.
 Se publicó cada canción en Spotify y demás plataformas, se puede escuchar también en [YouTube](https://www.youtube.com/playlist?list=OLAK5uy_ljUXwq9glHtZlRdZe-q-VoQDu_t0duN0k).
 
 <div class="pd-galeria" style="grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));">
@@ -21,3 +21,5 @@ Se publicó cada canción en Spotify y demás plataformas, se puede escuchar tam
 </div>
 
 Luego, para los efectos de sonido, lo hice con el mismo programa y sintetizadores personalizados para cada efecto.
+
+Por ejemplo, para el sonido de la bomba, se hizo grabando un bote de Actimel lleno de lentejas.

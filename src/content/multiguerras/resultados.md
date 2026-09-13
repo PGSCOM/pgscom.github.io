@@ -4,9 +4,9 @@ orden: 12
 categoria: video
 ---
 
-El cortometraje se terminó, fue difícil (estuvo técnicamente cancelado durante 2 horas). Aunque no se hubiera llegado a las expectativas ambiciosas del principio, me ha hecho ver todo el proceso de una producción audiovisual desde todos los ángulos posibles.
+El cortometraje se terminó, fue difícil (estuvo técnicamente cancelado durante 4 horas y se replanteó el guión). Aunque no se hubiera llegado a las expectativas ambiciosas del principio, me ha hecho ver todo el proceso de una producción audiovisual desde todos los ángulos posibles.
 
-Conseguí con recursos limitados hacer el cortometraje, supe adaptarme a errores bajo presión y también a colaborar.
+Conseguí con recursos limitados (RPI4 como servidor y cámaras de móvil) hacer el cortometraje (Con mucha ayuda de mis familiares para temas logísticos y material), supe adaptarme a errores bajo presión y también a colaborar.
 
 Me ha gustado más el proceso de creación que el resultado final, y he descubierto que me gusta más la parte artístico-técnica que la parte del desarrollo de la historia.
 
