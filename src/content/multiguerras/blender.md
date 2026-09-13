@@ -27,12 +27,12 @@ Luego mi compañero Aarón me enseñó a usar los modificadores "Malla a volumen
 
 ![Portal en Blender](../../assets/proyectos/multiguerras/portalBlender.png)
 
-Esta versión fue traspasada a Unreal que se puede ver
+Trasladé esta versión a Unreal, que se puede ver
 [aquí](#portales).
 
 ## Simulaciones
 
-Los assets que requerían simulación de humos (excepto el portal en su mayoría de ocasiones) fueron hechos con Blender.
+Los assets que requerían simulación de humos (excepto el portal en su mayoría de ocasiones) los hice con Blender.
 
 <div class="pd-galeria" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
 <video src="/proyvid/multiguerras/bolaportal.mp4" muted preload="none"></video>
@@ -53,4 +53,4 @@ Tuve que compilar el servidor de Flamenco en la RPI4 (ARM) lidiando con varias d
 ### Por qué no se utilizó
 Flamenco funciona de tal manera que cada Worker (PC renderizador) tiene que tener acceso con VPN a la RPI4 y acceso a un servidor de samba.
 
-Todo esto lo conseguí, incluso hice un script para ejecutar el worker de Flamenco, pero el problema fue que no capte suficientes personas para renderizar (3 personas). Así que al final opté por [Sheepit Renderfarm](https://www.sheepit-renderfarm.com/), en la que hace tiempo rendericé para otra gente y ahora tengo puntos para que otros rendericen por mí y los que me quieren apoyar pueden renderizar con las Render Keys.
+Todo esto lo conseguí, incluso hice un script para ejecutar el worker de Flamenco, pero el problema fue que no capté suficientes personas para renderizar (3 personas). Así que al final opté por [Sheepit Renderfarm](https://www.sheepit-renderfarm.com/), en la que hace tiempo rendericé para otra gente y ahora tengo puntos para que otros rendericen por mí y los que me quieren apoyar pueden renderizar con las Render Keys.

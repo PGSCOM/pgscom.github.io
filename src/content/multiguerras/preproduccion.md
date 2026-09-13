@@ -6,17 +6,17 @@ categoria: video
 
 ## Guion
 
-El guion fue escrito al 100% por mí, y me fuí basando en ideas que tuve en proyectos anteriores (Como en el proyecto cancelado "El desafío")
+El guion fue escrito al 100% por mí, y me fui basando en ideas que tuve en proyectos anteriores (Como en el proyecto cancelado "El desafío")
 
 Al principio hice un guion bastante más largo de lo que es pero al final lo recorté a lo que es ahora (Quitando escenas como unas del descubrimiento de América o un desenlace final).
 
-Para ese desenlace se barajaron dos finales alternativos: uno apocalíptico (explota el universo), el que el protagonista vuelve a casa y otro de reconciliación. Y al final se acabó con un final abierto
+Para ese desenlace barajé dos finales alternativos: uno apocalíptico (explota el universo), otro en el que el protagonista vuelve a casa y otro de reconciliación. Y al final se acabó con un final abierto
 
 > Un error que cometí fue hacer que los personajes sobreexplicaran lo que estaba pasando en la escena, cuando hay otros medios no verbales de contar la historia.
 
 ## Organización
 
-Nada más arrancar el proyecto cree:
+Nada más arrancar el proyecto, creé:
 
 - Un canal de Telegram para poder comunicarme con el equipo y subir archivos grandes.
 - Una organización de Github (Ver [infraestructura](#infraestructura))

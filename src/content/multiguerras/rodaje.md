@@ -15,15 +15,15 @@ Lo que pasó fue que no tuvimos suficiente tiempo, fue un fin de semana, y me qu
 
 ### Segundo set
 
-Para seguir trabajando, se usó un aula donde se pegaron a las cortinas el chroma y así se podría retirar durante las clases.
+Para seguir trabajando, usé un aula donde se pegaron a las cortinas el chroma y así se podría retirar durante las clases.
 
 En este segundo set estuvimos más tiempo, y descubrí que con menos gente se trabaja mejor.
 
 ## Galería primer rodaje
 
-En el primer rodaje se usó un ordenador potente y una red con un router externo para que el iPhone se conectara directamente al PC.
+En el primer rodaje usé un ordenador potente y una red con un router externo para que el iPhone se conectara directamente al PC.
 
-Al ser un sistema tan difícil de montar y desmontar se decidió simplificarlo para tener un set más sencillo con el inconveniente de que la grabación de movimiento sea más inestable.
+Al ser un sistema tan difícil de montar y desmontar decidí simplificarlo para tener un set más sencillo con el inconveniente de que la grabación de movimiento fuera más inestable.
 
 <div class="pd-galeria">
 

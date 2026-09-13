@@ -30,17 +30,17 @@ Después se me ocurrió que podría sincronizarlo con timecode. Pero no había n
 
 ### Calibración de cámaras
 
-Para que la cámara virtual de Unreal tuviera el mismo campo de visión que el iPhone 12 real, hice una hoja de cálculo con el ancho y alto real del sensor de cada lente (principal, 0.5x y 2.5x). Esos valores de sensor se copian y pegan directamente en los parámetros de la cámara de Unreal, así el encuadre virtual coincide con el de la cámara que graba a los actores.
+Para que la cámara virtual de Unreal tuviera el mismo campo de visión que el iPhone 12 real, hice una hoja de cálculo con el ancho y alto real del sensor de cada lente (principal, 0.5x y 2.5x). Esos valores de sensor los copiaba y pegaba directamente en los parámetros de la cámara de Unreal, así el encuadre virtual coincidía con el de la cámara que graba a los actores.
 
 El sistema de tracking no siempre funcionó bien: hubo tomas donde se perdían keyframes de cámara en pleno rodaje. Cómo detecté el problema y lo recuperé con IA está contado como caso aparte en [Atención especial](#atencion-especial).
 
 ## Grabación
-En cuanto a la producción virtual, se tenía un ordenador portátil con Unreal Engine 5 conectado a una red Wifi el iPhone con Unreal VCam. Y en ese ordenador se grababa en un Sequencer de Unreal el movimiento de la cámara virtual para posteriormente revisar si en algún punto la cámara virtual se desconectó y también añadir animaciones adicionales a la escena.
+En cuanto a la producción virtual, tenía un ordenador portátil con Unreal Engine 5 conectado a una red Wifi el iPhone con Unreal VCam. Y en ese ordenador grababa en un Sequencer de Unreal el movimiento de la cámara virtual para posteriormente revisar si en algún punto la cámara virtual se desconectó y también añadir animaciones adicionales a la escena.
 ![Setup de grabación](../../assets/proyectos/multiguerras/prodvirt.jpg)
 ![Captura del sequencer de Unreal Engine donde se ven todos los keyframes de la cámara](../../assets/proyectos/multiguerras/Sequencer.png)
 
 ### Emparejamiento de tomas reales y virtuales
-Las tomas se emparejan a partir de los metadatos escena y toma. (La ID de la escena que se graba en Unreal se empareja con la escena que tiene la misma escena en el iPhone) y se sincronizan a partir del timecode en el cual para Unreal Engine se tuvo que hacer un [script](https://github.com/multiguerras/TimecodeUnreal) que generara un CSV con todos los metadatos para importarlos a DaVinci Resolve para montarlos.
+Las tomas las emparejo a partir de los metadatos escena y toma. (La ID de la escena que se graba en Unreal se empareja con la escena que tiene la misma escena en el iPhone) y las sincronizo a partir del timecode, para lo cual en Unreal Engine tuve que hacer un [script](https://github.com/multiguerras/TimecodeUnreal) que generara un CSV con todos los metadatos para importarlos a DaVinci Resolve para montarlos.
 
 | File Name                         | Scene | Take | Start TC    |
 |-----------------------------------|-------|------|-------------|
@@ -53,7 +53,7 @@ Las tomas se emparejan a partir de los metadatos escena y toma. (La ID de la esc
 
 ## Movie Render Queue
 
-Todos estas escenas de sequencer, para renderizarlas, se añaden varias a una Render Queue de Unreal con una configuración especial que renderiza los EXR con los metadatos necesarios en el nombre del frame (Escena, Toma y Timecode) para luego [el script](https://github.com/multiguerras/TimecodeUnreal) pueda trabajar.
+Todas estas escenas de sequencer, para renderizarlas, añadía varias a una Render Queue de Unreal con una configuración especial que renderiza los EXR con los metadatos necesarios en el nombre del frame (Escena, Toma y Timecode) para luego [el script](https://github.com/multiguerras/TimecodeUnreal) pueda trabajar.
 
 <Image src={renderImg} alt="Proceso Render de Unreal Engine" width={400} />
 

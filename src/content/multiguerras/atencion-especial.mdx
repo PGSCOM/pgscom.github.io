@@ -17,9 +17,9 @@ Estás son las que más relevantes han sido para mí:
 
 La razón principal de los problemas del tracking fue que la conexión entre el iPhone y el ordenador con Unreal no era estable, lo que hacía que en medio de la toma se perdieran keyframes de la cámara.
 
-Fue el mayor problema de todo elrodaje, y en las escenas se nota bastante.
+Fue el mayor problema de todo el rodaje, y en las escenas se nota bastante.
 
-Como se detecto en postproducción, tuve que investigar cómo recuperar la toma, y encontré un modelo de Facebook llamado [CoTracker3](https://cotracker3.github.io/) que trackea puntos mediante IA.
+Como lo detecté en postproducción, tuve que investigar cómo recuperar la toma, y encontré un modelo de Facebook llamado [CoTracker3](https://cotracker3.github.io/) que trackea puntos mediante IA.
 
 [Modifiqué la demo oficial](https://huggingface.co/spaces/PGSCOM/cotracker/commits/main) para que admitiera mejor calidad y la ejecuté en mi ordenador, y luego, importé el video a Blender y trackee los puntos que generó el video de la demo.
 
@@ -41,8 +41,8 @@ En el entorno me inspiré en una escena del final de la película "Flow". Ver [a
 ## Escena explosión muro
 Hay una escena donde un muro explota. Y en esa escena lo que hice fue simular la explosión y humos en Blender y luego renderizar esa escena en dos:
 
-- En Blender: se renderiza humo y partículas con los otros elementos como shadow catcher
-- En Unreal se importaron los movimientos de las piezas como un FBX animado (convertido y exportado desde Blender) y se renderizó la escena sin más cambios
+- En Blender: rendericé humo y partículas con los otros elementos como shadow catcher
+- En Unreal importé los movimientos de las piezas como un FBX animado (convertido y exportado desde Blender) y rendericé la escena sin más cambios
 <VideoCompareSlider beforeSrc="/proyvid/multiguerras/escenas/explosion/despues.mp4" afterSrc="/proyvid/multiguerras/escenas/explosion/antes.mp4" beforeLabel="Final" afterLabel="Blender" />
 
 <video src="/proyvid/multiguerras/explosionmuro.mp4" muted preload="none" autoplay style="width: 75%;"></video>
@@ -66,7 +66,7 @@ Usé como referencia para esta escena el efecto de carcel de Spider-Man Across t
 
 ## Final del jefe volando
 
-Esta escena hubo que hacerla en Blender porque incluía un escaneo de Gaussian Splatting que se tenía que renderizar en EEVEE. Así que se hizo esa escena renderizando primero una parte en cycles y luego se superponía la parte de EEVEE para meter el Gaussian Splatting. 
+Tuve que hacer esta escena en Blender porque incluía un escaneo de Gaussian Splatting que tenía que renderizar en EEVEE. Así que hice la escena renderizando primero una parte en cycles y luego superponiendo la parte de EEVEE para meter el Gaussian Splatting. 
 
 <video src="/proyvid/multiguerras/escenas/jefeflotando.mp4" muted preload="none"></video>
 <VideoCompareSlider beforeSrc="/proyvid/multiguerras/escenas/jefevolando/despues.mp4" afterSrc="/proyvid/multiguerras/escenas/jefevolando/antes.mp4" beforeLabel="EEVEE + Cycles" afterLabel="EEVEE" />
