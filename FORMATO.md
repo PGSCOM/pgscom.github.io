@@ -12,8 +12,11 @@ titulo: Nombre del Proyecto          # OBLIGATORIO — aparece en el <h1> y la c
 fecha: "2024-03"                     # OBLIGATORIO — "YYYY", "YYYY-MM" o "YYYY-MM-DD"
 fechaFin: "2025"                     # Opcional — omitir si sigue activo; "ahora" = en curso
 categorias: [programacion, video]    # OBLIGATORIO — uno o más IDs de categorías.json
-peso: 75                             # Ancho en la línea de tiempo (0–100, defecto 50)
-destacado: 2                         # Aparece en el carrusel del hero; entero, menor = primero
+peso: 75                             # Tamaño de card (0–100, defecto 50): ≥75 grande, ≥55 medio, resto pequeño.
+                                      # Decide tanto el ancho en la línea de tiempo como el tamaño en la rejilla.
+destacado: 2                         # Aparece en el carrusel del hero; entero, menor = primero.
+                                      # Además ordena la rejilla: los que tienen este campo van primero
+                                      # (por este número), el resto sigue detrás en orden cronológico.
 imagen: ../../assets/proyectos/x.png # Imagen de la card y og:image
 portada: ../../assets/proyectos/x.png # Portada en el hero de la ficha (si difiere de imagen)
 trailer: /videos/mi-trailer.mp4      # Vídeo en el hero (reemplaza a portada)

@@ -14,9 +14,11 @@ document.querySelectorAll('.hero-card').forEach((card) => {
 	card.addEventListener('mouseleave', () => video.pause());
 });
 
-const rutaVideos = document.querySelectorAll('.ruta-video');
+// Vídeos que arrancan al entrar en el viewport, sin depender de hover (así
+// funcionan también en táctil): cronología y rejilla.
+const scrollVideos = document.querySelectorAll('.ruta-video, .rejilla-video');
 
-if (rutaVideos.length > 0) {
+if (scrollVideos.length > 0) {
 	const observer = new IntersectionObserver(
 		(entries) => {
 			entries.forEach((entry) => {
@@ -28,5 +30,5 @@ if (rutaVideos.length > 0) {
 		{ threshold: 0.25 },
 	);
 
-	rutaVideos.forEach((video) => observer.observe(video));
+	scrollVideos.forEach((video) => observer.observe(video));
 }

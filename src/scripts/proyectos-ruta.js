@@ -3,9 +3,21 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import lenis from './smooth-scroll.js';
 gsap.registerPlugin(ScrollTrigger);
 
-// Una línea luminosa baja por la cronología pasando por cada marcador de año y
-// cada tarjeta, y se traza con el scroll. Los filtros por disciplina atenúan
-// y desaturan lo que no encaja, sin ocultarlo.
+// Dos vistas de los mismos proyectos: la Rejilla (por defecto, todos a la
+// vez) y la Cronología, una línea luminosa que baja pasando por cada
+// marcador de año y cada tarjeta, trazada con el scroll. Los filtros por
+// disciplina atenúan y desaturan lo que no encaja, sin ocultarlo, en
+// cualquiera de las dos vistas.
+
+// Imágenes que no existen: fondo tintado + icono de la categoría (compartido
+// por la cronología y la rejilla, cada una con su propio contenedor raíz)
+function marcarSinImagen(root, imgSel, contenedorSel) {
+  root.querySelectorAll(imgSel).forEach((img) => {
+    const fallar = () => img.closest(contenedorSel)?.classList.add('sin-imagen');
+    if (img.complete && img.naturalWidth === 0) fallar();
+    else img.addEventListener('error', fallar, { once: true });
+  });
+}
 
 function initRuta() {
   const mapa = document.getElementById('proyectos-mapa');
@@ -147,66 +159,93 @@ function initRuta() {
     });
   }
 
-  // ── Entradas al hacer scroll ──
-  // Un único ScrollTrigger por marcador de año: entrada animada y "encendido"
-  // del punto cuando la ruta pasa por él (se apaga al volver hacia arriba)
-  gsap.utils.toArray('.ruta-año', cuerpo).forEach((el) => {
-    gsap.from(el, {
-      autoAlpha: 0,
-      scale: 0.7,
-      duration: 0.6,
-      ease: 'back.out(1.6)',
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 82%',
-        onEnter: () => el.classList.add('on'),
-        onLeaveBack: () => el.classList.remove('on'),
-      },
-    });
-  });
+  // ── Preparación de la cronología, aplazada a su primera activación ──
+  // La vista por defecto es la Rejilla: `.ruta-cuerpo` empieza en
+  // `display:none` (CSS, ver `.proyectos-mapa[data-vista]`). Un ScrollTrigger
+  // creado sobre un elemento sin layout mide un rectángulo a 0, así que tanto
+  // el trazado de la línea como las animaciones de entrada se crean aquí, la
+  // primera vez que se cambia a la vista Cronología, nunca antes.
+  let rutaLista = false;
+  function prepararRuta() {
+    if (rutaLista) return;
+    rutaLista = true;
 
-  // Un único ScrollTrigger por entrada: la tarjeta principal entra y las
-  // subtarjetas brotan de ella en cascada, todo en la misma timeline
-  gsap.utils.toArray('.ruta-entry', cuerpo).forEach((entry) => {
-    const der = entry.classList.contains('ruta-entry--der');
-    const item = entry.querySelector('.ruta-item');
-    const subs = entry.querySelectorAll('.ruta-sub');
-
-    const tlEntry = gsap.timeline({
-      scrollTrigger: { trigger: entry, start: 'top 84%' },
-    });
-    tlEntry.from(item, {
-      autoAlpha: 0,
-      y: 56,
-      rotation: der ? 1.4 : -1.4,
-      duration: 0.9,
-      ease: 'power3.out',
-    });
-    if (subs.length) {
-      tlEntry.from(subs, {
+    // Un único ScrollTrigger por marcador de año: entrada animada y "encendido"
+    // del punto cuando la ruta pasa por él (se apaga al volver hacia arriba)
+    gsap.utils.toArray('.ruta-año', cuerpo).forEach((el) => {
+      gsap.from(el, {
         autoAlpha: 0,
-        x: der ? 36 : -36,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.16,
-      }, '-=0.45');
-    }
-  });
-
-  // ── Imágenes que no existen: fondo tintado + icono de la categoría ──
-  function marcarSinImagen(imgSel, contenedorSel) {
-    cuerpo.querySelectorAll(imgSel).forEach((img) => {
-      const fallar = () => img.closest(contenedorSel)?.classList.add('sin-imagen');
-      if (img.complete && img.naturalWidth === 0) fallar();
-      else img.addEventListener('error', fallar, { once: true });
+        scale: 0.7,
+        duration: 0.6,
+        ease: 'back.out(1.6)',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 82%',
+          onEnter: () => el.classList.add('on'),
+          onLeaveBack: () => el.classList.remove('on'),
+        },
+      });
     });
+
+    // Un único ScrollTrigger por entrada: la tarjeta principal entra y las
+    // subtarjetas brotan de ella en cascada, todo en la misma timeline
+    gsap.utils.toArray('.ruta-entry', cuerpo).forEach((entry) => {
+      const der = entry.classList.contains('ruta-entry--der');
+      const item = entry.querySelector('.ruta-item');
+      const subs = entry.querySelectorAll('.ruta-sub');
+
+      const tlEntry = gsap.timeline({
+        scrollTrigger: { trigger: entry, start: 'top 84%' },
+      });
+      tlEntry.from(item, {
+        autoAlpha: 0,
+        y: 56,
+        rotation: der ? 1.4 : -1.4,
+        duration: 0.9,
+        ease: 'power3.out',
+      });
+      if (subs.length) {
+        tlEntry.from(subs, {
+          autoAlpha: 0,
+          x: der ? 36 : -36,
+          duration: 0.7,
+          ease: 'power3.out',
+          stagger: 0.16,
+        }, '-=0.45');
+      }
+    });
+
+    marcarSinImagen(cuerpo, '.ruta-img', '.ruta-item');
+    marcarSinImagen(cuerpo, '.ruta-sub-img', '.ruta-sub');
+
+    build();
+    // Las imágenes tienen aspect-ratio fijo, pero las fuentes pueden mover el
+    // layout: se recalcula la línea al cargar todo y al redimensionar.
+    window.addEventListener('load', () => {
+      ScrollTrigger.refresh();
+      build();
+    });
+
+    let resizeRaf = 0;
+    const reflow = () => {
+      if (resizeRaf) return;
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = 0;
+        build();
+        ScrollTrigger.refresh();
+      });
+    };
+    new ResizeObserver(reflow).observe(cuerpo);
   }
-  marcarSinImagen('.ruta-img', '.ruta-item');
-  marcarSinImagen('.ruta-sub-img', '.ruta-sub');
+
+  marcarSinImagen(mapa, '.rejilla-img', '.rejilla-item');
 
   // ── Filtro por disciplina: atenúa y desatura, no oculta ──
+  // Vale para las dos vistas: cada tarjeta principal lleva su propio
+  // `data-cats` (la rejilla en sí misma; la cronología en `.ruta-entry`).
   const filtros = mapa.querySelectorAll('.ruta-filtro');
   const entries = cuerpo.querySelectorAll('.ruta-entry');
+  const rejillaItems = mapa.querySelectorAll('.rejilla-item');
   let filtroActual = 'all';
 
   function setFiltro(cat) {
@@ -220,6 +259,7 @@ function initRuta() {
       if (item) aplicarFuera(entry, item);
     });
     cuerpo.querySelectorAll('.ruta-sub').forEach((sub) => aplicarFuera(sub, sub));
+    rejillaItems.forEach((el) => aplicarFuera(el, el));
     filtros.forEach((f) => {
       const act = f.dataset.cat === cat;
       f.classList.toggle('act', act);
@@ -237,35 +277,33 @@ function initRuta() {
     });
   });
 
-  // La órbita de categorías también filtra y baja hasta la cronología
+  // ── Selector de vista: Rejilla ↔ Cronología ──
+  const vistaBtns = mapa.querySelectorAll('.vista-btn');
+  function setVista(v) {
+    mapa.dataset.vista = v;
+    vistaBtns.forEach((b) => {
+      const act = b.dataset.vista === v;
+      b.classList.toggle('act', act);
+      b.setAttribute('aria-pressed', act ? 'true' : 'false');
+    });
+    if (v === 'ruta') {
+      prepararRuta();
+      ScrollTrigger.refresh();
+    }
+  }
+  vistaBtns.forEach((b) => b.addEventListener('click', () => setVista(b.dataset.vista)));
+
+  // La órbita de categorías también filtra, vuelve a la Rejilla y baja hasta ella
   document.querySelectorAll('.proyecto-card').forEach((card) => {
     card.addEventListener('click', (e) => {
       const id = card.dataset.aptitudId;
       if (!id) return;
       e.preventDefault();
       setFiltro(filtroActual === id ? 'all' : id);
+      setVista('rejilla');
       lenis.scrollTo(mapa);
     });
   });
-
-  build();
-  // Las imágenes tienen aspect-ratio fijo, pero las fuentes pueden mover el
-  // layout: se recalcula la línea al cargar todo y al redimensionar.
-  window.addEventListener('load', () => {
-    ScrollTrigger.refresh();
-    build();
-  });
-
-  let resizeRaf = 0;
-  const reflow = () => {
-    if (resizeRaf) return;
-    resizeRaf = requestAnimationFrame(() => {
-      resizeRaf = 0;
-      build();
-      ScrollTrigger.refresh();
-    });
-  };
-  new ResizeObserver(reflow).observe(cuerpo);
 }
 
 // Astro emite este bloque como <script type="module">, ya diferido por el

@@ -35,11 +35,17 @@ const heroLayout = [
 	{ left: '67%', top: '89%', depth: 0.8,  rot: -5,  size: 'sm', far: true },
 ];
 
+// Qué huecos de heroLayout ocupa cada tarjeta según cuántas haya en total,
+// para que 2 o 3 destacados no se amontonen en un lado de la pantalla en vez
+// de usar los huecos en orden (0,1,2…) que dejarían media pantalla vacía.
+const huecosPorCantidad = [[], [2], [3, 1], [3, 1, 4], [0, 1, 2, 3], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4, 5]];
+
 const featured = proyectos
 	.filter((p) => p.destacado != null && p.imagen)
 	.sort((a, b) => (a.destacado ?? 0) - (b.destacado ?? 0))
 	.slice(0, heroLayout.length)
 	.map((p) => ({ ...p, aptitudTitulo: catById[p.categorias?.[0]]?.titulo ?? '' }));
+const huecosHero = huecosPorCantidad[featured.length] ?? featured.map((_, i) => i);
 
 // Póster de las tarjetas con vídeo: el atributo `poster` no pasa por <Image>,
 // así que sin esto se descargaría el PNG original completo en vez del webp.
@@ -81,6 +87,8 @@ const rutaEntries = cronologia.map((p, i) => {
 		lado: i % 2 === 0 ? 'izq' : 'der',
 		inset: ['0%', '5%', '2%'][i % 3],
 		w: peso >= 75 ? 580 : peso >= 55 ? 500 : 430,
+		// Tamaño en la rejilla: mismo umbral que el ancho de la cronología
+		escala: peso >= 75 ? 'grande' : peso >= 55 ? 'medio' : 'pequeño',
 		color: colorDe(catsProyecto[0]),
 		// Para el filtro cuentan solo las categorías del proyecto
 		catIds: catsProyecto,
@@ -92,6 +100,12 @@ const rutaEntries = cronologia.map((p, i) => {
 			: null,
 	};
 });
+
+// ── Rejilla: orden manual ──
+// La cronología (arriba) siempre va por fecha; la rejilla la decide `destacado`
+// (mismo campo que ya sitúa las tarjetas del hero, menor = primero). El resto,
+// sin ese campo, cae detrás manteniendo su orden cronológico (sort estable).
+const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity) - (b.destacado ?? Infinity));
 ---
 
 <!-- Cloudflare Turnstile -->
@@ -147,7 +161,7 @@ const rutaEntries = cronologia.map((p, i) => {
 	<main class="main-container">
 		<div class="hero-cards">
 			{featured.map((proyecto, i) => {
-				const l = heroLayout[i];
+				const l = heroLayout[huecosHero[i] ?? i];
 				return (
 					<a
 						class={`hero-card hero-card--${l.size}${l.far ? ' is-far' : ''}${proyecto.enlaceExterno ? ' es-externo' : ''}`}
@@ -211,7 +225,7 @@ const rutaEntries = cronologia.map((p, i) => {
 		<div class="proyectos-header">
 			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
 			<p class="proyectos-subtitulo-seccion">
-				Mi trayectoria en orden cronológico, de lo más reciente a lo más antiguo. Filtra por disciplina para ver solo lo que te interesa.
+				Toda mi trayectoria: filtra por disciplina o cambia de vista para explorarla.
 			</p>
 		</div>
 
@@ -247,21 +261,61 @@ const rutaEntries = cronologia.map((p, i) => {
 			</div>
 		</div>
 
-		<div class="proyectos-mapa" id="proyectos-mapa">
-			<!-- Filtros por disciplina: atenúan (no ocultan) lo que no encaja -->
-			<div class="ruta-filtros" role="group" aria-label="Filtrar proyectos por disciplina">
-				<button type="button" class="ruta-filtro act" data-cat="all" aria-pressed="true">Todos</button>
-				{categorias.map((c) => (
-					<button
-						type="button"
-						class="ruta-filtro"
-						data-cat={c.id}
-						aria-pressed="false"
-						style={`--cat-color:${c.color ?? COLOR_NEUTRO}`}
+		<div class="proyectos-mapa" id="proyectos-mapa" data-vista="rejilla">
+			<div class="proyectos-barra">
+				<!-- Filtros por disciplina: atenúan (no ocultan) lo que no encaja -->
+				<div class="ruta-filtros" role="group" aria-label="Filtrar proyectos por disciplina">
+					<button type="button" class="ruta-filtro act" data-cat="all" aria-pressed="true">Todos</button>
+					{categorias.map((c) => (
+						<button
+							type="button"
+							class="ruta-filtro"
+							data-cat={c.id}
+							aria-pressed="false"
+							style={`--cat-color:${c.color ?? COLOR_NEUTRO}`}
+						>
+							<img src={c.logo} alt="" aria-hidden="true" />
+							<span>{c.titulo}</span>
+						</button>
+					))}
+				</div>
+
+				<!-- Rejilla = escaneo rápido de todo; Cronología = la misma ruta de siempre -->
+				<div class="vista-toggle" role="group" aria-label="Forma de ver los proyectos">
+					<button type="button" class="vista-btn act" data-vista="rejilla" aria-pressed="true">Rejilla</button>
+					<button type="button" class="vista-btn" data-vista="ruta" aria-pressed="false">Cronología</button>
+				</div>
+			</div>
+
+			<div class="rejilla">
+				{rejillaEntries.map((proyecto) => (
+					<a
+						class={`rejilla-item rejilla-item--${proyecto.escala}${proyecto.imagen ? '' : ' sin-imagen'}${proyecto.enlaceExterno ? ' es-externo' : ''}`}
+						data-cats={proyecto.catIds.join(',')}
+						style={`--cat-color:${proyecto.color}`}
+						{...(proyecto.enlaceExterno
+							? { href: proyecto.enlaceExterno, target: '_blank', rel: 'noopener noreferrer' }
+							: { href: `/proyectos/${proyecto.id}`, 'data-proyecto-link': true })}
 					>
-						<img src={c.logo} alt="" aria-hidden="true" />
-						<span>{c.titulo}</span>
-					</button>
+						<div class="rejilla-media">
+							{proyecto.video
+								? <video class="rejilla-video" data-src={proyecto.video} poster={postersVideo.get(proyecto.id)} muted loop playsinline preload="none" aria-hidden="true"></video>
+								: proyecto.imagen && <Image class="rejilla-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
+							<img class="rejilla-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
+							{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
+							{proyecto.enlaceExterno && (
+								<span class="card-externo-icono" aria-hidden="true">
+									<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+								</span>
+							)}
+						</div>
+						<div class="rejilla-info">
+							<h4 class="rejilla-titulo">{proyecto.titulo.trim()}</h4>
+							<p class="rejilla-meta">
+								{[proyecto.cats.map((c) => c.titulo).join(' · '), proyecto.año !== 'Otros' ? proyecto.año : null].filter(Boolean).join(' · ')}
+							</p>
+						</div>
+					</a>
 				))}
 			</div>
 
