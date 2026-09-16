@@ -542,6 +542,54 @@ Pasos de instalación, con código inline: `pip install flamenco`.
 
 ---
 
+## 15. Habilidades: el grafo sobre "Proyectos"
+
+Cada `.md` de `src/content/habilidades/` es una burbuja del grafo que orbita el
+logo, encima del título "Proyectos" de la portada. No son proyectos: no tienen
+ficha propia ni URL, solo un nodo en ese grafo.
+
+```yaml
+---
+titulo: Tailscale                    # OBLIGATORIO — el nombre bajo la burbuja
+categoria: programacion              # Opcional — ID de categorias.json; da el color del icono y del panel
+icono: tailscale                     # Opcional — archivo de public/icons/marcas/<icono>.svg
+resumen: Red privada entre mis máquinas, sin abrir puertos.   # Opcional — ver más abajo
+orden: 10                            # Opcional (por defecto 50) — menor va antes; empata por título
+---
+```
+
+### Cuerpo = contenido del panel
+
+Lo que escribas **debajo del frontmatter** es lo que aparece al pulsar la
+burbuja: en pantallas anchas sustituye al logo en el centro del grafo; en
+pantallas estrechas, en un panel debajo. Si el archivo no tiene cuerpo, la
+burbuja no es pulsable (se pinta atenuada, sin `<button>` detrás). Es el
+comportamiento correcto para una habilidad que no da para más de una frase —
+no un error ni algo que arreglar.
+
+Dentro del panel funcionan párrafos, listas, enlaces, `código` inline y
+**negrita**. Nada más: no hay encabezados, imágenes, galerías ni pestañas (para
+eso está la ficha de un proyecto, secciones 1–13).
+
+### `resumen`
+
+Una frase corta, opcional. Con cuerpo, aparece como subtítulo bajo el título
+dentro del panel. Sin cuerpo (burbuja no pulsable), aparece como tooltip nativo
+del navegador al pasar el ratón — la única pista extra que tiene ese nodo,
+ya que no hay panel que abrir.
+
+### Iconos de marca
+
+Guarda el SVG en `public/icons/marcas/<slug>.svg` y pon ese `<slug>` en
+`icono`. Los de [Simple Icons](https://simpleicons.org) van perfectos: son
+monocromos y de dominio público (descárgalos del repo oficial, no los enlaces
+directamente desde su CDN). El archivo se usa como máscara, así que el color
+del SVG original da igual — la burbuja lo tiñe con el color de su categoría.
+Sin `icono` se usa el logo de la categoría; sin ninguno de los dos, el nodo
+queda sin marca (un punto pequeño) y el grafo se mantiene igual de conectado.
+
+---
+
 ## Ejemplo completo
 
 ```markdown

@@ -1,0 +1,471 @@
+/* #region 🕸️ GRAFO DE APTITUDES + panel de contenido - Estilos */
+
+/* Grid de una columna: el círculo arriba, el panel de contenido debajo.
+   En escritorio ancho (≥1025px) el panel se superpone al círculo, ocupando
+   la MISMA área de grid ("grafo"), centrado sobre el logo. */
+.hab-grafo {
+  display: grid;
+  grid-template-areas: 'grafo' 'docs';
+  justify-items: center;
+  row-gap: 22px;
+  margin: 2vh auto 4vh;
+  padding: 0 clamp(20px, 5vw, 32px);
+}
+
+.hab-grafo-inner {
+  grid-area: grafo;
+  position: relative;
+  width: 560px;
+  max-width: 100%;
+  /* La altura la fija el JS (ResizeObserver), a partir del radio real que
+     ocupan los chips — nada de un cuadro fijo con hueco muerto alrededor.
+     Antes de que corra (o si no llega a correr): flujo simple centrado, con
+     el contenido íntegro y legible, sin nodos amontonados. */
+  min-height: 220px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.hab-aristas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Vocabulario de la línea de la cronología (.ruta-linea-glow/-trazo):
+   halo tenue desenfocado + trazo nítido encima, tinta pálida, no --cat-color. */
+.hab-aristas-halo line {
+  stroke: rgba(150, 185, 245, 0.34);
+  stroke-width: 6;
+  filter: blur(5px);
+  opacity: 1;
+  transition: opacity 0.3s ease, stroke-width 0.3s ease;
+}
+
+/* El trazo es un <polyline> (necesita un vértice intermedio para la flecha
+   de marker-mid) — fill:none o, por defecto, un SVG rellena el polígono que
+   forman sus puntos. */
+.hab-aristas-trazo polyline {
+  fill: none;
+  stroke: rgba(205, 222, 255, 0.78);
+  stroke-width: 1.6;
+  opacity: 1;
+  transition: opacity 0.3s ease, stroke-width 0.3s ease;
+}
+
+/* Con un panel abierto, la línea de SU chip es la única que se queda viva:
+   el ojo la sigue del logo al chip y, a través de ella, al panel — el panel
+   deja de ser una caja suelta y pasa a ser el destino de un trazo que ya
+   estaba ahí. Las demás se apagan del todo, no a medias. */
+.hab-aristas-trazo polyline.hab-arista-activa {
+  stroke-width: 2.2;
+}
+
+.hab-aristas-halo line.hab-arista-dim,
+.hab-aristas-trazo polyline.hab-arista-dim {
+  opacity: 0.08;
+}
+
+.hab-grafo-inner.listo .hab-aristas {
+  opacity: 1;
+}
+
+.hab-grafo-inner.listo .hab-nodo,
+.hab-grafo-inner.listo .hab-centro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.hab-centro {
+  width: 118px;
+  height: 118px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.35s ease;
+}
+
+.hab-centro img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── El chip: vocabulario de .ruta-filtro (fondo sólido + borde + sombra
+   direccional), no un icono pelado suelto en el vacío. Icono a la izquierda,
+   etiqueta a la derecha, esquina inferior-izquierda recta: una silueta propia
+   que lo distingue de la píldora de la barra de filtros de más abajo. ── */
+.hab-nodo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 168px;
+  min-height: 44px; /* área de toque, incluso al reducir padding en los cortes móviles */
+  box-sizing: border-box;
+  padding: 9px 14px 9px 11px;
+  border-radius: 16px 16px 16px 4px;
+  background: rgba(7, 11, 24, 0.86);
+  border: 1px solid color-mix(in srgb, var(--cat-color) 22%, rgba(255, 255, 255, 0.16));
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+}
+
+.hab-nodo-marca {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+  background: #e6edfb;
+  -webkit-mask: var(--marca) center / contain no-repeat;
+  mask: var(--marca) center / contain no-repeat;
+  transition: opacity 0.25s ease;
+}
+
+.hab-nodo-marca--vacia {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  mask: none;
+  -webkit-mask: none;
+}
+
+.hab-nodo-label {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* El "+" que marca que un chip se puede abrir — gira a "×" al expandirse.
+   Es lo que hace visible "esto se puede pulsar", sin depender del hover
+   (que en táctil no existe). */
+.hab-nodo-mas {
+  flex: none;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin-left: 2px;
+}
+
+.hab-nodo-mas::before,
+.hab-nodo-mas::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 1.6px;
+  background: rgba(255, 255, 255, 0.55);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease, background 0.25s ease;
+}
+
+.hab-nodo-mas::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+button.hab-nodo {
+  cursor: pointer;
+}
+
+button.hab-nodo:hover,
+button.hab-nodo[aria-expanded='true'] {
+  border-color: color-mix(in srgb, var(--cat-color) 55%, rgba(255, 255, 255, 0.16));
+}
+
+button.hab-nodo:hover .hab-nodo-marca,
+button.hab-nodo[aria-expanded='true'] .hab-nodo-marca {
+  opacity: 1;
+}
+
+button.hab-nodo:hover .hab-nodo-mas::before,
+button.hab-nodo:hover .hab-nodo-mas::after,
+button.hab-nodo[aria-expanded='true'] .hab-nodo-mas::before,
+button.hab-nodo[aria-expanded='true'] .hab-nodo-mas::after {
+  background: #fff;
+}
+
+button.hab-nodo[aria-expanded='true'] .hab-nodo-mas::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+button.hab-nodo[aria-expanded='true'] .hab-nodo-mas::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+button.hab-nodo:focus-visible {
+  outline: 2px solid var(--cat-color);
+  outline-offset: 3px;
+  border-radius: 16px 16px 16px 4px;
+}
+
+/* Sin cuerpo markdown: un escalón por debajo, sin cursor, sin reacción.
+   Es lo único (junto con ser <div> y no <button>) que la distingue de un
+   chip pulsable — cero controles muertos. */
+.hab-nodo--plana {
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+.hab-nodo--plana .hab-nodo-marca {
+  opacity: 0.55;
+}
+
+.hab-nodo--plana .hab-nodo-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Apertura: el logo cede el centro al panel en escritorio ── */
+.hab-grafo.abierto .hab-centro {
+  opacity: 0;
+}
+
+.hab-grafo.abierto .hab-nodo:not([aria-expanded='true']) {
+  opacity: 0.16;
+}
+
+/* ── Panel de contenido ── */
+.hab-docs {
+  grid-area: docs;
+  width: 100%;
+  max-width: 640px;
+  /* Centra .hab-doc dentro de .hab-docs: sin esto, el bloque de 330px del
+     panel se queda pegado al borde izquierdo del carril de grid en vez de
+     centrado bajo el logo. */
+  display: flex;
+  justify-content: center;
+}
+
+/* Vidrio real, no un tinte casi transparente: el panel flota sobre el propio
+   grafo (chips, aristas, el fondo de estrellas de la sección), y está quieto
+   (a diferencia de los chips, que se mueven cada frame), así que aquí el
+   blur sí se gana el sitio. Misma silueta que el chip (esquina recta), a
+   mayor escala, y la sombra direccional de .ruta-media, no un halo. */
+.hab-doc {
+  border-radius: 20px 20px 20px 6px;
+  padding: 18px 20px;
+  background: rgba(6, 9, 20, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid color-mix(in srgb, var(--cat-color) 22%, rgba(255, 255, 255, 0.15));
+  box-shadow:
+    0 16px 44px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+/* Entrada cosmética: el contenido ya está (hidden/no-hidden lo controla el
+   JS), esto solo suaviza la aparición. Si el navegador no soporta
+   @starting-style, el panel simplemente aparece en su estado de reposo. */
+@starting-style {
+  .hab-doc:not([hidden]) {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Sin <h3> propio: el título ya lo dice el chip acoplado justo encima, que
+   pasa a hacer de cabecera del panel. El resumen es la primera línea real. */
+.hab-doc-resumen {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 12px;
+}
+
+/* Tipografía del cuerpo markdown de cada habilidad */
+.hab-doc-cuerpo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.hab-doc-cuerpo > :first-child {
+  margin-top: 0;
+}
+
+.hab-doc-cuerpo > :last-child {
+  margin-bottom: 0;
+}
+
+.hab-doc-cuerpo p,
+.hab-doc-cuerpo ul {
+  margin: 0 0 12px;
+}
+
+.hab-doc-cuerpo ul {
+  padding-left: 20px;
+}
+
+.hab-doc-cuerpo p,
+.hab-doc-cuerpo li {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.hab-doc-cuerpo li {
+  margin-bottom: 6px;
+}
+
+.hab-doc-cuerpo strong {
+  font-weight: 700; /* 700 está cargado (Montserrat); 600 sería sintético */
+  color: #fff;
+}
+
+.hab-doc-cuerpo a {
+  color: #93c5fd;
+  text-decoration: underline;
+  text-decoration-color: rgba(147, 197, 253, 0.35);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.hab-doc-cuerpo a:hover {
+  color: #fff;
+  text-decoration-color: #93c5fd;
+}
+
+.hab-doc-cuerpo code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.86em;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── Escritorio ancho: el panel se superpone al centro del círculo ── */
+@media (min-width: 1025px) {
+  .hab-grafo {
+    grid-template-areas: 'grafo';
+  }
+
+  .hab-docs {
+    grid-area: grafo;
+    align-self: center;
+    justify-self: center;
+    z-index: 2;
+    pointer-events: none; /* solo .hab-doc (visible) vuelve a activarlos */
+  }
+
+  .hab-doc {
+    width: 330px;
+    max-height: 320px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    pointer-events: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  }
+
+  .hab-doc::-webkit-scrollbar {
+    width: 6px;
+  }
+  .hab-doc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .hab-doc::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 3px;
+  }
+
+  /* El chip pulsado viaja hasta acoplarse al borde superior del panel (JS) y
+     pasa a hacer de cabecera suya: por delante del cristal, no detrás. */
+  .hab-grafo.abierto .hab-nodo[aria-expanded='true'] {
+    z-index: 3;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .hab-doc {
+    width: 270px;
+    max-height: 260px;
+  }
+}
+
+/* ── Breakpoints: solo el ancho del anillo y el tamaño de logo/chip/icono.
+   La altura del anillo la calcula el JS a partir del radio real, así que no
+   hace falta fijarla aquí en cada corte. ── */
+@media (max-width: 1200px) {
+  .hab-grafo-inner {
+    width: 480px;
+  }
+  .hab-centro {
+    width: 104px;
+    height: 104px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hab-grafo-inner {
+    width: 400px;
+  }
+  .hab-centro {
+    width: 92px;
+    height: 92px;
+  }
+  .hab-nodo {
+    max-width: 148px;
+  }
+}
+
+/* ≤1024px: el círculo ya es pequeño para centrar texto legible — el panel
+   cae debajo como tarjeta y el logo se queda visible (vaciar el centro no
+   tiene sentido si el contenido ya no está ahí). */
+@media (max-width: 1024px) {
+  .hab-grafo.abierto .hab-centro {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .hab-grafo-inner {
+    width: 340px;
+  }
+  .hab-centro {
+    width: 84px;
+    height: 84px;
+  }
+  .hab-nodo {
+    max-width: 128px;
+    padding: 8px 12px 8px 10px;
+  }
+  .hab-nodo-label {
+    font-size: 0.76rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hab-grafo-inner {
+    width: 290px;
+  }
+  .hab-centro {
+    width: 72px;
+    height: 72px;
+  }
+  .hab-nodo {
+    max-width: 110px;
+    gap: 7px;
+  }
+  .hab-nodo-marca {
+    width: 17px;
+    height: 17px;
+  }
+  .hab-nodo-label {
+    font-size: 0.7rem;
+  }
+}
+
+/* #endregion */

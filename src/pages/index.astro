@@ -2,11 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import './_styles.css';
 import '../styles/proyectos.css';
+import '../styles/habilidades.css';
 import '../styles/contacto.css';
 import { Image, getImage } from 'astro:assets';
 import logo from '../assets/logo.png';
 
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import categoriasData from '../data/categorias.json';
 import contactoData from '../data/contacto.json';
 import { formatFecha, formatRangoFecha, esEnCurso } from '../utils/fechas.js';
@@ -22,6 +23,26 @@ const catById = Object.fromEntries(categorias.map((c) => [c.id, c]));
 // Color cuando un proyecto no tiene categoría (o esta no existe en el JSON)
 const COLOR_NEUTRO = '#9bb4d0';
 const colorDe = (catId: string | undefined) => (catId ? catById[catId]?.color : undefined) ?? COLOR_NEUTRO;
+
+// ── Habilidades: burbujas del grafo sobre el título "Proyectos" ──────────
+// Un <Content/> por habilidad: render() devuelve un componente nuevo por
+// entrada (mismo patrón que proyectos/multiguerras.astro).
+// `entrada.body` es el markdown crudo: vacío ⇒ burbuja sin panel (no clicable).
+const habilidades = await Promise.all(
+	(await getCollection('habilidades'))
+		.sort((a, b) => a.data.orden - b.data.orden || a.data.titulo.localeCompare(b.data.titulo, 'es'))
+		.map(async (entrada) => ({
+			...entrada.data,
+			id: entrada.id,
+			color: colorDe(entrada.data.categoria),
+			// Marca propia > logo de su categoría > nada
+			marca: entrada.data.icono
+				? `/icons/marcas/${entrada.data.icono}.svg`
+				: catById[entrada.data.categoria ?? '']?.logo,
+			expandible: Boolean(entrada.body?.trim()),
+			Content: (await render(entrada)).Content,
+		})),
+);
 
 // Posición, profundidad (parallax) y rotación de cada card del hero.
 // Los proyectos con `destacado: N` en su frontmatter flotan aquí (ordenados
@@ -222,43 +243,72 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 	<div class="scroll-spacer"></div>
 
 	<section class="proyectos-section" id="proyectos">
+		<div class="hab-grafo" id="hab-grafo">
+			<div class="hab-grafo-inner" id="hab-grafo-inner">
+				<svg class="hab-aristas" id="hab-aristas" aria-hidden="true">
+					<defs>
+						<radialGradient id="hab-fade">
+							<stop offset="0" stop-color="#fff" stop-opacity="1" />
+							<stop offset=".85" stop-color="#fff" stop-opacity=".45" />
+							<stop offset="1" stop-color="#fff" stop-opacity="0" />
+						</radialGradient>
+						<mask id="hab-fade-m"><rect width="100%" height="100%" fill="url(#hab-fade)" /></mask>
+						<marker id="hab-flecha" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+							<path d="M1,1 L7,4 L1,7 Z" fill="rgba(205,222,255,.78)" />
+						</marker>
+					</defs>
+					<g class="hab-aristas-halo" mask="url(#hab-fade-m)"></g>
+					<g class="hab-aristas-trazo" mask="url(#hab-fade-m)"></g>
+				</svg>
+
+				{habilidades.map((h) => {
+					const Nodo = h.expandible ? 'button' : 'div';
+					return (
+						<Nodo
+							class={`hab-nodo${h.expandible ? '' : ' hab-nodo--plana'}`}
+							style={`--cat-color:${h.color}`}
+							{...(h.expandible
+								? { type: 'button', id: `hab-nodo-${h.id}`, 'aria-expanded': 'false', 'aria-controls': `hab-doc-${h.id}` }
+								: { title: h.resumen })}
+						>
+							<span
+								class={`hab-nodo-marca${h.marca ? '' : ' hab-nodo-marca--vacia'}`}
+								style={h.marca ? `--marca:url(${h.marca})` : undefined}
+								aria-hidden="true"
+							></span>
+							<span class="hab-nodo-label">{h.titulo}</span>
+							{h.expandible && <span class="hab-nodo-mas" aria-hidden="true"></span>}
+						</Nodo>
+					);
+				})}
+
+				<div class="hab-centro">
+					<Image
+						src={logo}
+						alt="PGSCOM Logo"
+						width={720}
+						height={720}
+						widths={[200, 400, 720]}
+						sizes="(max-width: 768px) 110px, 150px"
+					/>
+				</div>
+			</div>
+
+			<div class="hab-docs">
+				{habilidades.filter((h) => h.expandible).map((h) => (
+					<div class="hab-doc" id={`hab-doc-${h.id}`} style={`--cat-color:${h.color}`} role="group" aria-labelledby={`hab-nodo-${h.id}`} data-lenis-prevent hidden>
+						{h.resumen && <p class="hab-doc-resumen">{h.resumen}</p>}
+						<div class="hab-doc-cuerpo"><h.Content /></div>
+					</div>
+				))}
+			</div>
+		</div>
+
 		<div class="proyectos-header">
 			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
 			<p class="proyectos-subtitulo-seccion">
 				Toda mi trayectoria: filtra por disciplina o cambia de vista para explorarla.
 			</p>
-		</div>
-
-		<div class="proyectos-hero">
-			<div class="proyectos-hero-inner">
-				<div class="proyectos-grid">
-					{categorias.map((aptitud) => (
-						<a
-							href="#proyectos-mapa"
-							class="proyecto-card"
-							data-aptitud-id={aptitud.id}
-							style={`--cat-color:${aptitud.color ?? COLOR_NEUTRO}`}
-						>
-							<div class="proyecto-card-inner">
-								<div class="proyecto-icon">
-									<img src={aptitud.logo} alt={aptitud.titulo} />
-								</div>
-								<span class="proyecto-titulo">{aptitud.titulo}</span>
-							</div>
-						</a>
-					))}
-				</div>
-				<div class="proyectos-logo">
-					<Image 
-						src={logo} 
-						alt="PGSCOM Logo" 
-						width={720} 
-						height={720} 
-						widths={[200, 400, 720]}
-						sizes="(max-width: 768px) 150px, 200px"
-					/>
-				</div>
-			</div>
 		</div>
 
 		<div class="proyectos-mapa" id="proyectos-mapa" data-vista="rejilla">
@@ -671,7 +721,7 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 		import '../scripts/smooth-scroll.js';
 		import '../scripts/preloader.js';
 		import '../scripts/hero.js';
-		import '../scripts/proyectos-orbit.js';
+		import '../scripts/habilidades-grafo.js';
 		import '../scripts/proyectos-ruta.js';
 		import '../scripts/card-video.js';
 	</script>

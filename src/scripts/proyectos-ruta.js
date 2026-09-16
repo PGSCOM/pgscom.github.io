@@ -1,6 +1,5 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import lenis from './smooth-scroll.js';
 gsap.registerPlugin(ScrollTrigger);
 
 // Dos vistas de los mismos proyectos: la Rejilla (por defecto, todos a la
@@ -265,9 +264,6 @@ function initRuta() {
       f.classList.toggle('act', act);
       f.setAttribute('aria-pressed', act ? 'true' : 'false');
     });
-    document.querySelectorAll('.proyecto-card').forEach((card) => {
-      card.classList.toggle('is-active', card.dataset.aptitudId === cat);
-    });
   }
 
   filtros.forEach((f) => {
@@ -292,18 +288,6 @@ function initRuta() {
     }
   }
   vistaBtns.forEach((b) => b.addEventListener('click', () => setVista(b.dataset.vista)));
-
-  // La órbita de categorías también filtra, vuelve a la Rejilla y baja hasta ella
-  document.querySelectorAll('.proyecto-card').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      const id = card.dataset.aptitudId;
-      if (!id) return;
-      e.preventDefault();
-      setFiltro(filtroActual === id ? 'all' : id);
-      setVista('rejilla');
-      lenis.scrollTo(mapa);
-    });
-  });
 }
 
 // Astro emite este bloque como <script type="module">, ya diferido por el

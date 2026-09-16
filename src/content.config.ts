@@ -86,4 +86,25 @@ const multiguerras = defineCollection({
 		}),
 });
 
-export const collections = { proyectos, multiguerras };
+// Competencias técnicas sueltas que se listan en la home (Tailscale, Docker,
+// montar un NAS…). No son proyectos: no tienen ficha ni URL propia.
+// El CUERPO markdown es el panel desplegable; sin cuerpo, la fila se pinta
+// plana, sin "+" y sin clic.
+// Solo .md: en .mdx el `body` incluye las líneas `import`, así que un archivo
+// "vacío" con un import parecería tener cuerpo y saldría como expandible.
+const habilidades = defineCollection({
+	loader: glob({ pattern: '*.md', base: './src/content/habilidades' }),
+	schema: z.object({
+		titulo: z.string(),
+		// ID de src/data/categorias.json: solo da el color de acento de la fila
+		categoria: z.string().optional(),
+		// Nombre de archivo (sin .svg) dentro de public/icons/marcas/
+		icono: z.string().optional(),
+		// Una línea, siempre visible bajo el título
+		resumen: z.string().optional(),
+		// Menor = antes. Sin este campo va al montón del medio y desempata por título
+		orden: z.number().default(50),
+	}),
+});
+
+export const collections = { proyectos, multiguerras, habilidades };

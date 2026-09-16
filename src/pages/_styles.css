@@ -485,19 +485,6 @@
 }
 
 /* ============================================
-   ÓRBITA DE CATEGORÍAS (sección proyectos)
-   ============================================ */
-
-.proyectos-grid {
-    position: absolute;
-    inset: 0;
-}
-
-.proyectos-grid .proyecto-card {
-    will-change: transform;
-}
-
-/* ============================================
    RESPONSIVE
    ============================================ */
 
