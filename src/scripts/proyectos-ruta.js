@@ -237,7 +237,8 @@ function initRuta() {
     new ResizeObserver(reflow).observe(cuerpo);
   }
 
-  marcarSinImagen(mapa, '.rejilla-img', '.rejilla-item');
+  const rejilla = mapa.querySelector('.rejilla');
+  if (rejilla) marcarSinImagen(rejilla, '.ruta-img', '.ruta-item');
 
   // ── Filtro por disciplina: atenúa y desatura, no oculta ──
   // Vale para las dos vistas: cada tarjeta principal lleva su propio

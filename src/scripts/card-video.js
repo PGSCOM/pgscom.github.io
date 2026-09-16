@@ -16,7 +16,7 @@ document.querySelectorAll('.hero-card').forEach((card) => {
 
 // Vídeos que arrancan al entrar en el viewport, sin depender de hover (así
 // funcionan también en táctil): cronología y rejilla.
-const scrollVideos = document.querySelectorAll('.ruta-video, .rejilla-video');
+const scrollVideos = document.querySelectorAll('.ruta-video');
 
 if (scrollVideos.length > 0) {
 	const observer = new IntersectionObserver(

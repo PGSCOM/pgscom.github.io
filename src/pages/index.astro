@@ -1,11 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import './_styles.css';
+import '../styles/titulo-proyecto.css';
 import '../styles/proyectos.css';
 import '../styles/habilidades.css';
 import '../styles/contacto.css';
 import { Image, getImage } from 'astro:assets';
 import logo from '../assets/logo.png';
+import ProyectoCard from '../components/ProyectoCard.astro';
 
 import { getCollection, render } from 'astro:content';
 import categoriasData from '../data/categorias.json';
@@ -134,8 +136,11 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 
 <Layout>
 	<!-- Familias de display solo para la rotación tipográfica del logo (más
-	     abajo): Montserrat y Chakra Petch ya las carga Layout.astro en toda la web. -->
-	<link slot="head" rel="preload" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Bungee+Inline&family=Kranky&family=Limelight&family=Meow+Script&family=Modak&family=Monoton&family=Offside&family=Pacifico&family=Permanent+Marker&family=Rampart+One&family=Solway:wght@500&family=Tapestry&family=Tiny5&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	     abajo): Montserrat y Chakra Petch ya las carga Layout.astro en toda la web.
+	     Open+Sans:wght@800 es el tratamiento de título con degradado
+	     (.titulo-degradado, ver titulo-proyecto.css), nacido en la ficha de
+	     multiguerras y reutilizable en cualquier tarjeta. -->
+	<link slot="head" rel="preload" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Bungee+Inline&family=Kranky&family=Limelight&family=Meow+Script&family=Modak&family=Monoton&family=Offside&family=Open+Sans:wght@800&family=Pacifico&family=Permanent+Marker&family=Rampart+One&family=Solway:wght@500&family=Tapestry&family=Tiny5&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 	<script is:inline>
 		document.documentElement.style.overflow = 'hidden';
 		// Red de seguridad: si el bundle de preloader.js no llega a ejecutarse
@@ -339,33 +344,14 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 
 			<div class="rejilla">
 				{rejillaEntries.map((proyecto) => (
-					<a
-						class={`rejilla-item rejilla-item--${proyecto.escala}${proyecto.imagen ? '' : ' sin-imagen'}${proyecto.enlaceExterno ? ' es-externo' : ''}`}
+					<ProyectoCard
+						proyecto={proyecto}
+						poster={postersVideo.get(proyecto.id)}
+						fecha={false}
+						class={`rejilla-item rejilla-item--${proyecto.escala}`}
 						data-cats={proyecto.catIds.join(',')}
 						style={`--cat-color:${proyecto.color}`}
-						{...(proyecto.enlaceExterno
-							? { href: proyecto.enlaceExterno, target: '_blank', rel: 'noopener noreferrer' }
-							: { href: `/proyectos/${proyecto.id}`, 'data-proyecto-link': true })}
-					>
-						<div class="rejilla-media">
-							{proyecto.video
-								? <video class="rejilla-video" data-src={proyecto.video} poster={postersVideo.get(proyecto.id)} muted loop playsinline preload="none" aria-hidden="true"></video>
-								: proyecto.imagen && <Image class="rejilla-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
-							<img class="rejilla-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
-							{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
-							{proyecto.enlaceExterno && (
-								<span class="card-externo-icono" aria-hidden="true">
-									<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-								</span>
-							)}
-						</div>
-						<div class="rejilla-info">
-							<h4 class="rejilla-titulo">{proyecto.titulo.trim()}</h4>
-							<p class="rejilla-meta">
-								{[proyecto.cats.map((c) => c.titulo).join(' · '), proyecto.año !== 'Otros' ? proyecto.año : null].filter(Boolean).join(' · ')}
-							</p>
-						</div>
-					</a>
+					/>
 				))}
 			</div>
 
@@ -387,52 +373,7 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 							data-cats={proyecto.catIds.join(',')}
 							style={`--cat-color:${proyecto.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
 						>
-							<a
-								class={`ruta-item${proyecto.imagen ? '' : ' sin-imagen'}${proyecto.enlaceExterno ? ' es-externo' : ''}`}
-								{...(proyecto.enlaceExterno
-									? { href: proyecto.enlaceExterno, target: '_blank', rel: 'noopener noreferrer' }
-									: { href: `/proyectos/${proyecto.id}`, 'data-proyecto-link': true })}
-							>
-								{proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
-								<div class="ruta-media">
-									{proyecto.video
-										? <video class="ruta-video" data-src={proyecto.video} poster={postersVideo.get(proyecto.id)} muted loop playsinline preload="none" aria-hidden="true"></video>
-										: proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
-									<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
-									{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
-									{proyecto.enlaceExterno && (
-										<span class="card-externo-icono" aria-hidden="true">
-											<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-										</span>
-									)}
-									<div class="ruta-info">
-										<div class="ruta-cats">
-											{proyecto.cats.map((c) => (
-												<span class="ruta-cat-chip" style={`--cat-color:${c.color ?? COLOR_NEUTRO}`}>
-													<img src={c.logo} alt="" aria-hidden="true" />
-													<span>{c.titulo}</span>
-												</span>
-											))}
-										</div>
-										<h4 class="ruta-titulo">{proyecto.titulo.trim()}</h4>
-										{proyecto.descExterior
-											? <p class="ruta-desc ruta-desc--fija">{proyecto.descExterior}</p>
-											: proyecto.descripcion && <p class="ruta-desc">{proyecto.descripcion}</p>}
-										{proyecto.tecnologias && (
-											<div class="ruta-techs">
-												{proyecto.tecnologias.slice(0, 4).map((tech) => (
-													<span class="ruta-tech">{tech}</span>
-												))}
-											</div>
-										)}
-										{proyecto.enlaceExterno && (
-											<span class="ruta-externo-url">
-												{new URL(proyecto.enlaceExterno).hostname}
-											</span>
-										)}
-									</div>
-								</div>
-							</a>
+							<ProyectoCard proyecto={proyecto} poster={postersVideo.get(proyecto.id)} />
 
 							{proyecto.subs.length > 0 && (
 								<div class="ruta-subs">

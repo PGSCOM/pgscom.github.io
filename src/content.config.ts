@@ -47,6 +47,26 @@ const proyectos = defineCollection({
 			urlvideopage: z.string().optional(),
 			// Oculta el badge de fecha en la tarjeta del timeline
 			ocultarFecha: z.boolean().optional(),
+			// Sustituye el título de la tarjeta por una imagen (como el logo de un
+			// juego en la biblioteca de Steam). El título sigue siendo el `alt`.
+			logo: image().optional(),
+			// Anclaje del logo. Sin este campo ocupa el hueco del título dentro del
+			// overlay (nunca pisa chips ni descripción). Con valor, flota sobre el arte.
+			logoPos: z
+				.enum([
+					'abajo-izq', 'abajo-centro', 'abajo-der',
+					'centro-izq', 'centro', 'centro-der',
+					'arriba-izq', 'arriba-centro', 'arriba-der',
+				])
+				.optional(),
+			logoAncho: z.number().min(10).max(100).optional(), // % del ancho de la tarjeta
+			logoAlto: z.number().min(10).max(100).optional(), // % máximo del alto
+			// Degradado letra a letra en el título (ficha y tarjeta). `true` usa el
+			// degradado por defecto; un par de colores lo sustituye.
+			tituloDegradado: z.union([z.boolean(), z.array(z.string()).length(2)]).optional(),
+			// Multiplicador del tamaño del título en la tarjeta (el degradado
+			// necesita tamaño para leerse). 1 = como ahora.
+			tituloEscala: z.number().min(0.5).max(3).optional(),
 			sub: z
 				.array(
 					z.object({

@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import ProyectoHero from '../../components/ProyectoHero.astro';
 import TemaToggle from '../../components/TemaToggle.astro';
 import '../../styles/proyecto-detalle.css';
+import '../../styles/titulo-proyecto.css';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import categoriasData from '../../data/categorias.json';
@@ -123,6 +124,7 @@ const breadcrumbLd = {
 			portada={portada}
 			trailer={proyecto.trailer}
 			logoFallback={aptitud.logo}
+			tituloDegradado={proyecto.tituloDegradado}
 		/>
 
 		<article class="pd-wrapper">

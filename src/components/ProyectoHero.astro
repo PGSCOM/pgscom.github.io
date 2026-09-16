@@ -12,6 +12,7 @@
 // scroll pasa a la esquina opuesta, abajo a la derecha, como segunda pieza
 // de la misma fila en vez de cerrar la pila.
 import { Image, getImage } from 'astro:assets';
+import { palabrasLetras } from '../utils/titulo.js';
 
 interface Props {
 	titulo: string;
@@ -24,9 +25,13 @@ interface Props {
 	portada?: ImageMetadata;
 	trailer?: string;
 	logoFallback: string;
+	// Degradado letra a letra del título (ver src/styles/titulo-proyecto.css).
+	// `true` usa los colores por defecto; un par de colores los sustituye.
+	tituloDegradado?: boolean | string[];
 }
 
-const { titulo, breadcrumbActual, descripcion, fechaTexto, premio, link, txtboton, portada, trailer, logoFallback } = Astro.props;
+const { titulo, breadcrumbActual, descripcion, fechaTexto, premio, link, txtboton, portada, trailer, logoFallback, tituloDegradado } = Astro.props;
+const [gradA, gradB] = Array.isArray(tituloDegradado) ? tituloDegradado : [];
 
 // Póster del trailer: webp optimizado (el atributo `poster` no pasa por
 // <Image>, así que con `.src` directo cargaría el asset original completo).
@@ -80,7 +85,24 @@ const posterTrailer = trailer && portada
 					<span class="pd-breadcrumb-current">{breadcrumbActual}</span>
 				</nav>
 
-				<h1 class="pd-titulo">{titulo}</h1>
+				{tituloDegradado ? (
+					<h1
+						class="pd-titulo titulo-degradado"
+						style={(gradA && gradB) ? `--titulo-grad-a:${gradA};--titulo-grad-b:${gradB}` : undefined}
+						aria-label={titulo}
+					>
+						<span aria-hidden="true">
+							{palabrasLetras(titulo).map((letras: string[], i: number) => (
+								<Fragment>
+									{i > 0 && ' '}
+									<span class="titulo-palabra">{letras.map((c: string) => <span>{c}</span>)}</span>
+								</Fragment>
+							))}
+						</span>
+					</h1>
+				) : (
+					<h1 class="pd-titulo">{titulo}</h1>
+				)}
 
 				<div class="pd-meta">
 					{fechaTexto && <span class="pd-meta-item">{fechaTexto}</span>}

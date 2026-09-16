@@ -1,0 +1,127 @@
+---
+// Tarjeta de proyecto compartida por la Cronología y la Rejilla: misma
+// imagen a sangre con overlay (chips de categoría + título + desc/techs al
+// pasar el cursor). `fecha` controla solo el chip flotante de arriba, que la
+// rejilla no lleva.
+//
+// El título puede sustituirse por otras dos cosas, configurables desde el
+// frontmatter del proyecto (ver src/content.config.ts): una imagen `logo`
+// (como el logo de un juego en la biblioteca de Steam) o un tratamiento de
+// texto con degradado letra a letra (`tituloDegradado`), compartido con la
+// cabecera de la ficha vía src/styles/titulo-proyecto.css.
+import { Image } from 'astro:assets';
+import { palabrasLetras } from '../utils/titulo.js';
+
+const COLOR_NEUTRO = '#9bb4d0';
+
+// Ancla del logo cuando flota sobre el arte (`logoPos`): [align-items,
+// justify-items] para el `place-items` de .ruta-logo-capa en proyectos.css.
+const LOGO_ANCLAJE: Record<string, [string, string]> = {
+	'abajo-izq': ['end', 'start'],
+	'abajo-centro': ['end', 'center'],
+	'abajo-der': ['end', 'end'],
+	'centro-izq': ['center', 'start'],
+	centro: ['center', 'center'],
+	'centro-der': ['center', 'end'],
+	'arriba-izq': ['start', 'start'],
+	'arriba-centro': ['start', 'center'],
+	'arriba-der': ['start', 'end'],
+};
+
+interface Props {
+	proyecto: any;
+	poster?: string;
+	fecha?: boolean;
+	class?: string;
+	[attr: string]: any;
+}
+
+const { proyecto, poster, fecha = true, class: claseExtra, ...rest } = Astro.props;
+
+const logoEstilo = proyecto.logo
+	? `--logo-ancho:${proyecto.logoAncho ?? 55}%;--logo-alto:${proyecto.logoAlto ?? 40}%`
+	: undefined;
+const logoCapaEstilo = proyecto.logo && proyecto.logoPos
+	? `${logoEstilo};--logo-y:${LOGO_ANCLAJE[proyecto.logoPos][0]};--logo-x:${LOGO_ANCLAJE[proyecto.logoPos][1]}`
+	: undefined;
+
+const [gradA, gradB] = Array.isArray(proyecto.tituloDegradado) ? proyecto.tituloDegradado : [];
+const tituloEstilo = proyecto.tituloDegradado
+	? [
+			gradA && gradB ? `--titulo-grad-a:${gradA};--titulo-grad-b:${gradB}` : '',
+			proyecto.tituloEscala ? `--titulo-escala:${proyecto.tituloEscala}` : '',
+		]
+			.filter(Boolean)
+			.join(';')
+	: undefined;
+---
+
+<a
+	class={`ruta-item${claseExtra ? ` ${claseExtra}` : ''}${proyecto.imagen ? '' : ' sin-imagen'}${proyecto.enlaceExterno ? ' es-externo' : ''}`}
+	{...(proyecto.enlaceExterno
+		? { href: proyecto.enlaceExterno, target: '_blank', rel: 'noopener noreferrer' }
+		: { href: `/proyectos/${proyecto.id}`, 'data-proyecto-link': true })}
+	{...rest}
+>
+	{fecha && proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
+	<div class="ruta-media">
+		{proyecto.video
+			? <video class="ruta-video" data-src={proyecto.video} poster={poster} muted loop playsinline preload="none" aria-hidden="true"></video>
+			: proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
+		<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
+		{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
+		{proyecto.enlaceExterno && (
+			<span class="card-externo-icono" aria-hidden="true">
+				<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+			</span>
+		)}
+		{proyecto.logo && proyecto.logoPos && (
+			<div class="ruta-logo-capa" style={logoCapaEstilo}>
+				<Image class="ruta-logo" src={proyecto.logo} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />
+			</div>
+		)}
+		<div class="ruta-info">
+			<div class="ruta-cats">
+				{proyecto.cats.map((c: any) => (
+					<span class="ruta-cat-chip" style={`--cat-color:${c.color ?? COLOR_NEUTRO}`}>
+						<img src={c.logo} alt="" aria-hidden="true" />
+						<span>{c.titulo}</span>
+					</span>
+				))}
+			</div>
+			{proyecto.logo
+				? (!proyecto.logoPos && (
+					<Image class="ruta-logo" src={proyecto.logo} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" style={logoEstilo} />
+				))
+				: proyecto.tituloDegradado ? (
+					<h4 class="ruta-titulo titulo-degradado" style={tituloEstilo} aria-label={proyecto.titulo.trim()}>
+						<span aria-hidden="true">
+							{palabrasLetras(proyecto.titulo).map((letras: string[], i: number) => (
+								<Fragment>
+									{i > 0 && ' '}
+									<span class="titulo-palabra">{letras.map((c: string) => <span>{c}</span>)}</span>
+								</Fragment>
+							))}
+						</span>
+					</h4>
+				) : (
+					<h4 class="ruta-titulo">{proyecto.titulo.trim()}</h4>
+				)}
+			{proyecto.descExterior
+				? <p class="ruta-desc ruta-desc--fija">{proyecto.descExterior}</p>
+				: proyecto.descripcion && <p class="ruta-desc">{proyecto.descripcion}</p>}
+			{proyecto.tecnologias && (
+				<div class="ruta-techs">
+					{proyecto.tecnologias.slice(0, 4).map((tech: string) => (
+						<span class="ruta-tech">{tech}</span>
+					))}
+				</div>
+			)}
+			{proyecto.enlaceExterno && (
+				<span class="ruta-externo-url">
+					{new URL(proyecto.enlaceExterno).hostname}
+				</span>
+			)}
+		</div>
+	</div>
+</a>

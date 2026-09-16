@@ -1,0 +1,42 @@
+/* Tratamiento de título compartido por tarjetas y fichas: degradado letra a
+   letra con contorno blanco (nacido en la ficha de multiguerras). Se activa
+   con la clase .titulo-degradado sobre el título, con una <span
+   class="titulo-palabra"> por palabra y una <span> por letra dentro de cada
+   una — repartidas en build por palabrasLetras() (src/utils/titulo.js), no
+   por un script en el navegador. Los colores por defecto son los originales
+   de multiguerras; --titulo-grad-a/b los sustituyen por proyecto. */
+
+.titulo-degradado {
+	text-shadow: none;
+	-webkit-text-stroke: var(--titulo-borde, 1px) #fff;
+	text-stroke: var(--titulo-borde, 1px) #fff;
+}
+
+/* Una palabra por bloque (white-space: nowrap): así la línea solo puede
+   partirse entre palabras. Sin esto, cada letra (inline-block suelto) es un
+   punto de corte válido y el navegador parte por mitad de palabra. */
+.titulo-palabra {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.titulo-degradado .titulo-palabra > span {
+	display: inline-block;
+	background: linear-gradient(145deg, var(--titulo-grad-a, hsl(262, 40%, 50%)) 30%, var(--titulo-grad-b, #96b6ff) 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	-webkit-text-stroke: var(--titulo-borde-letra, 0.25px) #fff;
+	text-stroke: var(--titulo-borde-letra, 0.25px) #fff;
+}
+
+/* Fallback para navegadores sin background-clip: text — sin esto el título
+   quedaría invisible (fondo transparente sin relleno de color detrás). */
+@supports not (-webkit-background-clip: text) {
+	.titulo-degradado .titulo-palabra > span {
+		-webkit-text-fill-color: currentColor;
+		color: #3f1f76;
+		-webkit-text-stroke: 2px #fff;
+		text-stroke: 2px #fff;
+	}
+}

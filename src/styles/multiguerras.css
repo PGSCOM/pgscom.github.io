@@ -43,15 +43,15 @@
   object-position: 68% center;
 }
 
-/* ── Título del hero: mismo tratamiento que cine.pgscom.es ────────── */
+/* ── Título del hero: mismo tratamiento que cine.pgscom.es ──────────
+   El degradado letra a letra en sí (.titulo-degradado/.titulo-palabra) vive
+   en titulo-proyecto.css, compartido con la tarjeta — aquí solo lo propio
+   de esta cabecera: la tipografía y la compensación de ancho. */
 .mg-page .pd-titulo {
   font-family: 'Open Sans', sans-serif;
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: normal;
-  text-shadow: none;
-  -webkit-text-stroke: 1px #fff;
-  text-stroke: 1px #fff;
   /* Las letras se renderizan a 1.125em (ver más abajo): el ancho real en
      pantalla es un 12.5% mayor que el que calcularía un `15ch` medido
      contra el tamaño del propio h1. Se compensa aquí para que el título
@@ -59,35 +59,9 @@
   max-width: 13ch;
 }
 
-/* Una palabra por bloque (white-space: nowrap): así la línea solo puede
-   partirse entre palabras. Sin esto, cada letra (inline-block suelto) es un
-   punto de corte válido y el navegador parte por mitad de palabra. */
-.mg-page .pd-titulo .mg-titulo-palabra {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-/* Cada letra con su propio degradado (las spans las crea el script inline
-   de multiguerras.astro). 1.125em = la proporción 4.5rem/4rem del original. */
-.mg-page .pd-titulo .mg-titulo-palabra > span {
-  display: inline-block;
+/* 1.125em = la proporción 4.5rem/4rem del tamaño original de esta ficha. */
+.mg-page .pd-titulo .titulo-palabra > span {
   font-size: 1.125em;
-  background: linear-gradient(145deg, hsl(262, 40%, 50%) 30%, #96b6ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 0.25px #fff;
-  text-stroke: 0.25px #fff;
-}
-
-/* Fallback del original para navegadores sin background-clip: text */
-@supports not (-webkit-background-clip: text) {
-  .mg-page .pd-titulo .mg-titulo-palabra > span {
-    -webkit-text-fill-color: currentColor;
-    color: #3f1f76;
-    -webkit-text-stroke: 2px #fff;
-    text-stroke: 2px #fff;
-  }
 }
 
 /* ── Cuerpo: índice lateral + capítulos ───────────────────────────
