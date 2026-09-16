@@ -1,12 +1,10 @@
 import gsap from 'gsap';
 
 // ── Grafo de aptitudes sobre el título "Proyectos" ────────────────────────
-// Chips conectados al logo central por líneas, repartidos de forma orgánica
-// (radio y ángulo propios por nodo, no un anillo perfecto) y con un vaivén
-// leve y acotado (nunca una rotación rígida). Sin dependencia de física
-// nueva: con N≤15 nodos, "repartidos sin solapar" sale de una relajación por
-// pares — unas pocas iteraciones de trigonometría simple, no un simulador
-// continuo que además convergería y se pararía (ver plan). Un solo bucle de
+// Chips conectados al logo central por líneas, repartidos en un anillo con
+// ángulos equiespaciados y un único radio (el solape entre chips queda
+// descartado por construcción, no por una relajación), con un vaivén leve y
+// acotado por nodo más una deriva angular lenta compartida. Un solo bucle de
 // rAF, compartido con el ticker de GSAP que ya conduce Lenis
 // (src/scripts/smooth-scroll.js).
 //
@@ -26,8 +24,6 @@ function initGrafo() {
 	const logo = inner.querySelector('.hab-centro');
 	if (!nodos.length || !logo) return;
 
-	const gHalo = svg.querySelector('.hab-aristas-halo');
-	const gTrazo = svg.querySelector('.hab-aristas-trazo');
 	const n = nodos.length;
 	// El acoplado del chip al panel solo existe en escritorio, donde el panel
 	// se superpone al anillo compartiendo su centro; en móvil el panel cae
@@ -39,18 +35,11 @@ function initGrafo() {
 	// asomaría por encima del propio contenedor.
 	const estrechoMQ = window.matchMedia('(max-width: 1200px)');
 
-	// Halo desenfocado (sin flecha, enturbiaría el trazo) + trazo nítido con
-	// flecha a mitad de camino — vocabulario de .ruta-linea, con dirección.
+	// Un trazo nítido por nodo, sin flecha — vocabulario de .ruta-linea-trazo.
 	const NS = 'http://www.w3.org/2000/svg';
-	const halos = nodos.map(() => {
-		const l = document.createElementNS(NS, 'line');
-		gHalo.append(l);
-		return l;
-	});
 	const trazos = nodos.map(() => {
-		const l = document.createElementNS(NS, 'polyline');
-		l.setAttribute('marker-mid', 'url(#hab-flecha)');
-		gTrazo.append(l);
+		const l = document.createElementNS(NS, 'line');
+		svg.append(l);
 		return l;
 	});
 
@@ -74,7 +63,11 @@ function initGrafo() {
 		return { x: Math.cos(a) * r, y: Math.sin(a) * r };
 	}
 
-	let cx = 0, cy = 0, r0 = 0;
+	let cx = 0, cy = 0;
+	// Media anchura/altura de cada chip, medida una vez por el ResizeObserver
+	// — recortar la línea en el borde del chip en tick() no puede leer layout
+	// (offsetWidth/Height) en cada frame.
+	const mitades = nodos.map(() => ({ hw: 0, hh: 0 }));
 	const t0 = performance.now();
 
 	// El chip abierto (acoplado y quieto) y el que está en tránsito (viajando
@@ -96,15 +89,14 @@ function initGrafo() {
 				({ x, y } = posicionReposo(o, t));
 				gsap.set(nodo, { x, y });
 			}
-			// El extremo junto al logo usa el ángulo de reposo (a): con ampA tan
-			// pequeño la diferencia con el ángulo oscilante es invisible, y así
-			// vale igual para el nodo en tránsito, que ya no tiene un ángulo vivo.
-			const x1 = cx + Math.cos(o.a) * r0, y1 = cy + Math.sin(o.a) * r0;
-			const x2 = cx + x, y2 = cy + y;
-			const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
-			halos[i].setAttribute('x1', x1); halos[i].setAttribute('y1', y1);
-			halos[i].setAttribute('x2', x2); halos[i].setAttribute('y2', y2);
-			trazos[i].setAttribute('points', `${x1},${y1} ${mx},${my} ${x2},${y2}`);
+			// Nace en el centro real (cx, cy) — el logo, que pinta encima, lo tapa
+			// hasta su borde — y muere en el borde de la caja del chip, no en su
+			// centro, para no correr por debajo de su fondo semitransparente.
+			const { hw, hh } = mitades[i];
+			const corte = Math.min(hw / (Math.abs(x) || Infinity), hh / (Math.abs(y) || Infinity), 1);
+			const x2 = cx + x * (1 - corte), y2 = cy + y * (1 - corte);
+			trazos[i].setAttribute('x1', cx); trazos[i].setAttribute('y1', cy);
+			trazos[i].setAttribute('x2', x2); trazos[i].setAttribute('y2', y2);
 		});
 	}
 
@@ -127,49 +119,29 @@ function initGrafo() {
 			gsap.set(logo, { xPercent: -50, yPercent: -50 });
 			inner.classList.add('listo');
 		}
+		nodos.forEach((el, i) => {
+			mitades[i].hw = el.offsetWidth / 2;
+			mitades[i].hh = el.offsetHeight / 2;
+		});
 		const wChip = Math.max(...nodos.map((el) => el.offsetWidth));
 		const hChip = Math.max(...nodos.map((el) => el.offsetHeight));
 		const radioColision = Math.hypot(wChip, hChip) / 2 + 10;
-		r0 = logo.offsetWidth / 2 + 10;
 
-		// Reparto orgánico: ángulo base uniforme + jitter, radio propio entre
-		// 0.6× y 1.4× de un nominal calibrado para que incluso el más lejano
-		// quepa en el ancho real del contenedor.
+		// Anillo repartido: ángulos equiespaciados, un único radio — con eso el
+		// solape ya es imposible por construcción, así que no hace falta ninguna
+		// relajación. El radio es el mínimo que separa a dos vecinos la cuerda
+		// necesaria (2·R·sin(π/n)), acotado a lo que cabe entre el logo y el
+		// borde del contenedor.
 		const Rlogo = logo.offsetWidth / 2 + radioColision;
 		const Rmax = w / 2 - wChip / 2 - 4;
-		const Rbase = Math.min(Rmax / 1.4, Math.max(Rlogo * 1.15, Rmax * 0.6));
-		osc.forEach((o) => {
-			o.a = Math.random() * Math.PI * 2;
-			o.r = Math.min(Rmax, Math.max(Rlogo, Rbase * (0.6 + Math.random() * 0.8)));
+		const R = Math.min(Rmax, Math.max(Rlogo, radioColision / Math.sin(Math.PI / n)));
+		osc.forEach((o, i) => {
+			o.a = -Math.PI / 2 + (i * Math.PI * 2) / n;
+			o.r = R;
 		});
 
-		// Relajación anti-solape: empuja cada par demasiado cerca a lo largo de
-		// la línea que los une, y vuelve a fijar cada nodo a [Rlogo, Rmax] en
-		// cada pasada. ~24 iteraciones bastan de sobra con n≤15.
-		for (let iter = 0; iter < 24; iter++) {
-			for (let i = 0; i < n; i++) {
-				for (let j = i + 1; j < n; j++) {
-					const oi = osc[i], oj = osc[j];
-					const xi = Math.cos(oi.a) * oi.r, yi = Math.sin(oi.a) * oi.r;
-					const xj = Math.cos(oj.a) * oj.r, yj = Math.sin(oj.a) * oj.r;
-					const dx = xj - xi, dy = yj - yi;
-					const dist = Math.hypot(dx, dy) || 0.001;
-					const minDist = radioColision * 2;
-					if (dist >= minDist) continue;
-					const empuje = (minDist - dist) / 2;
-					const ux = dx / dist, uy = dy / dist;
-					const nxi = xi - ux * empuje, nyi = yi - uy * empuje;
-					const nxj = xj + ux * empuje, nyj = yj + uy * empuje;
-					oi.a = Math.atan2(nyi, nxi); oi.r = Math.hypot(nxi, nyi);
-					oj.a = Math.atan2(nyj, nxj); oj.r = Math.hypot(nxj, nyj);
-				}
-			}
-			osc.forEach((o) => { o.r = Math.min(Rmax, Math.max(Rlogo, o.r)); });
-		}
-
-		const Rmax2 = Math.max(...osc.map((o) => o.r));
 		const panelMaxH = overlayMQ.matches ? (estrechoMQ.matches ? 260 : 320) : 0;
-		const mitad = Math.max(Rmax2 + hChip / 2, panelMaxH / 2 + hChip / 2 + 12) + 5;
+		const mitad = Math.max(R + hChip / 2, panelMaxH / 2 + hChip / 2 + 12) + 5;
 		const alto = 2 * mitad + 10;
 		inner.style.height = `${alto}px`;
 		cx = w / 2; cy = alto / 2;
@@ -215,7 +187,6 @@ function initGrafo() {
 		abierto = btn && btn !== previo ? btn : null;
 		grafo.classList.toggle('abierto', Boolean(abierto));
 
-		halos.forEach((l) => l.classList.remove('hab-arista-activa', 'hab-arista-dim'));
 		trazos.forEach((l) => l.classList.remove('hab-arista-activa', 'hab-arista-dim'));
 
 		if (previo) {
@@ -231,9 +202,7 @@ function initGrafo() {
 
 		const i = nodos.indexOf(abierto);
 		nodos.forEach((_, j) => {
-			const cls = j === i ? 'hab-arista-activa' : 'hab-arista-dim';
-			halos[j].classList.add(cls);
-			trazos[j].classList.add(cls);
+			trazos[j].classList.add(j === i ? 'hab-arista-activa' : 'hab-arista-dim');
 		});
 
 		// El chip viaja y se acopla al borde superior del panel — pasa a hacer

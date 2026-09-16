@@ -250,21 +250,7 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 	<section class="proyectos-section" id="proyectos">
 		<div class="hab-grafo" id="hab-grafo">
 			<div class="hab-grafo-inner" id="hab-grafo-inner">
-				<svg class="hab-aristas" id="hab-aristas" aria-hidden="true">
-					<defs>
-						<radialGradient id="hab-fade">
-							<stop offset="0" stop-color="#fff" stop-opacity="1" />
-							<stop offset=".85" stop-color="#fff" stop-opacity=".45" />
-							<stop offset="1" stop-color="#fff" stop-opacity="0" />
-						</radialGradient>
-						<mask id="hab-fade-m"><rect width="100%" height="100%" fill="url(#hab-fade)" /></mask>
-						<marker id="hab-flecha" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto">
-							<path d="M1,1 L7,4 L1,7 Z" fill="rgba(205,222,255,.78)" />
-						</marker>
-					</defs>
-					<g class="hab-aristas-halo" mask="url(#hab-fade-m)"></g>
-					<g class="hab-aristas-trazo" mask="url(#hab-fade-m)"></g>
-				</svg>
+				<svg class="hab-aristas" id="hab-aristas" aria-hidden="true"></svg>
 
 				{habilidades.map((h) => {
 					const Nodo = h.expandible ? 'button' : 'div';

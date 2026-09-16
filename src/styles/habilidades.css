@@ -39,23 +39,15 @@
   transition: opacity 0.4s ease;
 }
 
-/* Vocabulario de la línea de la cronología (.ruta-linea-glow/-trazo):
-   halo tenue desenfocado + trazo nítido encima, tinta pálida, no --cat-color. */
-.hab-aristas-halo line {
-  stroke: rgba(150, 185, 245, 0.34);
-  stroke-width: 6;
-  filter: blur(5px);
-  opacity: 1;
-  transition: opacity 0.3s ease, stroke-width 0.3s ease;
-}
-
-/* El trazo es un <polyline> (necesita un vértice intermedio para la flecha
-   de marker-mid) — fill:none o, por defecto, un SVG rellena el polígono que
-   forman sus puntos. */
-.hab-aristas-trazo polyline {
-  fill: none;
+/* Trazo nítido y limpio, sin halo ni flecha — vocabulario de .ruta-linea-trazo
+   pero sin el glow desenfocado (aquí, sobre el fondo de estrellas, ensuciaba
+   más que ayudaba). Nace en el centro real del logo, que pinta encima y lo
+   tapa hasta su borde (ver .hab-centro más abajo), y muere en el borde del
+   chip: lo calcula tick() en el JS. */
+.hab-aristas line {
   stroke: rgba(205, 222, 255, 0.78);
-  stroke-width: 1.6;
+  stroke-width: 1.4;
+  stroke-linecap: round;
   opacity: 1;
   transition: opacity 0.3s ease, stroke-width 0.3s ease;
 }
@@ -64,12 +56,11 @@
    el ojo la sigue del logo al chip y, a través de ella, al panel — el panel
    deja de ser una caja suelta y pasa a ser el destino de un trazo que ya
    estaba ahí. Las demás se apagan del todo, no a medias. */
-.hab-aristas-trazo polyline.hab-arista-activa {
+.hab-aristas line.hab-arista-activa {
   stroke-width: 2.2;
 }
 
-.hab-aristas-halo line.hab-arista-dim,
-.hab-aristas-trazo polyline.hab-arista-dim {
+.hab-aristas line.hab-arista-dim {
   opacity: 0.08;
 }
 
@@ -113,7 +104,7 @@
   border-radius: 16px 16px 16px 4px;
   background: rgba(7, 11, 24, 0.86);
   border: 1px solid color-mix(in srgb, var(--cat-color) 22%, rgba(255, 255, 255, 0.16));
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
   font: inherit;
   color: inherit;
   text-align: left;
@@ -222,7 +213,7 @@ button.hab-nodo:focus-visible {
 }
 
 .hab-nodo--plana .hab-nodo-label {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* ── Apertura: el logo cede el centro al panel en escritorio ── */
