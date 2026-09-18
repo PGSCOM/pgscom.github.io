@@ -27,6 +27,9 @@ const proyectos = defineCollection({
 			// Vídeo en bucle para la tarjeta (hero y timeline). Ruta a un archivo en
 			// public/ (p. ej. /vid/blog.mp4). Usa `imagen` como poster; no sustituye a `trailer`.
 			video: z.string().optional(),
+			// Segundos que la tarjeta muestra `imagen` antes de arrancar `video` al
+			// aparecer en pantalla. Sin este campo, se usa el valor por defecto (2s).
+			videoDelay: z.number().optional(),
 			// Orden en el hero (1 = primero); los proyectos sin destacado no flotan
 			destacado: z.number().optional(),
 			descripcion: z.string().optional(),

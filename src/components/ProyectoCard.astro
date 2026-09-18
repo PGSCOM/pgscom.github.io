@@ -66,7 +66,13 @@ const tituloEstilo = proyecto.tituloDegradado
 	{fecha && proyecto.fechaTexto && <span class="ruta-fecha">{proyecto.fechaTexto}</span>}
 	<div class="ruta-media">
 		{proyecto.video
-			? <video class="ruta-video" data-src={proyecto.video} poster={poster} muted loop playsinline preload="none" aria-hidden="true"></video>
+			? <Fragment>
+				<video class="ruta-video" data-src={proyecto.video} data-delay={proyecto.videoDelay} poster={poster} muted loop playsinline preload="none" aria-hidden="true"></video>
+				{/* Va DESPUÉS del <video>: ambos son absolutos y sin z-index, así que el
+				    orden del DOM es lo único que mantiene el póster por encima y permite
+				    desvanecerlo sobre el vídeo (ver .is-playing en proyectos.css). */}
+				<img class="ruta-video-poster" src={poster} alt="" aria-hidden="true" loading="lazy" />
+			</Fragment>
 			: proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
 		<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
 		{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
