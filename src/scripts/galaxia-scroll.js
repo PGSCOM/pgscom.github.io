@@ -88,18 +88,27 @@ function init() {
 			if (!yaTieneSrc) { el.src = src; el.load(); }
 			await waitForMetadata(el);
 
+			if (autoplay) {
+				try { await el.play(); } catch {}
+			} else {
+				// En iOS Safari un <video> que nunca ha reproducido no decodifica ni
+				// pinta ningún frame (preload="auto" se ignora y se queda en solo
+				// metadatos), así que ni el póster inicial ni los seeks de scrub se
+				// ven: hace falta este play()+pause() para cebarlo (permitido sin
+				// gesto porque es muted+playsinline). El seek de más abajo se aplica
+				// después porque el play mueve el currentTime unos milisegundos.
+				try { await el.play(); } catch {}
+				el.pause();
+			}
+
 			const t = Math.max(0, Math.min(startTime, el.duration || Infinity));
 			if (!isNaN(t)) try { el.currentTime = t; } catch {}
-
-			if (autoplay) try { await el.play(); } catch {}
-			else el.pause();
 		} catch {}
 	}
 
 	async function prepareNext(src) {
+		// El cebado (play+pause) ya lo hace setVideoSource(); no hay que repetirlo.
 		await setVideoSource(bufferVideo, src, 0, false);
-		// Forzar el buffering del primer frame para que el cambio sea instantáneo
-		try { await bufferVideo.play(); bufferVideo.pause(); } catch {}
 	}
 
 	function attachEndedHandler() {
@@ -147,6 +156,7 @@ function init() {
 	// scrubea, nunca se reproduce), o si falla su carga, para no colgar la
 	// pantalla de carga.
 	function done() {
+		if (window.__galaxiaScrubDone) return;
 		window.__galaxiaScrubDone = true;
 		window.dispatchEvent(new CustomEvent('galaxia-scrub-ready'));
 	}
@@ -169,6 +179,10 @@ function init() {
 	// `await null` dejaría el búfer sin vídeo asignado (fondo negro).
 	let nextReady = setVideoSource(activeVideo, VIDEO_SCRUB, 0, false).then(() => {
 		activeReady = true;
+		// En iOS el evento `canplay` de arriba puede no llegar nunca (preload="auto"
+		// se ignora), así que esto también libera al preloader en cuanto el scrub
+		// está cebado y listo para pintar, en vez de dejarlo colgado hasta su tope.
+		done();
 		if (pendingScrubT != null && !afterZoomStarted) scheduleScrub(pendingScrubT);
 		if (!afterZoomStarted) return prepareNext(VIDEO_INTRO);
 		// Entrada directa pasada la zona de zoom: el vídeo de intro ya no
