@@ -24,3 +24,10 @@ pnpm-debug.log*
 .idea/
 
 *.log
+
+# graphify local/machine-specific files (graph.json, graph.html, GRAPH_REPORT.md stay tracked)
+graphify-out/cache/
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+graphify-out/cost.json
+graphify-out/manifest.json
