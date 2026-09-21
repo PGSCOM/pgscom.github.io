@@ -1041,8 +1041,31 @@
     opacity: 1;
   }
 
+  /* Sin hover, la info va siempre desplegada y a menudo es más alta que el
+     recorte 16/10 de la tarjeta: ahí el overflow:hidden de .ruta-media le
+     cortaba los chips y el título por arriba. En móvil la caja deja de tener
+     proporción fija (solo un alto mínimo) y la info pasa al flujo, anclada
+     abajo, de modo que la tarjeta crece lo que haga falta. */
+  .ruta-media,
+  .rejilla-item--grande .ruta-media,
+  .rejilla-item--pequeño .ruta-media {
+    aspect-ratio: auto;
+    min-height: 58vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Con la info siempre abierta el velo tiene que oscurecer antes: si no,
+     los chips caen en la zona transparente del degradado y se pierden sobre
+     las imágenes claras. */
   .ruta-info {
+    position: relative;
+    margin-top: auto;
     padding: 44px 14px 13px;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(2, 8, 23, 0.72) 32%,
+      rgba(2, 8, 23, 0.95) 100%);
   }
 }
 
