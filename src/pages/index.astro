@@ -26,7 +26,13 @@ const catById = Object.fromEntries(categorias.map((c) => [c.id, c]));
 const COLOR_NEUTRO = '#9bb4d0';
 const colorDe = (catId: string | undefined) => (catId ? catById[catId]?.color : undefined) ?? COLOR_NEUTRO;
 
-// ── Habilidades: burbujas del grafo sobre el título "Proyectos" ──────────
+// SVG de marca que existen de verdad en public/icons/marcas/ (solo las
+// rutas: el glob perezoso no llega a importar nada)
+const marcasDisponibles = new Set(
+	Object.keys(import.meta.glob('/public/icons/marcas/*.svg')).map((ruta) => ruta.split('/').pop()?.replace('.svg', '')),
+);
+
+// ── Habilidades: estrellas de las constelaciones sobre "Proyectos" ────────
 // Un <Content/> por habilidad: render() devuelve un componente nuevo por
 // entrada (mismo patrón que proyectos/multiguerras.astro).
 // `entrada.body` es el markdown crudo: vacío ⇒ burbuja sin panel (no clicable).
@@ -37,14 +43,20 @@ const habilidades = await Promise.all(
 			...entrada.data,
 			id: entrada.id,
 			color: colorDe(entrada.data.categoria),
-			// Marca propia > logo de su categoría > nada
-			marca: entrada.data.icono
+			// Marca propia > logo de su categoría > nada. Una marca declarada en
+			// `icono` pero sin su SVG en public/icons/marcas/ cae al logo de la
+			// categoría en vez de dejar un hueco vacío.
+			marca: entrada.data.icono && marcasDisponibles.has(entrada.data.icono)
 				? `/icons/marcas/${entrada.data.icono}.svg`
 				: catById[entrada.data.categoria ?? '']?.logo,
 			expandible: Boolean(entrada.body?.trim()),
 			Content: (await render(entrada)).Content,
 		})),
 );
+// Cada categoría es una constelación del grafo; su nombre sale del JSON o,
+// si la categoría no está ahí (p. ej. desarrollo-web), de su propio id.
+const nombreConstelacion = (catId: string | undefined) =>
+	catId ? (catById[catId]?.titulo ?? catId.charAt(0).toUpperCase() + catId.slice(1).replaceAll('-', ' ')) : '';
 
 // Posición, profundidad (parallax) y rotación de cada card del hero.
 // Los proyectos con `destacado: N` en su frontmatter flotan aquí (ordenados
@@ -256,17 +268,18 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 						<Nodo
 							class={`hab-nodo${h.expandible ? '' : ' hab-nodo--plana'}`}
 							style={`--cat-color:${h.color}`}
+							data-cat={h.categoria ?? ''}
+							data-cat-titulo={nombreConstelacion(h.categoria)}
 							{...(h.expandible
 								? { type: 'button', id: `hab-nodo-${h.id}`, 'aria-expanded': 'false', 'aria-controls': `hab-doc-${h.id}` }
 								: { title: h.resumen })}
 						>
-							<span
-								class={`hab-nodo-marca${h.marca ? '' : ' hab-nodo-marca--vacia'}`}
-								style={h.marca ? `--marca:url(${h.marca})` : undefined}
-								aria-hidden="true"
-							></span>
-							<span class="hab-nodo-label">{h.titulo}</span>
-							{h.expandible && <span class="hab-nodo-mas" aria-hidden="true"></span>}
+							<span class="hab-estrella" aria-hidden="true"></span>
+							<span class="hab-nodo-placa">
+								{h.marca && <span class="hab-nodo-marca" style={`--marca:url(${h.marca})`} aria-hidden="true"></span>}
+								<span class="hab-nodo-label">{h.titulo}</span>
+								{h.expandible && <span class="hab-nodo-mas" aria-hidden="true"></span>}
+							</span>
 						</Nodo>
 					);
 				})}
@@ -286,6 +299,7 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 			<div class="hab-docs">
 				{habilidades.filter((h) => h.expandible).map((h) => (
 					<div class="hab-doc" id={`hab-doc-${h.id}`} style={`--cat-color:${h.color}`} role="group" aria-labelledby={`hab-nodo-${h.id}`} data-lenis-prevent hidden>
+						<p class="hab-doc-titulo" aria-hidden="true">{h.titulo}</p>
 						{h.resumen && <p class="hab-doc-resumen">{h.resumen}</p>}
 						<div class="hab-doc-cuerpo"><h.Content /></div>
 					</div>
