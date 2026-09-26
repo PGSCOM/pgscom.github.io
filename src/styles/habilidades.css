@@ -6,6 +6,9 @@
 .hab-grafo {
   display: grid;
   grid-template-areas: 'grafo' 'docs';
+  /* Columna acotada al ancho disponible: sin esto la pista crece hasta el
+     ancho fijo del cielo y el max-width: 100% de dentro no limitaría nada. */
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   row-gap: 22px;
   margin: 2vh auto 4vh;
@@ -15,7 +18,9 @@
 .hab-grafo-inner {
   grid-area: grafo;
   position: relative;
-  width: 560px;
+  /* Ancho de sobra para que el cielo se abra en horizontal en escritorio
+     (el JS lo estira hasta llenar el ancho). */
+  width: 1240px;
   max-width: 100%;
   /* La altura la fija el JS (ResizeObserver), a partir del radio real que
      ocupan los chips — nada de un cuadro fijo con hueco muerto alrededor.
@@ -39,29 +44,69 @@
   transition: opacity 0.4s ease;
 }
 
-/* Trazo nítido y limpio, sin halo ni flecha — vocabulario de .ruta-linea-trazo
-   pero sin el glow desenfocado (aquí, sobre el fondo de estrellas, ensuciaba
-   más que ayudaba). Nace en el centro real del logo, que pinta encima y lo
-   tapa hasta su borde (ver .hab-centro más abajo), y muere en el borde del
-   chip: lo calcula tick() en el JS. */
+/* Líneas de constelación: finas, tintadas con el color de su categoría
+   (--cat-color lo pone el JS en cada tramo), sin halo. Mueren a unos
+   píxeles de cada estrella y los troncos nacen en el borde del logo. */
 .hab-aristas line {
-  stroke: rgba(205, 222, 255, 0.78);
-  stroke-width: 1.4;
+  stroke: color-mix(in srgb, var(--cat-color, #9bb4d0) 40%, rgb(214, 226, 255));
   stroke-linecap: round;
-  opacity: 1;
+  fill: none;
+}
+
+.hab-arista {
+  transition: opacity 0.3s ease;
+}
+
+.hab-trazo {
+  stroke-width: 1;
+  opacity: 0.38;
   transition: opacity 0.3s ease, stroke-width 0.3s ease;
 }
 
-/* Con un panel abierto, la línea de SU chip es la única que se queda viva:
-   el ojo la sigue del logo al chip y, a través de ella, al panel — el panel
-   deja de ser una caja suelta y pasa a ser el destino de un trazo que ya
-   estaba ahí. Las demás se apagan del todo, no a medias. */
-.hab-aristas line.hab-arista-activa {
-  stroke-width: 2.2;
+/* Los troncos que salen del logo, un punto más presentes: se lee que cada
+   constelación cuelga del núcleo. */
+.hab-arista--tronco .hab-trazo {
+  stroke-width: 1.4;
+  opacity: 0.62;
 }
 
-.hab-aristas line.hab-arista-dim {
-  opacity: 0.08;
+/* El pulso: un guion corto y redondeado que recorre cada tramo de padre a
+   hijo (pathLength 1, así que 0.12 es el 12% del tramo). Tarda el 10% del
+   ciclo de 7s —los 0.7s de PASO en el JS— y cada tramo lo retrasa según su
+   profundidad (--retraso): la luz sale del logo y avanza tramo a tramo hacia
+   fuera. Antes de arrancar y al acabar queda fuera del tramo, invisible. */
+.hab-pulso {
+  stroke: color-mix(in srgb, var(--cat-color, #9bb4d0) 25%, #fff);
+  stroke-width: 2;
+  stroke-dasharray: 0.12 2;
+  stroke-dashoffset: 0.12;
+  opacity: 0.85;
+  animation: hab-pulso 7s linear var(--retraso, 0s) infinite;
+}
+
+@keyframes hab-pulso {
+  0% {
+    stroke-dashoffset: 0.12;
+  }
+  10%,
+  100% {
+    stroke-dashoffset: -1;
+  }
+}
+
+/* Pasar por una estrella enciende su constelación entera */
+.hab-arista-grupo .hab-trazo {
+  opacity: 0.8;
+}
+
+/* Con un panel abierto solo quedan vivas las líneas de SU estrella */
+.hab-arista-activa .hab-trazo {
+  opacity: 0.9;
+  stroke-width: 1.4;
+}
+
+.hab-arista.hab-arista-dim {
+  opacity: 0.06;
 }
 
 .hab-grafo-inner.listo .hab-aristas {
@@ -69,7 +114,8 @@
 }
 
 .hab-grafo-inner.listo .hab-nodo,
-.hab-grafo-inner.listo .hab-centro {
+.hab-grafo-inner.listo .hab-centro,
+.hab-grafo-inner.listo .hab-constelacion {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -89,64 +135,140 @@
   height: auto;
 }
 
-/* ── El chip: vocabulario de .ruta-filtro (fondo sólido + borde + sombra
-   direccional), no un icono pelado suelto en el vacío. Icono a la izquierda,
-   etiqueta a la derecha, esquina inferior-izquierda recta: una silueta propia
-   que lo distingue de la píldora de la barra de filtros de más abajo. ── */
+/* ── Cada habilidad: una estrella (el punto que unen las líneas de su
+   constelación) y, pegado a ella, su chip con icono y nombre. El nodo entero
+   (estrella + chip) es el área de toque. ── */
 .hab-nodo {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  max-width: 168px;
-  min-height: 44px; /* área de toque, incluso al reducir padding en los cortes móviles */
+  gap: 7px;
+  max-width: 250px;
+  min-height: 40px;
   box-sizing: border-box;
-  padding: 9px 14px 9px 11px;
-  border-radius: 16px 16px 16px 4px;
-  background: rgba(7, 11, 24, 0.86);
-  border: 1px solid color-mix(in srgb, var(--cat-color) 22%, rgba(255, 255, 255, 0.16));
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  padding: 0 2px;
+  border: 0;
+  background: none;
   font: inherit;
   color: inherit;
   text-align: left;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
+/* Chip a la izquierda de su estrella (lo decide el JS según el hueco). El
+   padding del nodo es simétrico, así que la estrella queda a la misma
+   distancia del borde en los dos sentidos. */
+.hab-nodo--izq {
+  flex-direction: row-reverse;
+}
+
+/* Núcleo en el color de su categoría casi blanco, y dos destellos en cruz
+   (como las estrellas de una foto de telescopio) que titilan a un ritmo
+   propio por estrella (--titilar/--retardo, JS). */
+.hab-estrella {
+  flex: none;
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--cat-color) 28%, #fff);
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--cat-color) 55%, transparent);
+  transition: transform 0.3s ease;
+}
+
+.hab-estrella::before,
+.hab-estrella::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 1px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--cat-color) 35%, #fff), transparent);
+  transform: translate(-50%, -50%) rotate(var(--giro, 0deg)) scaleX(0.8);
+  opacity: 0.6;
+  animation: hab-titilar var(--titilar, 4s) ease-in-out var(--retardo, 0s) infinite;
+}
+
+.hab-estrella::after {
+  --giro: 90deg;
+}
+
+@keyframes hab-titilar {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(var(--giro, 0deg)) scaleX(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(var(--giro, 0deg)) scaleX(1.25);
+    opacity: 0.95;
+  }
+}
+
+/* La alfa de cada constelación (la de menor `orden`): más grande y brillante */
+.hab-nodo--alfa .hab-estrella {
+  width: 8px;
+  height: 8px;
+}
+
+.hab-nodo--alfa .hab-estrella::before,
+.hab-nodo--alfa .hab-estrella::after {
+  width: 30px;
+}
+
+/* El chip: vocabulario del chip de siempre (fondo sólido, borde teñido de su
+   categoría, sombra corta direccional) para que icono y nombre se lean
+   sobre la nebulosa. Su única esquina recta es la que mira a su estrella:
+   la etiqueta cuelga de ella. El contenido va siempre en orden de lectura
+   (icono, nombre, "+"), esté la estrella a un lado o al otro. */
+.hab-nodo-placa {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 7px 12px 7px 9px;
+  border-radius: 14px 14px 14px 4px;
+  background: rgba(7, 11, 24, 0.84);
+  border: 1px solid color-mix(in srgb, var(--cat-color) 26%, rgba(255, 255, 255, 0.14));
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.hab-nodo--izq .hab-nodo-placa {
+  border-radius: 14px 14px 4px 14px;
+}
+
+/* Marca real de la herramienta (Simple Icons) o, si no tiene, el icono de
+   su categoría: monocromo y a un solo tamaño, como el resto de iconos. */
 .hab-nodo-marca {
   flex: none;
-  width: 20px;
-  height: 20px;
-  opacity: 0.9;
-  background: #e6edfb;
+  width: 18px;
+  height: 18px;
+  background: #e8eefb;
+  opacity: 0.92;
   -webkit-mask: var(--marca) center / contain no-repeat;
   mask: var(--marca) center / contain no-repeat;
   transition: opacity 0.25s ease;
 }
 
-.hab-nodo-marca--vacia {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  mask: none;
-  -webkit-mask: none;
-}
-
 .hab-nodo-label {
   font-family: 'Chakra Petch', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 0.84rem;
+  font-weight: 500;
   line-height: 1.2;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.92);
+  transition: color 0.25s ease;
 }
 
-/* El "+" que marca que un chip se puede abrir — gira a "×" al expandirse.
-   Es lo que hace visible "esto se puede pulsar", sin depender del hover
-   (que en táctil no existe). */
+/* El "+" que marca que se puede abrir — gira a "×" al abrirse. Es lo que
+   hace visible "esto se puede pulsar" sin depender del hover (que en táctil
+   no existe). Dentro del chip no se confunde con los destellos. */
 .hab-nodo-mas {
   flex: none;
   position: relative;
-  width: 14px;
-  height: 14px;
-  margin-left: 2px;
+  width: 12px;
+  height: 12px;
+  margin-left: 1px;
 }
 
 .hab-nodo-mas::before,
@@ -157,7 +279,8 @@
   left: 50%;
   width: 10px;
   height: 1.6px;
-  background: rgba(255, 255, 255, 0.55);
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.5);
   transform: translate(-50%, -50%);
   transition: transform 0.3s ease, background 0.25s ease;
 }
@@ -170,14 +293,26 @@ button.hab-nodo {
   cursor: pointer;
 }
 
-button.hab-nodo:hover,
-button.hab-nodo[aria-expanded='true'] {
-  border-color: color-mix(in srgb, var(--cat-color) 55%, rgba(255, 255, 255, 0.16));
+button.hab-nodo:hover .hab-estrella,
+button.hab-nodo:focus-visible .hab-estrella,
+button.hab-nodo[aria-expanded='true'] .hab-estrella {
+  transform: scale(1.4);
+}
+
+button.hab-nodo:hover .hab-nodo-placa,
+button.hab-nodo[aria-expanded='true'] .hab-nodo-placa {
+  background: rgba(10, 15, 31, 0.94);
+  border-color: color-mix(in srgb, var(--cat-color) 60%, rgba(255, 255, 255, 0.2));
 }
 
 button.hab-nodo:hover .hab-nodo-marca,
 button.hab-nodo[aria-expanded='true'] .hab-nodo-marca {
   opacity: 1;
+}
+
+button.hab-nodo:hover .hab-nodo-label,
+button.hab-nodo[aria-expanded='true'] .hab-nodo-label {
+  color: #fff;
 }
 
 button.hab-nodo:hover .hab-nodo-mas::before,
@@ -195,25 +330,70 @@ button.hab-nodo[aria-expanded='true'] .hab-nodo-mas::after {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
+/* El foco se marca en el chip, que es lo que se lee como botón */
 button.hab-nodo:focus-visible {
-  outline: 2px solid var(--cat-color);
-  outline-offset: 3px;
-  border-radius: 16px 16px 16px 4px;
+  outline: none;
 }
 
-/* Sin cuerpo markdown: un escalón por debajo, sin cursor, sin reacción.
-   Es lo único (junto con ser <div> y no <button>) que la distingue de un
-   chip pulsable — cero controles muertos. */
-.hab-nodo--plana {
+button.hab-nodo:focus-visible .hab-nodo-placa {
+  outline: 2px solid color-mix(in srgb, var(--cat-color) 60%, #fff);
+  outline-offset: 2px;
+}
+
+/* Sin cuerpo markdown: un escalón por debajo (estrella sin destellos, chip
+   más apagado), sin cursor ni reacción. Es lo único, junto con ser <div> y
+   no <button>, que la distingue de una pulsable — cero controles muertos. */
+.hab-nodo--plana .hab-estrella {
+  opacity: 0.7;
+}
+
+.hab-nodo--plana .hab-estrella::before,
+.hab-nodo--plana .hab-estrella::after {
+  display: none;
+}
+
+.hab-nodo--plana .hab-nodo-placa {
   border-color: rgba(255, 255, 255, 0.09);
 }
 
 .hab-nodo--plana .hab-nodo-marca {
-  opacity: 0.55;
+  opacity: 0.6;
 }
 
 .hab-nodo--plana .hab-nodo-label {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.74);
+}
+
+/* Nombre de cada constelación, como en una carta celeste: tenue, espaciado,
+   teñido de su color. Decorativo (aria-hidden): sin JS no se pinta. */
+.hab-constelacion {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--cat-color) 45%, rgb(220, 228, 245));
+  opacity: 0.62;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.hab-constelacion.activa {
+  opacity: 0.95;
+}
+
+.hab-grafo-inner:not(.listo) .hab-constelacion {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hab-estrella::before,
+  .hab-estrella::after {
+    animation: none;
+  }
+  .hab-pulso {
+    display: none;
+  }
 }
 
 /* ── Apertura: el logo cede el centro al panel en escritorio ── */
@@ -221,7 +401,8 @@ button.hab-nodo:focus-visible {
   opacity: 0;
 }
 
-.hab-grafo.abierto .hab-nodo:not([aria-expanded='true']) {
+.hab-grafo.abierto .hab-nodo:not([aria-expanded='true']),
+.hab-grafo.abierto .hab-constelacion {
   opacity: 0.16;
 }
 
@@ -267,8 +448,25 @@ button.hab-nodo:focus-visible {
   }
 }
 
-/* Sin <h3> propio: el título ya lo dice el chip acoplado justo encima, que
-   pasa a hacer de cabecera del panel. El resumen es la primera línea real. */
+/* Título del panel solo cuando cae debajo del cielo (≤1024px): ahí la
+   estrella pulsada se queda arriba, a veces fuera de la vista. En escritorio
+   lo dice la propia estrella acoplada encima, que hace de cabecera. Para el
+   lector de pantalla ya lo nombra aria-labelledby, de ahí el aria-hidden. */
+.hab-doc-titulo {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 6px;
+}
+
+@media (min-width: 1025px) {
+  .hab-doc-titulo {
+    display: none;
+  }
+}
+
+/* El resumen es la primera línea real bajo el título. */
 .hab-doc-resumen {
   font-family: 'Montserrat', sans-serif;
   font-size: 0.88rem;
@@ -372,8 +570,8 @@ button.hab-nodo:focus-visible {
     border-radius: 3px;
   }
 
-  /* El chip pulsado viaja hasta acoplarse al borde superior del panel (JS) y
-     pasa a hacer de cabecera suya: por delante del cristal, no detrás. */
+  /* La estrella pulsada viaja hasta acoplarse sobre el borde superior del
+     panel (JS) y pasa a hacer de cabecera suya: por delante del cristal. */
   .hab-grafo.abierto .hab-nodo[aria-expanded='true'] {
     z-index: 3;
   }
@@ -386,13 +584,10 @@ button.hab-nodo:focus-visible {
   }
 }
 
-/* ── Breakpoints: solo el ancho del anillo y el tamaño de logo/chip/icono.
-   La altura del anillo la calcula el JS a partir del radio real, así que no
-   hace falta fijarla aquí en cada corte. ── */
+/* ── Breakpoints: solo el tamaño del logo y de los chips.
+   La altura la calcula el JS a partir del reparto real, así que no hace
+   falta fijarla aquí en cada corte. ── */
 @media (max-width: 1200px) {
-  .hab-grafo-inner {
-    width: 480px;
-  }
   .hab-centro {
     width: 104px;
     height: 104px;
@@ -400,15 +595,9 @@ button.hab-nodo:focus-visible {
 }
 
 @media (max-width: 1024px) {
-  .hab-grafo-inner {
-    width: 400px;
-  }
   .hab-centro {
     width: 92px;
     height: 92px;
-  }
-  .hab-nodo {
-    max-width: 148px;
   }
 }
 
@@ -422,40 +611,37 @@ button.hab-nodo:focus-visible {
 }
 
 @media (max-width: 768px) {
-  .hab-grafo-inner {
-    width: 340px;
-  }
   .hab-centro {
     width: 84px;
     height: 84px;
   }
   .hab-nodo {
-    max-width: 128px;
-    padding: 8px 12px 8px 10px;
+    max-width: 200px;
+    gap: 6px;
+  }
+  .hab-nodo-placa {
+    gap: 7px;
+    padding: 6px 10px 6px 8px;
+  }
+  .hab-nodo-marca {
+    width: 16px;
+    height: 16px;
   }
   .hab-nodo-label {
-    font-size: 0.76rem;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
-  .hab-grafo-inner {
-    width: 290px;
-  }
   .hab-centro {
     width: 72px;
     height: 72px;
   }
   .hab-nodo {
-    max-width: 110px;
-    gap: 7px;
-  }
-  .hab-nodo-marca {
-    width: 17px;
-    height: 17px;
+    max-width: 176px;
   }
   .hab-nodo-label {
-    font-size: 0.7rem;
+    font-size: 0.76rem;
   }
 }
 
