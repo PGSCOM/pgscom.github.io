@@ -14,6 +14,9 @@ fechaFin: "2025"                     # Opcional — omitir si sigue activo; "aho
 categorias: [programacion, video]    # OBLIGATORIO — uno o más IDs de categorías.json
 peso: 75                             # Tamaño de card (0–100, defecto 50): ≥75 grande, ≥55 medio, resto pequeño.
                                       # Decide tanto el ancho en la línea de tiempo como el tamaño en la rejilla.
+experimento: true                    # Proyecto pequeño: sale de la rejilla y va a la lista compacta de debajo
+                                      # (miniatura + nombre + descripción). Enlaza a `enlaceExterno` (o a `link`).
+                                      # En la cronología sigue saliendo como tarjeta normal.
 destacado: 2                         # Aparece en el carrusel del hero; entero, menor = primero.
                                       # Además ordena la rejilla: los que tienen este campo van primero
                                       # (por este número), el resto sigue detrás en orden cronológico.

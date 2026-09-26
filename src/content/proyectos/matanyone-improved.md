@@ -7,6 +7,8 @@ peso: 35
 descripcion: Rotoscopia con IA preparada para trabajar en 4K y desplegar con Docker.
 tecnologias: [Python, PyTorch, Gradio, Docker]
 link: https://github.com/PGSCOM/MatAnyone-Improved
+enlaceExterno: https://github.com/PGSCOM/MatAnyone-Improved
+experimento: true
 txtboton: Ver en GitHub
 ---
 

@@ -8,6 +8,8 @@ peso: 45
 descripcion: Limpiador de la fototeca de iOS que clasifica las fotos en el propio iPhone.
 tecnologias: [Swift, SwiftUI, Vision Framework]
 link: https://github.com/PGSCOM/Clearer
+enlaceExterno: https://github.com/PGSCOM/Clearer
+experimento: true
 txtboton: Ver en GitHub
 ---
 

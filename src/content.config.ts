@@ -18,6 +18,8 @@ const proyectos = defineCollection({
 			fechaFin: z.coerce.string().optional(),
 			categorias: z.array(z.string()).default([]),
 			peso: z.number().optional(),
+			// Proyecto pequeño: sale de la rejilla y va a la lista compacta de debajo
+			experimento: z.boolean().optional(),
 			// Opcional: sin imagen la tarjeta muestra el icono de su categoría
 			imagen: image().optional(),
 			// Imagen grande de la cabecera de la ficha; si falta se usa `imagen`

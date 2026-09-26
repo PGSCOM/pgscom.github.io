@@ -7,6 +7,8 @@ peso: 20
 descripcion: Mantiene sincronizado el horario de la universidad automáticamente.
 tecnologias: [Python]
 link: https://github.com/PGSCOM/Horario-Deusto-updater
+enlaceExterno: https://github.com/PGSCOM/Horario-Deusto-updater
+experimento: true
 txtboton: Ver en GitHub
 ---
 

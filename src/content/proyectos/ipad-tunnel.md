@@ -8,6 +8,8 @@ peso: 40
 descripcion: Usar el iPad como pantalla y cliente del PC por USB-C, sin depender del Wi-Fi.
 tecnologias: [Go, go-ios, WireGuard, Docker, Moonlight, Sunshine]
 link: https://github.com/PGSCOM/ios-tunnel-stream
+enlaceExterno: https://github.com/PGSCOM/ios-tunnel-stream
+experimento: true
 txtboton: Ver en GitHub
 ---
 

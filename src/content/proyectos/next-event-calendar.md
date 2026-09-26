@@ -7,6 +7,8 @@ peso: 45
 descripcion: Extensión de GNOME que muestra tu próximo evento en la barra superior.
 tecnologias: [JavaScript, GJS, GNOME Shell, D-Bus]
 link: https://extensions.gnome.org/extension/10932/next-event-calendar/
+enlaceExterno: https://extensions.gnome.org/extension/10932/next-event-calendar/
+experimento: true
 txtboton: Ver en GNOME Extensions
 ---
 

@@ -7,6 +7,8 @@ peso: 25
 descripcion: Importa archivos de un canal de Telegram a Teldrive, mi nube sobre Telegram.
 tecnologias: [Python, Telethon, Teldrive]
 link: https://github.com/PGSCOM/Teldrive-adder
+enlaceExterno: https://github.com/PGSCOM/Teldrive-adder
+experimento: true
 txtboton: Ver en GitHub
 ---
 

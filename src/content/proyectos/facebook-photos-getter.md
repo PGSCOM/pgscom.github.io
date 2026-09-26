@@ -6,6 +6,8 @@ peso: 25
 descripcion: Exporta las publicaciones y fotos de un perfil de Facebook a carpetas navegables.
 tecnologias: [Python, Selenium]
 link: https://github.com/PGSCOM/Facebook-Photos-Getter
+enlaceExterno: https://github.com/PGSCOM/Facebook-Photos-Getter
+experimento: true
 txtboton: Ver en GitHub
 ---
 

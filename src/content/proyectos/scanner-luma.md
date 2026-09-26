@@ -6,6 +6,8 @@ peso: 30
 descripcion: Script que prepara las capturas de 3D Scanner (iOS) para reconstruirlas en Luma AI.
 tecnologias: [Python, Luma AI, NeRF]
 link: https://github.com/PGSCOM/3D-Scanner-to-Luma-AI
+enlaceExterno: https://github.com/PGSCOM/3D-Scanner-to-Luma-AI
+experimento: true
 txtboton: Ver en GitHub
 ---
 

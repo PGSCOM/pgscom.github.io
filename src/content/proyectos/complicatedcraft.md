@@ -8,6 +8,8 @@ peso: 40
 descripcion: Servidor de Minecraft entre amigos, con modpack e infraestructura en Docker.
 tecnologias: [Docker, Packwiz, NeoForge, Tailscale, Cloudflare Pages]
 link: https://github.com/ComplicatedCraft
+enlaceExterno: https://github.com/ComplicatedCraft
+experimento: true
 txtboton: Ver en GitHub
 ---
 

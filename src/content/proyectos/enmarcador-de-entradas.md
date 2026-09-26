@@ -7,6 +7,8 @@ peso: 30
 descripcion: Genera en serie entradas personalizadas a partir de una plantilla SVG.
 tecnologias: [Python, SVG, Inkscape]
 link: https://github.com/PGSCOM/Enmarcador-de-entradas
+enlaceExterno: https://github.com/PGSCOM/Enmarcador-de-entradas
+experimento: true
 txtboton: Ver en GitHub
 ---
 

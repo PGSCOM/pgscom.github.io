@@ -140,7 +140,12 @@ const rutaEntries = cronologia.map((p, i) => {
 // La cronología (arriba) siempre va por fecha; la rejilla la decide `destacado`
 // (mismo campo que ya sitúa las tarjetas del hero, menor = primero). El resto,
 // sin ese campo, cae detrás manteniendo su orden cronológico (sort estable).
-const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity) - (b.destacado ?? Infinity));
+const rejillaEntries = rutaEntries
+	.filter((p) => !p.experimento)
+	.sort((a, b) => (a.destacado ?? Infinity) - (b.destacado ?? Infinity));
+
+// Experimentos: fuera de la rejilla, en una lista compacta debajo (orden cronológico)
+const experimentos = rutaEntries.filter((p) => p.experimento);
 ---
 
 <!-- Cloudflare Turnstile -->
@@ -352,6 +357,37 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 					/>
 				))}
 			</div>
+
+			{experimentos.length > 0 && (
+				<div class="experimentos">
+					<ul class="exp-lista">
+						{experimentos.map((p) => (
+							<li>
+								<a
+									class={`exp-fila rejilla-item${p.imagen ? '' : ' sin-imagen'}`}
+									href={p.enlaceExterno ?? p.link}
+									target="_blank"
+									rel="noopener noreferrer"
+									data-cats={p.catIds.join(',')}
+									style={`--cat-color:${p.color}`}
+								>
+									<span class="exp-thumb">
+										{p.imagen
+											? <Image src={p.imagen} alt="" width={176} loading="lazy" decoding="async" />
+											: p.cats[0] && <img class="exp-thumb-fallback" src={p.cats[0].logo} alt="" aria-hidden="true" loading="lazy" />}
+									</span>
+									<span class="exp-texto">
+										<strong class="exp-nombre">{p.titulo.trim()}</strong>
+										{p.descripcion && <span class="exp-desc">{p.descripcion}</span>}
+									</span>
+									<span class="exp-año">{String(p.fecha ?? '').slice(0, 4)}</span>
+									<svg class="exp-flecha" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
 
 			<div class="ruta-cuerpo">
 				<!-- Línea de la ruta: se dibuja con el scroll (la traza el JS) -->

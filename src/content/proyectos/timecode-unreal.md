@@ -8,6 +8,8 @@ peso: 40
 descripcion: Convierte los renders de Unreal en .mov con timecode listos para DaVinci Resolve.
 tecnologias: [Python, FFmpeg, Unreal Engine, DaVinci Resolve]
 link: https://github.com/PGSCOM/TimecodeUnreal
+enlaceExterno: https://github.com/PGSCOM/TimecodeUnreal
+experimento: true
 txtboton: Ver en GitHub
 ---
 

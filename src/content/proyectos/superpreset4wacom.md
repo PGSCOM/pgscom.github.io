@@ -7,6 +7,8 @@ peso: 35
 descripcion: Web para fusionar presets de tabletas Wacom en un solo archivo.
 tecnologias: [HTML, JavaScript]
 link: https://pgscom.github.io/SuperPreset4Wacom/
+enlaceExterno: https://pgscom.github.io/SuperPreset4Wacom/
+experimento: true
 txtboton: Abrir la herramienta
 ---
 

@@ -3,7 +3,7 @@ titulo: Faro
 fecha: "2026-09"
 fechaFin: ahora
 categorias: [programacion]
-peso: 70
+peso: 75
 # imagen: ../../assets/proyectos/TODO.png   # TODO: captura para la card
 descripcion: App de iOS y macOS para chatear con modelos de IA que corren en el propio dispositivo.
 tecnologias: [Swift, SwiftUI, MLX, Hugging Face, MCP, GitHub Actions]

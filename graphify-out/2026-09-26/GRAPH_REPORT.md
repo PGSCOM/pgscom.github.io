@@ -1,17 +1,17 @@
-# Graph Report - pgscom.github.io  (2026-09-26)
+# Graph Report - FixDistribucionSkills  (2026-09-25)
 
 ## Corpus Check
-- 112 files · ~3,346,697 words
+- 95 files · ~3,344,426 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 17 file(s) not represented in the graph (top: .css 10, (none) 6, .woff2 1)
+- Unclassified: 18 file(s) not represented in the graph (top: .css 10, (none) 7, .woff2 1)
 
 ## Summary
-- 406 nodes · 408 edges · 101 communities (24 shown, 77 thin omitted)
+- 379 nodes · 398 edges · 83 communities (23 shown, 60 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ca2e0774`
+- Built from commit: `1db7bc1c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -42,9 +42,9 @@
 - video-compare.js
 - diseño-escenarios.md
 - Inicios del Blog
-- proyecto-galeria.js
-- Cómo funciona
-- cold-searcher.md
+- Identidad PGSCOM
+- Portafolio Cinematográfico
+- Portfolio Personal PGSCOM
 - audio.md
 - resultados.md
 - multiguerras-timeline.js
@@ -60,12 +60,6 @@
 - styles_proyectos
 - styles_titulo_proyecto
 - styles_video_page
-- ipad-tunnel.md
-- lcemp.md
-- mlxchat.md
-- pulseboot.md
-- blender-cotracker3.md
-- unreal-render-farm.md
 
 ## God Nodes (most connected - your core abstractions)
 1. `Guía de formato — ficheros de proyecto` - 17 edges
@@ -94,19 +88,19 @@
 ## Import Cycles
 - None detected.
 
-## Communities (101 total, 77 thin omitted)
+## Communities (83 total, 60 thin omitted)
 
 ### Community 1 - "index.astro"
-Cohesion: 0.11
-Nodes (21): ref_astro_assets, ref_astro_content, src_assets_logo, src_assets_proyectos_portfolio, src_data_categorias, src_data_contacto, src_data_multiguerras, GET() (+13 more)
+Cohesion: 0.09
+Nodes (25): ref_astro_assets, ref_astro_content, src_assets_logo, src_assets_proyectos_portfolio, collections, habilidades, multiguerras, proyectos (+17 more)
 
 ### Community 2 - "proyecto-video.js"
-Cohesion: 0.14
-Nodes (13): hls.js, reproducir(), videos, esHLS(), montarFuente(), ajustarSkin(), ATRIBUTOS_A_COPIAR, CONFIG_HLS (+5 more)
+Cohesion: 0.15
+Nodes (12): reproducir(), videos, esHLS(), montarFuente(), ajustarSkin(), ATRIBUTOS_A_COPIAR, CONFIG_HLS, derivarPoster() (+4 more)
 
 ### Community 3 - "gsap"
-Cohesion: 0.19
-Nodes (9): gsap, azar(), initHero(), entrance(), startIdleFloat(), dispatchDone(), initPreloader(), hint (+1 more)
+Cohesion: 0.21
+Nodes (8): gsap, initHero(), entrance(), startIdleFloat(), dispatchDone(), initPreloader(), hint, lenis
 
 ### Community 4 - "Guía de formato — ficheros de proyecto"
 Cohesion: 0.07
@@ -122,7 +116,7 @@ Nodes (15): Composición, Metadatos, Montaje:, PostgreSQL, VFX, Almacenamiento:,
 
 ### Community 7 - "package.json"
 Cohesion: 0.06
-Nodes (31): dependencies, astro, @astrojs/mdx, gsap, hls.js, lenis, photoswipe, @videojs/html (+23 more)
+Nodes (30): dependencies, astro, @astrojs/mdx, gsap, hls.js, lenis, photoswipe, @videojs/html (+22 more)
 
 ### Community 8 - "generate-posters.mjs"
 Cohesion: 0.20
@@ -141,8 +135,8 @@ Cohesion: 0.20
 Nodes (9): Audio, Detrás de cámaras, Galería, Generación de entradas, QRs generados por IA, ¿Qué es este proyecto?, Sistema de cámaras, Validación (+1 more)
 
 ### Community 12 - "initGrafo"
-Cohesion: 0.36
-Nodes (10): initGrafo(), caja(), maquetar(), medirEtiqueta(), orientar(), posicionReposo(), repartir(), seleccionar() (+2 more)
+Cohesion: 0.32
+Nodes (11): azar(), initGrafo(), caja(), maquetar(), medirEtiqueta(), orientar(), posicionReposo(), repartir() (+3 more)
 
 ### Community 13 - "scripts"
 Cohesion: 0.22
@@ -188,26 +182,22 @@ Nodes (4): Galería primer rodaje, Preparación del set, Primer set, Segundo set
 Cohesion: 0.67
 Nodes (3): initVideoCompareSliders(), setupSlider(), teardowns
 
-### Community 28 - "Cómo funciona"
-Cohesion: 0.40
-Nodes (4): Cliente, Cómo funciona, Host (Windows / Linux / macOS), Qué hace
-
 ## Knowledge Gaps
-- **154 isolated node(s):** `TurnstileResponse`, `TelegramResponse`, `Env`, `name`, `type` (+149 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 254 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **77 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **142 isolated node(s):** `TurnstileResponse`, `TelegramResponse`, `Env`, `name`, `type` (+137 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 231 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **60 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `gsap` connect `gsap` to `initRuta`, `package.json`?**
-  _High betweenness centrality (0.086) - this node is a cross-community bridge._
+  _High betweenness centrality (0.098) - this node is a cross-community bridge._
 - **What connects `TurnstileResponse`, `TelegramResponse`, `Env` to the rest of the system?**
-  _154 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _142 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `index.astro` be split into smaller, more focused modules?**
-  _Cohesion score 0.10793650793650794 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08902439024390243 - nodes in this community are weakly interconnected._
 - **Should `proyecto-video.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.1380952380952381 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.14736842105263157 - nodes in this community are weakly interconnected._
 - **Should `Guía de formato — ficheros de proyecto` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `initRuta` be split into smaller, more focused modules?**

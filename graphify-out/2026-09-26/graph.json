@@ -127,6 +127,18 @@
       "source_location": "L5"
     },
     {
+      "id": "src_scripts_habilidades_grafo_azar",
+      "label": "azar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 12,
+      "community_name": "initGrafo",
+      "file_type": "code",
+      "norm_label": "azar()",
+      "source_file": "src/scripts/habilidades-grafo.js",
+      "source_location": "L28"
+    },
+    {
       "id": "src_scripts_habilidades_grafo_initgrafo",
       "label": "initGrafo()",
       "_callable": true,
@@ -451,42 +463,6 @@
       "source_location": "L36"
     },
     {
-      "id": "src_scripts_proyecto_galeria_crearenlace",
-      "label": "crearEnlace()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "proyecto-galeria.js",
-      "file_type": "code",
-      "norm_label": "crearenlace()",
-      "source_file": "src/scripts/proyecto-galeria.js",
-      "source_location": "L22"
-    },
-    {
-      "id": "src_scripts_proyecto_galeria_derivarposter",
-      "label": "derivarPoster()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "proyecto-galeria.js",
-      "file_type": "code",
-      "norm_label": "derivarposter()",
-      "source_file": "src/scripts/proyecto-galeria.js",
-      "source_location": "L17"
-    },
-    {
-      "id": "src_scripts_habilidades_grafo_azar",
-      "label": "azar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "gsap",
-      "file_type": "code",
-      "norm_label": "azar()",
-      "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L28"
-    },
-    {
       "id": "src_scripts_hero_inithero",
       "label": "initHero()",
       "_callable": true,
@@ -653,6 +629,30 @@
       "norm_label": "marcarsinimagen()",
       "source_file": "src/scripts/proyectos-ruta.js",
       "source_location": "L13"
+    },
+    {
+      "id": "src_scripts_proyecto_galeria_crearenlace",
+      "label": "crearEnlace()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "crearenlace()",
+      "source_file": "src/scripts/proyecto-galeria.js",
+      "source_location": "L22"
+    },
+    {
+      "id": "src_scripts_proyecto_galeria_derivarposter",
+      "label": "derivarPoster()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "derivarposter()",
+      "source_file": "src/scripts/proyecto-galeria.js",
+      "source_location": "L17"
     },
     {
       "id": "scripts_generate_posters_extraerframe",
@@ -878,6 +878,61 @@
       "source_location": "L1"
     },
     {
+      "id": "src_content_config",
+      "label": "content.config.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "content.config.ts",
+      "source_file": "src/content.config.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_content_config_collections",
+      "label": "collections",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "collections",
+      "source_file": "src/content.config.ts",
+      "source_location": "L133"
+    },
+    {
+      "id": "src_content_config_habilidades",
+      "label": "habilidades",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "habilidades",
+      "source_file": "src/content.config.ts",
+      "source_location": "L118"
+    },
+    {
+      "id": "src_content_config_multiguerras",
+      "label": "multiguerras",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "multiguerras",
+      "source_file": "src/content.config.ts",
+      "source_location": "L92"
+    },
+    {
+      "id": "src_content_config_proyectos",
+      "label": "proyectos",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "proyectos",
+      "source_file": "src/content.config.ts",
+      "source_location": "L7"
+    },
+    {
       "id": "src_layouts_layout",
       "label": "Layout.astro",
       "_origin": "ast",
@@ -1101,31 +1156,6 @@
       "norm_label": "renderizado",
       "source_file": "src/content/multiguerras/unreal.md",
       "source_location": "L64"
-    },
-    {
-      "id": "src_content_proyectos_timecode_unreal",
-      "label": "timecode-unreal.md",
-      "_origin": "ast",
-      "community": 100,
-      "community_name": "timecode-unreal.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "TimecodeUnreal",
-        "fecha": "2023-09",
-        "fechaFin": "2024-11",
-        "categorias": "[vfx, programacion]",
-        "peso": "40",
-        "descripcion": "Convierte los renders de Unreal en .mov con timecode listos para DaVinci Resolve.",
-        "tecnologias": "[Python, FFmpeg, Unreal Engine, DaVinci Resolve]",
-        "link": "https://github.com/PGSCOM/TimecodeUnreal",
-        "enlaceExterno": "https://github.com/PGSCOM/TimecodeUnreal",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "timecode-unreal.md",
-      "source_file": "src/content/proyectos/timecode-unreal.md",
-      "source_location": "L1"
     },
     {
       "id": "src_content_proyectos_premios_macula",
@@ -1979,17 +2009,6 @@
       "source_location": "L118"
     },
     {
-      "id": "ref_hls_js",
-      "label": "hls.js",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "proyecto-video.js",
-      "file_type": "concept",
-      "norm_label": "hls.js",
-      "source_file": "package.json",
-      "source_location": "L20"
-    },
-    {
       "id": "src_content_habilidades_ableton_live",
       "label": "ableton-live.md",
       "_origin": "ast",
@@ -2283,176 +2302,141 @@
       "source_location": "L18"
     },
     {
-      "id": "lightbox",
-      "label": "photoswipe/lightbox",
+      "id": "src_content_proyectos_identidad_pgscom",
+      "label": "identidad-pgscom.md",
       "_origin": "ast",
       "community": 27,
-      "community_name": "proyecto-galeria.js",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "photoswipe/lightbox",
-      "source_file": "photoswipe/lightbox"
-    },
-    {
-      "id": "style_css",
-      "label": "photoswipe/style.css",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "proyecto-galeria.js",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "photoswipe/style.css",
-      "source_file": "photoswipe/style.css"
-    },
-    {
-      "id": "src_scripts_proyecto_galeria",
-      "label": "proyecto-galeria.js",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "proyecto-galeria.js",
-      "file_type": "code",
-      "norm_label": "proyecto-galeria.js",
-      "source_file": "src/scripts/proyecto-galeria.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_scripts_proyecto_galeria_galerias",
-      "label": "galerias",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "proyecto-galeria.js",
-      "file_type": "code",
-      "norm_label": "galerias",
-      "source_file": "src/scripts/proyecto-galeria.js",
-      "source_location": "L12"
-    },
-    {
-      "id": "ref_photoswipe",
-      "label": "photoswipe",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "proyecto-galeria.js",
-      "file_type": "concept",
-      "norm_label": "photoswipe",
-      "source_file": "package.json",
-      "source_location": "L22"
-    },
-    {
-      "id": "src_content_proyectos_immersive",
-      "label": "immersive.md",
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "C\u00f3mo funciona",
+      "community_name": "Identidad PGSCOM",
       "file_type": "document",
       "frontmatter": {
-        "titulo": "Immersive",
-        "fecha": "2026-02",
-        "fechaFin": "ahora",
-        "categorias": "[programacion]",
-        "peso": "75",
-        "descripcion": "Alternativa open source a Immersed - tus monitores del PC dentro de unas gafas de realidad virtual.",
-        "tecnologias": "[Godot 4, OpenXR, C++, DXGI, NVENC, WebXR, Node.js]",
-        "link": "https://pgscom.github.io/Immersive/"
+        "titulo": "Identidad PGSCOM",
+        "fecha": "2022-03",
+        "categorias": "[dise\u00f1o-grafico]",
+        "peso": "55",
+        "descripcion": "Dise\u00f1o de identidad visual completa.",
+        "tecnologias": "[Illustrator, Photoshop, Figma]"
       },
       "node_kind": "page",
-      "norm_label": "immersive.md",
-      "source_file": "src/content/proyectos/immersive.md",
+      "norm_label": "identidad-pgscom.md",
+      "source_file": "src/content/proyectos/identidad-pgscom.md",
       "source_location": "L1"
     },
     {
-      "id": "src_content_proyectos_immersive_cliente",
-      "label": "Cliente",
+      "id": "src_content_proyectos_identidad_pgscom_elementos",
+      "label": "Elementos:",
       "_origin": "ast",
-      "community": 28,
-      "community_name": "C\u00f3mo funciona",
+      "community": 27,
+      "community_name": "Identidad PGSCOM",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "cliente",
-      "source_file": "src/content/proyectos/immersive.md",
-      "source_location": "L32"
+      "norm_label": "elementos:",
+      "source_file": "src/content/proyectos/identidad-pgscom.md",
+      "source_location": "L14"
     },
     {
-      "id": "src_content_proyectos_immersive_c\u00f3mo_funciona",
-      "label": "C\u00f3mo funciona",
+      "id": "src_content_proyectos_identidad_pgscom_identidad_pgscom",
+      "label": "Identidad PGSCOM",
       "_origin": "ast",
-      "community": 28,
-      "community_name": "C\u00f3mo funciona",
+      "community": 27,
+      "community_name": "Identidad PGSCOM",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "como funciona",
-      "source_file": "src/content/proyectos/immersive.md",
-      "source_location": "L26"
+      "norm_label": "identidad pgscom",
+      "source_file": "src/content/proyectos/identidad-pgscom.md",
+      "source_location": "L10"
     },
     {
-      "id": "src_content_proyectos_immersive_host_windows_linux_macos",
-      "label": "Host (Windows / Linux / macOS)",
+      "id": "src_content_proyectos_portafolio_cine",
+      "label": "portafolio-cine.md",
       "_origin": "ast",
       "community": 28,
-      "community_name": "C\u00f3mo funciona",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "host (windows / linux / macos)",
-      "source_file": "src/content/proyectos/immersive.md",
-      "source_location": "L28"
-    },
-    {
-      "id": "src_content_proyectos_immersive_qu\u00e9_hace",
-      "label": "Qu\u00e9 hace",
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "C\u00f3mo funciona",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "que hace",
-      "source_file": "src/content/proyectos/immersive.md",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_content_proyectos_cold_searcher",
-      "label": "cold-searcher.md",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "cold-searcher.md",
+      "community_name": "Portafolio Cinematogr\u00e1fico",
       "file_type": "document",
       "frontmatter": {
-        "titulo": "Cold Searcher",
-        "fecha": "2026-02",
-        "fechaFin": "2026-06",
-        "categorias": "[programacion]",
+        "titulo": "Portafolio Cinematogr\u00e1fico",
+        "fecha": "2024-02",
+        "categorias": "[desarrollo-web, video-produccion]",
         "peso": "60",
-        "descripcion": "Buscador \u00fanico para discos externos y nubes, aunque el disco est\u00e9 desconectado.",
-        "tecnologias": "[Python, FastAPI, PostgreSQL, pgvector, CLIP, Meilisearch, React, Electron, Docker]",
-        "link": "https://github.com/PGSCOM/Cold-Searcher",
-        "txtboton": "Ver en GitHub"
+        "destacado": "4",
+        "imagen": "../../assets/proyectos/PortfolioCortos.png",
+        "descripcion": "Galer\u00eda de proyectos audiovisuales con reproductor de video integrado.",
+        "tecnologias": "[HTML5, CSS3, JavaScript, Video.js]",
+        "link": "https://cine.pgscom.es"
       },
       "node_kind": "page",
-      "norm_label": "cold-searcher.md",
-      "source_file": "src/content/proyectos/cold-searcher.md",
+      "norm_label": "portafolio-cine.md",
+      "source_file": "src/content/proyectos/portafolio-cine.md",
       "source_location": "L1"
     },
     {
-      "id": "src_content_proyectos_cold_searcher_arquitectura",
-      "label": "Arquitectura",
+      "id": "src_content_proyectos_portafolio_cine_funcionalidades",
+      "label": "Funcionalidades:",
       "_origin": "ast",
-      "community": 29,
-      "community_name": "cold-searcher.md",
+      "community": 28,
+      "community_name": "Portafolio Cinematogr\u00e1fico",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "arquitectura",
-      "source_file": "src/content/proyectos/cold-searcher.md",
-      "source_location": "L23"
+      "norm_label": "funcionalidades:",
+      "source_file": "src/content/proyectos/portafolio-cine.md",
+      "source_location": "L17"
     },
     {
-      "id": "src_content_proyectos_cold_searcher_qu\u00e9_hace",
-      "label": "Qu\u00e9 hace",
+      "id": "src_content_proyectos_portafolio_cine_portafolio_cinematogr\u00e1fico",
+      "label": "Portafolio Cinematogr\u00e1fico",
       "_origin": "ast",
-      "community": 29,
-      "community_name": "cold-searcher.md",
+      "community": 28,
+      "community_name": "Portafolio Cinematogr\u00e1fico",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "que hace",
-      "source_file": "src/content/proyectos/cold-searcher.md",
+      "norm_label": "portafolio cinematografico",
+      "source_file": "src/content/proyectos/portafolio-cine.md",
+      "source_location": "L13"
+    },
+    {
+      "id": "src_content_proyectos_portfolio_pgscom",
+      "label": "portfolio-pgscom.md",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "Portfolio Personal PGSCOM",
+      "file_type": "document",
+      "frontmatter": {
+        "titulo": "Portfolio PGSCOM",
+        "fecha": "2025-03",
+        "categorias": "[desarrollo-web]",
+        "peso": "90",
+        "imagen": "../../assets/proyectos/portfolio.png",
+        "descripcion": "Sitio web personal desarrollado con Astro, React y animaciones con AnimeJS.",
+        "tecnologias": "[Astro, React, TypeScript, AnimeJS, CSS3]",
+        "link": "https://pgscom.es"
+      },
+      "node_kind": "page",
+      "norm_label": "portfolio-pgscom.md",
+      "source_file": "src/content/proyectos/portfolio-pgscom.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_content_proyectos_portfolio_pgscom_caracter\u00edsticas_principales",
+      "label": "Caracter\u00edsticas principales:",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "Portfolio Personal PGSCOM",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "caracteristicas principales:",
+      "source_file": "src/content/proyectos/portfolio-pgscom.md",
       "source_location": "L16"
+    },
+    {
+      "id": "src_content_proyectos_portfolio_pgscom_portfolio_personal_pgscom",
+      "label": "Portfolio Personal PGSCOM",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "Portfolio Personal PGSCOM",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "portfolio personal pgscom",
+      "source_file": "src/content/proyectos/portfolio-pgscom.md",
+      "source_location": "L12"
     },
     {
       "id": "src_scripts_galaxia_scroll",
@@ -2668,7 +2652,7 @@
       "node_kind": "heading",
       "norm_label": "10. desplegable `<details>`",
       "source_file": "FORMATO.md",
-      "source_location": "L336"
+      "source_location": "L333"
     },
     {
       "id": "formato_11_secci\u00f3n_con_franja_de_color_pd_seccion",
@@ -2680,7 +2664,7 @@
       "node_kind": "heading",
       "norm_label": "11. seccion con franja de color (`pd-seccion`)",
       "source_file": "FORMATO.md",
-      "source_location": "L354"
+      "source_location": "L351"
     },
     {
       "id": "formato_12_anclas_para_sub_items",
@@ -2692,7 +2676,7 @@
       "node_kind": "heading",
       "norm_label": "12. anclas para sub-items",
       "source_file": "FORMATO.md",
-      "source_location": "L396"
+      "source_location": "L393"
     },
     {
       "id": "formato_13_pesta\u00f1as_data_tab",
@@ -2704,7 +2688,7 @@
       "node_kind": "heading",
       "norm_label": "13. pestanas (`data-tab`)",
       "source_file": "FORMATO.md",
-      "source_location": "L408"
+      "source_location": "L405"
     },
     {
       "id": "formato_14_micrositio_de_cap\u00edtulos_multiguerras",
@@ -2716,7 +2700,7 @@
       "node_kind": "heading",
       "norm_label": "14. micrositio de capitulos (multiguerras)",
       "source_file": "FORMATO.md",
-      "source_location": "L452"
+      "source_location": "L449"
     },
     {
       "id": "formato_15_habilidades_el_grafo_sobre_proyectos",
@@ -2728,7 +2712,7 @@
       "node_kind": "heading",
       "norm_label": "15. habilidades: el grafo sobre \"proyectos\"",
       "source_file": "FORMATO.md",
-      "source_location": "L548"
+      "source_location": "L545"
     },
     {
       "id": "formato_1_frontmatter",
@@ -2752,7 +2736,7 @@
       "node_kind": "heading",
       "norm_label": "2. encabezados en el cuerpo",
       "source_file": "FORMATO.md",
-      "source_location": "L57"
+      "source_location": "L54"
     },
     {
       "id": "formato_3_texto_b\u00e1sico",
@@ -2764,7 +2748,7 @@
       "node_kind": "heading",
       "norm_label": "3. texto basico",
       "source_file": "FORMATO.md",
-      "source_location": "L69"
+      "source_location": "L66"
     },
     {
       "id": "formato_4_listas",
@@ -2776,7 +2760,7 @@
       "node_kind": "heading",
       "norm_label": "4. listas",
       "source_file": "FORMATO.md",
-      "source_location": "L81"
+      "source_location": "L78"
     },
     {
       "id": "formato_5_enlaces",
@@ -2788,7 +2772,7 @@
       "node_kind": "heading",
       "norm_label": "5. enlaces",
       "source_file": "FORMATO.md",
-      "source_location": "L94"
+      "source_location": "L91"
     },
     {
       "id": "formato_7_cita_destacada_blockquote",
@@ -2800,7 +2784,7 @@
       "node_kind": "heading",
       "norm_label": "7. cita destacada (blockquote)",
       "source_file": "FORMATO.md",
-      "source_location": "L143"
+      "source_location": "L140"
     },
     {
       "id": "formato_8_c\u00f3digo",
@@ -2812,7 +2796,7 @@
       "node_kind": "heading",
       "norm_label": "8. codigo",
       "source_file": "FORMATO.md",
-      "source_location": "L154"
+      "source_location": "L151"
     },
     {
       "id": "formato_9_v\u00eddeos",
@@ -2824,7 +2808,7 @@
       "node_kind": "heading",
       "norm_label": "9. videos",
       "source_file": "FORMATO.md",
-      "source_location": "L169"
+      "source_location": "L166"
     },
     {
       "id": "formato_comparador_antes_despu\u00e9s_videocompareslider",
@@ -2836,7 +2820,7 @@
       "node_kind": "heading",
       "norm_label": "comparador antes/despues (`videocompareslider`)",
       "source_file": "FORMATO.md",
-      "source_location": "L290"
+      "source_location": "L287"
     },
     {
       "id": "formato_cuerpo_contenido_del_panel",
@@ -2848,7 +2832,7 @@
       "node_kind": "heading",
       "norm_label": "cuerpo = contenido del panel",
       "source_file": "FORMATO.md",
-      "source_location": "L564"
+      "source_location": "L561"
     },
     {
       "id": "formato_c\u00f3mo_codificar_el_v\u00eddeo",
@@ -2860,7 +2844,7 @@
       "node_kind": "heading",
       "norm_label": "como codificar el video",
       "source_file": "FORMATO.md",
-      "source_location": "L241"
+      "source_location": "L238"
     },
     {
       "id": "formato_d\u00f3nde_colocar_los_archivos",
@@ -2872,7 +2856,7 @@
       "node_kind": "heading",
       "norm_label": "donde colocar los archivos",
       "source_file": "FORMATO.md",
-      "source_location": "L213"
+      "source_location": "L210"
     },
     {
       "id": "formato_ejemplo_completo",
@@ -2884,7 +2868,7 @@
       "node_kind": "heading",
       "norm_label": "ejemplo completo",
       "source_file": "FORMATO.md",
-      "source_location": "L596"
+      "source_location": "L593"
     },
     {
       "id": "formato_ejemplo_de_cap\u00edtulo_completo",
@@ -2896,7 +2880,7 @@
       "node_kind": "heading",
       "norm_label": "ejemplo de capitulo completo",
       "source_file": "FORMATO.md",
-      "source_location": "L520"
+      "source_location": "L517"
     },
     {
       "id": "formato_frontmatter_de_un_cap\u00edtulo",
@@ -2908,7 +2892,7 @@
       "node_kind": "heading",
       "norm_label": "frontmatter de un capitulo",
       "source_file": "FORMATO.md",
-      "source_location": "L462"
+      "source_location": "L459"
     },
     {
       "id": "formato_gu\u00eda_de_formato_ficheros_de_proyecto",
@@ -2932,7 +2916,7 @@
       "node_kind": "heading",
       "norm_label": "iconos de marca",
       "source_file": "FORMATO.md",
-      "source_location": "L584"
+      "source_location": "L581"
     },
     {
       "id": "formato_ids_de_categor\u00edas_disponibles",
@@ -2944,7 +2928,7 @@
       "node_kind": "heading",
       "norm_label": "ids de categorias disponibles",
       "source_file": "FORMATO.md",
-      "source_location": "L44"
+      "source_location": "L41"
     },
     {
       "id": "formato_miniaturas_autom\u00e1ticas",
@@ -2956,7 +2940,7 @@
       "node_kind": "heading",
       "norm_label": "miniaturas automaticas",
       "source_file": "FORMATO.md",
-      "source_location": "L204"
+      "source_location": "L201"
     },
     {
       "id": "formato_nombre_de_archivo_y_orden",
@@ -2968,7 +2952,7 @@
       "node_kind": "heading",
       "norm_label": "nombre de archivo y orden",
       "source_file": "FORMATO.md",
-      "source_location": "L486"
+      "source_location": "L483"
     },
     {
       "id": "formato_resumen",
@@ -2980,7 +2964,7 @@
       "node_kind": "heading",
       "norm_label": "`resumen`",
       "source_file": "FORMATO.md",
-      "source_location": "L577"
+      "source_location": "L574"
     },
     {
       "id": "formato_selector_de_calidad",
@@ -2992,7 +2976,7 @@
       "node_kind": "heading",
       "norm_label": "selector de calidad",
       "source_file": "FORMATO.md",
-      "source_location": "L191"
+      "source_location": "L188"
     },
     {
       "id": "formato_subt\u00edtulos_del_\u00edndice_acorde\u00f3n",
@@ -3004,7 +2988,7 @@
       "node_kind": "heading",
       "norm_label": "subtitulos del indice (acordeon)",
       "source_file": "FORMATO.md",
-      "source_location": "L493"
+      "source_location": "L490"
     },
     {
       "id": "src_content_habilidades_docker",
@@ -3239,7 +3223,7 @@
       "node_kind": "heading",
       "norm_label": "6. imagenes",
       "source_file": "FORMATO.md",
-      "source_location": "L108"
+      "source_location": "L105"
     },
     {
       "id": "formato_galer\u00eda_de_im\u00e1genes_v\u00eddeo_lightbox",
@@ -3251,7 +3235,7 @@
       "node_kind": "heading",
       "norm_label": "galeria de imagenes / video (lightbox)",
       "source_file": "FORMATO.md",
-      "source_location": "L116"
+      "source_location": "L113"
     },
     {
       "id": "src_content_habilidades_app_inventor_firebase",
@@ -3727,7 +3711,6 @@
       "frontmatter": {
         "titulo": "Go",
         "categoria": "programacion",
-        "icono": "go",
         "orden": "350",
         "resumen": "Herramientas de red y dispositivos iOS."
       },
@@ -3810,6 +3793,28 @@
       "norm_label": "ia-vfx.md",
       "source_file": "src/content/habilidades/ia-vfx.md",
       "source_location": "L1"
+    },
+    {
+      "id": "lightbox",
+      "label": "photoswipe/lightbox",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "confidence": "EXTRACTED",
+      "file_type": "code",
+      "norm_label": "photoswipe/lightbox",
+      "source_file": "photoswipe/lightbox"
+    },
+    {
+      "id": "style_css",
+      "label": "photoswipe/style.css",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "confidence": "EXTRACTED",
+      "file_type": "code",
+      "norm_label": "photoswipe/style.css",
+      "source_file": "photoswipe/style.css"
     },
     {
       "id": "astro_config",
@@ -4043,59 +4048,26 @@
       "source_location": "L4"
     },
     {
-      "id": "src_content_config",
-      "label": "content.config.ts",
+      "id": "src_scripts_proyecto_galeria",
+      "label": "proyecto-galeria.js",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "content.config.ts",
-      "source_file": "src/content.config.ts",
+      "norm_label": "proyecto-galeria.js",
+      "source_file": "src/scripts/proyecto-galeria.js",
       "source_location": "L1"
     },
     {
-      "id": "src_content_config_collections",
-      "label": "collections",
+      "id": "src_scripts_proyecto_galeria_galerias",
+      "label": "galerias",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "collections",
-      "source_file": "src/content.config.ts",
-      "source_location": "L135"
-    },
-    {
-      "id": "src_content_config_habilidades",
-      "label": "habilidades",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "habilidades",
-      "source_file": "src/content.config.ts",
-      "source_location": "L120"
-    },
-    {
-      "id": "src_content_config_multiguerras",
-      "label": "multiguerras",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "multiguerras",
-      "source_file": "src/content.config.ts",
-      "source_location": "L94"
-    },
-    {
-      "id": "src_content_config_proyectos",
-      "label": "proyectos",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "proyectos",
-      "source_file": "src/content.config.ts",
-      "source_location": "L7"
+      "norm_label": "galerias",
+      "source_file": "src/scripts/proyecto-galeria.js",
+      "source_location": "L12"
     },
     {
       "id": "ref_astro",
@@ -4153,6 +4125,17 @@
       "source_location": "L25"
     },
     {
+      "id": "ref_hls_js",
+      "label": "hls.js",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "concept",
+      "norm_label": "hls.js",
+      "source_file": "package.json",
+      "source_location": "L20"
+    },
+    {
       "id": "ref_lenis",
       "label": "lenis",
       "_origin": "ast",
@@ -4162,6 +4145,17 @@
       "norm_label": "lenis",
       "source_file": "package.json",
       "source_location": "L21"
+    },
+    {
+      "id": "ref_photoswipe",
+      "label": "photoswipe",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "concept",
+      "norm_label": "photoswipe",
+      "source_file": "package.json",
+      "source_location": "L22"
     },
     {
       "id": "ref_typescript",
@@ -4482,531 +4476,6 @@
       "node_kind": "page",
       "norm_label": "wireguard.md",
       "source_file": "src/content/habilidades/wireguard.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_ipad_tunnel",
-      "label": "ipad-tunnel.md",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "ipad-tunnel.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "iPad por cable",
-        "fecha": "2026-03",
-        "fechaFin": "2026-09",
-        "categorias": "[programacion]",
-        "peso": "40",
-        "descripcion": "Usar el iPad como pantalla y cliente del PC por USB-C, sin depender del Wi-Fi.",
-        "tecnologias": "[Go, go-ios, WireGuard, Docker, Moonlight, Sunshine]",
-        "link": "https://github.com/PGSCOM/ios-tunnel-stream",
-        "enlaceExterno": "https://github.com/PGSCOM/ios-tunnel-stream",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "ipad-tunnel.md",
-      "source_file": "src/content/proyectos/ipad-tunnel.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_ipad_tunnel_ios_tunnel_stream",
-      "label": "ios-tunnel-stream",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "ipad-tunnel.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "ios-tunnel-stream",
-      "source_file": "src/content/proyectos/ipad-tunnel.md",
-      "source_location": "L22"
-    },
-    {
-      "id": "src_content_proyectos_ipad_tunnel_ipad_typec_tunnel",
-      "label": "ipad-typec-tunnel",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "ipad-tunnel.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "ipad-typec-tunnel",
-      "source_file": "src/content/proyectos/ipad-tunnel.md",
-      "source_location": "L18"
-    },
-    {
-      "id": "src_content_proyectos_lcemp",
-      "label": "lcemp.md",
-      "_origin": "ast",
-      "community": 84,
-      "community_name": "lcemp.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "LCEMP",
-        "fecha": "2026-03",
-        "fechaFin": "2026-06",
-        "categorias": "[programacion]",
-        "peso": "55",
-        "descripcion": "Multijugador y servidor dedicado para Minecraft Legacy Console Edition.",
-        "tecnologias": "[C++, CMake]",
-        "link": "https://github.com/PGSCOM/LCEMP",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "lcemp.md",
-      "source_file": "src/content/proyectos/lcemp.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_lcemp_cliente",
-      "label": "Cliente",
-      "_origin": "ast",
-      "community": 84,
-      "community_name": "lcemp.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "cliente",
-      "source_file": "src/content/proyectos/lcemp.md",
-      "source_location": "L16"
-    },
-    {
-      "id": "src_content_proyectos_lcemp_servidor_dedicado_lcemp_server_https_github_com_pgscom_lcemp_server",
-      "label": "Servidor dedicado ([LCEMP-Server](https://github.com/PGSCOM/LCEMP-Server))",
-      "_origin": "ast",
-      "community": 84,
-      "community_name": "lcemp.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "servidor dedicado ([lcemp-server](https://github.com/pgscom/lcemp-server))",
-      "source_file": "src/content/proyectos/lcemp.md",
-      "source_location": "L21"
-    },
-    {
-      "id": "src_content_proyectos_mlxchat",
-      "label": "mlxchat.md",
-      "_origin": "ast",
-      "community": 85,
-      "community_name": "mlxchat.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Faro",
-        "fecha": "2026-09",
-        "fechaFin": "ahora",
-        "categorias": "[programacion]",
-        "peso": "75",
-        "descripcion": "App de iOS y macOS para chatear con modelos de IA que corren en el propio dispositivo.",
-        "tecnologias": "[Swift, SwiftUI, MLX, Hugging Face, MCP, GitHub Actions]",
-        "link": "https://github.com/PGSCOM/MLXChat",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "mlxchat.md",
-      "source_file": "src/content/proyectos/mlxchat.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_mlxchat_c\u00f3mo_est\u00e1_montado",
-      "label": "C\u00f3mo est\u00e1 montado",
-      "_origin": "ast",
-      "community": 85,
-      "community_name": "mlxchat.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "como esta montado",
-      "source_file": "src/content/proyectos/mlxchat.md",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_content_proyectos_mlxchat_qu\u00e9_hace",
-      "label": "Qu\u00e9 hace",
-      "_origin": "ast",
-      "community": 85,
-      "community_name": "mlxchat.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "que hace",
-      "source_file": "src/content/proyectos/mlxchat.md",
-      "source_location": "L16"
-    },
-    {
-      "id": "src_content_proyectos_pulseboot",
-      "label": "pulseboot.md",
-      "_origin": "ast",
-      "community": 86,
-      "community_name": "pulseboot.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "PulseBoot",
-        "fecha": "2026-08",
-        "categorias": "[programacion]",
-        "peso": "55",
-        "descripcion": "Un ESP32 que sustituye el bot\u00f3n de encendido del PC y lo conecta a la dom\u00f3tica.",
-        "tecnologias": "[ESP32-C6, ESP-IDF, PlatformIO, Matter, ESPHome, MQTT, Home Assistant]",
-        "link": "https://github.com/PGSCOM/PulseBoot",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "pulseboot.md",
-      "source_file": "src/content/proyectos/pulseboot.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_pulseboot_firmware",
-      "label": "Firmware",
-      "_origin": "ast",
-      "community": 86,
-      "community_name": "pulseboot.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "firmware",
-      "source_file": "src/content/proyectos/pulseboot.md",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_content_proyectos_pulseboot_qu\u00e9_hace",
-      "label": "Qu\u00e9 hace",
-      "_origin": "ast",
-      "community": 86,
-      "community_name": "pulseboot.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "que hace",
-      "source_file": "src/content/proyectos/pulseboot.md",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_content_proyectos_blender_cotracker3",
-      "label": "blender-cotracker3.md",
-      "_origin": "ast",
-      "community": 87,
-      "community_name": "blender-cotracker3.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "CoTracker3 para Blender",
-        "fecha": "2026-09",
-        "categorias": "[vfx, programacion]",
-        "peso": "65",
-        "descripcion": "Addon que cambia el tracker de Blender por CoTracker3, un modelo de IA de Meta.",
-        "tecnologias": "[Blender, Python, PyTorch, CoTracker3]",
-        "link": "https://github.com/PGSCOM/Blender-Cotracker3",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "blender-cotracker3.md",
-      "source_file": "src/content/proyectos/blender-cotracker3.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_blender_cotracker3_c\u00f3mo_funciona",
-      "label": "C\u00f3mo funciona",
-      "_origin": "ast",
-      "community": 87,
-      "community_name": "blender-cotracker3.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "como funciona",
-      "source_file": "src/content/proyectos/blender-cotracker3.md",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_content_proyectos_unreal_render_farm",
-      "label": "unreal-render-farm.md",
-      "_origin": "ast",
-      "community": 88,
-      "community_name": "unreal-render-farm.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Render farm para Unreal",
-        "fecha": "2025-01",
-        "categorias": "[vfx, programacion]",
-        "peso": "45",
-        "descripcion": "Granja de render distribuida para el Movie Render Queue de Unreal Engine 5.",
-        "tecnologias": "[Python, Flask, Unreal Engine 5, Cloudflare]",
-        "link": "https://github.com/PGSCOM/unrealRenderFarm",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "unreal-render-farm.md",
-      "source_file": "src/content/proyectos/unreal-render-farm.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_unreal_render_farm_cambios_propios",
-      "label": "Cambios propios",
-      "_origin": "ast",
-      "community": 88,
-      "community_name": "unreal-render-farm.md",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "cambios propios",
-      "source_file": "src/content/proyectos/unreal-render-farm.md",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_content_proyectos_clearer",
-      "label": "clearer.md",
-      "_origin": "ast",
-      "community": 89,
-      "community_name": "clearer.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Clearer",
-        "fecha": "2026-08",
-        "fechaFin": "2026-09",
-        "categorias": "[programacion]",
-        "peso": "45",
-        "descripcion": "Limpiador de la fototeca de iOS que clasifica las fotos en el propio iPhone.",
-        "tecnologias": "[Swift, SwiftUI, Vision Framework]",
-        "link": "https://github.com/PGSCOM/Clearer",
-        "enlaceExterno": "https://github.com/PGSCOM/Clearer",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "clearer.md",
-      "source_file": "src/content/proyectos/clearer.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_complicatedcraft",
-      "label": "complicatedcraft.md",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "complicatedcraft.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "ComplicatedCraft",
-        "fecha": "2025-11",
-        "fechaFin": "2025-12",
-        "categorias": "[programacion]",
-        "peso": "40",
-        "descripcion": "Servidor de Minecraft entre amigos, con modpack e infraestructura en Docker.",
-        "tecnologias": "[Docker, Packwiz, NeoForge, Tailscale, Cloudflare Pages]",
-        "link": "https://github.com/ComplicatedCraft",
-        "enlaceExterno": "https://github.com/ComplicatedCraft",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "complicatedcraft.md",
-      "source_file": "src/content/proyectos/complicatedcraft.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_enmarcador_de_entradas",
-      "label": "enmarcador-de-entradas.md",
-      "_origin": "ast",
-      "community": 91,
-      "community_name": "enmarcador-de-entradas.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Enmarcador de entradas",
-        "fecha": "2024-09",
-        "fechaFin": "2026-04",
-        "categorias": "[dise\u00f1o-grafico, programacion]",
-        "peso": "30",
-        "descripcion": "Genera en serie entradas personalizadas a partir de una plantilla SVG.",
-        "tecnologias": "[Python, SVG, Inkscape]",
-        "link": "https://github.com/PGSCOM/Enmarcador-de-entradas",
-        "enlaceExterno": "https://github.com/PGSCOM/Enmarcador-de-entradas",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "enmarcador-de-entradas.md",
-      "source_file": "src/content/proyectos/enmarcador-de-entradas.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_facebook_photos_getter",
-      "label": "facebook-photos-getter.md",
-      "_origin": "ast",
-      "community": 92,
-      "community_name": "facebook-photos-getter.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Facebook Photos Getter",
-        "fecha": "2026-05",
-        "categorias": "[programacion]",
-        "peso": "25",
-        "descripcion": "Exporta las publicaciones y fotos de un perfil de Facebook a carpetas navegables.",
-        "tecnologias": "[Python, Selenium]",
-        "link": "https://github.com/PGSCOM/Facebook-Photos-Getter",
-        "enlaceExterno": "https://github.com/PGSCOM/Facebook-Photos-Getter",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "facebook-photos-getter.md",
-      "source_file": "src/content/proyectos/facebook-photos-getter.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_horario_deusto",
-      "label": "horario-deusto.md",
-      "_origin": "ast",
-      "community": 93,
-      "community_name": "horario-deusto.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Horario de Deusto",
-        "fecha": "2025-10",
-        "fechaFin": "ahora",
-        "categorias": "[programacion]",
-        "peso": "20",
-        "descripcion": "Mantiene sincronizado el horario de la universidad autom\u00e1ticamente.",
-        "tecnologias": "[Python]",
-        "link": "https://github.com/PGSCOM/Horario-Deusto-updater",
-        "enlaceExterno": "https://github.com/PGSCOM/Horario-Deusto-updater",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "horario-deusto.md",
-      "source_file": "src/content/proyectos/horario-deusto.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_matanyone_improved",
-      "label": "matanyone-improved.md",
-      "_origin": "ast",
-      "community": 94,
-      "community_name": "matanyone-improved.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "MatAnyone 4K",
-        "fecha": "2025-12",
-        "categorias": "[vfx]",
-        "peso": "35",
-        "descripcion": "Rotoscopia con IA preparada para trabajar en 4K y desplegar con Docker.",
-        "tecnologias": "[Python, PyTorch, Gradio, Docker]",
-        "link": "https://github.com/PGSCOM/MatAnyone-Improved",
-        "enlaceExterno": "https://github.com/PGSCOM/MatAnyone-Improved",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "matanyone-improved.md",
-      "source_file": "src/content/proyectos/matanyone-improved.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_next_event_calendar",
-      "label": "next-event-calendar.md",
-      "_origin": "ast",
-      "community": 95,
-      "community_name": "next-event-calendar.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Next Event Calendar",
-        "fecha": "2026-09",
-        "categorias": "[programacion]",
-        "peso": "45",
-        "descripcion": "Extensi\u00f3n de GNOME que muestra tu pr\u00f3ximo evento en la barra superior.",
-        "tecnologias": "[JavaScript, GJS, GNOME Shell, D-Bus]",
-        "link": "https://extensions.gnome.org/extension/10932/next-event-calendar/",
-        "enlaceExterno": "https://extensions.gnome.org/extension/10932/next-event-calendar/",
-        "experimento": "true",
-        "txtboton": "Ver en GNOME Extensions"
-      },
-      "node_kind": "page",
-      "norm_label": "next-event-calendar.md",
-      "source_file": "src/content/proyectos/next-event-calendar.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_portfolio_cine",
-      "label": "portfolio-cine.md",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "portfolio-cine.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Portfolio de cine",
-        "fecha": "2024",
-        "categorias": "[video, desarrollo-web]",
-        "peso": "40",
-        "imagen": "../../assets/proyectos/PortfolioCortos.png",
-        "descripcion": "Web aparte para mis cortometrajes y series.",
-        "tecnologias": "[Astro]",
-        "link": "https://github.com/PGSCOM/cine",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "portfolio-cine.md",
-      "source_file": "src/content/proyectos/portfolio-cine.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_scanner_luma",
-      "label": "scanner-luma.md",
-      "_origin": "ast",
-      "community": 97,
-      "community_name": "scanner-luma.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "3D Scanner a Luma AI",
-        "fecha": "2024-07",
-        "categorias": "[vfx, programacion]",
-        "peso": "30",
-        "descripcion": "Script que prepara las capturas de 3D Scanner (iOS) para reconstruirlas en Luma AI.",
-        "tecnologias": "[Python, Luma AI, NeRF]",
-        "link": "https://github.com/PGSCOM/3D-Scanner-to-Luma-AI",
-        "enlaceExterno": "https://github.com/PGSCOM/3D-Scanner-to-Luma-AI",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "scanner-luma.md",
-      "source_file": "src/content/proyectos/scanner-luma.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_superpreset4wacom",
-      "label": "superpreset4wacom.md",
-      "_origin": "ast",
-      "community": 98,
-      "community_name": "superpreset4wacom.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "SuperPreset4Wacom",
-        "fecha": "2026-04",
-        "categorias": "[dise\u00f1o-grafico, programacion]",
-        "peso": "35",
-        "descripcion": "Web para fusionar presets de tabletas Wacom en un solo archivo.",
-        "tecnologias": "[HTML, JavaScript]",
-        "link": "https://pgscom.github.io/SuperPreset4Wacom/",
-        "enlaceExterno": "https://pgscom.github.io/SuperPreset4Wacom/",
-        "experimento": "true",
-        "txtboton": "Abrir la herramienta"
-      },
-      "node_kind": "page",
-      "norm_label": "superpreset4wacom.md",
-      "source_file": "src/content/proyectos/superpreset4wacom.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_content_proyectos_teldrive_adder",
-      "label": "teldrive-adder.md",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "teldrive-adder.md",
-      "file_type": "document",
-      "frontmatter": {
-        "titulo": "Teldrive Adder",
-        "fecha": "2026-01",
-        "fechaFin": "2026-04",
-        "categorias": "[programacion]",
-        "peso": "25",
-        "descripcion": "Importa archivos de un canal de Telegram a Teldrive, mi nube sobre Telegram.",
-        "tecnologias": "[Python, Telethon, Teldrive]",
-        "link": "https://github.com/PGSCOM/Teldrive-adder",
-        "enlaceExterno": "https://github.com/PGSCOM/Teldrive-adder",
-        "experimento": "true",
-        "txtboton": "Ver en GitHub"
-      },
-      "node_kind": "page",
-      "norm_label": "teldrive-adder.md",
-      "source_file": "src/content/proyectos/teldrive-adder.md",
       "source_location": "L1"
     },
     {
@@ -7198,7 +6667,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L462",
+      "source_location": "L459",
       "weight": 1.0
     },
     {
@@ -7209,7 +6678,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L486",
+      "source_location": "L483",
       "weight": 1.0
     },
     {
@@ -7220,7 +6689,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L493",
+      "source_location": "L490",
       "weight": 1.0
     },
     {
@@ -7231,7 +6700,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L520",
+      "source_location": "L517",
       "weight": 1.0
     },
     {
@@ -7242,7 +6711,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L564",
+      "source_location": "L561",
       "weight": 1.0
     },
     {
@@ -7253,7 +6722,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L577",
+      "source_location": "L574",
       "weight": 1.0
     },
     {
@@ -7264,7 +6733,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L584",
+      "source_location": "L581",
       "weight": 1.0
     },
     {
@@ -7275,7 +6744,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L44",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -7286,7 +6755,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L116",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -7297,7 +6766,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L191",
+      "source_location": "L188",
       "weight": 1.0
     },
     {
@@ -7308,7 +6777,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L204",
+      "source_location": "L201",
       "weight": 1.0
     },
     {
@@ -7319,7 +6788,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L213",
+      "source_location": "L210",
       "weight": 1.0
     },
     {
@@ -7330,7 +6799,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L241",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -7341,7 +6810,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L290",
+      "source_location": "L287",
       "weight": 1.0
     },
     {
@@ -7352,7 +6821,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L108",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -7363,7 +6832,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L143",
+      "source_location": "L140",
       "weight": 1.0
     },
     {
@@ -7374,7 +6843,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L154",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -7385,7 +6854,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L169",
+      "source_location": "L166",
       "weight": 1.0
     },
     {
@@ -7396,7 +6865,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L336",
+      "source_location": "L333",
       "weight": 1.0
     },
     {
@@ -7407,7 +6876,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L354",
+      "source_location": "L351",
       "weight": 1.0
     },
     {
@@ -7418,7 +6887,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L396",
+      "source_location": "L393",
       "weight": 1.0
     },
     {
@@ -7429,7 +6898,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L408",
+      "source_location": "L405",
       "weight": 1.0
     },
     {
@@ -7440,18 +6909,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L452",
-      "weight": 1.0
-    },
-    {
-      "source": "formato_gu\u00eda_de_formato_ficheros_de_proyecto",
-      "target": "formato_15_habilidades_el_grafo_sobre_proyectos",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "FORMATO.md",
-      "source_location": "L548",
+      "source_location": "L449",
       "weight": 1.0
     },
     {
@@ -7462,7 +6920,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L57",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "formato_gu\u00eda_de_formato_ficheros_de_proyecto",
+      "target": "formato_15_habilidades_el_grafo_sobre_proyectos",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "FORMATO.md",
+      "source_location": "L545",
       "weight": 1.0
     },
     {
@@ -7473,7 +6942,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L596",
+      "source_location": "L593",
       "weight": 1.0
     },
     {
@@ -7484,7 +6953,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L69",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -7506,7 +6975,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L81",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -7517,7 +6986,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L94",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -7935,7 +7404,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/content.config.ts",
-      "source_location": "L120",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -7946,7 +7415,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/content.config.ts",
-      "source_location": "L135",
+      "source_location": "L133",
       "weight": 1.0
     },
     {
@@ -7968,7 +7437,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/content.config.ts",
-      "source_location": "L94",
+      "source_location": "L92",
       "weight": 1.0
     },
     {
@@ -8599,17 +8068,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_content_proyectos_blender_cotracker3",
-      "target": "src_content_proyectos_blender_cotracker3_c\u00f3mo_funciona",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/blender-cotracker3.md",
-      "source_location": "L15",
-      "weight": 1.0
-    },
-    {
       "source": "src_content_proyectos_blog_personal",
       "target": "src_content_proyectos_blog_personal_inicios_del_blog",
       "relation": "contains",
@@ -8629,28 +8087,6 @@
       "confidence_score": 1.0,
       "source_file": "src/content/proyectos/blog-personal.md",
       "source_location": "L24",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_cold_searcher",
-      "target": "src_content_proyectos_cold_searcher_qu\u00e9_hace",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/cold-searcher.md",
-      "source_location": "L16",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_cold_searcher",
-      "target": "src_content_proyectos_cold_searcher_arquitectura",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/cold-searcher.md",
-      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -8709,113 +8145,69 @@
       "weight": 1.0
     },
     {
-      "source": "src_content_proyectos_immersive",
-      "target": "src_content_proyectos_immersive_qu\u00e9_hace",
+      "source": "src_content_proyectos_identidad_pgscom",
+      "target": "src_content_proyectos_identidad_pgscom_identidad_pgscom",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/immersive.md",
-      "source_location": "L15",
+      "source_file": "src/content/proyectos/identidad-pgscom.md",
+      "source_location": "L10",
       "weight": 1.0
     },
     {
-      "source": "src_content_proyectos_immersive",
-      "target": "src_content_proyectos_immersive_c\u00f3mo_funciona",
+      "source": "src_content_proyectos_identidad_pgscom_identidad_pgscom",
+      "target": "src_content_proyectos_identidad_pgscom_elementos",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/immersive.md",
-      "source_location": "L26",
+      "source_file": "src/content/proyectos/identidad-pgscom.md",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
-      "source": "src_content_proyectos_immersive_c\u00f3mo_funciona",
-      "target": "src_content_proyectos_immersive_host_windows_linux_macos",
+      "source": "src_content_proyectos_portafolio_cine",
+      "target": "src_content_proyectos_portafolio_cine_portafolio_cinematogr\u00e1fico",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/immersive.md",
-      "source_location": "L28",
+      "source_file": "src/content/proyectos/portafolio-cine.md",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
-      "source": "src_content_proyectos_immersive_c\u00f3mo_funciona",
-      "target": "src_content_proyectos_immersive_cliente",
+      "source": "src_content_proyectos_portafolio_cine_portafolio_cinematogr\u00e1fico",
+      "target": "src_content_proyectos_portafolio_cine_funcionalidades",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/immersive.md",
-      "source_location": "L32",
+      "source_file": "src/content/proyectos/portafolio-cine.md",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
-      "source": "src_content_proyectos_ipad_tunnel",
-      "target": "src_content_proyectos_ipad_tunnel_ipad_typec_tunnel",
+      "source": "src_content_proyectos_portfolio_pgscom",
+      "target": "src_content_proyectos_portfolio_pgscom_portfolio_personal_pgscom",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/ipad-tunnel.md",
-      "source_location": "L18",
+      "source_file": "src/content/proyectos/portfolio-pgscom.md",
+      "source_location": "L12",
       "weight": 1.0
     },
     {
-      "source": "src_content_proyectos_ipad_tunnel",
-      "target": "src_content_proyectos_ipad_tunnel_ios_tunnel_stream",
+      "source": "src_content_proyectos_portfolio_pgscom_portfolio_personal_pgscom",
+      "target": "src_content_proyectos_portfolio_pgscom_caracter\u00edsticas_principales",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/ipad-tunnel.md",
-      "source_location": "L22",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_lcemp",
-      "target": "src_content_proyectos_lcemp_cliente",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/lcemp.md",
+      "source_file": "src/content/proyectos/portfolio-pgscom.md",
       "source_location": "L16",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_lcemp",
-      "target": "src_content_proyectos_lcemp_servidor_dedicado_lcemp_server_https_github_com_pgscom_lcemp_server",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/lcemp.md",
-      "source_location": "L21",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_mlxchat",
-      "target": "src_content_proyectos_mlxchat_qu\u00e9_hace",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/mlxchat.md",
-      "source_location": "L16",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_mlxchat",
-      "target": "src_content_proyectos_mlxchat_c\u00f3mo_est\u00e1_montado",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/mlxchat.md",
-      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -8915,39 +8307,6 @@
       "confidence_score": 1.0,
       "source_file": "src/content/proyectos/premios-macula.md",
       "source_location": "L138",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_pulseboot",
-      "target": "src_content_proyectos_pulseboot_qu\u00e9_hace",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/pulseboot.md",
-      "source_location": "L15",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_pulseboot",
-      "target": "src_content_proyectos_pulseboot_firmware",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/pulseboot.md",
-      "source_location": "L25",
-      "weight": 1.0
-    },
-    {
-      "source": "src_content_proyectos_unreal_render_farm",
-      "target": "src_content_proyectos_unreal_render_farm_cambios_propios",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/content/proyectos/unreal-render-farm.md",
-      "source_location": "L15",
       "weight": 1.0
     },
     {
@@ -9968,10 +9327,10 @@
       "confidence_score": 0.95,
       "context": "build",
       "source_file": "FORMATO.md",
-      "source_location": "L137",
+      "source_location": "L134",
       "weight": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "ca2e077496321b22a72affccd5b40ae059082f7e"
+  "built_at_commit": "1db7bc1c25aa47e1ba885b5a67a664bea6372b9f"
 }
