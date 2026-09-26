@@ -334,6 +334,8 @@ function initGrafo() {
 			medirEtiqueta(i);
 		});
 
+		nebulosas(aristas);
+
 		// Las líneas van bajo una máscara con un hueco por cada etiqueta: donde
 		// una línea no ha podido esquivar un nombre, pasa por detrás de él en
 		// vez de tacharlo, como en una carta celeste impresa.
@@ -398,6 +400,58 @@ function initGrafo() {
 		return { extension, altoNodo: Math.max(...med.map((m) => m.alto)) };
 	}
 
+	// Nebulosa de cada constelación: la silueta de sus estrellas, chips y
+	// líneas (sin el tronco al logo, para que los colores no se mezclen en el
+	// núcleo) difuminada en una bruma de su color, con grano para que el
+	// degradado no se escalone. Un <svg> por constelación, pintado una vez
+	// por reparto: su opacidad (reposo, resaltada, atenuada) la anima el
+	// compositor sin volver a pasar el filtro. Se queda en el reposo de cada
+	// estrella; el vaivén de 2px no se nota en una bruma de 30px de radio.
+	function nebulosas(aristas) {
+		const capa = document.getElementById('hab-nebulosas');
+		if (!capa) return;
+		const P = (j) => (j === NUCLEO ? { x: 0, y: 0 } : { x: est[j].bx, y: est[j].by });
+		const n = (v) => v.toFixed(1);
+		capa.replaceChildren();
+		grupos.forEach((g, gi) => {
+			// Mismo tono que su categoría, pero con la luz igualada: si no, la
+			// de un color oscuro (Audiovisual) apenas se vería junto a las
+			// claras. Las categorías sin color propio (el gris neutro de
+			// index.astro) toman un verde azulado que no repite ningún tono.
+			const cat = nodos[g.miembros[0]].style.getPropertyValue('--cat-color').trim();
+			const color = cat === '#9bb4d0' ? 'hsl(172 45% 55%)' : `hsl(from ${cat} h clamp(40, s, 75) 58)`;
+			let l = Infinity, r = -Infinity, t = Infinity, b = -Infinity;
+			const formas = g.miembros.map((i) => {
+				const o = est[i];
+				const x = o.bx + o.ox + o.lab.l - 18, y = o.by - o.alto / 2 + o.lab.t - 18;
+				const w = o.lab.w + 36, h = o.lab.h + 36;
+				l = Math.min(l, x, o.bx - 50); r = Math.max(r, x + w, o.bx + 50);
+				t = Math.min(t, y, o.by - 50); b = Math.max(b, y + h, o.by + 50);
+				return `<circle cx="${n(o.bx)}" cy="${n(o.by)}" r="50"/><rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" rx="32"/>`;
+			});
+			const puentes = aristas
+				.filter(([a, bb]) => a !== NUCLEO && grupoDe[bb] === g)
+				.map(([a, bb]) => `<line x1="${n(P(a).x)}" y1="${n(P(a).y)}" x2="${n(P(bb).x)}" y2="${n(P(bb).y)}"/>`);
+			// Margen del filtro: 3σ del desenfoque, para que la bruma se apague
+			// entera antes del borde de su región y no quede cortada en seco.
+			const m = 3 * 34;
+			const id = `hab-bruma-${gi}`;
+			const el = document.createElement('div');
+			el.className = 'hab-nebulosa';
+			el.innerHTML = `<svg width="1" height="1" overflow="visible">
+				<filter id="${id}" filterUnits="userSpaceOnUse" x="${n(l - m)}" y="${n(t - m)}" width="${n(r - l + 2 * m)}" height="${n(b - t + 2 * m)}" color-interpolation-filters="sRGB">
+					<feGaussianBlur stdDeviation="34" result="bruma"/>
+					<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="${gi + 3}"/>
+					<feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0 0 0 0.45"/>
+					<feComposite in="bruma" operator="in"/>
+				</filter>
+				<g filter="url(#${id})" style="fill: ${color}; stroke: ${color}">${formas.join('')}<g stroke-width="64" stroke-linecap="round">${puentes.join('')}</g></g>
+			</svg>`;
+			capa.append(el);
+			g.nebulosa = el;
+		});
+	}
+
 	// content-visibility:auto deja la sección sin maquetar hasta que se acerca
 	// al viewport. ResizeObserver solo dispara con medidas reales, así que
 	// sustituye a la vez a una medición inicial y al listener de resize.
@@ -443,7 +497,10 @@ function initGrafo() {
 	// Al pasar por una estrella se enciende su constelación entera
 	function resaltar(g) {
 		trazos.forEach(({ b, el }) => el.classList.toggle('hab-arista-grupo', grupoDe[b] === g));
-		grupos.forEach((x) => x.nombre?.classList.toggle('activa', x === g));
+		grupos.forEach((x) => {
+			x.nombre?.classList.toggle('activa', x === g);
+			x.nebulosa?.classList.toggle('activa', x === g);
+		});
 	}
 	const alPasar = (e) => {
 		const nodo = e.target.closest?.('.hab-nodo');
@@ -484,6 +541,8 @@ function initGrafo() {
 		grafo.classList.toggle('abierto', Boolean(abierto));
 
 		trazos.forEach(({ el }) => el.classList.remove('hab-arista-activa', 'hab-arista-dim'));
+		const gAbierto = abierto && grupoDe[nodos.indexOf(abierto)];
+		grupos.forEach((g) => g.nebulosa?.classList.toggle('abierta', g === gAbierto));
 
 		if (previo) {
 			previo.setAttribute('aria-expanded', 'false');

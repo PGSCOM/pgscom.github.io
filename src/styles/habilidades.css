@@ -113,6 +113,45 @@
   opacity: 1;
 }
 
+/* Nebulosas: la bruma de color de cada constelación, bajo las líneas. Cada
+   <svg> mide 1px en el centro del cielo y pinta desbordado (JS), así la
+   bruma no depende del alto del contenedor ni se corta en su borde. Se
+   funde en modo "screen": suma luz a la foto de fondo en vez de taparla. */
+.hab-nebulosas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
+
+.hab-grafo-inner:not(.listo) .hab-nebulosas {
+  display: none;
+}
+
+.hab-nebulosa {
+  position: absolute;
+  mix-blend-mode: screen;
+  opacity: 0.36;
+  will-change: opacity;
+  transition: opacity 0.45s ease;
+}
+
+.hab-nebulosa svg {
+  display: block;
+}
+
+.hab-nebulosa.activa {
+  opacity: 0.58;
+}
+
+.hab-grafo.abierto .hab-nebulosa {
+  opacity: 0.1;
+}
+
+.hab-grafo.abierto .hab-nebulosa.abierta {
+  opacity: 0.42;
+}
+
 .hab-grafo-inner.listo .hab-nodo,
 .hab-grafo-inner.listo .hab-centro,
 .hab-grafo-inner.listo .hab-constelacion {

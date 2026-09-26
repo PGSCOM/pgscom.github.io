@@ -127,18 +127,6 @@
       "source_location": "L5"
     },
     {
-      "id": "src_scripts_habilidades_grafo_azar",
-      "label": "azar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "initGrafo",
-      "file_type": "code",
-      "norm_label": "azar()",
-      "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L28"
-    },
-    {
       "id": "src_scripts_habilidades_grafo_initgrafo",
       "label": "initGrafo()",
       "_callable": true,
@@ -172,7 +160,7 @@
       "file_type": "code",
       "norm_label": "maquetar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L459"
+      "source_location": "L405"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_mediretiqueta",
@@ -185,18 +173,6 @@
       "norm_label": "mediretiqueta()",
       "source_file": "src/scripts/habilidades-grafo.js",
       "source_location": "L176"
-    },
-    {
-      "id": "src_scripts_habilidades_grafo_initgrafo_nebulosas",
-      "label": "nebulosas()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "initGrafo",
-      "file_type": "code",
-      "norm_label": "nebulosas()",
-      "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L410"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_orientar",
@@ -244,7 +220,7 @@
       "file_type": "code",
       "norm_label": "resaltar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L498"
+      "source_location": "L444"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_seleccionar",
@@ -256,7 +232,7 @@
       "file_type": "code",
       "norm_label": "seleccionar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L538"
+      "source_location": "L481"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_soltar",
@@ -268,7 +244,7 @@
       "file_type": "code",
       "norm_label": "soltar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L518"
+      "source_location": "L461"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_tick",
@@ -475,6 +451,42 @@
       "source_location": "L36"
     },
     {
+      "id": "src_scripts_proyecto_galeria_crearenlace",
+      "label": "crearEnlace()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "proyecto-galeria.js",
+      "file_type": "code",
+      "norm_label": "crearenlace()",
+      "source_file": "src/scripts/proyecto-galeria.js",
+      "source_location": "L22"
+    },
+    {
+      "id": "src_scripts_proyecto_galeria_derivarposter",
+      "label": "derivarPoster()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "proyecto-galeria.js",
+      "file_type": "code",
+      "norm_label": "derivarposter()",
+      "source_file": "src/scripts/proyecto-galeria.js",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_scripts_habilidades_grafo_azar",
+      "label": "azar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "gsap",
+      "file_type": "code",
+      "norm_label": "azar()",
+      "source_file": "src/scripts/habilidades-grafo.js",
+      "source_location": "L28"
+    },
+    {
       "id": "src_scripts_hero_inithero",
       "label": "initHero()",
       "_callable": true,
@@ -641,30 +653,6 @@
       "norm_label": "marcarsinimagen()",
       "source_file": "src/scripts/proyectos-ruta.js",
       "source_location": "L13"
-    },
-    {
-      "id": "src_scripts_proyecto_galeria_crearenlace",
-      "label": "crearEnlace()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "crearenlace()",
-      "source_file": "src/scripts/proyecto-galeria.js",
-      "source_location": "L22"
-    },
-    {
-      "id": "src_scripts_proyecto_galeria_derivarposter",
-      "label": "derivarPoster()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "derivarposter()",
-      "source_file": "src/scripts/proyecto-galeria.js",
-      "source_location": "L17"
     },
     {
       "id": "scripts_generate_posters_extraerframe",
@@ -2295,92 +2283,59 @@
       "source_location": "L18"
     },
     {
-      "id": "package_dependencies",
-      "label": "dependencies",
+      "id": "lightbox",
+      "label": "photoswipe/lightbox",
       "_origin": "ast",
       "community": 27,
-      "community_name": "dependencies",
+      "community_name": "proyecto-galeria.js",
+      "confidence": "EXTRACTED",
       "file_type": "code",
-      "norm_label": "dependencies",
-      "source_file": "package.json",
-      "source_location": "L15"
+      "norm_label": "photoswipe/lightbox",
+      "source_file": "photoswipe/lightbox"
     },
     {
-      "id": "package_dependencies_astro",
-      "label": "astro",
+      "id": "style_css",
+      "label": "photoswipe/style.css",
       "_origin": "ast",
       "community": 27,
-      "community_name": "dependencies",
+      "community_name": "proyecto-galeria.js",
+      "confidence": "EXTRACTED",
       "file_type": "code",
-      "norm_label": "astro",
-      "source_file": "package.json",
-      "source_location": "L18"
+      "norm_label": "photoswipe/style.css",
+      "source_file": "photoswipe/style.css"
     },
     {
-      "id": "package_dependencies_astrojs_mdx",
-      "label": "@astrojs/mdx",
+      "id": "src_scripts_proyecto_galeria",
+      "label": "proyecto-galeria.js",
       "_origin": "ast",
       "community": 27,
-      "community_name": "dependencies",
+      "community_name": "proyecto-galeria.js",
       "file_type": "code",
-      "norm_label": "@astrojs/mdx",
-      "source_file": "package.json",
-      "source_location": "L16"
+      "norm_label": "proyecto-galeria.js",
+      "source_file": "src/scripts/proyecto-galeria.js",
+      "source_location": "L1"
     },
     {
-      "id": "package_dependencies_gsap",
-      "label": "gsap",
+      "id": "src_scripts_proyecto_galeria_galerias",
+      "label": "galerias",
       "_origin": "ast",
       "community": 27,
-      "community_name": "dependencies",
+      "community_name": "proyecto-galeria.js",
       "file_type": "code",
-      "norm_label": "gsap",
-      "source_file": "package.json",
-      "source_location": "L19"
+      "norm_label": "galerias",
+      "source_file": "src/scripts/proyecto-galeria.js",
+      "source_location": "L12"
     },
     {
-      "id": "package_dependencies_hls_js",
-      "label": "hls.js",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "hls.js",
-      "source_file": "package.json",
-      "source_location": "L20"
-    },
-    {
-      "id": "package_dependencies_lenis",
-      "label": "lenis",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "lenis",
-      "source_file": "package.json",
-      "source_location": "L21"
-    },
-    {
-      "id": "package_dependencies_photoswipe",
+      "id": "ref_photoswipe",
       "label": "photoswipe",
       "_origin": "ast",
       "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
+      "community_name": "proyecto-galeria.js",
+      "file_type": "concept",
       "norm_label": "photoswipe",
       "source_file": "package.json",
       "source_location": "L22"
-    },
-    {
-      "id": "package_dependencies_videojs_html",
-      "label": "@videojs/html",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "@videojs/html",
-      "source_file": "package.json",
-      "source_location": "L17"
     },
     {
       "id": "src_content_proyectos_immersive",
@@ -3857,28 +3812,6 @@
       "source_location": "L1"
     },
     {
-      "id": "lightbox",
-      "label": "photoswipe/lightbox",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "photoswipe/lightbox",
-      "source_file": "photoswipe/lightbox"
-    },
-    {
-      "id": "style_css",
-      "label": "photoswipe/style.css",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "photoswipe/style.css",
-      "source_file": "photoswipe/style.css"
-    },
-    {
       "id": "astro_config",
       "label": "astro.config.mjs",
       "_origin": "ast",
@@ -3899,6 +3832,94 @@
       "norm_label": "package.json",
       "source_file": "package.json",
       "source_location": "L1"
+    },
+    {
+      "id": "package_dependencies",
+      "label": "dependencies",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "dependencies",
+      "source_file": "package.json",
+      "source_location": "L15"
+    },
+    {
+      "id": "package_dependencies_astro",
+      "label": "astro",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "astro",
+      "source_file": "package.json",
+      "source_location": "L18"
+    },
+    {
+      "id": "package_dependencies_astrojs_mdx",
+      "label": "@astrojs/mdx",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "@astrojs/mdx",
+      "source_file": "package.json",
+      "source_location": "L16"
+    },
+    {
+      "id": "package_dependencies_gsap",
+      "label": "gsap",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "gsap",
+      "source_file": "package.json",
+      "source_location": "L19"
+    },
+    {
+      "id": "package_dependencies_hls_js",
+      "label": "hls.js",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "hls.js",
+      "source_file": "package.json",
+      "source_location": "L20"
+    },
+    {
+      "id": "package_dependencies_lenis",
+      "label": "lenis",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "lenis",
+      "source_file": "package.json",
+      "source_location": "L21"
+    },
+    {
+      "id": "package_dependencies_photoswipe",
+      "label": "photoswipe",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "photoswipe",
+      "source_file": "package.json",
+      "source_location": "L22"
+    },
+    {
+      "id": "package_dependencies_videojs_html",
+      "label": "@videojs/html",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "@videojs/html",
+      "source_file": "package.json",
+      "source_location": "L17"
     },
     {
       "id": "package_devdependencies",
@@ -4077,28 +4098,6 @@
       "source_location": "L7"
     },
     {
-      "id": "src_scripts_proyecto_galeria",
-      "label": "proyecto-galeria.js",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "proyecto-galeria.js",
-      "source_file": "src/scripts/proyecto-galeria.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_scripts_proyecto_galeria_galerias",
-      "label": "galerias",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "galerias",
-      "source_file": "src/scripts/proyecto-galeria.js",
-      "source_location": "L12"
-    },
-    {
       "id": "ref_astro",
       "label": "astro",
       "_origin": "ast",
@@ -4163,17 +4162,6 @@
       "norm_label": "lenis",
       "source_file": "package.json",
       "source_location": "L21"
-    },
-    {
-      "id": "ref_photoswipe",
-      "label": "photoswipe",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "photoswipe",
-      "source_file": "package.json",
-      "source_location": "L22"
     },
     {
       "id": "ref_typescript",
@@ -5548,7 +5536,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L466",
+      "source_location": "L412",
       "weight": 1.0
     },
     {
@@ -5560,7 +5548,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L473",
+      "source_location": "L419",
       "weight": 1.0
     },
     {
@@ -5612,18 +5600,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_scripts_habilidades_grafo_initgrafo_repartir",
-      "target": "src_scripts_habilidades_grafo_initgrafo_nebulosas",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L337",
-      "weight": 1.0
-    },
-    {
       "source": "src_scripts_habilidades_grafo_initgrafo_seleccionar",
       "target": "src_scripts_habilidades_grafo_initgrafo_soltar",
       "relation": "calls",
@@ -5632,7 +5608,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L550",
+      "source_location": "L491",
       "weight": 1.0
     },
     {
@@ -5644,7 +5620,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L576",
+      "source_location": "L517",
       "weight": 1.0
     },
     {
@@ -5656,7 +5632,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L521",
+      "source_location": "L464",
       "weight": 1.0
     },
     {
@@ -5668,7 +5644,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L528",
+      "source_location": "L471",
       "weight": 1.0
     },
     {
@@ -5992,7 +5968,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L459",
+      "source_location": "L405",
       "weight": 1.0
     },
     {
@@ -6004,7 +5980,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L498",
+      "source_location": "L444",
       "weight": 1.0
     },
     {
@@ -6016,7 +5992,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L538",
+      "source_location": "L481",
       "weight": 1.0
     },
     {
@@ -9163,24 +9139,13 @@
     },
     {
       "source": "src_scripts_habilidades_grafo_initgrafo",
-      "target": "src_scripts_habilidades_grafo_initgrafo_nebulosas",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L410",
-      "weight": 1.0
-    },
-    {
-      "source": "src_scripts_habilidades_grafo_initgrafo",
       "target": "src_scripts_habilidades_grafo_initgrafo_soltar",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L518",
+      "source_location": "L461",
       "weight": 1.0
     },
     {
@@ -9931,7 +9896,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L491",
+      "source_location": "L437",
       "weight": 1.0
     },
     {
@@ -10008,5 +9973,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "8cbcd009667dbb1b35dfa275f7520967d3f8606c"
+  "built_at_commit": "ca2e077496321b22a72affccd5b40ae059082f7e"
 }
