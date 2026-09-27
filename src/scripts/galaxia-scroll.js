@@ -50,19 +50,24 @@ function init() {
 	let bufferVideo = videoB;
 	let activeReady = false; // metadatos del vídeo de scrub disponibles
 
-	// Scrub: como mucho un seek por frame, y nunca antes de tener metadatos
+	// Scrub: un solo seek en vuelo, y nunca antes de tener metadatos. En iOS
+	// cada seek nuevo cancela el anterior antes de pintarlo, así que lanzar
+	// uno por frame dejaba el vídeo congelado mientras durase el scroll. Con
+	// uno en curso solo se guarda el último objetivo, y se aplica en `seeked`.
 	let pendingScrubT = null;
 	let scrubRafId    = 0;
 
 	function applyScrub() {
 		scrubRafId = 0;
-		if (pendingScrubT == null || !activeReady) return;
+		if (pendingScrubT == null || !activeReady || activeVideo.seeking) return;
 		const t = pendingScrubT;
 		pendingScrubT = null;
 		try {
 			if (Math.abs((activeVideo.currentTime || 0) - t) < 0.02) return;
-			if (typeof activeVideo.fastSeek === 'function') activeVideo.fastSeek(t);
-			else activeVideo.currentTime = t;
+			// Seek exacto, no fastSeek(): todos los frames de este vídeo son
+			// keyframes, así que cuesta lo mismo, y el fastSeek de Safari puede
+			// quedarse en cualquier punto entre el frame actual y el pedido.
+			activeVideo.currentTime = t;
 		} catch {}
 	}
 
@@ -70,6 +75,11 @@ function init() {
 		pendingScrubT = t;
 		if (!scrubRafId) scrubRafId = requestAnimationFrame(applyScrub);
 	}
+
+	// El scrub siempre va sobre videoA: activeVideo no cambia hasta startAfterZoom().
+	videoA.addEventListener('seeked', () => {
+		if (pendingScrubT != null) scheduleScrub(pendingScrubT);
+	});
 
 	// Resuelve con metadatos o con error: una carga fallida no cuelga la cadena
 	function waitForMetadata(el) {
@@ -113,6 +123,10 @@ function init() {
 
 	function attachEndedHandler() {
 		activeVideo.onended = async () => {
+			// Si el siguiente sigue descargando (el blob llega entero o no llega),
+			// se espera en el último frame: cambiar ya mostraría el búfer con el
+			// vídeo anterior, y al llegar el nuevo se quedaría en pausa (cebado).
+			await nextReady;
 			await swapToPreloaded();
 			playlistIndex = (playlistIndex + 1) % PLAYLIST.length;
 			nextReady = prepareNext(PLAYLIST[playlistIndex]);

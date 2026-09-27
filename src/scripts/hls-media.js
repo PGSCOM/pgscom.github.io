@@ -54,6 +54,7 @@ export async function montarFuente(video) {
 
 	if (esHLS(src) && !video.canPlayType('application/vnd.apple.mpegurl')) {
 		const { default: Hls } = await import('hls.js');
+		if (!video.dataset.montado) return; // desmontado mientras llegaba hls.js
 		if (Hls.isSupported()) {
 			const hls = new Hls();
 			hls.loadSource(src);
@@ -63,4 +64,14 @@ export async function montarFuente(video) {
 		}
 	}
 	video.src = src;
+}
+
+/** Deshace montarFuente(): sin destroy(), hls.js sigue descargando segmentos. */
+export function desmontarFuente(video) {
+	if (!video.dataset.montado) return;
+	delete video.dataset.montado;
+	video._hls?.destroy();
+	delete video._hls;
+	video.removeAttribute('src');
+	video.load();
 }

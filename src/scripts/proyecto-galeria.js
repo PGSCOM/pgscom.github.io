@@ -9,7 +9,7 @@
 // pesa lo suyo, así que se importa de forma dinámica y solo si la ficha
 // tiene alguna galería.
 
-import { montarFuente } from './hls-media.js';
+import { desmontarFuente, montarFuente } from './hls-media.js';
 
 const galerias = [...document.querySelectorAll('.pd-contenido .pd-galeria')];
 
@@ -88,11 +88,11 @@ if (galerias.length > 0) {
 				// contenido, así que `contentDestroy` ya no llegaría.
 				const creados = new Set();
 				lightbox.on('contentDestroy', ({ content }) => {
-					content.element?._hls?.destroy();
+					if (content.element) desmontarFuente(content.element);
 					creados.delete(content.element);
 				});
 				lightbox.on('destroy', () => {
-					for (const video of creados) video._hls?.destroy();
+					for (const video of creados) desmontarFuente(video);
 					creados.clear();
 				});
 
