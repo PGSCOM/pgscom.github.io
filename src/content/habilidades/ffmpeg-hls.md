@@ -4,6 +4,7 @@ categoria: video
 icono: ffmpeg
 orden: 230
 resumen: Codificar, segmentar y servir vídeo adaptativo.
+progress: 82
 ---
 - HLS con varias calidades para todos los vídeos de esta web, servidos desde Cloudflare Pages.
 - Generación automática de miniaturas con FFmpeg + Sharp en el build.

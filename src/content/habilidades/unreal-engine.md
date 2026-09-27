@@ -4,6 +4,7 @@ categoria: vfx
 icono: unrealengine
 orden: 110
 resumen: Escenarios, multitudes procedurales y render para producción virtual.
+progress: 95
 ---
 - Niagara Fluids dentro de Blueprints.
 - Multitudes procedurales con PCG Graph y vestimenta aleatoria.
