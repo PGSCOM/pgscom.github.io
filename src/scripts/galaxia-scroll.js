@@ -79,13 +79,28 @@ function init() {
 		});
 	}
 
+	// Cloudflare Pages ignora `Range` (siempre 200, sin Accept-Ranges): Chrome
+	// deja entonces el vídeo sin seek (seekable [0,0], el scrub se queda en el
+	// frame 0) y Safari/iOS puede negarse a reproducirlo. Un blob está entero en
+	// memoria y admite seek y reproducción en todas partes, sea cual sea el
+	// servidor. Uno por URL (~35 MB en total), reutilizado por la playlist. Si la
+	// descarga falla se usa la URL directa y el <video> gestiona su propio error.
+	const blobs = new Map();
+	function blobUrl(src) {
+		if (!blobs.has(src)) {
+			blobs.set(src, fetch(src)
+				.then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+				.then(b => URL.createObjectURL(b))
+				.catch(() => src));
+		}
+		return blobs.get(src);
+	}
+
 	async function setVideoSource(el, src, startTime = 0, autoplay = false) {
 		try {
 			el.loop = false;
-			// Si el <video> ya trae este `src` desde el HTML (caso del vídeo de scrub,
-			// que arranca a descargar en el parseo), no reiniciar la descarga en curso.
-			const yaTieneSrc = el.src === location.origin + src || el.src === src;
-			if (!yaTieneSrc) { el.src = src; el.load(); }
+			const url = await blobUrl(src);
+			if (el.src !== url) { el.src = url; el.load(); }
 			await waitForMetadata(el);
 
 			if (autoplay) {
@@ -166,8 +181,8 @@ function init() {
 		activeVideo.addEventListener('error', done, { once: true });
 	}
 
-	// El vídeo de scrub se carga en el elemento activo (ya trae `src` desde el
-	// HTML, así que la descarga empieza en el parseo); si llega tarde, aplica
+	// El vídeo de scrub se carga en el elemento activo (un <link rel="preload">
+	// en index.astro arranca su descarga en el parseo); si llega tarde, aplica
 	// el seek que hubiera quedado pendiente de scrolls anteriores. El vídeo de
 	// intro no hace falta hasta pasado el zoom, así que no compite por ancho
 	// de banda con el de scrub: se precarga después.

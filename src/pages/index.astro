@@ -153,6 +153,9 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 	     (.titulo-degradado, ver titulo-proyecto.css), nacido en la ficha de
 	     multiguerras y reutilizable en cualquier tarjeta. -->
 	<link slot="head" rel="preload" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Bungee+Inline&family=Kranky&family=Limelight&family=Meow+Script&family=Modak&family=Monoton&family=Offside&family=Open+Sans:wght@800&family=Pacifico&family=Permanent+Marker&family=Rampart+One&family=Solway:wght@500&family=Tapestry&family=Tiny5&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<!-- El vídeo de scrub se carga como blob (ver galaxia-scroll.js): así su
+	     descarga sigue empezando en el parseo, como cuando era `src` del <video>. -->
+	<link slot="head" rel="preload" href="/vid/empezar_scroll.mp4" as="fetch" crossorigin>
 	<script is:inline>
 		document.documentElement.style.overflow = 'hidden';
 		// Red de seguridad: si el bundle de preloader.js no llega a ejecutarse
@@ -249,7 +252,7 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 	<section class="parte2-wrapper">
 		<div class="parte2">
 			<div class="galaxiamask">
-				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia" src="/vid/empezar_scroll.mp4" poster="/vid/empezar_scroll.webp" style="opacity: 1;"></video>
+				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia" poster="/vid/empezar_scroll.webp" style="opacity: 1;"></video>
 				<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity: 0;"></video>
 			</div>
 			<img id="logoanimar" style="width: auto; height: 32.3%;" src="/assets/animlogo/logo.svg" alt="" />
