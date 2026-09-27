@@ -109,6 +109,7 @@
 }
 
 .contacto-titulo {
+  font-family: 'PGSText', 'Montserrat';
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
   background: linear-gradient(135deg, #00b4d8 0%, #0096c7 50%, #48cae4 100%);
