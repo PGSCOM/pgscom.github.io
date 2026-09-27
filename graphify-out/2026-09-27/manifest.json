@@ -96,9 +96,9 @@
     "semantic_hash": ""
   },
   "src/pages/index.astro": {
-    "mtime": 1790469501.956185,
-    "seen": 1790469638.7135184,
-    "ast_hash": "f3c9b259b25c0c9fd9a99dd8307352fa",
+    "mtime": 1790470059.0073671,
+    "seen": 1790470095.4094524,
+    "ast_hash": "7dd0c7150bd14a4a88f3172d38642779",
     "semantic_hash": ""
   },
   "src/pages/proyectos/[id].astro": {
@@ -258,9 +258,9 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/ableton-live.md": {
-    "mtime": 1790468453.1068594,
-    "seen": 1790469638.7135422,
-    "ast_hash": "04f612e4610ea0466562f7233c79d5ab",
+    "mtime": 1790469990.4243054,
+    "seen": 1790470095.4094987,
+    "ast_hash": "86eb9cc5d3c2535d65b6436b7805f475",
     "semantic_hash": ""
   },
   "src/content/habilidades/app-inventor-firebase.md": {
@@ -360,9 +360,9 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/hugo.md": {
-    "mtime": 1790469626.0101864,
-    "seen": 1790469638.7135568,
-    "ast_hash": "dfb5c63d164605b95a39b1bba92e0101",
+    "mtime": 1790469807.8863413,
+    "seen": 1790470095.4095209,
+    "ast_hash": "65f3739867d12d94eb7707d2939d43ab",
     "semantic_hash": ""
   },
   "src/content/habilidades/ia-local.md": {
@@ -438,8 +438,8 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/syncthing.md": {
-    "mtime": 1790382661.8119307,
-    "seen": 1790426340.000116,
+    "mtime": 1790469749.324864,
+    "seen": 1790470095.4095354,
     "ast_hash": "c3a27c6363713082b5717155eb56e3ec",
     "semantic_hash": ""
   },

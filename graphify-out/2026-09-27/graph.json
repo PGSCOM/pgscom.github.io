@@ -43,6 +43,18 @@
       "source_location": "L1"
     },
     {
+      "id": "src_pages_index_showstatus",
+      "label": "showStatus()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "showstatus()",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L724"
+    },
+    {
       "id": "src_pages_proyectos_id_getstaticpaths",
       "label": "getStaticPaths()",
       "_callable": true,
@@ -643,6 +655,42 @@
       "source_location": "L13"
     },
     {
+      "id": "scripts_generate_posters_extraerframe",
+      "label": "extraerFrame()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "extraerframe()",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L43"
+    },
+    {
+      "id": "scripts_generate_posters_generarposter",
+      "label": "generarPoster()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "generarposter()",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L50"
+    },
+    {
+      "id": "scripts_generate_posters_listadevideos",
+      "label": "listaDeVideos()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "listadevideos()",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L31"
+    },
+    {
       "id": "src_scripts_proyecto_galeria_crearenlace",
       "label": "crearEnlace()",
       "_callable": true,
@@ -665,42 +713,6 @@
       "norm_label": "derivarposter()",
       "source_file": "src/scripts/proyecto-galeria.js",
       "source_location": "L17"
-    },
-    {
-      "id": "scripts_generate_posters_extraerframe",
-      "label": "extraerFrame()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
-      "file_type": "code",
-      "norm_label": "extraerframe()",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L43"
-    },
-    {
-      "id": "scripts_generate_posters_generarposter",
-      "label": "generarPoster()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
-      "file_type": "code",
-      "norm_label": "generarposter()",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L50"
-    },
-    {
-      "id": "scripts_generate_posters_listadevideos",
-      "label": "listaDeVideos()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
-      "file_type": "code",
-      "norm_label": "listadevideos()",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L31"
     },
     {
       "id": "src_scripts_galaxia_scroll_init",
@@ -890,6 +902,61 @@
       "source_location": "L1"
     },
     {
+      "id": "src_content_config",
+      "label": "content.config.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "content.config.ts",
+      "source_file": "src/content.config.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_content_config_collections",
+      "label": "collections",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "collections",
+      "source_file": "src/content.config.ts",
+      "source_location": "L137"
+    },
+    {
+      "id": "src_content_config_habilidades",
+      "label": "habilidades",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "habilidades",
+      "source_file": "src/content.config.ts",
+      "source_location": "L120"
+    },
+    {
+      "id": "src_content_config_multiguerras",
+      "label": "multiguerras",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "multiguerras",
+      "source_file": "src/content.config.ts",
+      "source_location": "L94"
+    },
+    {
+      "id": "src_content_config_proyectos",
+      "label": "proyectos",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "proyectos",
+      "source_file": "src/content.config.ts",
+      "source_location": "L7"
+    },
+    {
       "id": "src_layouts_layout",
       "label": "Layout.astro",
       "_origin": "ast",
@@ -910,6 +977,160 @@
       "norm_label": "index.astro",
       "source_file": "src/pages/index.astro",
       "source_location": "L1"
+    },
+    {
+      "id": "src_pages_index_catbyid",
+      "label": "catById",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "catbyid",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L24"
+    },
+    {
+      "id": "src_pages_index_cronologia",
+      "label": "cronologia",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "cronologia",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L100"
+    },
+    {
+      "id": "src_pages_index_experimentos",
+      "label": "experimentos",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "experimentos",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L148"
+    },
+    {
+      "id": "src_pages_index_featured",
+      "label": "featured",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "featured",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L78"
+    },
+    {
+      "id": "src_pages_index_formgroups",
+      "label": "formGroups",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "formgroups",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L713"
+    },
+    {
+      "id": "src_pages_index_formstatus",
+      "label": "formStatus",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "formstatus",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L710"
+    },
+    {
+      "id": "src_pages_index_herolayout",
+      "label": "heroLayout",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "herolayout",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L64"
+    },
+    {
+      "id": "src_pages_index_huecosporcantidad",
+      "label": "huecosPorCantidad",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "huecosporcantidad",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L76"
+    },
+    {
+      "id": "src_pages_index_inputs",
+      "label": "inputs",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "inputs",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L730"
+    },
+    {
+      "id": "src_pages_index_marcasdisponibles",
+      "label": "marcasDisponibles",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "marcasdisponibles",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L31"
+    },
+    {
+      "id": "src_pages_index_postersvideo",
+      "label": "postersVideo",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "postersvideo",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L87"
+    },
+    {
+      "id": "src_pages_index_proyectos",
+      "label": "proyectos",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "proyectos",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L23"
+    },
+    {
+      "id": "src_pages_index_rejillaentries",
+      "label": "rejillaEntries",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "rejillaentries",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L143"
+    },
+    {
+      "id": "src_pages_index_rutaentries",
+      "label": "rutaEntries",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "index.astro",
+      "file_type": "code",
+      "norm_label": "rutaentries",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L105"
     },
     {
       "id": "src_pages_proyectos_id",
@@ -4022,59 +4243,37 @@
       "source_location": "L4"
     },
     {
-      "id": "src_content_config",
-      "label": "content.config.ts",
+      "id": "scripts_generate_posters",
+      "label": "generate-posters.mjs",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "content.config.ts",
-      "source_file": "src/content.config.ts",
+      "norm_label": "generate-posters.mjs",
+      "source_file": "scripts/generate-posters.mjs",
       "source_location": "L1"
     },
     {
-      "id": "src_content_config_collections",
-      "label": "collections",
+      "id": "scripts_generate_posters_dirs",
+      "label": "DIRS",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "collections",
-      "source_file": "src/content.config.ts",
-      "source_location": "L137"
+      "norm_label": "dirs",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L26"
     },
     {
-      "id": "src_content_config_habilidades",
-      "label": "habilidades",
+      "id": "scripts_generate_posters_video_ext",
+      "label": "VIDEO_EXT",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "habilidades",
-      "source_file": "src/content.config.ts",
-      "source_location": "L120"
-    },
-    {
-      "id": "src_content_config_multiguerras",
-      "label": "multiguerras",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "multiguerras",
-      "source_file": "src/content.config.ts",
-      "source_location": "L94"
-    },
-    {
-      "id": "src_content_config_proyectos",
-      "label": "proyectos",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "proyectos",
-      "source_file": "src/content.config.ts",
-      "source_location": "L7"
+      "norm_label": "video_ext",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L27"
     },
     {
       "id": "src_scripts_proyecto_galeria",
@@ -4154,6 +4353,17 @@
       "source_location": "L25"
     },
     {
+      "id": "ref_ffmpeg_installer_ffmpeg",
+      "label": "@ffmpeg-installer/ffmpeg",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "concept",
+      "norm_label": "@ffmpeg-installer/ffmpeg",
+      "source_file": "package.json",
+      "source_location": "L30"
+    },
+    {
       "id": "ref_lenis",
       "label": "lenis",
       "_origin": "ast",
@@ -4174,6 +4384,17 @@
       "norm_label": "photoswipe",
       "source_file": "package.json",
       "source_location": "L22"
+    },
+    {
+      "id": "ref_sharp",
+      "label": "sharp",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "concept",
+      "norm_label": "sharp",
+      "source_file": "package.json",
+      "source_location": "L31"
     },
     {
       "id": "ref_typescript",
@@ -4384,61 +4605,6 @@
       "norm_label": "syncthing.md",
       "source_file": "src/content/habilidades/syncthing.md",
       "source_location": "L1"
-    },
-    {
-      "id": "scripts_generate_posters",
-      "label": "generate-posters.mjs",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
-      "file_type": "code",
-      "norm_label": "generate-posters.mjs",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L1"
-    },
-    {
-      "id": "scripts_generate_posters_dirs",
-      "label": "DIRS",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
-      "file_type": "code",
-      "norm_label": "dirs",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L26"
-    },
-    {
-      "id": "scripts_generate_posters_video_ext",
-      "label": "VIDEO_EXT",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
-      "file_type": "code",
-      "norm_label": "video_ext",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L27"
-    },
-    {
-      "id": "ref_ffmpeg_installer_ffmpeg",
-      "label": "@ffmpeg-installer/ffmpeg",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
-      "file_type": "concept",
-      "norm_label": "@ffmpeg-installer/ffmpeg",
-      "source_file": "package.json",
-      "source_location": "L30"
-    },
-    {
-      "id": "ref_sharp",
-      "label": "sharp",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
-      "file_type": "concept",
-      "norm_label": "sharp",
-      "source_file": "package.json",
-      "source_location": "L31"
     },
     {
       "id": "src_content_habilidades_unreal_engine",
@@ -5361,8 +5527,8 @@
       "id": "ref_node_child_process",
       "label": "ref_node_child_process",
       "_origin": "semantic",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
+      "community": 7,
+      "community_name": "package.json",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_node_child_process",
@@ -5373,8 +5539,8 @@
       "id": "ref_node_fs",
       "label": "ref_node_fs",
       "_origin": "semantic",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
+      "community": 7,
+      "community_name": "package.json",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_node_fs",
@@ -5385,8 +5551,8 @@
       "id": "ref_node_path",
       "label": "ref_node_path",
       "_origin": "semantic",
-      "community": 8,
-      "community_name": "generate-posters.mjs",
+      "community": 7,
+      "community_name": "package.json",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_node_path",
@@ -5417,6 +5583,42 @@
       "context": "call",
       "source_file": "scripts/generate-posters.mjs",
       "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index_rutaentries",
+      "target": "src_utils_fechas_esencurso",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index_rutaentries",
+      "target": "src_utils_fechas_formatfecha",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index_rutaentries",
+      "target": "src_utils_fechas_formatrangofecha",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -5897,6 +6099,18 @@
       "context": "call",
       "source_file": "src/utils/fechas.js",
       "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_showstatus",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/pages/index.astro",
+      "source_location": "L724",
       "weight": 1.0
     },
     {
@@ -8972,6 +9186,160 @@
       "confidence_score": 1.0,
       "source_file": "src/content/proyectos/unreal-render-farm.md",
       "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_cronologia",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_rutaentries",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L105",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_rejillaentries",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L143",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_experimentos",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L148",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_proyectos",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_catbyid",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_marcasdisponibles",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_herolayout",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_formstatus",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L710",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_formgroups",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L713",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_inputs",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L730",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_huecosporcantidad",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_featured",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "src_pages_index",
+      "target": "src_pages_index_postersvideo",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/index.astro",
+      "source_location": "L87",
       "weight": 1.0
     },
     {

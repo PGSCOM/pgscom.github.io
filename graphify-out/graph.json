@@ -139,18 +139,6 @@
       "source_location": "L5"
     },
     {
-      "id": "src_scripts_habilidades_grafo_azar",
-      "label": "azar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "initGrafo",
-      "file_type": "code",
-      "norm_label": "azar()",
-      "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L28"
-    },
-    {
       "id": "src_scripts_habilidades_grafo_initgrafo",
       "label": "initGrafo()",
       "_callable": true,
@@ -172,7 +160,7 @@
       "file_type": "code",
       "norm_label": "caja()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L183"
+      "source_location": "L187"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_maquetar",
@@ -184,7 +172,7 @@
       "file_type": "code",
       "norm_label": "maquetar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L459"
+      "source_location": "L463"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_mediretiqueta",
@@ -196,7 +184,7 @@
       "file_type": "code",
       "norm_label": "mediretiqueta()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L176"
+      "source_location": "L180"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_nebulosas",
@@ -208,7 +196,7 @@
       "file_type": "code",
       "norm_label": "nebulosas()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L410"
+      "source_location": "L414"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_orientar",
@@ -220,7 +208,7 @@
       "file_type": "code",
       "norm_label": "orientar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L166"
+      "source_location": "L170"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_posicionreposo",
@@ -244,7 +232,7 @@
       "file_type": "code",
       "norm_label": "repartir()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L189"
+      "source_location": "L193"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_resaltar",
@@ -256,7 +244,7 @@
       "file_type": "code",
       "norm_label": "resaltar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L498"
+      "source_location": "L502"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_seleccionar",
@@ -268,7 +256,7 @@
       "file_type": "code",
       "norm_label": "seleccionar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L538"
+      "source_location": "L542"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_soltar",
@@ -280,7 +268,7 @@
       "file_type": "code",
       "norm_label": "soltar()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L518"
+      "source_location": "L522"
     },
     {
       "id": "src_scripts_habilidades_grafo_initgrafo_tick",
@@ -292,7 +280,7 @@
       "file_type": "code",
       "norm_label": "tick()",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L136"
+      "source_location": "L139"
     },
     {
       "id": "src_scripts_multiguerras_nav_abrirgrupo",
@@ -487,6 +475,18 @@
       "source_location": "L36"
     },
     {
+      "id": "src_scripts_habilidades_grafo_azar",
+      "label": "azar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "gsap",
+      "file_type": "code",
+      "norm_label": "azar()",
+      "source_file": "src/scripts/habilidades-grafo.js",
+      "source_location": "L28"
+    },
+    {
       "id": "src_scripts_hero_inithero",
       "label": "initHero()",
       "_callable": true,
@@ -655,42 +655,6 @@
       "source_location": "L13"
     },
     {
-      "id": "scripts_generate_posters_extraerframe",
-      "label": "extraerFrame()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "extraerframe()",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L43"
-    },
-    {
-      "id": "scripts_generate_posters_generarposter",
-      "label": "generarPoster()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "generarposter()",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L50"
-    },
-    {
-      "id": "scripts_generate_posters_listadevideos",
-      "label": "listaDeVideos()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "listadevideos()",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L31"
-    },
-    {
       "id": "src_scripts_proyecto_galeria_crearenlace",
       "label": "crearEnlace()",
       "_callable": true,
@@ -713,6 +677,42 @@
       "norm_label": "derivarposter()",
       "source_file": "src/scripts/proyecto-galeria.js",
       "source_location": "L17"
+    },
+    {
+      "id": "scripts_generate_posters_extraerframe",
+      "label": "extraerFrame()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
+      "file_type": "code",
+      "norm_label": "extraerframe()",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L43"
+    },
+    {
+      "id": "scripts_generate_posters_generarposter",
+      "label": "generarPoster()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
+      "file_type": "code",
+      "norm_label": "generarposter()",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L50"
+    },
+    {
+      "id": "scripts_generate_posters_listadevideos",
+      "label": "listaDeVideos()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
+      "file_type": "code",
+      "norm_label": "listadevideos()",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L31"
     },
     {
       "id": "src_scripts_galaxia_scroll_init",
@@ -1494,103 +1494,70 @@
       "source_location": "L82"
     },
     {
-      "id": "package_scripts",
-      "label": "scripts",
+      "id": "package_devdependencies",
+      "label": "devDependencies",
       "_origin": "ast",
       "community": 13,
-      "community_name": "scripts",
+      "community_name": "devDependencies",
       "file_type": "code",
-      "norm_label": "scripts",
+      "norm_label": "devdependencies",
       "source_file": "package.json",
-      "source_location": "L5"
+      "source_location": "L27"
     },
     {
-      "id": "package_scripts_astro",
-      "label": "astro",
+      "id": "package_devdependencies_astrojs_check",
+      "label": "@astrojs/check",
       "_origin": "ast",
       "community": 13,
-      "community_name": "scripts",
+      "community_name": "devDependencies",
       "file_type": "code",
-      "norm_label": "astro",
+      "norm_label": "@astrojs/check",
       "source_file": "package.json",
-      "source_location": "L11"
+      "source_location": "L28"
     },
     {
-      "id": "package_scripts_build",
-      "label": "build",
+      "id": "package_devdependencies_cloudflare_workers_types",
+      "label": "@cloudflare/workers-types",
       "_origin": "ast",
       "community": 13,
-      "community_name": "scripts",
+      "community_name": "devDependencies",
       "file_type": "code",
-      "norm_label": "build",
+      "norm_label": "@cloudflare/workers-types",
       "source_file": "package.json",
-      "source_location": "L9"
+      "source_location": "L29"
     },
     {
-      "id": "package_scripts_check",
-      "label": "check",
+      "id": "package_devdependencies_ffmpeg_installer_ffmpeg",
+      "label": "@ffmpeg-installer/ffmpeg",
       "_origin": "ast",
       "community": 13,
-      "community_name": "scripts",
+      "community_name": "devDependencies",
       "file_type": "code",
-      "norm_label": "check",
+      "norm_label": "@ffmpeg-installer/ffmpeg",
       "source_file": "package.json",
-      "source_location": "L12"
+      "source_location": "L30"
     },
     {
-      "id": "package_scripts_dev",
-      "label": "dev",
+      "id": "package_devdependencies_sharp",
+      "label": "sharp",
       "_origin": "ast",
       "community": 13,
-      "community_name": "scripts",
+      "community_name": "devDependencies",
       "file_type": "code",
-      "norm_label": "dev",
+      "norm_label": "sharp",
       "source_file": "package.json",
-      "source_location": "L7"
+      "source_location": "L31"
     },
     {
-      "id": "package_scripts_posters",
-      "label": "posters",
+      "id": "package_devdependencies_typescript",
+      "label": "typescript",
       "_origin": "ast",
       "community": 13,
-      "community_name": "scripts",
+      "community_name": "devDependencies",
       "file_type": "code",
-      "norm_label": "posters",
+      "norm_label": "typescript",
       "source_file": "package.json",
-      "source_location": "L13"
-    },
-    {
-      "id": "package_scripts_prebuild",
-      "label": "prebuild",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "scripts",
-      "file_type": "code",
-      "norm_label": "prebuild",
-      "source_file": "package.json",
-      "source_location": "L8"
-    },
-    {
-      "id": "package_scripts_predev",
-      "label": "predev",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "scripts",
-      "file_type": "code",
-      "norm_label": "predev",
-      "source_file": "package.json",
-      "source_location": "L6"
-    },
-    {
-      "id": "package_scripts_preview",
-      "label": "preview",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "scripts",
-      "file_type": "code",
-      "norm_label": "preview",
-      "source_file": "package.json",
-      "source_location": "L10"
+      "source_location": "L32"
     },
     {
       "id": "src_content_multiguerras_atencion_especial",
@@ -2516,94 +2483,6 @@
       "source_location": "L18"
     },
     {
-      "id": "package_dependencies",
-      "label": "dependencies",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "dependencies",
-      "source_file": "package.json",
-      "source_location": "L15"
-    },
-    {
-      "id": "package_dependencies_astro",
-      "label": "astro",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "astro",
-      "source_file": "package.json",
-      "source_location": "L18"
-    },
-    {
-      "id": "package_dependencies_astrojs_mdx",
-      "label": "@astrojs/mdx",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "@astrojs/mdx",
-      "source_file": "package.json",
-      "source_location": "L16"
-    },
-    {
-      "id": "package_dependencies_gsap",
-      "label": "gsap",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "gsap",
-      "source_file": "package.json",
-      "source_location": "L19"
-    },
-    {
-      "id": "package_dependencies_hls_js",
-      "label": "hls.js",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "hls.js",
-      "source_file": "package.json",
-      "source_location": "L20"
-    },
-    {
-      "id": "package_dependencies_lenis",
-      "label": "lenis",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "lenis",
-      "source_file": "package.json",
-      "source_location": "L21"
-    },
-    {
-      "id": "package_dependencies_photoswipe",
-      "label": "photoswipe",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "photoswipe",
-      "source_file": "package.json",
-      "source_location": "L22"
-    },
-    {
-      "id": "package_dependencies_videojs_html",
-      "label": "@videojs/html",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "dependencies",
-      "file_type": "code",
-      "norm_label": "@videojs/html",
-      "source_file": "package.json",
-      "source_location": "L17"
-    },
-    {
       "id": "src_content_proyectos_immersive",
       "label": "immersive.md",
       "_origin": "ast",
@@ -3114,7 +2993,7 @@
       "node_kind": "heading",
       "norm_label": "cuerpo = contenido del panel",
       "source_file": "FORMATO.md",
-      "source_location": "L564"
+      "source_location": "L565"
     },
     {
       "id": "formato_c\u00f3mo_codificar_el_v\u00eddeo",
@@ -3150,7 +3029,7 @@
       "node_kind": "heading",
       "norm_label": "ejemplo completo",
       "source_file": "FORMATO.md",
-      "source_location": "L596"
+      "source_location": "L605"
     },
     {
       "id": "formato_ejemplo_de_cap\u00edtulo_completo",
@@ -3198,7 +3077,7 @@
       "node_kind": "heading",
       "norm_label": "iconos de marca",
       "source_file": "FORMATO.md",
-      "source_location": "L584"
+      "source_location": "L593"
     },
     {
       "id": "formato_ids_de_categor\u00edas_disponibles",
@@ -3237,6 +3116,18 @@
       "source_location": "L486"
     },
     {
+      "id": "formato_progress",
+      "label": "`progress`",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "Gu\u00eda de formato \u2014 ficheros de proyecto",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "`progress`",
+      "source_file": "FORMATO.md",
+      "source_location": "L585"
+    },
+    {
       "id": "formato_resumen",
       "label": "`resumen`",
       "_origin": "ast",
@@ -3246,7 +3137,7 @@
       "node_kind": "heading",
       "norm_label": "`resumen`",
       "source_file": "FORMATO.md",
-      "source_location": "L577"
+      "source_location": "L578"
     },
     {
       "id": "formato_selector_de_calidad",
@@ -4122,70 +4013,92 @@
       "source_location": "L1"
     },
     {
-      "id": "package_devdependencies",
-      "label": "devDependencies",
+      "id": "package_dependencies",
+      "label": "dependencies",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "devdependencies",
+      "norm_label": "dependencies",
       "source_file": "package.json",
-      "source_location": "L27"
+      "source_location": "L15"
     },
     {
-      "id": "package_devdependencies_astrojs_check",
-      "label": "@astrojs/check",
+      "id": "package_dependencies_astro",
+      "label": "astro",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "@astrojs/check",
+      "norm_label": "astro",
       "source_file": "package.json",
-      "source_location": "L28"
+      "source_location": "L18"
     },
     {
-      "id": "package_devdependencies_cloudflare_workers_types",
-      "label": "@cloudflare/workers-types",
+      "id": "package_dependencies_astrojs_mdx",
+      "label": "@astrojs/mdx",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "@cloudflare/workers-types",
+      "norm_label": "@astrojs/mdx",
       "source_file": "package.json",
-      "source_location": "L29"
+      "source_location": "L16"
     },
     {
-      "id": "package_devdependencies_ffmpeg_installer_ffmpeg",
-      "label": "@ffmpeg-installer/ffmpeg",
+      "id": "package_dependencies_gsap",
+      "label": "gsap",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "@ffmpeg-installer/ffmpeg",
+      "norm_label": "gsap",
       "source_file": "package.json",
-      "source_location": "L30"
+      "source_location": "L19"
     },
     {
-      "id": "package_devdependencies_sharp",
-      "label": "sharp",
+      "id": "package_dependencies_hls_js",
+      "label": "hls.js",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "sharp",
+      "norm_label": "hls.js",
       "source_file": "package.json",
-      "source_location": "L31"
+      "source_location": "L20"
     },
     {
-      "id": "package_devdependencies_typescript",
-      "label": "typescript",
+      "id": "package_dependencies_lenis",
+      "label": "lenis",
       "_origin": "ast",
       "community": 7,
       "community_name": "package.json",
       "file_type": "code",
-      "norm_label": "typescript",
+      "norm_label": "lenis",
       "source_file": "package.json",
-      "source_location": "L32"
+      "source_location": "L21"
+    },
+    {
+      "id": "package_dependencies_photoswipe",
+      "label": "photoswipe",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "photoswipe",
+      "source_file": "package.json",
+      "source_location": "L22"
+    },
+    {
+      "id": "package_dependencies_videojs_html",
+      "label": "@videojs/html",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "@videojs/html",
+      "source_file": "package.json",
+      "source_location": "L17"
     },
     {
       "id": "package_name",
@@ -4221,6 +4134,105 @@
       "source_location": "L25"
     },
     {
+      "id": "package_scripts",
+      "label": "scripts",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "scripts",
+      "source_file": "package.json",
+      "source_location": "L5"
+    },
+    {
+      "id": "package_scripts_astro",
+      "label": "astro",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "astro",
+      "source_file": "package.json",
+      "source_location": "L11"
+    },
+    {
+      "id": "package_scripts_build",
+      "label": "build",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "build",
+      "source_file": "package.json",
+      "source_location": "L9"
+    },
+    {
+      "id": "package_scripts_check",
+      "label": "check",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "check",
+      "source_file": "package.json",
+      "source_location": "L12"
+    },
+    {
+      "id": "package_scripts_dev",
+      "label": "dev",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "dev",
+      "source_file": "package.json",
+      "source_location": "L7"
+    },
+    {
+      "id": "package_scripts_posters",
+      "label": "posters",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "posters",
+      "source_file": "package.json",
+      "source_location": "L13"
+    },
+    {
+      "id": "package_scripts_prebuild",
+      "label": "prebuild",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "prebuild",
+      "source_file": "package.json",
+      "source_location": "L8"
+    },
+    {
+      "id": "package_scripts_predev",
+      "label": "predev",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "predev",
+      "source_file": "package.json",
+      "source_location": "L6"
+    },
+    {
+      "id": "package_scripts_preview",
+      "label": "preview",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "preview",
+      "source_file": "package.json",
+      "source_location": "L10"
+    },
+    {
       "id": "package_type",
       "label": "type",
       "_origin": "ast",
@@ -4241,39 +4253,6 @@
       "norm_label": "version",
       "source_file": "package.json",
       "source_location": "L4"
-    },
-    {
-      "id": "scripts_generate_posters",
-      "label": "generate-posters.mjs",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "generate-posters.mjs",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L1"
-    },
-    {
-      "id": "scripts_generate_posters_dirs",
-      "label": "DIRS",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "dirs",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L26"
-    },
-    {
-      "id": "scripts_generate_posters_video_ext",
-      "label": "VIDEO_EXT",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "video_ext",
-      "source_file": "scripts/generate-posters.mjs",
-      "source_location": "L27"
     },
     {
       "id": "src_scripts_proyecto_galeria",
@@ -4353,17 +4332,6 @@
       "source_location": "L25"
     },
     {
-      "id": "ref_ffmpeg_installer_ffmpeg",
-      "label": "@ffmpeg-installer/ffmpeg",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "@ffmpeg-installer/ffmpeg",
-      "source_file": "package.json",
-      "source_location": "L30"
-    },
-    {
       "id": "ref_lenis",
       "label": "lenis",
       "_origin": "ast",
@@ -4384,17 +4352,6 @@
       "norm_label": "photoswipe",
       "source_file": "package.json",
       "source_location": "L22"
-    },
-    {
-      "id": "ref_sharp",
-      "label": "sharp",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "sharp",
-      "source_file": "package.json",
-      "source_location": "L31"
     },
     {
       "id": "ref_typescript",
@@ -4605,6 +4562,61 @@
       "norm_label": "syncthing.md",
       "source_file": "src/content/habilidades/syncthing.md",
       "source_location": "L1"
+    },
+    {
+      "id": "scripts_generate_posters",
+      "label": "generate-posters.mjs",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
+      "file_type": "code",
+      "norm_label": "generate-posters.mjs",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L1"
+    },
+    {
+      "id": "scripts_generate_posters_dirs",
+      "label": "DIRS",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
+      "file_type": "code",
+      "norm_label": "dirs",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L26"
+    },
+    {
+      "id": "scripts_generate_posters_video_ext",
+      "label": "VIDEO_EXT",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
+      "file_type": "code",
+      "norm_label": "video_ext",
+      "source_file": "scripts/generate-posters.mjs",
+      "source_location": "L27"
+    },
+    {
+      "id": "ref_ffmpeg_installer_ffmpeg",
+      "label": "@ffmpeg-installer/ffmpeg",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
+      "file_type": "concept",
+      "norm_label": "@ffmpeg-installer/ffmpeg",
+      "source_file": "package.json",
+      "source_location": "L30"
+    },
+    {
+      "id": "ref_sharp",
+      "label": "sharp",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
+      "file_type": "concept",
+      "norm_label": "sharp",
+      "source_file": "package.json",
+      "source_location": "L31"
     },
     {
       "id": "src_content_habilidades_unreal_engine",
@@ -5527,8 +5539,8 @@
       "id": "ref_node_child_process",
       "label": "ref_node_child_process",
       "_origin": "semantic",
-      "community": 7,
-      "community_name": "package.json",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_node_child_process",
@@ -5539,8 +5551,8 @@
       "id": "ref_node_fs",
       "label": "ref_node_fs",
       "_origin": "semantic",
-      "community": 7,
-      "community_name": "package.json",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_node_fs",
@@ -5551,8 +5563,8 @@
       "id": "ref_node_path",
       "label": "ref_node_path",
       "_origin": "semantic",
-      "community": 7,
-      "community_name": "package.json",
+      "community": 8,
+      "community_name": "generate-posters.mjs",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_node_path",
@@ -5750,7 +5762,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L466",
+      "source_location": "L470",
       "weight": 1.0
     },
     {
@@ -5762,7 +5774,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L473",
+      "source_location": "L477",
       "weight": 1.0
     },
     {
@@ -5774,7 +5786,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L171",
+      "source_location": "L175",
       "weight": 1.0
     },
     {
@@ -5786,7 +5798,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L221",
+      "source_location": "L225",
       "weight": 1.0
     },
     {
@@ -5798,7 +5810,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L242",
+      "source_location": "L246",
       "weight": 1.0
     },
     {
@@ -5810,7 +5822,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L334",
+      "source_location": "L338",
       "weight": 1.0
     },
     {
@@ -5822,7 +5834,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L337",
+      "source_location": "L341",
       "weight": 1.0
     },
     {
@@ -5834,7 +5846,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L550",
+      "source_location": "L554",
       "weight": 1.0
     },
     {
@@ -5846,7 +5858,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L576",
+      "source_location": "L580",
       "weight": 1.0
     },
     {
@@ -5858,7 +5870,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L521",
+      "source_location": "L525",
       "weight": 1.0
     },
     {
@@ -5870,7 +5882,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L528",
+      "source_location": "L532",
       "weight": 1.0
     },
     {
@@ -5882,7 +5894,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L144",
+      "source_location": "L147",
       "weight": 1.0
     },
     {
@@ -6206,7 +6218,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L459",
+      "source_location": "L463",
       "weight": 1.0
     },
     {
@@ -6218,7 +6230,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L498",
+      "source_location": "L502",
       "weight": 1.0
     },
     {
@@ -6230,7 +6242,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L538",
+      "source_location": "L542",
       "weight": 1.0
     },
     {
@@ -7480,7 +7492,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L564",
+      "source_location": "L565",
       "weight": 1.0
     },
     {
@@ -7491,7 +7503,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L577",
+      "source_location": "L578",
+      "weight": 1.0
+    },
+    {
+      "source": "formato_15_habilidades_el_grafo_sobre_proyectos",
+      "target": "formato_progress",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "FORMATO.md",
+      "source_location": "L585",
       "weight": 1.0
     },
     {
@@ -7502,7 +7525,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L584",
+      "source_location": "L593",
       "weight": 1.0
     },
     {
@@ -7711,7 +7734,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "FORMATO.md",
-      "source_location": "L596",
+      "source_location": "L605",
       "weight": 1.0
     },
     {
@@ -9493,7 +9516,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L166",
+      "source_location": "L170",
       "weight": 1.0
     },
     {
@@ -9504,7 +9527,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L176",
+      "source_location": "L180",
       "weight": 1.0
     },
     {
@@ -9515,7 +9538,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L183",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -9526,7 +9549,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L189",
+      "source_location": "L193",
       "weight": 1.0
     },
     {
@@ -9537,7 +9560,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L410",
+      "source_location": "L414",
       "weight": 1.0
     },
     {
@@ -9548,7 +9571,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L518",
+      "source_location": "L522",
       "weight": 1.0
     },
     {
@@ -10299,7 +10322,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/scripts/habilidades-grafo.js",
-      "source_location": "L491",
+      "source_location": "L495",
       "weight": 1.0
     },
     {
@@ -10376,5 +10399,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c3d204cd9d446fe12bc0bef7bef3a00f1cd3867e"
+  "built_at_commit": "79ccc2d190c23e6815a7b64826367d44fa47c58b"
 }

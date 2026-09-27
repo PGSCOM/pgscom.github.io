@@ -132,6 +132,9 @@ function initGrafo() {
 
 	const pos = nodos.map(() => ({ x: 0, y: 0 }));
 	pos[NUCLEO] = { x: 0, y: 0 };
+	// gsap.set crea un tween por llamada: en tick(), 35 por frame. Los
+	// quickSetter escriben la misma caché de transform sin crear nada.
+	const mover = nodos.map((n) => ({ x: gsap.quickSetter(n, 'x', 'px'), y: gsap.quickSetter(n, 'y', 'px') }));
 
 	function tick() {
 		if (!listo) return;
@@ -142,7 +145,8 @@ function initGrafo() {
 				pos[i].y = gsap.getProperty(nodo, 'y');
 			} else {
 				pos[i] = posicionReposo(est[i], t);
-				gsap.set(nodo, { x: pos[i].x + est[i].ox, y: pos[i].y });
+				mover[i].x(pos[i].x + est[i].ox);
+				mover[i].y(pos[i].y);
 			}
 		});
 		huecos.forEach(({ i, el }) => {

@@ -191,6 +191,9 @@
   color: inherit;
   text-align: left;
   transition: opacity 0.3s ease;
+  /* El vaivén (JS) mueve cada nodo en cada frame: en su propia capa lo
+     desplaza el compositor, sin volver a rasterizar chip, sombra e icono. */
+  will-change: transform;
 }
 
 /* Chip a la izquierda de su estrella (lo decide el JS según el hueco). El
