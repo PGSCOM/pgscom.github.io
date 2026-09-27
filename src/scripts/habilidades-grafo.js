@@ -481,7 +481,7 @@ function initGrafo() {
 				inner.classList.remove('listo');
 				inner.style.height = '';
 				nodos.forEach((n) => n.classList.remove('hab-nodo--izq'));
-				gsap.set(nodos, { clearProps: 'transform' });
+				gsap.set([...nodos, logo], { clearProps: 'transform' });
 			}
 			return;
 		}

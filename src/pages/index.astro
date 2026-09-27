@@ -279,6 +279,18 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 				<div class="hab-nebulosas" id="hab-nebulosas" aria-hidden="true"></div>
 				<svg class="hab-aristas" id="hab-aristas" aria-hidden="true"></svg>
 
+				<!-- Núcleo del cielo (JS lo centra); en la rejilla de móvil, cabecera -->
+				<div class="hab-centro">
+					<Image
+						src={logo}
+						alt="PGSCOM Logo"
+						width={720}
+						height={720}
+						widths={[200, 400, 720]}
+						sizes="(max-width: 768px) 110px, 150px"
+					/>
+				</div>
+
 				{gruposHab.map((g) => (
 					<div class="hab-grupo" style={`--cat-color:${g.color}`}>
 						{g.titulo && <h3 class="hab-grupo-titulo">{g.titulo}</h3>}
@@ -306,17 +318,6 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 						})}
 					</div>
 				))}
-
-				<div class="hab-centro">
-					<Image
-						src={logo}
-						alt="PGSCOM Logo"
-						width={720}
-						height={720}
-						widths={[200, 400, 720]}
-						sizes="(max-width: 768px) 110px, 150px"
-					/>
-				</div>
 			</div>
 
 			<div class="hab-docs">

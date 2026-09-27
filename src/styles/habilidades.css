@@ -731,9 +731,12 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   }
   .hab-nebulosas,
   .hab-aristas,
-  .hab-centro,
   .hab-estrella {
     display: none;
+  }
+  /* El logo, núcleo del cielo, encabeza la rejilla */
+  .hab-centro {
+    margin: 0 auto 28px;
   }
   .hab-grupo {
     display: grid;
