@@ -57,6 +57,17 @@ const habilidades = await Promise.all(
 // si la categoría no está ahí (p. ej. desarrollo-web), de su propio id.
 const nombreConstelacion = (catId: string | undefined) =>
 	catId ? (catById[catId]?.titulo ?? catId.charAt(0).toUpperCase() + catId.slice(1).replaceAll('-', ' ')) : '';
+// Las habilidades agrupadas por categoría, en el orden en que aparece cada
+// una. En móvil cada grupo es una rejilla con su título; en escritorio el
+// grupo no genera caja (display: contents) y el grafo ve las mismas estrellas
+// en el mismo orden dentro de cada constelación.
+const gruposHab: { cat: string; titulo: string; color: string; items: typeof habilidades }[] = [];
+for (const h of habilidades) {
+	const cat = h.categoria ?? '';
+	let g = gruposHab.find((x) => x.cat === cat);
+	if (!g) gruposHab.push((g = { cat, titulo: nombreConstelacion(h.categoria), color: h.color, items: [] }));
+	g.items.push(h);
+}
 
 // Posición, profundidad (parallax) y rotación de cada card del hero.
 // Los proyectos con `destacado: N` en su frontmatter flotan aquí (ordenados
@@ -201,7 +212,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 		})();
 	</script>
 
-	<main class="main-container">
+	<main class="main-container" data-pausa-fuera>
 		<div class="hero-cards">
 			{featured.map((proyecto, i) => {
 				const l = heroLayout[huecosHero[i] ?? i];
@@ -263,33 +274,38 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 	<div class="scroll-spacer"></div>
 
 	<section class="proyectos-section" id="proyectos">
-		<div class="hab-grafo" id="hab-grafo">
+		<div class="hab-grafo" id="hab-grafo" data-pausa-fuera>
 			<div class="hab-grafo-inner" id="hab-grafo-inner">
 				<div class="hab-nebulosas" id="hab-nebulosas" aria-hidden="true"></div>
 				<svg class="hab-aristas" id="hab-aristas" aria-hidden="true"></svg>
 
-				{habilidades.map((h) => {
-					const Nodo = h.expandible ? 'button' : 'div';
-					return (
-						<Nodo
-							class={`hab-nodo${h.expandible ? '' : ' hab-nodo--plana'}${h.progress < 100 ? ' hab-nodo--obra' : ''}`}
-							style={`--cat-color:${h.color}`}
-							data-cat={h.categoria ?? ''}
-							data-cat-titulo={nombreConstelacion(h.categoria)}
-							{...(h.expandible
-								? { type: 'button', id: `hab-nodo-${h.id}`, 'aria-expanded': 'false', 'aria-controls': `hab-doc-${h.id}` }
-								: { title: h.resumen })}
-						>
-							<span class="hab-estrella" aria-hidden="true"></span>
-							<span class="hab-nodo-placa">
-								{h.marca && <span class="hab-nodo-marca" style={`--marca:url(${h.marca})`} aria-hidden="true"></span>}
-								<span class="hab-nodo-label">{h.titulo}</span>
-								{h.expandible && <span class="hab-nodo-mas" aria-hidden="true"></span>}
-								{h.progress < 100 && <span class="hab-nodo-progreso" style={`--progreso:${h.progress}%`}><span class="sr-only">Dominio: {h.progress}%</span></span>}
-							</span>
-						</Nodo>
-					);
-				})}
+				{gruposHab.map((g) => (
+					<div class="hab-grupo" style={`--cat-color:${g.color}`}>
+						{g.titulo && <h3 class="hab-grupo-titulo">{g.titulo}</h3>}
+						{g.items.map((h) => {
+							const Nodo = h.expandible ? 'button' : 'div';
+							return (
+								<Nodo
+									class={`hab-nodo${h.expandible ? '' : ' hab-nodo--plana'}${h.progress < 100 ? ' hab-nodo--obra' : ''}`}
+									style={`--cat-color:${h.color}`}
+									data-cat={h.categoria ?? ''}
+									data-cat-titulo={nombreConstelacion(h.categoria)}
+									{...(h.expandible
+										? { type: 'button', id: `hab-nodo-${h.id}`, 'aria-expanded': 'false', 'aria-controls': `hab-doc-${h.id}` }
+										: { title: h.resumen })}
+								>
+									<span class="hab-estrella" aria-hidden="true"></span>
+									<span class="hab-nodo-placa">
+										{h.marca && <span class="hab-nodo-marca" style={`--marca:url(${h.marca})`} aria-hidden="true"></span>}
+										<span class="hab-nodo-label">{h.titulo}</span>
+										{h.expandible && <span class="hab-nodo-mas" aria-hidden="true"></span>}
+										{h.progress < 100 && <span class="hab-nodo-progreso" style={`--progreso:${h.progress}%`}><span class="sr-only">Dominio: {h.progress}%</span></span>}
+									</span>
+								</Nodo>
+							);
+						})}
+					</div>
+				))}
 
 				<div class="hab-centro">
 					<Image
@@ -452,7 +468,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 
 	<section class="contacto-section" id="contacto">
 		<div class="contacto-wrapper">
-			<div class="contacto-particles">
+			<div class="contacto-particles" data-pausa-fuera>
 				<div class="particle-space"></div>
 				<div class="particle-space"></div>
 				<div class="particle-space"></div>
@@ -701,6 +717,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 		import '../scripts/habilidades-grafo.js';
 		import '../scripts/proyectos-ruta.js';
 		import '../scripts/card-video.js';
+		import '../scripts/pausar-fuera.js';
 	</script>
 
 	<!-- Formulario de contacto -->

@@ -119,7 +119,7 @@
    funde en modo "screen": suma luz a la foto de fondo en vez de taparla. */
 .hab-nebulosas {
   position: absolute;
-  top: 50%;
+  top: var(--centro-y, 50%);
   left: 50%;
   pointer-events: none;
 }
@@ -156,7 +156,7 @@
 .hab-grafo-inner.listo .hab-centro,
 .hab-grafo-inner.listo .hab-constelacion {
   position: absolute;
-  top: 50%;
+  top: var(--centro-y, 50%); /* centro del cielo: lo fija el JS */
   left: 50%;
 }
 
@@ -191,9 +191,26 @@
   color: inherit;
   text-align: left;
   transition: opacity 0.3s ease;
-  /* El vaivén (JS) mueve cada nodo en cada frame: en su propia capa lo
-     desplaza el compositor, sin volver a rasterizar chip, sombra e icono. */
-  will-change: transform;
+}
+
+/* El vaivén (JS, solo escritorio con ratón) mueve cada nodo en cada frame:
+   en su propia capa lo desplaza el compositor, sin volver a rasterizar chip,
+   sombra e icono. Donde el cielo está quieto, esas 35 capas sobran. */
+@media (min-width: 1025px) and (pointer: fine) {
+  .hab-nodo {
+    will-change: transform;
+  }
+}
+
+/* Grupo por categoría (markup): en el cielo no genera caja, así que las
+   estrellas se siguen posicionando contra .hab-grafo-inner. Su título solo
+   se ve en la rejilla de móvil. */
+.hab-grupo {
+  display: contents;
+}
+
+.hab-grupo-titulo {
+  display: none;
 }
 
 /* Chip a la izquierda de su estrella (lo decide el JS según el hueco). El
@@ -479,6 +496,17 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   }
 }
 
+/* Móvil (la misma media query que deja quieto el cielo en el JS): 68
+   destellos animados son un recálculo de estilo por frame que la CPU de un
+   teléfono no se puede permitir. Las cruces se quedan en reposo; el pulso de
+   las líneas sí sigue. */
+@media (max-width: 1024px), (pointer: coarse) {
+  .hab-estrella::before,
+  .hab-estrella::after {
+    animation: none;
+  }
+}
+
 /* ── Apertura: el logo cede el centro al panel en escritorio ── */
 .hab-grafo.abierto .hab-centro {
   opacity: 0;
@@ -693,16 +721,47 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   }
 }
 
+/* ≤768px: sin cielo. Las mismas tarjetas que en escritorio, en una rejilla
+   por categoría con su nombre encima; el panel de cada una se abre debajo de
+   su fila (JS), no al final de la lista. */
 @media (max-width: 768px) {
-  .hab-centro {
-    width: 84px;
-    height: 84px;
+  .hab-grafo-inner {
+    display: block;
+    min-height: 0;
   }
+  .hab-nebulosas,
+  .hab-aristas,
+  .hab-centro,
+  .hab-estrella {
+    display: none;
+  }
+  .hab-grupo {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .hab-grupo + .hab-grupo {
+    margin-top: 30px;
+  }
+  /* El nombre de la constelación, con la misma voz que en el cielo */
+  .hab-grupo-titulo {
+    display: block;
+    grid-column: 1 / -1;
+    margin: 0 0 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: color-mix(in srgb, var(--cat-color) 45%, rgb(220, 228, 245));
+  }
+  /* Tarjetas de una fila, a la misma altura; el "+" siempre en el borde */
   .hab-nodo {
-    max-width: 200px;
-    gap: 6px;
+    max-width: none;
+    align-items: stretch;
+    padding: 0;
   }
   .hab-nodo-placa {
+    flex: 1;
     gap: 7px;
     padding: 6px 10px 6px 8px;
   }
@@ -713,16 +772,23 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   .hab-nodo-label {
     font-size: 0.8rem;
   }
+  .hab-nodo-mas {
+    margin-left: auto;
+  }
+  .hab-grupo > .hab-doc {
+    grid-column: 1 / -1;
+  }
+  /* En la lista no se atenúa el resto: se tiene que poder elegir otra. Y el
+     panel ya cuelga de su tarjeta, que hace de título. */
+  .hab-grafo.abierto .hab-nodo:not([aria-expanded='true']) {
+    opacity: 1;
+  }
+  .hab-doc-titulo {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
-  .hab-centro {
-    width: 72px;
-    height: 72px;
-  }
-  .hab-nodo {
-    max-width: 176px;
-  }
   .hab-nodo-label {
     font-size: 0.76rem;
   }

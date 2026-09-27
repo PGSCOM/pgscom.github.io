@@ -532,3 +532,15 @@
         letter-spacing: 0.2em;
     }
 }
+
+/* Móvil: las animaciones infinitas de un bloque fuera de pantalla se pausan
+   (clase .fuera, src/scripts/pausar-fuera.js). !important porque el
+   degradado del logo lleva su animation inline, y el shorthand reinicia el
+   play-state a running. */
+@media (max-width: 1024px), (pointer: coarse) {
+    .fuera *,
+    .fuera *::before,
+    .fuera *::after {
+        animation-play-state: paused !important;
+    }
+}

@@ -53,11 +53,18 @@ function initGrafo() {
 	// — el hueco reservado tiene que ser al menos eso, o la estrella acoplada
 	// asomaría por encima del propio contenedor.
 	const estrechoMQ = window.matchMedia('(max-width: 1200px)');
+	// ≤768px no hay cielo: las tarjetas van en rejilla por categoría (CSS) y el
+	// panel se abre debajo de la fila de la tarjeta pulsada, no al final.
+	const rejillaMQ = window.matchMedia('(max-width: 768px)');
+	const docs = grafo.querySelector('.hab-docs');
 
-	// Hueco mínimo entre cajas; el vaivén nunca pasa de AMP < HUECO/2, y con
-	// "reducir movimiento" el cielo se queda quieto.
+	// Hueco mínimo entre cajas; el vaivén nunca pasa de AMP < HUECO/2. Con
+	// "reducir movimiento", y en móvil (táctil o ≤1024px), el cielo se queda
+	// quieto: mover 35 nodos, sus líneas y la máscara en cada frame ahoga la
+	// CPU de un teléfono, y 2px de deriva en esa pantalla ni se ven. Misma
+	// media query que apaga los destellos en habilidades.css.
 	const HUECO = 8;
-	const AMP = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3;
+	const AMP = window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 1024px), (pointer: coarse)').matches ? 0 : 3;
 	// Separación entre estrellas de una misma constelación: nunca menos de
 	// DMIN (la línea que las une tiene que verse), idealmente unos IDEAL px.
 	const DMIN = 58;
@@ -108,7 +115,7 @@ function initGrafo() {
 	}));
 
 	// Posición "viva" de la estrella alrededor de su reposo en el instante t —
-	// la misma fórmula la usan tick() (rama por defecto) y soltar() (el
+	// la misma fórmula la usan dibujar() (rama por defecto) y soltar() (el
 	// objetivo en marcha al que hay que llegar sin saltos).
 	function posicionReposo(o, t) {
 		return {
@@ -126,17 +133,22 @@ function initGrafo() {
 
 	// La estrella abierta (acoplada y quieta) y la que está en tránsito no
 	// siguen la fórmula del vaivén: su posición la lleva un gsap.to propio;
-	// tick() se limita a leerla.
+	// dibujar() se limita a leerla.
 	let abierto = null;
 	let animando = null;
 
 	const pos = nodos.map(() => ({ x: 0, y: 0 }));
 	pos[NUCLEO] = { x: 0, y: 0 };
-	// gsap.set crea un tween por llamada: en tick(), 35 por frame. Los
+	// gsap.set crea un tween por llamada: en dibujar(), 35 por frame. Los
 	// quickSetter escriben la misma caché de transform sin crear nada.
 	const mover = nodos.map((n) => ({ x: gsap.quickSetter(n, 'x', 'px'), y: gsap.quickSetter(n, 'y', 'px') }));
 
-	function tick() {
+	// Con el cielo quieto (AMP 0) el ticker solo redibuja mientras una estrella
+	// viaja; el resto de veces se llama a dibujar() a mano (al maquetar y al
+	// acabar cada viaje).
+	const tick = () => { if (AMP || animando) dibujar(); };
+
+	function dibujar() {
 		if (!listo) return;
 		const t = (performance.now() - t0) / 1000;
 		nodos.forEach((nodo, i) => {
@@ -399,9 +411,9 @@ function initGrafo() {
 			ocupadas.push(sitio.k);
 			gsap.set(g.nombre, { x: sitio.x, y: sitio.y });
 		}
-		let extension = 0;
-		for (const o of ocupadas) extension = Math.max(extension, Math.abs(o.t), Math.abs(o.b));
-		return { extension, altoNodo: Math.max(...med.map((m) => m.alto)) };
+		let arriba = 0, abajo = 0;
+		for (const o of ocupadas) { arriba = Math.max(arriba, -o.t); abajo = Math.max(abajo, o.b); }
+		return { arriba, abajo, altoNodo: Math.max(...med.map((m) => m.alto)) };
 	}
 
 	// Nebulosa de cada constelación: la silueta de sus estrellas, chips y
@@ -461,20 +473,39 @@ function initGrafo() {
 	// sustituye a la vez a una medición inicial y al listener de resize.
 	let anchoPrevio = 0;
 	function maquetar(w) {
+		if (rejillaMQ.matches) {
+			// De vuelta a la rejilla (al estrechar la ventana): fuera las
+			// posiciones y el lado que les dio el cielo; el resto es CSS.
+			if (listo) {
+				listo = false;
+				inner.classList.remove('listo');
+				inner.style.height = '';
+				nodos.forEach((n) => n.classList.remove('hab-nodo--izq'));
+				gsap.set(nodos, { clearProps: 'transform' });
+			}
+			return;
+		}
 		if (!listo) {
 			listo = true;
 			gsap.set(nodos, { xPercent: 0, yPercent: -50 });
 			gsap.set([logo, ...grupos.flatMap((g) => g.nombre ?? [])], { xPercent: -50, yPercent: -50 });
 			inner.classList.add('listo');
 		}
-		const { extension, altoNodo } = repartir(w);
-		const panelMaxH = overlayMQ.matches ? (estrechoMQ.matches ? 260 : 320) : 0;
-		const mitad = Math.max(extension + AMP, panelMaxH / 2 + altoNodo + 8) + 6;
-		const alto = 2 * mitad;
+		const { arriba, abajo, altoNodo } = repartir(w);
+		// Con el panel superpuesto (escritorio), centrado sobre el logo, el cielo
+		// es simétrico y le deja sitio. Sin superposición cada mitad mide lo que
+		// ocupa: sin cola vacía bajo la constelación más corta.
+		let sobre = arriba + AMP + 6, bajo = abajo + AMP + 6;
+		if (overlayMQ.matches) {
+			const panelMaxH = estrechoMQ.matches ? 260 : 320;
+			sobre = bajo = Math.max(Math.max(arriba, abajo) + AMP, panelMaxH / 2 + altoNodo + 8) + 6;
+		}
+		const alto = sobre + bajo;
 		inner.style.height = `${alto}px`;
-		cx = w / 2; cy = alto / 2;
+		inner.style.setProperty('--centro-y', `${sobre}px`);
+		cx = w / 2; cy = sobre;
 		svg.setAttribute('viewBox', `0 0 ${w} ${alto}`);
-		tick();
+		dibujar();
 	}
 	new ResizeObserver(([entry]) => {
 		const { width: w } = entry.contentRect;
@@ -517,7 +548,7 @@ function initGrafo() {
 
 	// Suelta una estrella de vuelta a su reposo — que sigue en marcha por el
 	// vaivén — interpolando hacia él en cada frame en vez de animar a un
-	// punto fijo: si no, el último frame del tween y el primero de tick()
+	// punto fijo: si no, el último frame del tween y el primero de dibujar()
 	// no coincidirían y se vería un salto.
 	function soltar(nodo) {
 		animando = nodo;
@@ -535,7 +566,7 @@ function initGrafo() {
 					y: gsap.utils.interpolate(inicio.y, destino.y, estado.p),
 				});
 			},
-			onComplete: () => { if (animando === nodo) animando = null; },
+			onComplete: () => { if (animando === nodo) animando = null; dibujar(); },
 		});
 	}
 
@@ -550,13 +581,22 @@ function initGrafo() {
 
 		if (previo) {
 			previo.setAttribute('aria-expanded', 'false');
-			document.getElementById(previo.getAttribute('aria-controls')).hidden = true;
-			if (overlayMQ.matches) soltar(previo);
+			const docPrevio = document.getElementById(previo.getAttribute('aria-controls'));
+			docPrevio.hidden = true;
+			// En la rejilla se movió junto a su tarjeta: vuelve a su sitio
+			docs.append(docPrevio);
+			if (overlayMQ.matches && listo) soltar(previo);
 		}
 		if (!abierto) return;
 
 		abierto.setAttribute('aria-expanded', 'true');
 		const doc = document.getElementById(abierto.getAttribute('aria-controls'));
+		if (rejillaMQ.matches) {
+			// Tras la última tarjeta de su fila, a todo el ancho de la rejilla
+			let fin = abierto;
+			for (let s = abierto.nextElementSibling; s?.classList.contains('hab-nodo') && s.offsetTop === abierto.offsetTop; s = s.nextElementSibling) fin = s;
+			fin.after(doc);
+		}
 		doc.hidden = false;
 
 		const i = nodos.indexOf(abierto);
@@ -564,9 +604,17 @@ function initGrafo() {
 			el.classList.add(a === i || b === i ? 'hab-arista-activa' : 'hab-arista-dim');
 		});
 
+		// En la rejilla, tarjeta y panel a la vista (abrir otra cierra la
+		// anterior, y lo que había encima puede encoger); 80px libres abajo, ahí
+		// flota la barra de navegación inferior.
+		if (rejillaMQ.matches) {
+			const t = abierto.getBoundingClientRect(), d = doc.getBoundingClientRect();
+			if (t.top < 24 || d.bottom > window.innerHeight - 80) {
+				lenis.scrollTo(abierto, { offset: -Math.max(24, window.innerHeight - 80 - (d.bottom - t.top)) });
+			}
 		// Sin superposición el panel cae debajo del cielo, que puede ser más
 		// alto que la pantalla: si queda fuera de la vista, se lleva hasta ella.
-		if (!overlayMQ.matches && doc.getBoundingClientRect().bottom > window.innerHeight) {
+		} else if (!overlayMQ.matches && doc.getBoundingClientRect().bottom > window.innerHeight) {
 			// 80px libres abajo: ahí flota la barra de navegación inferior
 			lenis.scrollTo(doc, { offset: -Math.max(24, window.innerHeight - doc.offsetHeight - 80) });
 		}
@@ -584,7 +632,7 @@ function initGrafo() {
 			const { lab } = est[i];
 			gsap.to(abierto, {
 				x: -(lab.l + lab.w / 2), y: dockY, duration: 0.5, ease: 'power2.out',
-				onComplete: () => { if (animando === abierto) animando = null; },
+				onComplete: () => { if (animando === abierto) animando = null; dibujar(); },
 			});
 		}
 	}
@@ -596,6 +644,8 @@ function initGrafo() {
 	document.addEventListener('keydown', (e) => {
 		if (e.key === 'Escape') seleccionar(null);
 	});
+	// Al cruzar el corte de la rejilla el panel abierto se queda sin sitio
+	rejillaMQ.addEventListener('change', () => seleccionar(null));
 }
 
 // Astro emite este bloque como <script type="module">, ya diferido por el
