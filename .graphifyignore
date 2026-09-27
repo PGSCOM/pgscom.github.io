@@ -1,0 +1,27 @@
+# Alcance del grafo de graphify: solo código (AST).
+# Mismo formato que .gitignore; se combina con él y gana en conflictos.
+# public/ (vídeos, imágenes, iconos) y el markdown quedan fuera a propósito.
+
+# Excluir todo por defecto...
+*
+
+# ...e incluir solo las carpetas de código
+!src/
+!src/**
+!functions/
+!functions/**
+!scripts/
+!scripts/**
+
+# Contenido markdown de las colecciones (no es código)
+src/content/**/*.md
+src/content/**/*.mdx
+
+# Imágenes que Astro optimiza en build (src/assets/)
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.svg
+*.avif

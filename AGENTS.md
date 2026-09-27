@@ -38,7 +38,7 @@ Los ficheros `src/content/proyectos/<slug>.md` tienen un frontmatter extenso (fe
 
 ## graphify
 
-Este repo tiene un grafo de conocimiento en `graphify-out/` (generado sobre `src/`, solo código vía AST — `public/` y el contenido markdown quedaron fuera a propósito). Antes de explorar el código a base de grep, usa:
+Este repo tiene un grafo de conocimiento en `graphify-out/` (solo código vía AST de `src/`, `functions/` y `scripts/`; `public/`, imágenes y contenido markdown quedan fuera a propósito). El alcance se define en [`.graphifyignore`](.graphifyignore). Antes de explorar el código a base de grep, usa:
 
 ```bash
 graphify query "<pregunta>"
