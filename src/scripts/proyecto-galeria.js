@@ -9,6 +9,8 @@
 // pesa lo suyo, así que se importa de forma dinámica y solo si la ficha
 // tiene alguna galería.
 
+import { montarFuente } from './hls-media.js';
+
 const galerias = [...document.querySelectorAll('.pd-contenido .pd-galeria')];
 
 // Si el autor no puso `poster`, se deriva del propio vídeo: scripts/generate-posters.mjs
@@ -78,6 +80,22 @@ if (galerias.length > 0) {
 			});
 
 			if (hayVideo) {
+				// hls.js sigue descargando segmentos aunque su <video> salga del DOM,
+				// así que hay que destruirlo. No en `contentRemove`: PhotoSwipe
+				// reutiliza el elemento si se vuelve a esa diapositiva. Sí cuando
+				// saca el contenido de su caché (`contentDestroy`) y al cerrar
+				// (`destroy`): ahí borra sus listeners antes de destruir el
+				// contenido, así que `contentDestroy` ya no llegaría.
+				const creados = new Set();
+				lightbox.on('contentDestroy', ({ content }) => {
+					content.element?._hls?.destroy();
+					creados.delete(content.element);
+				});
+				lightbox.on('destroy', () => {
+					for (const video of creados) video._hls?.destroy();
+					creados.clear();
+				});
+
 				lightbox.addFilter('itemData', (itemData) => {
 					const el = itemData.element;
 					if (el?.dataset.pswpVideoPoster) {
@@ -92,8 +110,12 @@ if (galerias.length > 0) {
 
 					e.preventDefault();
 
+					// montarFuente(): un mp4 local va por su HLS (Cloudflare Pages no
+					// sirve rangos, ver hls-media.js); nativo en Safari, hls.js en el resto.
 					const video = document.createElement('video');
-					video.src = content.data.src;
+					video.dataset.src = content.data.src;
+					content.montado = montarFuente(video);
+					creados.add(video);
 					video.controls = true;
 					video.playsInline = true;
 					video.style.width = '100%';
@@ -129,13 +151,17 @@ if (galerias.length > 0) {
 					const { content } = e;
 					if (content.type !== 'video' || !content.element) return;
 
-					content.element.play().catch(() => {});
+					// Si se pasa de diapositiva antes de montar la fuente, no reproducir.
+					const video = content.element;
+					content.activo = true;
+					content.montado.then(() => { if (content.activo) video.play().catch(() => {}); });
 				});
 
 				lightbox.on('contentDeactivate', (e) => {
 					const { content } = e;
 					if (content.type !== 'video' || !content.element) return;
 
+					content.activo = false;
 					content.element.pause();
 				});
 

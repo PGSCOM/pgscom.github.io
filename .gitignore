@@ -41,3 +41,6 @@ graphify-out/.graphify_semantic.json
 graphify-out/.graphify_chunk_*.json
 graphify-out/.needs_update
 graphify-out/.gfy-*
+
+# HLS generado de los mp4 locales (scripts/generate-hls.mjs)
+public/hls/

@@ -11,11 +11,45 @@ export function esHLS(src) {
 	return HLS_RE.test(src);
 }
 
+// Cloudflare Pages ignora `Range` (siempre 200 con el fichero entero): Chrome
+// no deja hacer seek en un mp4 servido así y Safari/iOS no lo reproduce.
+// Por eso cada mp4 local tiene su HLS generado en el build
+// (scripts/generate-hls.mjs, mismas carpetas que esta expresión).
+const MP4_LOCAL_RE = /^\/(proyvid|videos)\/(.+)\.mp4$/i;
+
+/**
+ * URL del HLS generado para un mp4 local; cualquier otra URL, sin cambios.
+ * Acepta rutas (`/proyvid/...`) y URLs absolutas del propio sitio (PhotoSwipe
+ * pasa el `href` ya resuelto).
+ */
+export function aHLS(src) {
+	const url = new URL(src, location.href);
+	if (url.origin !== location.origin || !MP4_LOCAL_RE.test(url.pathname)) return src;
+	return url.pathname.replace(MP4_LOCAL_RE, '/hls/$1/$2/index.m3u8');
+}
+
+// Para clips cortos que necesitan seek fino (scrub, comparadores
+// sincronizados), el HLS no sirve: se descargan enteros como blob, que admite
+// seek en cualquier navegador sea cual sea el servidor. Uno por URL,
+// reutilizado. Si la descarga falla se devuelve la URL tal cual y el <video>
+// gestiona su propio error.
+const blobs = new Map();
+export function blobUrl(src) {
+	if (!blobs.has(src)) {
+		blobs.set(src, fetch(src)
+			.then((r) => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+			.then((b) => URL.createObjectURL(b))
+			.catch(() => src));
+	}
+	return blobs.get(src);
+}
+
 /** Asigna la fuente a un <video> (data-src o src), eligiendo nativo o hls.js. Idempotente. */
 export async function montarFuente(video) {
 	if (video.dataset.montado) return;
-	const src = video.dataset.src ?? video.getAttribute('src');
-	if (!src) return;
+	const original = video.dataset.src ?? video.getAttribute('src');
+	if (!original) return;
+	const src = aHLS(original);
 	video.dataset.montado = 'true';
 
 	if (esHLS(src) && !video.canPlayType('application/vnd.apple.mpegurl')) {

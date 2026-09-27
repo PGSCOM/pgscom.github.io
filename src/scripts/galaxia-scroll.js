@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { blobUrl } from './hls-media.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,26 +80,10 @@ function init() {
 		});
 	}
 
-	// Cloudflare Pages ignora `Range` (siempre 200, sin Accept-Ranges): Chrome
-	// deja entonces el vídeo sin seek (seekable [0,0], el scrub se queda en el
-	// frame 0) y Safari/iOS puede negarse a reproducirlo. Un blob está entero en
-	// memoria y admite seek y reproducción en todas partes, sea cual sea el
-	// servidor. Uno por URL (~35 MB en total), reutilizado por la playlist. Si la
-	// descarga falla se usa la URL directa y el <video> gestiona su propio error.
-	const blobs = new Map();
-	function blobUrl(src) {
-		if (!blobs.has(src)) {
-			blobs.set(src, fetch(src)
-				.then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
-				.then(b => URL.createObjectURL(b))
-				.catch(() => src));
-		}
-		return blobs.get(src);
-	}
-
 	async function setVideoSource(el, src, startTime = 0, autoplay = false) {
 		try {
 			el.loop = false;
+			// Blob y no la URL directa: el scrub necesita seek (ver blobUrl()).
 			const url = await blobUrl(src);
 			if (el.src !== url) { el.src = url; el.load(); }
 			await waitForMetadata(el);
