@@ -272,7 +272,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 					const Nodo = h.expandible ? 'button' : 'div';
 					return (
 						<Nodo
-							class={`hab-nodo${h.expandible ? '' : ' hab-nodo--plana'}`}
+							class={`hab-nodo${h.expandible ? '' : ' hab-nodo--plana'}${h.progress < 100 ? ' hab-nodo--obra' : ''}`}
 							style={`--cat-color:${h.color}`}
 							data-cat={h.categoria ?? ''}
 							data-cat-titulo={nombreConstelacion(h.categoria)}
@@ -285,6 +285,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 								{h.marca && <span class="hab-nodo-marca" style={`--marca:url(${h.marca})`} aria-hidden="true"></span>}
 								<span class="hab-nodo-label">{h.titulo}</span>
 								{h.expandible && <span class="hab-nodo-mas" aria-hidden="true"></span>}
+								{h.progress < 100 && <span class="hab-nodo-progreso" style={`--progreso:${h.progress}%`}><span class="sr-only">Dominio: {h.progress}%</span></span>}
 							</span>
 						</Nodo>
 					);

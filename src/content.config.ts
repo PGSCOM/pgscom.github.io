@@ -129,6 +129,8 @@ const habilidades = defineCollection({
 		resumen: z.string().optional(),
 		// Menor = antes. Sin este campo va al montón del medio y desempata por título
 		orden: z.number().default(50),
+		// Cuánto la domino (0–100). Por debajo de 100 el chip se pinta "en obras"
+		progress: z.number().min(0).max(100).default(100),
 	}),
 });
 

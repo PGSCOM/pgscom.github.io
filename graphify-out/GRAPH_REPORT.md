@@ -1,17 +1,17 @@
 # Graph Report - pgscom.github.io  (2026-09-27)
 
 ## Corpus Check
-- 112 files · ~3,347,167 words
+- 112 files · ~3,347,204 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 17 file(s) not represented in the graph (top: .css 10, (none) 6, .woff2 1)
 
 ## Summary
-- 407 nodes · 410 edges · 101 communities (25 shown, 76 thin omitted)
+- 422 nodes · 428 edges · 100 communities (24 shown, 76 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8cbcd009`
+- Built from commit: `c3d204cd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -24,7 +24,6 @@
 - initRuta
 - infraestructura.md
 - package.json
-- generate-posters.mjs
 - init
 - unreal.md
 - premios-macula.md
@@ -74,10 +73,10 @@
 4. `scripts` - 9 edges
 5. `initRuta()` - 9 edges
 6. `gsap` - 8 edges
-7. `repartir()` - 6 edges
-8. `montarFuente()` - 6 edges
-9. `build()` - 6 edges
-10. `formatRangoFecha()` - 6 edges
+7. `formatRangoFecha()` - 7 edges
+8. `repartir()` - 6 edges
+9. `montarFuente()` - 6 edges
+10. `build()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Stack` --references--> `build()`  [INFERRED]
@@ -88,17 +87,17 @@
   src/pages/sitemap.xml.ts → src/utils/fechas.js
 - `reproducir()` --calls--> `montarFuente()`  [EXTRACTED]
   src/scripts/card-video.js → src/scripts/hls-media.js
-- `envolver()` --calls--> `esHLS()`  [EXTRACTED]
-  src/scripts/proyecto-video.js → src/scripts/hls-media.js
+- `rutaEntries` --calls--> `esEnCurso()`  [EXTRACTED]
+  src/pages/index.astro → src/utils/fechas.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (101 total, 76 thin omitted)
+## Communities (100 total, 76 thin omitted)
 
 ### Community 1 - "index.astro"
-Cohesion: 0.11
-Nodes (21): ref_astro_assets, ref_astro_content, src_assets_logo, src_assets_proyectos_portfolio, src_data_categorias, src_data_contacto, src_data_multiguerras, GET() (+13 more)
+Cohesion: 0.06
+Nodes (39): ref_astro_assets, ref_astro_content, src_assets_logo, src_assets_proyectos_portfolio, collections, habilidades, multiguerras, proyectos (+31 more)
 
 ### Community 2 - "proyecto-video.js"
 Cohesion: 0.14
@@ -122,11 +121,7 @@ Nodes (15): Composición, Metadatos, Montaje:, PostgreSQL, VFX, Almacenamiento:,
 
 ### Community 7 - "package.json"
 Cohesion: 0.06
-Nodes (25): devDependencies, @astrojs/check, @cloudflare/workers-types, @ffmpeg-installer/ffmpeg, sharp, typescript, name, optionalDependencies (+17 more)
-
-### Community 8 - "generate-posters.mjs"
-Cohesion: 0.20
-Nodes (10): @ffmpeg-installer/ffmpeg, ref_node_child_process, ref_node_fs, ref_node_path, sharp, DIRS, extraerFrame(), generarPoster() (+2 more)
+Nodes (31): devDependencies, @astrojs/check, @cloudflare/workers-types, @ffmpeg-installer/ffmpeg, sharp, typescript, name, optionalDependencies (+23 more)
 
 ### Community 9 - "init"
 Cohesion: 0.35
@@ -197,19 +192,19 @@ Cohesion: 0.40
 Nodes (4): Cliente, Cómo funciona, Host (Windows / Linux / macOS), Qué hace
 
 ## Knowledge Gaps
-- **154 isolated node(s):** `TurnstileResponse`, `TelegramResponse`, `Env`, `name`, `type` (+149 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 254 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **167 isolated node(s):** `TurnstileResponse`, `TelegramResponse`, `Env`, `name`, `type` (+162 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 268 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **76 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `gsap` connect `gsap` to `initRuta`, `package.json`?**
-  _High betweenness centrality (0.086) - this node is a cross-community bridge._
+  _High betweenness centrality (0.088) - this node is a cross-community bridge._
 - **What connects `TurnstileResponse`, `TelegramResponse`, `Env` to the rest of the system?**
-  _154 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _167 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `index.astro` be split into smaller, more focused modules?**
-  _Cohesion score 0.10793650793650794 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05909090909090909 - nodes in this community are weakly interconnected._
 - **Should `proyecto-video.js` be split into smaller, more focused modules?**
   _Cohesion score 0.1380952380952381 - nodes in this community are weakly interconnected._
 - **Should `Guía de formato — ficheros de proyecto` be split into smaller, more focused modules?**

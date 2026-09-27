@@ -558,6 +558,7 @@ categoria: programacion              # Opcional — ID de categorias.json; da el
 icono: tailscale                     # Opcional — archivo de public/icons/marcas/<icono>.svg
 resumen: Red privada entre mis máquinas, sin abrir puertos.   # Opcional — ver más abajo
 orden: 10                            # Opcional (por defecto 50) — menor va antes; empata por título
+progress: 60                         # Opcional (0–100, por defecto 100) — cuánto la domino; ver más abajo
 ---
 ```
 
@@ -580,6 +581,14 @@ Una frase corta, opcional. Con cuerpo, aparece como subtítulo bajo el título
 dentro del panel. Sin cuerpo (burbuja no pulsable), aparece como tooltip nativo
 del navegador al pasar el ratón — la única pista extra que tiene ese nodo,
 ya que no hay panel que abrir.
+
+### `progress`
+
+Cuánto domino la habilidad, de 0 a 100. Sin el campo (o con 100) la burbuja se
+ve normal. Por debajo de 100 se pinta "en obras": borde punteado, rayado
+diagonal tenue, nombre e icono algo más grises y una barra fina bajo el nombre
+que se rellena hasta ese porcentaje. El borde, el rayado y el gris son iguales
+para cualquier valor por debajo de 100; solo la barra cambia.
 
 ### Iconos de marca
 

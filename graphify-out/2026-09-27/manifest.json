@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "src/content.config.ts": {
-    "mtime": 1790426096.446788,
-    "seen": 1790426340.0000803,
-    "ast_hash": "625f1a509d3a4b6b48bb2bb16099ea3a",
+    "mtime": 1790469501.712909,
+    "seen": 1790469638.7135122,
+    "ast_hash": "db75d573b93f6dd2ca6d7c0926019757",
     "semantic_hash": ""
   },
   "src/data/categorias.json": {
@@ -96,9 +96,9 @@
     "semantic_hash": ""
   },
   "src/pages/index.astro": {
-    "mtime": 1790426106.3115594,
-    "seen": 1790426340.0000832,
-    "ast_hash": "10bab439761004c636d292fc38f17e61",
+    "mtime": 1790469501.956185,
+    "seen": 1790469638.7135184,
+    "ast_hash": "f3c9b259b25c0c9fd9a99dd8307352fa",
     "semantic_hash": ""
   },
   "src/pages/proyectos/[id].astro": {
@@ -138,9 +138,9 @@
     "semantic_hash": ""
   },
   "src/scripts/habilidades-grafo.js": {
-    "mtime": 1790382661.8139665,
-    "seen": 1790426340.0000875,
-    "ast_hash": "541b11a57cfc9e4df2ad50abe3d0e2f1",
+    "mtime": 1790463933.6692567,
+    "seen": 1790464032.878799,
+    "ast_hash": "8fff56e45b4354b902f7d24bca4f854b",
     "semantic_hash": ""
   },
   "src/scripts/hero.js": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "FORMATO.md": {
-    "mtime": 1790426138.4543488,
-    "seen": 1790426340.0000975,
+    "mtime": 1790468453.1013448,
+    "seen": 1790469638.7135394,
     "ast_hash": "8ab27b24d0c9cebb721da02a660b555e",
     "semantic_hash": ""
   },
@@ -258,8 +258,8 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/ableton-live.md": {
-    "mtime": 1790382661.810383,
-    "seen": 1790426340.0000997,
+    "mtime": 1790468453.1068594,
+    "seen": 1790469638.7135422,
     "ast_hash": "04f612e4610ea0466562f7233c79d5ab",
     "semantic_hash": ""
   },
@@ -276,8 +276,8 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/blender.md": {
-    "mtime": 1790382661.810662,
-    "seen": 1790426340.0001016,
+    "mtime": 1790465277.2746768,
+    "seen": 1790465286.5926123,
     "ast_hash": "e840c8da70e5556c31b242339fb8d1ed",
     "semantic_hash": ""
   },
@@ -288,8 +288,8 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/cpp.md": {
-    "mtime": 1790382661.8107638,
-    "seen": 1790426340.0001028,
+    "mtime": 1790468453.106973,
+    "seen": 1790469638.7135465,
     "ast_hash": "9f30c4108367631f55a06eb8eda5fe9e",
     "semantic_hash": ""
   },
@@ -348,20 +348,20 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/go.md": {
-    "mtime": 1790382661.811214,
-    "seen": 1790426340.0001082,
+    "mtime": 1790468453.107054,
+    "seen": 1790469638.713555,
     "ast_hash": "58aa2786191bab7b2de63c4b6375e337",
     "semantic_hash": ""
   },
   "src/content/habilidades/godot.md": {
-    "mtime": 1790382661.8112638,
-    "seen": 1790426340.0001087,
+    "mtime": 1790468453.1071272,
+    "seen": 1790469638.713556,
     "ast_hash": "1746a3756f0e7e7880fd3602955c0764",
     "semantic_hash": ""
   },
   "src/content/habilidades/hugo.md": {
-    "mtime": 1790382661.8113115,
-    "seen": 1790426340.0001092,
+    "mtime": 1790469626.0101864,
+    "seen": 1790469638.7135568,
     "ast_hash": "dfb5c63d164605b95a39b1bba92e0101",
     "semantic_hash": ""
   },
@@ -432,8 +432,8 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/swift.md": {
-    "mtime": 1790382661.8118837,
-    "seen": 1790426340.0001156,
+    "mtime": 1790469626.0104036,
+    "seen": 1790469638.7135673,
     "ast_hash": "6f1c34cf25f798c1da7cd6bf148e2bab",
     "semantic_hash": ""
   },
@@ -450,8 +450,8 @@
     "semantic_hash": ""
   },
   "src/content/habilidades/unreal-engine.md": {
-    "mtime": 1790382661.8119867,
-    "seen": 1790426340.0001175,
+    "mtime": 1790469626.0104036,
+    "seen": 1790469638.7135696,
     "ast_hash": "1cdd782fe14b18374a531d45cba08e0b",
     "semantic_hash": ""
   },

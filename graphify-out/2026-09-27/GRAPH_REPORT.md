@@ -1,17 +1,17 @@
-# Graph Report - pgscom.github.io  (2026-09-26)
+# Graph Report - pgscom.github.io  (2026-09-27)
 
 ## Corpus Check
-- 112 files · ~3,346,697 words
+- 112 files · ~3,347,201 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 17 file(s) not represented in the graph (top: .css 10, (none) 6, .woff2 1)
 
 ## Summary
-- 406 nodes · 408 edges · 101 communities (24 shown, 77 thin omitted)
+- 407 nodes · 410 edges · 101 communities (25 shown, 76 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ca2e0774`
+- Built from commit: `c3d204cd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -42,7 +42,7 @@
 - video-compare.js
 - diseño-escenarios.md
 - Inicios del Blog
-- proyecto-galeria.js
+- dependencies
 - Cómo funciona
 - cold-searcher.md
 - audio.md
@@ -69,15 +69,15 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `Guía de formato — ficheros de proyecto` - 17 edges
-2. `init()` - 11 edges
-3. `initGrafo()` - 11 edges
+2. `initGrafo()` - 12 edges
+3. `init()` - 11 edges
 4. `scripts` - 9 edges
 5. `initRuta()` - 9 edges
 6. `gsap` - 8 edges
-7. `montarFuente()` - 6 edges
-8. `build()` - 6 edges
-9. `formatRangoFecha()` - 6 edges
-10. `9. Vídeos` - 6 edges
+7. `repartir()` - 6 edges
+8. `montarFuente()` - 6 edges
+9. `build()` - 6 edges
+10. `formatRangoFecha()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Stack` --references--> `build()`  [INFERRED]
@@ -94,7 +94,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (101 total, 77 thin omitted)
+## Communities (101 total, 76 thin omitted)
 
 ### Community 1 - "index.astro"
 Cohesion: 0.11
@@ -105,8 +105,8 @@ Cohesion: 0.14
 Nodes (13): hls.js, reproducir(), videos, esHLS(), montarFuente(), ajustarSkin(), ATRIBUTOS_A_COPIAR, CONFIG_HLS (+5 more)
 
 ### Community 3 - "gsap"
-Cohesion: 0.19
-Nodes (9): gsap, azar(), initHero(), entrance(), startIdleFloat(), dispatchDone(), initPreloader(), hint (+1 more)
+Cohesion: 0.21
+Nodes (8): gsap, initHero(), entrance(), startIdleFloat(), dispatchDone(), initPreloader(), hint, lenis
 
 ### Community 4 - "Guía de formato — ficheros de proyecto"
 Cohesion: 0.07
@@ -122,7 +122,7 @@ Nodes (15): Composición, Metadatos, Montaje:, PostgreSQL, VFX, Almacenamiento:,
 
 ### Community 7 - "package.json"
 Cohesion: 0.06
-Nodes (31): dependencies, astro, @astrojs/mdx, gsap, hls.js, lenis, photoswipe, @videojs/html (+23 more)
+Nodes (25): devDependencies, @astrojs/check, @cloudflare/workers-types, @ffmpeg-installer/ffmpeg, sharp, typescript, name, optionalDependencies (+17 more)
 
 ### Community 8 - "generate-posters.mjs"
 Cohesion: 0.20
@@ -141,8 +141,8 @@ Cohesion: 0.20
 Nodes (9): Audio, Detrás de cámaras, Galería, Generación de entradas, QRs generados por IA, ¿Qué es este proyecto?, Sistema de cámaras, Validación (+1 more)
 
 ### Community 12 - "initGrafo"
-Cohesion: 0.36
-Nodes (10): initGrafo(), caja(), maquetar(), medirEtiqueta(), orientar(), posicionReposo(), repartir(), seleccionar() (+2 more)
+Cohesion: 0.29
+Nodes (12): azar(), initGrafo(), caja(), maquetar(), medirEtiqueta(), nebulosas(), orientar(), posicionReposo() (+4 more)
 
 ### Community 13 - "scripts"
 Cohesion: 0.22
@@ -188,6 +188,10 @@ Nodes (4): Galería primer rodaje, Preparación del set, Primer set, Segundo set
 Cohesion: 0.67
 Nodes (3): initVideoCompareSliders(), setupSlider(), teardowns
 
+### Community 27 - "dependencies"
+Cohesion: 0.25
+Nodes (8): dependencies, astro, @astrojs/mdx, gsap, hls.js, lenis, photoswipe, @videojs/html
+
 ### Community 28 - "Cómo funciona"
 Cohesion: 0.40
 Nodes (4): Cliente, Cómo funciona, Host (Windows / Linux / macOS), Qué hace
@@ -195,7 +199,7 @@ Nodes (4): Cliente, Cómo funciona, Host (Windows / Linux / macOS), Qué hace
 ## Knowledge Gaps
 - **154 isolated node(s):** `TurnstileResponse`, `TelegramResponse`, `Env`, `name`, `type` (+149 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 254 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **77 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **76 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
