@@ -456,8 +456,7 @@
     height: 100cqh;
     overflow: hidden;
     pointer-events: none;
-    /* Mismo valor que galaxia-scroll.js al inicio del zoom: sin salto al cargar */
-    transform: scale(0.25);
+    transform: scale(0.38);
     will-change: transform;
 }
 
@@ -467,7 +466,7 @@
     left: calc(50cqh - 50cqw);
     width: 100cqw;
     height: 100cqh;
-    transform: scale(calc(1 / 0.25));
+    transform: scale(calc(1 / 0.38));
     will-change: transform;
 }
 
