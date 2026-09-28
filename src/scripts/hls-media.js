@@ -44,17 +44,22 @@ export function blobUrl(src) {
 	return blobs.get(src);
 }
 
+let montajes = 0;
+
 /** Asigna la fuente a un <video> (data-src o src), eligiendo nativo o hls.js. Idempotente. */
 export async function montarFuente(video) {
 	if (video.dataset.montado) return;
 	const original = video.dataset.src ?? video.getAttribute('src');
 	if (!original) return;
 	const src = aHLS(original);
-	video.dataset.montado = 'true';
+	// Un id por montaje, no un booleano: si se desmonta y se vuelve a montar
+	// mientras llega hls.js, solo el último montaje debe crear su instancia.
+	const id = String(++montajes);
+	video.dataset.montado = id;
 
 	if (esHLS(src) && !video.canPlayType('application/vnd.apple.mpegurl')) {
 		const { default: Hls } = await import('hls.js');
-		if (!video.dataset.montado) return; // desmontado mientras llegaba hls.js
+		if (video.dataset.montado !== id) return; // desmontado o remontado mientras llegaba hls.js
 		if (Hls.isSupported()) {
 			const hls = new Hls();
 			hls.loadSource(src);

@@ -1,0 +1,200 @@
+{
+  "functions/contact.ts": {
+    "mtime": 1790473504.6838374,
+    "seen": 1790579040.7585473,
+    "ast_hash": "5a216ec8ec5131543dfd56d72c689226",
+    "semantic_hash": ""
+  },
+  "scripts/generate-hls.mjs": {
+    "mtime": 1790475674.8525155,
+    "seen": 1790579040.7585666,
+    "ast_hash": "749f0f4dea2c319aa3d69d8a557d9812",
+    "semantic_hash": ""
+  },
+  "scripts/generate-posters.mjs": {
+    "mtime": 1790473505.515844,
+    "seen": 1790579040.7585754,
+    "ast_hash": "0e60040d9036365279383cdcd6bfd9d4",
+    "semantic_hash": ""
+  },
+  "src/components/ProyectoCard.astro": {
+    "mtime": 1790473505.869847,
+    "seen": 1790579040.75858,
+    "ast_hash": "1d85e40f102d6862180ca9b8ddc54f7d",
+    "semantic_hash": ""
+  },
+  "src/components/ProyectoHero.astro": {
+    "mtime": 1790473505.8713007,
+    "seen": 1790579040.7585845,
+    "ast_hash": "dc4939a5789cd67872b21878903df418",
+    "semantic_hash": ""
+  },
+  "src/components/TemaToggle.astro": {
+    "mtime": 1790473505.8713007,
+    "seen": 1790579040.758588,
+    "ast_hash": "f5a1c7cb4f9991b6efec4ff89716ed29",
+    "semantic_hash": ""
+  },
+  "src/components/VideoCompareSlider.astro": {
+    "mtime": 1790475746.2089236,
+    "seen": 1790579040.7585917,
+    "ast_hash": "9308aaac8cd0b5ca3eab08a76688dee7",
+    "semantic_hash": ""
+  },
+  "src/content.config.ts": {
+    "mtime": 1790473505.8713007,
+    "seen": 1790579040.7585948,
+    "ast_hash": "363e8fb692ab6f02c636ea5c4d39bce6",
+    "semantic_hash": ""
+  },
+  "src/data/categorias.json": {
+    "mtime": 1790473505.877226,
+    "seen": 1790579040.7585976,
+    "ast_hash": "f015ea46964ab4c26ecba995effe7dae",
+    "semantic_hash": ""
+  },
+  "src/data/contacto.json": {
+    "mtime": 1790473505.8779902,
+    "seen": 1790579040.7586007,
+    "ast_hash": "f2bc668ce04bb5a91f99b26c1d5b3e68",
+    "semantic_hash": ""
+  },
+  "src/data/multiguerras.json": {
+    "mtime": 1790473505.8779902,
+    "seen": 1790579040.7586043,
+    "ast_hash": "292ad17b5a1f8422d9ec50d5d38976a3",
+    "semantic_hash": ""
+  },
+  "src/layouts/Layout.astro": {
+    "mtime": 1790473505.8779902,
+    "seen": 1790579040.7586083,
+    "ast_hash": "549ecde64f849ca71701701d33b41f4c",
+    "semantic_hash": ""
+  },
+  "src/pages/index.astro": {
+    "mtime": 1790577201.6332831,
+    "seen": 1790579040.7586112,
+    "ast_hash": "4f654e4c138dbc2f97925ffbf7080a2f",
+    "semantic_hash": ""
+  },
+  "src/pages/proyectos/[id].astro": {
+    "mtime": 1790473505.8786192,
+    "seen": 1790579040.7586138,
+    "ast_hash": "d30e25e9ea86baf7f1ccdde45a599e5e",
+    "semantic_hash": ""
+  },
+  "src/pages/proyectos/[id]/video.astro": {
+    "mtime": 1790473505.8793228,
+    "seen": 1790579040.7586162,
+    "ast_hash": "f81db9bf976f792c28d55ae0a2c411ee",
+    "semantic_hash": ""
+  },
+  "src/pages/proyectos/multiguerras.astro": {
+    "mtime": 1790473505.8793228,
+    "seen": 1790579040.7586186,
+    "ast_hash": "1a95f34f75fcba8620231fef2a17866d",
+    "semantic_hash": ""
+  },
+  "src/pages/sitemap.xml.ts": {
+    "mtime": 1790473505.8793228,
+    "seen": 1790579040.7586215,
+    "ast_hash": "9a6cfa32a30b7c532304ea0474a6a419",
+    "semantic_hash": ""
+  },
+  "src/scripts/card-video.js": {
+    "mtime": 1790477947.885139,
+    "seen": 1790579040.7586238,
+    "ast_hash": "b09625f4c034cf8e19b0bab7642ff865",
+    "semantic_hash": ""
+  },
+  "src/scripts/galaxia-scroll.js": {
+    "mtime": 1790577179.8282716,
+    "seen": 1790579040.7586274,
+    "ast_hash": "0ad81025957b22181b39e19b463cc29f",
+    "semantic_hash": ""
+  },
+  "src/scripts/habilidades-grafo.js": {
+    "mtime": 1790473505.879989,
+    "seen": 1790579040.7586308,
+    "ast_hash": "541b11a57cfc9e4df2ad50abe3d0e2f1",
+    "semantic_hash": ""
+  },
+  "src/scripts/hero.js": {
+    "mtime": 1790577186.1263099,
+    "seen": 1790579040.758634,
+    "ast_hash": "b7ec689b47620b5a33da282801dd666a",
+    "semantic_hash": ""
+  },
+  "src/scripts/hls-media.js": {
+    "mtime": 1790578916.305778,
+    "seen": 1790579040.758636,
+    "ast_hash": "f5ac06008d8a5ffb0e5fcf1675dd654a",
+    "semantic_hash": ""
+  },
+  "src/scripts/multiguerras-nav.js": {
+    "mtime": 1790473505.879989,
+    "seen": 1790579040.758641,
+    "ast_hash": "1ac81fb2b12283f5f598eec7108355a3",
+    "semantic_hash": ""
+  },
+  "src/scripts/multiguerras-timeline.js": {
+    "mtime": 1790473505.879989,
+    "seen": 1790579040.7586434,
+    "ast_hash": "0dbdc5b9f2f528f01957ff5e65514459",
+    "semantic_hash": ""
+  },
+  "src/scripts/preloader.js": {
+    "mtime": 1790473505.879989,
+    "seen": 1790579040.7586462,
+    "ast_hash": "38c1f18e3880ed09672f3885da5f3e1e",
+    "semantic_hash": ""
+  },
+  "src/scripts/proyecto-galeria.js": {
+    "mtime": 1790477947.8853977,
+    "seen": 1790579040.7586489,
+    "ast_hash": "44195400f7e172800abe8607053000b6",
+    "semantic_hash": ""
+  },
+  "src/scripts/proyecto-scroll-hint.js": {
+    "mtime": 1790473505.879989,
+    "seen": 1790579040.7586522,
+    "ast_hash": "6f99dfdfcd43b3c534911af2d4b5385a",
+    "semantic_hash": ""
+  },
+  "src/scripts/proyecto-video.js": {
+    "mtime": 1790475704.8725598,
+    "seen": 1790579040.7586544,
+    "ast_hash": "d2d517f5e459277a6edf5ec45ea39f33",
+    "semantic_hash": ""
+  },
+  "src/scripts/proyectos-ruta.js": {
+    "mtime": 1790473505.8808472,
+    "seen": 1790579040.7586575,
+    "ast_hash": "bfb5415423a1a712e783b538e9e8ea35",
+    "semantic_hash": ""
+  },
+  "src/scripts/smooth-scroll.js": {
+    "mtime": 1790473505.8808472,
+    "seen": 1790579040.7586606,
+    "ast_hash": "a4d2855222793aaeefb440f80384c476",
+    "semantic_hash": ""
+  },
+  "src/scripts/video-compare.js": {
+    "mtime": 1790475741.019889,
+    "seen": 1790579040.7586632,
+    "ast_hash": "412c3c2bb93548db7625bd0e8e7d3689",
+    "semantic_hash": ""
+  },
+  "src/utils/fechas.js": {
+    "mtime": 1790473505.8838472,
+    "seen": 1790579040.7586658,
+    "ast_hash": "3296eb474a231d72bcf18f314a089d09",
+    "semantic_hash": ""
+  },
+  "src/utils/titulo.js": {
+    "mtime": 1790473505.8850443,
+    "seen": 1790579040.758669,
+    "ast_hash": "14f6b1565a7f9a37dcb53799febb6b9e",
+    "semantic_hash": ""
+  }
+}

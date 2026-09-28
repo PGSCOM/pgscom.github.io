@@ -29,7 +29,7 @@ No hay test runner configurado. Para verificar un cambio, `npm run check` y una 
 - `src/components/`, `src/layouts/` — componentes y layouts Astro.
 - `src/scripts/` — JS de interactividad del lado cliente (scroll, vídeo, galería, grafo de skills, ruta de proyectos…).
 - `src/data/`, `src/utils/` — datos estáticos (categorías) y helpers (fechas, etc).
-- `public/` — estáticos servidos tal cual: vídeos (`vid/`, `proyvid/`), iconos, imágenes.
+- `public/` — estáticos servidos tal cual: vídeos (`proyvid/`, `videos/`; `vid/` es solo la galaxia de la portada), iconos, imágenes.
 - `functions/` — Cloudflare Pages Functions.
 
 ## Contenido de proyectos
@@ -53,4 +53,4 @@ Tras modificar código, `graphify update .` mantiene el grafo al día (gratis, s
 - Nombres de variables, comentarios y contenido en **español** (coherente con el resto del repo).
 - Mensajes de commit en español, estilo imperativo/descriptivo corto (ver `git log`).
 - Sin CSS-in-JS ni Tailwind: estilos en `src/styles/` y `<style>` scoped dentro de cada `.astro`.
-- Los vídeos de proyectos van en `public/vid/` o `public/proyvid/`, nunca en `src/assets/` (eso es solo para imágenes que Astro optimiza en build).
+- Los vídeos de proyectos van en `public/proyvid/` o `public/videos/`, nunca en `src/assets/` (eso es solo para imágenes que Astro optimiza en build) ni en `public/vid/`: solo esas dos carpetas se convierten a HLS (`scripts/generate-hls.mjs`), y un mp4 fuera de ellas no se reproduce en iOS desde Cloudflare Pages.
