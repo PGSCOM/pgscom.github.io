@@ -193,17 +193,20 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 
 	</div>
 
-	<!-- ?sincarga, volver atrás, o entrada directa por ancla (p. ej.
+	<!-- ?sincarga / ?noload, volver atrás, o entrada directa por ancla (p. ej.
 	     #proyectos-mapa): se quita el preloader antes del primer paint. Sin
 	     esto, el scrollTo(0,0) y el overflow:hidden del preloader pelean con
-	     el salto nativo al fragmento y la posición final queda indeterminista. -->
+	     el salto nativo al fragmento y la posición final queda indeterminista.
+	     ?sincarga es de un solo uso (se autolimpia); ?noload es persistente
+	     (no hace replaceState, sobrevive a recargas y HMR). -->
 	<script is:inline>
 		(function () {
 			var nav = performance.getEntriesByType('navigation')[0];
 			var sinCarga = new URLSearchParams(location.search).has('sincarga');
+			var noLoad = new URLSearchParams(location.search).has('noload');
 			var esVuelta = nav && nav.type === 'back_forward';
 			var conAncla = location.hash.length > 1;
-			if (!sinCarga && !esVuelta && !conAncla) return;
+			if (!sinCarga && !noLoad && !esVuelta && !conAncla) return;
 			var pre = document.getElementById('preloader');
 			if (pre) pre.remove();
 			document.documentElement.style.overflow = '';
