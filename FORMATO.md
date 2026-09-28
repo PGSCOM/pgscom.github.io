@@ -210,6 +210,18 @@ comprimida con Sharp — ver `scripts/generate-posters.mjs`). Si ya existe un fi
 nombre, o si el `<video>` trae su propio `poster`, no se toca. Para forzar la generación sin
 arrancar el servidor: `npm run posters`.
 
+### MP4 locales: se sirven como HLS
+
+Cloudflare Pages no responde a peticiones de rango (`Range`): con un `.mp4` servido tal cual,
+Chrome no deja saltar a otro punto del vídeo y Safari/iOS ni siquiera lo reproduce. Por eso
+`npm run dev` y `npm run build` convierten cada `.mp4` de `public/proyvid/` y `public/videos/`
+a HLS en `public/hls/` (sin recodificar, ver `scripts/generate-hls.mjs`; esa carpeta no se
+sube a git), y los reproductores del cuerpo y de la galería lo usan en lugar del mp4. Otras
+carpetas (p. ej. `public/vid/`, que es solo de la portada) no se convierten. Tú
+sigues escribiendo `src="/proyvid/....mp4"`: no hay que hacer nada a mano. Los segmentos se
+cortan en los keyframes que ya trae el clip, así que un mp4 largo con keyframes cada pocos
+segundos empieza a verse enseguida; uno con un solo keyframe se descarga entero antes de verse.
+
 ### Dónde colocar los archivos
 
 A diferencia de las imágenes (`![](../../assets/...)`), los vídeos **no** se procesan con el

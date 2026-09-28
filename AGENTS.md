@@ -29,7 +29,7 @@ No hay test runner configurado. Para verificar un cambio, `npm run check` y una 
 - `src/components/`, `src/layouts/` — componentes y layouts Astro.
 - `src/scripts/` — JS de interactividad del lado cliente (scroll, vídeo, galería, grafo de skills, ruta de proyectos…).
 - `src/data/`, `src/utils/` — datos estáticos (categorías) y helpers (fechas, etc).
-- `public/` — estáticos servidos tal cual: vídeos (`vid/`, `proyvid/`), iconos, imágenes.
+- `public/` — estáticos servidos tal cual: vídeos (`proyvid/`, `videos/`; `vid/` es solo la galaxia de la portada), iconos, imágenes.
 - `functions/` — Cloudflare Pages Functions.
 
 ## Contenido de proyectos
@@ -38,7 +38,7 @@ Los ficheros `src/content/proyectos/<slug>.md` tienen un frontmatter extenso (fe
 
 ## graphify
 
-Este repo tiene un grafo de conocimiento en `graphify-out/` (generado sobre `src/`, solo código vía AST — `public/` y el contenido markdown quedaron fuera a propósito). Antes de explorar el código a base de grep, usa:
+Este repo tiene un grafo de conocimiento en `graphify-out/` (solo código vía AST de `src/`, `functions/` y `scripts/`; `public/`, imágenes y contenido markdown quedan fuera a propósito). El alcance se define en [`.graphifyignore`](.graphifyignore). Antes de explorar el código a base de grep, usa:
 
 ```bash
 graphify query "<pregunta>"
@@ -53,4 +53,4 @@ Tras modificar código, `graphify update .` mantiene el grafo al día (gratis, s
 - Nombres de variables, comentarios y contenido en **español** (coherente con el resto del repo).
 - Mensajes de commit en español, estilo imperativo/descriptivo corto (ver `git log`).
 - Sin CSS-in-JS ni Tailwind: estilos en `src/styles/` y `<style>` scoped dentro de cada `.astro`.
-- Los vídeos de proyectos van en `public/vid/` o `public/proyvid/`, nunca en `src/assets/` (eso es solo para imágenes que Astro optimiza en build).
+- Los vídeos de proyectos van en `public/proyvid/` o `public/videos/`, nunca en `src/assets/` (eso es solo para imágenes que Astro optimiza en build) ni en `public/vid/`: solo esas dos carpetas se convierten a HLS (`scripts/generate-hls.mjs`), y un mp4 fuera de ellas no se reproduce en iOS desde Cloudflare Pages.

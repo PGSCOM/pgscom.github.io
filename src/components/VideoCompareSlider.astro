@@ -31,10 +31,10 @@ const {
 
      Ojo: no llevan `autoplay`. preload="none" a propósito: con 3 comparadores
      por página (6 vídeos de 1-4 MB) cargarlos todos de fábrica es justo el
-     motivo por el que tardaban tanto. El script pide la descarga (preload
-     'auto' + load()) con antelación cuando el comparador se acerca a la
-     pantalla, y reproduce cuando ya está a la vista. Sin JS sólo se ve el
-     poster. -->
+     motivo por el que tardaban tanto. El script descarga los dos clips (como
+     blob: Cloudflare Pages no sirve rangos) con antelación cuando el
+     comparador se acerca a la pantalla, y reproduce cuando ya está a la
+     vista. Sin JS sólo se ve el poster. -->
 <div class="vcs" data-vcs>
   <video class="vcs__video vcs__video--after" src={afterSrc} poster={poster} muted loop playsinline preload="none"></video>
   <video class="vcs__video vcs__video--before" src={beforeSrc} poster={poster} muted loop playsinline preload="none"></video>

@@ -159,9 +159,6 @@ const rejillaEntries = rutaEntries
 const experimentos = rutaEntries.filter((p) => p.experimento);
 ---
 
-<!-- Cloudflare Turnstile -->
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
 <Layout>
 	<!-- Familias de display solo para la rotación tipográfica del logo (más
 	     abajo): Montserrat y Chakra Petch ya las carga Layout.astro en toda la web.
@@ -169,6 +166,9 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 	     (.titulo-degradado, ver titulo-proyecto.css), nacido en la ficha de
 	     multiguerras y reutilizable en cualquier tarjeta. -->
 	<link slot="head" rel="preload" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Bungee+Inline&family=Kranky&family=Limelight&family=Meow+Script&family=Modak&family=Monoton&family=Offside&family=Open+Sans:wght@800&family=Pacifico&family=Permanent+Marker&family=Rampart+One&family=Solway:wght@500&family=Tapestry&family=Tiny5&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<!-- El vídeo de scrub se carga como blob (ver galaxia-scroll.js): así su
+	     descarga sigue empezando en el parseo, como cuando era `src` del <video>. -->
+	<link slot="head" rel="preload" href="/vid/empezar_scroll.mp4" as="fetch" crossorigin>
 	<script is:inline>
 		document.documentElement.style.overflow = 'hidden';
 		// Red de seguridad: si el bundle de preloader.js no llega a ejecutarse
@@ -265,8 +265,10 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 	<section class="parte2-wrapper">
 		<div class="parte2">
 			<div class="galaxiamask">
-				<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia" src="/vid/empezar_scroll.mp4" poster="/vid/empezar_scroll.webp" style="opacity: 1;"></video>
-				<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity: 0;"></video>
+				<div class="galaxia-lienzo">
+					<video muted playsinline preload="auto" id="video-galaxia-a" class="video-galaxia" poster="/vid/empezar_scroll.webp" style="opacity: 1;"></video>
+					<video muted playsinline preload="auto" id="video-galaxia-b" class="video-galaxia" style="opacity: 0;"></video>
+				</div>
 			</div>
 			<img id="logoanimar" style="width: auto; height: 32.3%;" src="/assets/animlogo/logo.svg" alt="" />
 		</div>
@@ -332,10 +334,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 		</div>
 
 		<div class="proyectos-header">
-			<h2 class="proyectos-titulo-seccion">Proyectos</h2>
-			<p class="proyectos-subtitulo-seccion">
-				Toda mi trayectoria: filtra por disciplina o cambia de vista para explorarla.
-			</p>
+			<h2 class="proyectos-titulo-seccion">PROYECTOS</h2>
 		</div>
 
 		<div class="proyectos-mapa" id="proyectos-mapa" data-vista="rejilla">
@@ -669,7 +668,8 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 			}
 
 			function changeFont() {
-				if (!fontsLoaded) return;
+				// Fuera de pantalla no se cambia: cada cambio fuerza un layout (hero.js pone la clase)
+				if (!fontsLoaded || animatedText.closest('.hero-oculto')) return;
 				const el = animatedText;
 
 				el.classList.add('fade-out');
@@ -719,6 +719,29 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 		import '../scripts/proyectos-ruta.js';
 		import '../scripts/card-video.js';
 		import '../scripts/pausar-fuera.js';
+	</script>
+
+	<!-- Cloudflare Turnstile: se carga a una pantalla del formulario, no al
+	     abrir la página. Su reto ejecuta JS pesado y en iOS el iframe comparte
+	     hilo con la página, así que competía con la intro y el scroll. -->
+	<script is:inline>
+		(function () {
+			var widget = document.querySelector('.cf-turnstile');
+			if (!widget) return;
+			function cargar() {
+				var s = document.createElement('script');
+				s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+				s.async = true;
+				document.head.appendChild(s);
+			}
+			if (!('IntersectionObserver' in window)) return cargar();
+			var io = new IntersectionObserver(function (entradas) {
+				if (!entradas[0].isIntersecting) return;
+				io.disconnect();
+				cargar();
+			}, { rootMargin: '100% 0px' });
+			io.observe(widget);
+		})();
 	</script>
 
 	<!-- Formulario de contacto -->

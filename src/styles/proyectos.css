@@ -30,7 +30,7 @@
 }
 
 .proyectos-titulo-seccion {
-  font-family: 'Chakra Petch', sans-serif;
+  font-family: 'PGSText', sans-serif;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
   color: white;
