@@ -108,9 +108,9 @@
     "semantic_hash": ""
   },
   "src/scripts/galaxia-scroll.js": {
-    "mtime": 1790577179.8282716,
-    "seen": 1790579040.7586274,
-    "ast_hash": "0ad81025957b22181b39e19b463cc29f",
+    "mtime": 1790589758.040364,
+    "seen": 1790589805.0355172,
+    "ast_hash": "70073e732da930d273a55edab4d77fc9",
     "semantic_hash": ""
   },
   "src/scripts/habilidades-grafo.js": {

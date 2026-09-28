@@ -228,11 +228,18 @@ function init() {
 
 	// ScrollTrigger (sincronizado con Lenis) en vez de un listener propio.
 	// onRefresh cubre la posición inicial al cargar o redimensionar.
+	// El zoom (mitad [0.5, 1] de la timeline) va desde que .parte2 se queda
+	// fija arriba hasta un alto suyo más, medido sobre los elementos y no con
+	// innerHeight: en Safari de iPad 100vh no coincide con innerHeight (barras)
+	// y el zoom arrancaba antes de tiempo en ventanas pequeñas o cuadradas.
+	// Antes del tramo la timeline no anima nada, así que basta con dejarla en 0.
+	const zoomProgress = (self) => onProgress(self.progress > 0 ? 0.5 + 0.5 * self.progress : 0);
 	ScrollTrigger.create({
-		start: 0,
-		end: () => window.innerHeight * 2,
-		onUpdate: (self) => onProgress(self.progress),
-		onRefresh: (self) => onProgress(self.progress),
+		trigger: '.parte2-wrapper',
+		start: 'top top',
+		end: () => `+=${maskEl.parentElement.offsetHeight}`,
+		onUpdate: zoomProgress,
+		onRefresh: zoomProgress,
 	});
 
 	// La playlist en bucle no tiene condición de parada propia: sin esto,
