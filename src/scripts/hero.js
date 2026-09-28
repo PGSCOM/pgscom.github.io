@@ -91,6 +91,8 @@ function initHero() {
     onToggle: self => {
       heroVisible = self.isActive;
       idleTweens.forEach(t => (heroVisible ? t.play() : t.pause()));
+      // Pausa también el degradado del título (ver .hero-oculto en _styles.css)
+      self.trigger.classList.toggle('hero-oculto', !heroVisible);
     },
   });
 

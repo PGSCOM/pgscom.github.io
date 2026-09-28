@@ -12,14 +12,15 @@ gsap.registerPlugin(ScrollTrigger);
 function init() {
 	const logoEl = document.querySelector('#logoanimar');
 	const maskEl = document.querySelector('.galaxiamask');
+	const lienzoEl = document.querySelector('.galaxia-lienzo');
 	const videoA = document.querySelector('#video-galaxia-a');
 	const videoB = document.querySelector('#video-galaxia-b');
 
-	if (!logoEl || !maskEl || !videoA || !videoB) return;
+	if (!logoEl || !maskEl || !lienzoEl || !videoA || !videoB) return;
 
 	gsap.config({ force3D: true });
 
-	// Timeline del zoom: el logo crece y la máscara se abre con él
+	// Timeline del zoom: el logo crece y la ventana del vídeo se abre con él
 	const tl = gsap.timeline({ paused: true });
 	tl.fromTo(logoEl,
 		{ scale: 1, y: 0 },
@@ -27,9 +28,11 @@ function init() {
 			scale: 25, y: 45, duration: 1, ease: 'power2.in',
 			onUpdate() {
 				const p = this.progress();
-				const s = 33 * (1 + 24 * p * p * p) - 8;
-				maskEl.style.webkitMaskSize = `${s}vh ${s}vh`;
-				maskEl.style.maskSize = `${s}vh ${s}vh`;
+				// Lado de la ventana en vh (33 por cada 1x del logo, algo menos
+				// que él); la base de .galaxiamask mide 100vh, de ahí el /100.
+				const k = (33 * (1 + 24 * p * p * p) - 8) / 100;
+				maskEl.style.transform = `scale(${k})`;
+				lienzoEl.style.transform = `scale(${1 / k})`;
 			}
 		}, 1)
 	.to(logoEl, { opacity: 0, duration: 0.001, ease: 'none' }, 1.8);
