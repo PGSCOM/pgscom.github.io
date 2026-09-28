@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { blobUrl } from './hls-media.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,14 +12,15 @@ gsap.registerPlugin(ScrollTrigger);
 function init() {
 	const logoEl = document.querySelector('#logoanimar');
 	const maskEl = document.querySelector('.galaxiamask');
+	const lienzoEl = document.querySelector('.galaxia-lienzo');
 	const videoA = document.querySelector('#video-galaxia-a');
 	const videoB = document.querySelector('#video-galaxia-b');
 
-	if (!logoEl || !maskEl || !videoA || !videoB) return;
+	if (!logoEl || !maskEl || !lienzoEl || !videoA || !videoB) return;
 
 	gsap.config({ force3D: true });
 
-	// Timeline del zoom: el logo crece y la máscara se abre con él
+	// Timeline del zoom: el logo crece y la ventana del vídeo se abre con él
 	const tl = gsap.timeline({ paused: true });
 	tl.fromTo(logoEl,
 		{ scale: 1, y: 0 },
@@ -26,9 +28,11 @@ function init() {
 			scale: 25, y: 45, duration: 1, ease: 'power2.in',
 			onUpdate() {
 				const p = this.progress();
-				const s = 33 * (1 + 24 * p * p * p) - 8;
-				maskEl.style.webkitMaskSize = `${s}vh ${s}vh`;
-				maskEl.style.maskSize = `${s}vh ${s}vh`;
+				// Lado de la ventana en vh (33 por cada 1x del logo, algo menos
+				// que él); la base de .galaxiamask mide 100vh, de ahí el /100.
+				const k = (33 * (1 + 24 * p * p * p) - 8) / 100;
+				maskEl.style.transform = `scale(${k})`;
+				lienzoEl.style.transform = `scale(${1 / k})`;
 			}
 		}, 1)
 	.to(logoEl, { opacity: 0, duration: 0.001, ease: 'none' }, 1.8);
@@ -49,19 +53,24 @@ function init() {
 	let bufferVideo = videoB;
 	let activeReady = false; // metadatos del vídeo de scrub disponibles
 
-	// Scrub: como mucho un seek por frame, y nunca antes de tener metadatos
+	// Scrub: un solo seek en vuelo, y nunca antes de tener metadatos. En iOS
+	// cada seek nuevo cancela el anterior antes de pintarlo, así que lanzar
+	// uno por frame dejaba el vídeo congelado mientras durase el scroll. Con
+	// uno en curso solo se guarda el último objetivo, y se aplica en `seeked`.
 	let pendingScrubT = null;
 	let scrubRafId    = 0;
 
 	function applyScrub() {
 		scrubRafId = 0;
-		if (pendingScrubT == null || !activeReady) return;
+		if (pendingScrubT == null || !activeReady || activeVideo.seeking) return;
 		const t = pendingScrubT;
 		pendingScrubT = null;
 		try {
 			if (Math.abs((activeVideo.currentTime || 0) - t) < 0.02) return;
-			if (typeof activeVideo.fastSeek === 'function') activeVideo.fastSeek(t);
-			else activeVideo.currentTime = t;
+			// Seek exacto, no fastSeek(): todos los frames de este vídeo son
+			// keyframes, así que cuesta lo mismo, y el fastSeek de Safari puede
+			// quedarse en cualquier punto entre el frame actual y el pedido.
+			activeVideo.currentTime = t;
 		} catch {}
 	}
 
@@ -69,6 +78,11 @@ function init() {
 		pendingScrubT = t;
 		if (!scrubRafId) scrubRafId = requestAnimationFrame(applyScrub);
 	}
+
+	// El scrub siempre va sobre videoA: activeVideo no cambia hasta startAfterZoom().
+	videoA.addEventListener('seeked', () => {
+		if (pendingScrubT != null) scheduleScrub(pendingScrubT);
+	});
 
 	// Resuelve con metadatos o con error: una carga fallida no cuelga la cadena
 	function waitForMetadata(el) {
@@ -82,10 +96,9 @@ function init() {
 	async function setVideoSource(el, src, startTime = 0, autoplay = false) {
 		try {
 			el.loop = false;
-			// Si el <video> ya trae este `src` desde el HTML (caso del vídeo de scrub,
-			// que arranca a descargar en el parseo), no reiniciar la descarga en curso.
-			const yaTieneSrc = el.src === location.origin + src || el.src === src;
-			if (!yaTieneSrc) { el.src = src; el.load(); }
+			// Blob y no la URL directa: el scrub necesita seek (ver blobUrl()).
+			const url = await blobUrl(src);
+			if (el.src !== url) { el.src = url; el.load(); }
 			await waitForMetadata(el);
 
 			if (autoplay) {
@@ -113,6 +126,10 @@ function init() {
 
 	function attachEndedHandler() {
 		activeVideo.onended = async () => {
+			// Si el siguiente sigue descargando (el blob llega entero o no llega),
+			// se espera en el último frame: cambiar ya mostraría el búfer con el
+			// vídeo anterior, y al llegar el nuevo se quedaría en pausa (cebado).
+			await nextReady;
 			await swapToPreloaded();
 			playlistIndex = (playlistIndex + 1) % PLAYLIST.length;
 			nextReady = prepareNext(PLAYLIST[playlistIndex]);
@@ -166,8 +183,8 @@ function init() {
 		activeVideo.addEventListener('error', done, { once: true });
 	}
 
-	// El vídeo de scrub se carga en el elemento activo (ya trae `src` desde el
-	// HTML, así que la descarga empieza en el parseo); si llega tarde, aplica
+	// El vídeo de scrub se carga en el elemento activo (un <link rel="preload">
+	// en index.astro arranca su descarga en el parseo); si llega tarde, aplica
 	// el seek que hubiera quedado pendiente de scrolls anteriores. El vídeo de
 	// intro no hace falta hasta pasado el zoom, así que no compite por ancho
 	// de banda con el de scrub: se precarga después.
@@ -211,11 +228,18 @@ function init() {
 
 	// ScrollTrigger (sincronizado con Lenis) en vez de un listener propio.
 	// onRefresh cubre la posición inicial al cargar o redimensionar.
+	// El zoom (mitad [0.5, 1] de la timeline) va desde que .parte2 se queda
+	// fija arriba hasta un alto suyo más, medido sobre los elementos y no con
+	// innerHeight: en Safari de iPad 100vh no coincide con innerHeight (barras)
+	// y el zoom arrancaba antes de tiempo en ventanas pequeñas o cuadradas.
+	// Antes del tramo la timeline no anima nada, así que basta con dejarla en 0.
+	const zoomProgress = (self) => onProgress(self.progress > 0 ? 0.5 + 0.5 * self.progress : 0);
 	ScrollTrigger.create({
-		start: 0,
-		end: () => window.innerHeight * 2,
-		onUpdate: (self) => onProgress(self.progress),
-		onRefresh: (self) => onProgress(self.progress),
+		trigger: '.parte2-wrapper',
+		start: 'top top',
+		end: () => `+=${maskEl.parentElement.offsetHeight}`,
+		onUpdate: zoomProgress,
+		onRefresh: zoomProgress,
 	});
 
 	// La playlist en bucle no tiene condición de parada propia: sin esto,

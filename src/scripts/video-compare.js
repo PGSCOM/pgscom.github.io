@@ -30,6 +30,8 @@
 // recomprimir, el primer play en datos móviles puede tardar. El poster tapa
 // la espera. Subir cuando moleste: recodificar esos dos a 1920x1080.
 
+import { blobUrl } from './hls-media.js';
+
 /** Limpiezas pendientes, ejecutadas al navegar con View Transitions. */
 const teardowns = new Set();
 
@@ -119,26 +121,30 @@ function setupSlider(root) {
 	handle.addEventListener('keydown', onKeyDown);
 	disposers.push(() => handle.removeEventListener('keydown', onKeyDown));
 
-	// --- Precarga: empieza a bufferizar bastante antes de entrar en pantalla ---
+	// --- Precarga: empieza a descargar bastante antes de entrar en pantalla ---
 	// Con preload="none" de fábrica (ver VideoCompareSlider.astro) nada
-	// descarga hasta que lo pedimos aquí explícitamente.
+	// descarga hasta que lo pedimos aquí explícitamente. Como blob y no por la
+	// URL directa: Cloudflare Pages no sirve rangos, y sin ellos Chrome no deja
+	// hacer seek (la corrección de deriva de abajo) y Safari/iOS no reproduce
+	// (ver blobUrl() en hls-media.js).
 	let prefetched = false;
+	let listos = false;
+	let visible = false;
 	const prefetch = () => {
 		if (prefetched) return;
 		prefetched = true;
-		for (const v of videos) {
-			v.preload = 'auto';
-			v.load();
-		}
+		Promise.all(videos.map((v) => blobUrl(v.src).then((url) => { v.src = url; })))
+			.then(() => { listos = true; if (visible) playAll(); });
 	};
 
 	// --- Reproducción: sólo cuando el comparador está en pantalla ---
-	// `play()` ya fuerza la descarga si hace falta (los dos son muted +
-	// playsinline, así que iOS lo permite sin gesto del usuario), así que no
-	// hay que esperar a ningún evento de carga antes de llamarlo: esperar a
-	// `loadeddata` con preload="metadata" podía no llegar nunca en iOS y dejar
-	// el comparador parado para siempre.
+	// Solo espera a que los blobs estén listos, no a ningún evento de carga
+	// del <video> (los dos son muted + playsinline, así que iOS permite el
+	// play() sin gesto del usuario): esperar a `loadeddata` con
+	// preload="metadata" podía no llegar nunca en iOS y dejar el comparador
+	// parado para siempre.
 	const playAll = () => {
+		if (!listos) return; // prefetch() lo llama al terminar si sigue a la vista
 		for (const v of videos) {
 			const p = v.play();
 			if (p) p.catch(() => {});
@@ -155,13 +161,18 @@ function setupSlider(root) {
 		disposers.push(() => ioPrefetch.disconnect());
 
 		const ioPlay = new IntersectionObserver(
-			(entries) => { for (const entry of entries) (entry.isIntersecting ? playAll : pauseAll)(); },
+			(entries) => {
+				for (const entry of entries) {
+					visible = entry.isIntersecting;
+					(visible ? playAll : pauseAll)();
+				}
+			},
 		);
 		ioPlay.observe(root);
 		disposers.push(() => ioPlay.disconnect());
 	} else {
+		visible = true;
 		prefetch();
-		playAll();
 	}
 
 	// --- Corrección de deriva ---

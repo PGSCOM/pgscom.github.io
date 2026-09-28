@@ -1,4 +1,4 @@
-import { esHLS, montarFuente } from './hls-media.js';
+import { aHLS, esHLS, montarFuente } from './hls-media.js';
 
 // Atributos del <video> original que se traspasan al reproductor. `controls`
 // no se copia: el skin de Video.js aporta los suyos. `playsinline` tampoco:
@@ -62,9 +62,11 @@ function derivarPoster(src) {
 /** Reemplaza un `<video>` nativo por el reproductor Video.js (player > skin > media). */
 function envolver(video) {
 	try {
-		const src = resolverFuente(video);
-		if (!src) return;
+		const original = resolverFuente(video);
+		if (!original) return;
 
+		// Un mp4 local se reproduce desde su HLS generado (ver aHLS()).
+		const src = aHLS(original);
 		const esHls = esHLS(src);
 		const media = document.createElement(esHls ? 'hlsjs-video' : 'video');
 		media.setAttribute('slot', 'media');
@@ -75,7 +77,7 @@ function envolver(video) {
 		media.setAttribute('playsinline', '');
 		if (esHls) media.config = CONFIG_HLS;
 		if (!video.hasAttribute('poster')) {
-			const poster = derivarPoster(src);
+			const poster = derivarPoster(original);
 			if (poster) video.setAttribute('poster', poster);
 		}
 		for (const attr of ATRIBUTOS_A_COPIAR) {
@@ -127,7 +129,7 @@ if (videos.length > 0) {
 		import('@videojs/html/video/minimal-skin').catch(() => null),
 	];
 	// El motor HLS es la parte más pesada: solo se descarga si hay alguna playlist HLS.
-	if (videos.some((v) => esHLS(resolverFuente(v) ?? ''))) {
+	if (videos.some((v) => esHLS(aHLS(resolverFuente(v) ?? '')))) {
 		cargas.push(import('@videojs/html/media/hlsjs-video').catch(() => null));
 	}
 	Promise.all(cargas).then(() => {

@@ -1,6 +1,6 @@
 // Los <video> usan `data-src` (no `src`) para no descargar nada hasta el primer play.
 
-import { montarFuente } from './hls-media.js';
+import { desmontarFuente, montarFuente } from './hls-media.js';
 
 // Segundos que la tarjeta muestra el póster antes de arrancar el vídeo,
 // ajustable por proyecto con `videoDelay` en su frontmatter (-> data-delay).
@@ -15,10 +15,7 @@ function reproducir(video) {
 function volverAlPoster(video) {
 	video.pause();
 	video.parentElement.classList.remove('is-playing');
-	if (!video.dataset.montado) return;
-	video.removeAttribute('src');
-	video.load();
-	delete video.dataset.montado;
+	desmontarFuente(video);
 }
 
 // El hover también arranca el vídeo al instante en rejilla/cronología: sirve

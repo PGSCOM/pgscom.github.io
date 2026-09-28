@@ -370,6 +370,14 @@
     padding-right: 0.05em;
 }
 
+/* Con el hero fuera de pantalla el degradado se para: background-position no
+   lo anima el compositor, así que repinta el texto en cada frame. !important
+   porque hero.js pone la animación en línea. */
+.hero-oculto #letter-p,
+.hero-oculto #letters-gscom {
+    animation-play-state: paused !important;
+}
+
 @keyframes pgscom-intro-scroll {
     0% { background-position: 0% 50%; }
     100% { background-position: 50% 50%; }
@@ -432,25 +440,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Unidades cq* para que el lienzo del vídeo mida exactamente lo que .parte2 */
+    container-type: size;
 }
 
+/* Ventana cuadrada (lado = alto de .parte2) que recorta el vídeo y crece con
+   scale(); el lienzo lleva la escala inversa, así el vídeo no cambia de tamaño
+   (galaxia-scroll.js). Solo transforms: el compositor lo mueve sin repintar.
+   Animar mask-size repintaba la máscara a pantalla completa en cada frame. */
 .galaxiamask {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    top: 0;
+    left: calc(50% - 50cqh);
+    width: 100cqh;
+    height: 100cqh;
     overflow: hidden;
     pointer-events: none;
+    transform: scale(0.38);
+    will-change: transform;
+}
 
-    /* Máscara cuadrada */
-    -webkit-mask-image: linear-gradient(#000, #000);
-    mask-image: linear-gradient(#000, #000);
-    -webkit-mask-size: 38vh 38vh;
-    mask-size: 38vh 38vh;
-    -webkit-mask-position: center;
-    mask-position: center;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
+.galaxia-lienzo {
+    position: absolute;
+    top: 0;
+    left: calc(50cqh - 50cqw);
+    width: 100cqw;
+    height: 100cqh;
+    transform: scale(calc(1 / 0.38));
+    will-change: transform;
 }
 
 .video-galaxia {
