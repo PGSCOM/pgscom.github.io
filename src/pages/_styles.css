@@ -460,14 +460,15 @@
     will-change: transform;
 }
 
-/* 2px de sangrado por lado, mismo centro: scale(k)·scale(1/k) no da 1 exacto y
-   el borde subpíxel dejaba ver una línea del fondo claro de .parte2-wrapper. */
+/* 10px de sangrado por lado, mismo centro: el lienzo se ajusta a píxel en el
+   espacio de .galaxiamask, y ese píxel mide k px en pantalla (k llega a ~8,2
+   en galaxia-scroll.js). Con menos, asoma una línea del fondo de .parte2-wrapper. */
 .galaxia-lienzo {
     position: absolute;
-    top: -2px;
-    left: calc(50cqh - 50cqw - 2px);
-    width: calc(100cqw + 4px);
-    height: calc(100cqh + 4px);
+    top: -10px;
+    left: calc(50cqh - 50cqw - 10px);
+    width: calc(100cqw + 20px);
+    height: calc(100cqh + 20px);
     transform: scale(calc(1 / 0.38));
     will-change: transform;
 }
