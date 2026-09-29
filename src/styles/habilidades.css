@@ -422,8 +422,14 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
 
 /* Lo que domino (progress 100): chip lleno del color de su categoría */
 .hab-nodo:not(.hab-nodo--obra) .hab-nodo-placa {
-  border-color: color-mix(in srgb, var(--cat-color) 62%, rgb(255 255 255 / 0.22));
-  background-color: color-mix(in srgb, var(--cat-color) 16%, rgb(7 11 24 / 0.9));
+  border-color: color-mix(in srgb, var(--cat-color) 82%, rgb(255 255 255 / 0.3));
+  background-color: color-mix(in srgb, var(--cat-color) 26%, rgb(7 11 24 / 0.9));
+}
+
+button.hab-nodo:not(.hab-nodo--obra):hover .hab-nodo-placa,
+button.hab-nodo:not(.hab-nodo--obra)[aria-expanded='true'] .hab-nodo-placa {
+  border-color: color-mix(in srgb, var(--cat-color) 90%, #fff);
+  background-color: color-mix(in srgb, var(--cat-color) 34%, rgb(7 11 24 / 0.94));
 }
 
 .hab-nodo:not(.hab-nodo--obra) .hab-nodo-label {
