@@ -3,16 +3,17 @@ import lenis from './smooth-scroll.js';
 
 // ── Constelaciones de aptitudes sobre el título "Proyectos" ───────────────
 // Cada habilidad es una estrella (un punto con destellos) con su chip de
-// icono y nombre pegado al lado, y cada categoría una constelación: su
-// propio sector del cielo alrededor del logo, sus estrellas unidas por el
-// árbol de líneas más corto que las conecta con el logo (como en una carta
-// celeste, pero todas colgando del núcleo) y su nombre cerca. Un pulso de
-// luz sale del logo y recorre cada árbol hacia fuera, tramo a tramo. Cuanto
-// más progreso tiene una habilidad, más cerca del logo cae; la de más
-// progreso de cada categoría es su estrella alfa, la más brillante.
+// icono y nombre pegado al lado, y cada categoría una constelación. Cruza el
+// cielo un horizonte que pasa por el logo: sobre él van las habilidades que
+// domino (progress 100); las que estoy aprendiendo cuelgan por encima o por
+// debajo, más lejos cuanto menos llevo. Cada categoría tiene su columna, sus
+// estrellas unidas por el árbol de líneas más corto que parte de su alfa (la
+// de más progreso, la más brillante), como en una carta celeste, y su nombre
+// cerca. Un pulso de luz sale de cada alfa y recorre su árbol hacia fuera,
+// tramo a tramo.
 //
 // El reparto es una búsqueda con semilla fija (el cielo sale igual en cada
-// visita): cada estrella prueba posiciones al azar dentro de su sector y se
+// visita): cada estrella prueba posiciones al azar dentro de su columna y se
 // queda con la que cae a buena distancia de su constelación sin pisar
 // ninguna otra etiqueta ni el logo. Si no cabe, el cielo crece y se vuelve a
 // repartir, así que no hay solapes haya 5 habilidades o 60. Un vaivén de
@@ -76,15 +77,11 @@ function initGrafo() {
 	const CORTE = 9;
 	// Lo que tarda el pulso de luz en recorrer cada tramo (ver .hab-pulso)
 	const PASO = 0.7;
-	// El logo hace de nodo más en los árboles de líneas: índice NUCLEO,
-	// siempre en el centro. radioLogo: donde nace la línea, en su borde.
-	const NUCLEO = nodos.length;
-	let radioLogo = 0;
 
-	// Cuánto domino cada habilidad (0–100): marca a qué distancia del logo va
+	// Cuánto domino cada habilidad (0–100): marca a qué distancia de la línea va
 	const progreso = nodos.map((n) => Number(n.dataset.progreso ?? 100));
-	// Orden de colocación: primero las más dominadas (se quedan el sitio junto
-	// al núcleo), a igualdad, el de `orden` con que llegan los nodos.
+	// Orden de colocación: primero las más dominadas (se quedan el sitio en la
+	// línea), a igualdad, el de `orden` con que llegan los nodos.
 	const porProgreso = [...nodos.keys()].sort((a, b) => progreso[b] - progreso[a] || a - b);
 
 	// ── Constelaciones: una por categoría, en el orden en que aparecen. Su
@@ -137,6 +134,7 @@ function initGrafo() {
 	let trazos = [];
 	// Hueco de cada etiqueta en la máscara de las líneas (ver repartir())
 	let huecos = [];
+	let capasGuia = [];
 	const t0 = performance.now();
 	let listo = false;
 
@@ -147,7 +145,6 @@ function initGrafo() {
 	let animando = null;
 
 	const pos = nodos.map(() => ({ x: 0, y: 0 }));
-	pos[NUCLEO] = { x: 0, y: 0 };
 	// gsap.set crea un tween por llamada: en dibujar(), 35 por frame. Los
 	// quickSetter escriben la misma caché de transform sin crear nada.
 	const mover = nodos.map((n) => ({ x: gsap.quickSetter(n, 'x', 'px'), y: gsap.quickSetter(n, 'y', 'px') }));
@@ -178,11 +175,10 @@ function initGrafo() {
 		trazos.forEach(({ a, b, lineas }) => {
 			const dx = pos[b].x - pos[a].x, dy = pos[b].y - pos[a].y;
 			const d = Math.hypot(dx, dy) || 1;
-			const ka = Math.min((a === NUCLEO ? radioLogo : CORTE) / d, 0.5);
-			const kb = Math.min(CORTE / d, 0.5);
+			const k = Math.min(CORTE / d, 0.5);
 			for (const l of lineas) {
-				l.setAttribute('x1', cx + pos[a].x + dx * ka); l.setAttribute('y1', cy + pos[a].y + dy * ka);
-				l.setAttribute('x2', cx + pos[b].x - dx * kb); l.setAttribute('y2', cy + pos[b].y - dy * kb);
+				l.setAttribute('x1', cx + pos[a].x + dx * k); l.setAttribute('y1', cy + pos[a].y + dy * k);
+				l.setAttribute('x2', cx + pos[b].x - dx * k); l.setAttribute('y2', cy + pos[b].y - dy * k);
 			}
 		});
 	}
@@ -232,34 +228,36 @@ function initGrafo() {
 		});
 		const n = nodos.length;
 		const logoR = logo.offsetWidth / 2 + 6;
-		radioLogo = logo.offsetWidth / 2 + 3;
 		const zonaLogo = { l: -logoR, r: logoR, t: -logoR, b: logoR };
 		const rMin = logoR + 34;
 		const topeX = w / 2 - 4 - AMP;
-
 		// Tamaño del cielo: el área de todas las cajas con holgura (esto es un
-		// cielo, no un puzle apretado), estirado en horizontal hasta el ancho.
-		// En pantallas estrechas no puede ensancharse, así que cada píxel de
-		// holgura se paga en scroll: ahí va más apretado.
+		// cielo, no un puzle apretado), repartida a lo ancho: rMax es su media
+		// altura. En pantallas estrechas no puede ensancharse, así que cada píxel
+		// de holgura se paga en scroll: ahí va más apretado.
 		const holgura = w < 1000 ? 1.6 : 2.2;
 		const area = med.reduce((s, m) => s + (m.ancho + AIRE) * (m.alto + AIRE), 0) * holgura;
+		let rMax = Math.max(rMin + 120, (1.4 * area) / (4 * topeX));
+		// Estiramiento horizontal con que se busca sitio a los nombres
 		const sx = Math.min(2.4, Math.max(0.55, topeX / Math.sqrt(area / Math.PI + rMin * rMin)));
-		let rMax = Math.sqrt(area / (Math.PI * sx) + rMin * rMin);
 
-		// Sector de cada constelación, proporcional a su número de estrellas;
-		// la primera, centrada arriba.
-		let a = -Math.PI / 2 - (Math.PI * grupos[0].miembros.length) / n;
-		grupos.forEach((g) => {
-			const span = (Math.PI * 2 * g.miembros.length) / n;
-			g.a0 = a; g.a1 = a + span; a += span;
+		// Columna de cada constelación: como poco tan ancha como lo que domina
+		// puesto en fila sobre la línea, y el resto del ancho repartido por
+		// número de estrellas.
+		const enFila = grupos.map((g) => g.miembros.reduce((s, i) => s + (progreso[i] >= 100 ? med[i].ancho + AIRE : 0), 0));
+		const sobra = Math.max(0, 2 * topeX - enFila.reduce((s, v) => s + v, 0));
+		let xCol = -topeX;
+		grupos.forEach((g, gi) => {
+			g.x0 = xCol; xCol += enFila[gi] + (sobra * g.miembros.length) / n; g.x1 = xCol;
 		});
 
-		// Radio al que aspira cada estrella: la de más progreso junto al logo, la
-		// de menos en el borde del cielo. Con raíz: lo proporcional a lo que le
-		// falta es el área que queda por dentro de su radio, no el radio; si no,
-		// las muchas que rondan el 80–100% se amontonarían junto al logo.
-		const pMax = Math.max(...progreso), pMin = Math.min(...progreso);
-		const lejania = (i) => (pMax === pMin ? 0.2 : Math.sqrt((pMax - progreso[i]) / (pMax - pMin)));
+		// Distancia a la línea a la que aspira lo que estoy aprendiendo (0 lo
+		// más cerca, 1 lo más lejos). Con raíz: lo proporcional a lo que le
+		// falta es el área que queda entre ella y la línea, no la distancia; si
+		// no, las muchas que rondan el 75–90% se amontonarían junto a la línea.
+		const pObra = progreso.filter((p) => p < 100);
+		const oMax = Math.max(...pObra), oMin = Math.min(...pObra);
+		const lejania = (i) => (progreso[i] >= 100 ? 0 : oMax === oMin ? 0.5 : Math.sqrt((oMax - progreso[i]) / (oMax - oMin)));
 
 		let puestos;
 		for (let intento = 0; ; intento++) {
@@ -267,35 +265,41 @@ function initGrafo() {
 			puestos = new Array(n);
 			const cajas = [zonaLogo];
 			// Líneas ya trazadas (aprox.: cada estrella a su vecina más cercana
-			// de la constelación, o al logo), para no tachar etiquetas con ellas.
+			// de la constelación), para no tachar etiquetas con ellas.
 			const lineas = [];
-			const nucleo = { x: 0, y: 0, k: zonaLogo };
 			const propiosDe = new Map(grupos.map((g) => [g, []]));
 			let cabe = true;
 			for (const i of porProgreso) {
 				const g = grupoDe[i], propios = propiosDe.get(g);
-				const rObj = rMin + (rMax - rMin) * (0.05 + 0.9 * lejania(i));
+				// Franja de distancias a la línea a la que puede ir la estrella. En
+				// pantallas estrechas lo que domino no cabe en una sola fila sobre
+				// la línea: con cada intento puede separarse un poco más.
+				const [lo, hi] = progreso[i] >= 100 ? [0, 3 + 30 * intento] : [90, rMax];
+				const yObj = lo + (hi - lo) * (0.05 + 0.9 * lejania(i));
 				// La alfa (la primera de su constelación en colocarse) apunta al
-				// centro de su sector; las demás crecen desde ella hacia fuera.
-				const aMed = (g.a0 + g.a1) / 2;
-				const objetivo = { x: Math.cos(aMed) * rObj * sx, y: Math.sin(aMed) * rObj };
+				// centro de su columna, arriba o abajo según la columna; las demás
+				// crecen desde ella.
+				const objetivo = { x: (g.x0 + g.x1) / 2, y: (grupos.indexOf(g) % 2 ? 1 : -1) * yObj };
 				let mejor = null;
 				for (let c = 0; c < 160; c++) {
-					const ang = g.a0 + (g.a1 - g.a0) * (0.05 + 0.9 * rnd());
-					const r = rMin + (rMax - rMin) * rnd();
-					const x0 = Math.cos(ang) * r * sx, y = Math.sin(ang) * r;
+					// Lo que domino, por toda la línea (dos de una misma categoría no
+					// caben en el ancho de su columna); la puntuación ya lo acerca a
+					// ella.
+					const [c0, c1] = progreso[i] >= 100 ? [-topeX, topeX] : [g.x0, g.x1];
+					const x0 = c0 + (c1 - c0) * (0.05 + 0.9 * rnd());
+					const y = (rnd() < 0.5 ? -1 : 1) * (lo + (hi - lo) * rnd());
 					for (const izq of [false, true]) {
 						// Si el chip se sale por un lado, la estrella se desliza hacia
 						// dentro en vez de descartar el sitio: si no, en pantallas
-						// estrechas los sectores que miran a los lados solo tendrían
-						// hueco junto al logo y el cielo crecería sin llegar a caber.
+						// estrechas las columnas de los bordes casi no tendrían hueco
+						// y el cielo crecería sin llegar a caber.
 						const k0 = caja(med[i], x0, y, izq);
 						const x = x0 + Math.max(0, -topeX - k0.l) - Math.max(0, k0.r - topeX);
 						const k = x === x0 ? k0 : caja(med[i], x, y, izq);
 						if (k.l < -topeX || k.r > topeX) continue; // chip más ancho que el cielo
 						if (cajas.some((o) => pisa(k, o, AIRE))) continue;
 						let puntos;
-						let padre = nucleo;
+						let padre = null;
 						if (propios.length) {
 							let dmin = Infinity, gx = 0, gy = 0;
 							for (const p of propios) {
@@ -303,12 +307,11 @@ function initGrafo() {
 								if (d < dmin) { dmin = d; padre = p; }
 								gx += p.x; gy += p.y;
 							}
-							if (Math.hypot(x, y) < dmin) padre = nucleo;
 							if (dmin < DMIN) continue;
 							gx /= propios.length; gy /= propios.length;
-							// El radio manda: una estrella poco dominada se va lejos
-							// aunque la línea hasta su vecina quede larga.
-							puntos = Math.abs(dmin - IDEAL) + 0.2 * Math.hypot(x - gx, y - gy) + 1.5 * Math.abs(Math.hypot(x / sx, y) - rObj);
+							// La distancia a la línea manda: una estrella poco dominada
+							// se va lejos aunque la línea hasta su vecina quede larga.
+							puntos = Math.abs(dmin - IDEAL) + 0.2 * Math.hypot(x - gx, y - gy) + 3 * Math.abs(Math.abs(y) - yObj);
 						} else {
 							puntos = Math.hypot(x - objetivo.x, y - objetivo.y);
 						}
@@ -317,7 +320,7 @@ function initGrafo() {
 						// Cada etiqueta tachada por una línea (la suya nueva sobre
 						// otras, o las ya trazadas sobre la suya) cuesta mucho.
 						const yo = { x, y };
-						for (const o of cajas) if (o !== padre.k && corta(padre, yo, o, 6)) p += 250;
+						if (padre) for (const o of cajas) if (o !== padre.k && corta(padre, yo, o, 6)) p += 250;
 						for (const [A, B] of lineas) if (corta(A, B, k, 6)) p += 250;
 						if (!mejor || p < mejor.p) mejor = { x, y, izq, k, p, padre };
 					}
@@ -326,11 +329,11 @@ function initGrafo() {
 				puestos[i] = mejor;
 				propios.push(mejor);
 				cajas.push(mejor.k);
-				lineas.push([mejor.padre, mejor]);
+				if (mejor.padre) lineas.push([mejor.padre, mejor]);
 			}
 			if (cabe) break;
 			rMax *= 1.12;
-			// ponytail: tras 40 crecimientos (×90 de radio) algo va muy mal;
+			// ponytail: tras 40 crecimientos (×90 de alto) algo va muy mal;
 			// antes que un bucle infinito, se aceptan solapes.
 			if (intento > 40) {
 				puestos = Array.from(puestos, (p) => p ?? { x: 0, y: rMax, izq: false, k: caja(med[0], 0, rMax, false) });
@@ -339,19 +342,22 @@ function initGrafo() {
 		}
 
 		// Líneas: por cada constelación, el árbol más corto que une sus
-		// estrellas con el logo (Prim desde el núcleo). Cada tramo va de padre
-		// a hijo y guarda su profundidad, que marca cuándo pasa el pulso.
-		const P = (j) => (j === NUCLEO ? pos[NUCLEO] : puestos[j]);
+		// estrellas partiendo de su alfa (Prim). Cada tramo va de padre a hijo y
+		// guarda su profundidad, que marca cuándo pasa el pulso.
+		const P = (j) => puestos[j];
 		const aristas = [];
 		for (const g of grupos) {
-			const dentro = [NUCLEO];
-			const fuera = [...g.miembros];
-			const prof = { [NUCLEO]: -1 };
+			const raiz = porProgreso.find((i) => grupoDe[i] === g);
+			const dentro = [raiz];
+			const fuera = g.miembros.filter((i) => i !== raiz);
+			const prof = { [raiz]: -1 };
 			while (fuera.length) {
 				let mejor = null;
 				for (const p of dentro) {
 					for (const [k, q] of fuera.entries()) {
-						const d = Math.hypot(P(p).x - P(q).x, P(p).y - P(q).y);
+						// Un tramo que tacharía una etiqueta ajena, solo si no hay otro
+						const d = Math.hypot(P(p).x - P(q).x, P(p).y - P(q).y)
+							+ (puestos.some((o, j) => j !== p && j !== q && corta(P(p), P(q), o.k, 4)) ? 1e4 : 0);
 						if (!mejor || d < mejor.d) mejor = { p, q, k, d };
 					}
 				}
@@ -415,11 +421,20 @@ function initGrafo() {
 		const capa = crear('g', { mask: 'url(#hab-mascara)' });
 		svg.replaceChildren(crear('defs', {}), capa);
 		svg.firstChild.append(mascara);
+		// El horizonte (en coordenadas del cielo: maquetar() lo lleva al centro)
+		// y su rótulo, fuera de la máscara, con su propio hueco en ella.
+		const guias = crear('g', {}), huecosGuias = crear('g', {}), rotulos = crear('g', {});
+		capa.append(guias);
+		mascara.append(huecosGuias);
+		svg.append(rotulos);
+		capasGuia = [guias, huecosGuias, rotulos];
+		guias.append(crear('line', { class: 'hab-guia', x1: -topeX, x2: topeX, y1: 0, y2: 0 }));
+		const cruzaGuia = (k, m = 8) => k.t < m && k.b > -m;
 		// Cada tramo: su línea y, encima, el pulso que la recorre (pathLength 1:
 		// el guion del pulso mide lo mismo en proporción, sea el tramo largo o
-		// corto). Los troncos que salen del logo llevan clase propia.
+		// corto).
 		trazos = aristas.map(([a, b, prof]) => {
-			const el = crear('g', { class: a === NUCLEO ? 'hab-arista hab-arista--tronco' : 'hab-arista' });
+			const el = crear('g', { class: 'hab-arista' });
 			el.style.setProperty('--cat-color', nodos[b].style.getPropertyValue('--cat-color'));
 			el.style.setProperty('--retraso', `${prof * PASO}s`);
 			const lineas = [crear('line', { class: 'hab-trazo' }), crear('line', { class: 'hab-pulso', pathLength: 1 })];
@@ -448,7 +463,7 @@ function initGrafo() {
 					if (k.l < -topeX || k.r > topeX) continue;
 					// Doble hueco: el nombre flota en su constelación, no pegado a una estrella
 					// y ninguna línea rozándolo: a menos de 12px parece tacharlo
-					if (!ocupadas.some((o) => pisa(k, o, 2 * HUECO)) && !cruzaLinea(k, 12)) sitio = { x, y, k };
+					if (!ocupadas.some((o) => pisa(k, o, 2 * HUECO)) && !cruzaLinea(k, 12) && !cruzaGuia(k)) sitio = { x, y, k };
 				}
 			}
 			g.nombre.hidden = !sitio;
@@ -456,14 +471,30 @@ function initGrafo() {
 			ocupadas.push(sitio.k);
 			gsap.set(g.nombre, { x: sitio.x, y: sitio.y });
 		}
+
+		// Rótulo del horizonte: sobre la propia línea (que se corta a su paso),
+		// en el primer hueco libre desde la izquierda.
+		const rotulo = crear('text', { class: 'hab-guia-texto', 'text-anchor': 'middle', 'dominant-baseline': 'central' });
+		rotulo.textContent = 'Domino';
+		rotulos.append(rotulo);
+		const hw = rotulo.getComputedTextLength() / 2 + 6, hh = 8;
+		const libre = Array.from({ length: 60 }, (_, s) => -topeX + 40 + s * 20)
+			.map((x) => ({ x, k: { l: x - hw, r: x + hw, t: -hh, b: hh } }))
+			.find(({ k }) => k.r <= topeX && !ocupadas.some((o) => pisa(k, o, 6)) && !cruzaLinea(k, 4));
+		if (libre) {
+			rotulo.setAttribute('x', libre.x);
+			rotulo.setAttribute('y', 0);
+			huecosGuias.append(crear('rect', { x: libre.k.l, y: -hh, width: 2 * hw, height: 2 * hh, fill: '#000' }));
+			ocupadas.push(libre.k);
+		} else rotulo.remove();
+
 		let arriba = 0, abajo = 0;
 		for (const o of ocupadas) { arriba = Math.max(arriba, -o.t); abajo = Math.max(abajo, o.b); }
 		return { arriba, abajo, altoNodo: Math.max(...med.map((m) => m.alto)) };
 	}
 
 	// Nebulosa de cada constelación: la silueta de sus estrellas, chips y
-	// líneas (sin el tronco al logo, para que los colores no se mezclen en el
-	// núcleo) difuminada en una bruma de su color, con grano para que el
+	// líneas difuminada en una bruma de su color, con grano para que el
 	// degradado no se escalone. Un <svg> por constelación, pintado una vez
 	// por reparto: su opacidad (reposo, resaltada, atenuada) la anima el
 	// compositor sin volver a pasar el filtro. Se queda en el reposo de cada
@@ -471,7 +502,7 @@ function initGrafo() {
 	function nebulosas(aristas) {
 		const capa = document.getElementById('hab-nebulosas');
 		if (!capa) return;
-		const P = (j) => (j === NUCLEO ? { x: 0, y: 0 } : { x: est[j].bx, y: est[j].by });
+		const P = (j) => ({ x: est[j].bx, y: est[j].by });
 		const n = (v) => v.toFixed(1);
 		capa.replaceChildren();
 		grupos.forEach((g, gi) => {
@@ -491,7 +522,7 @@ function initGrafo() {
 				return `<circle cx="${n(o.bx)}" cy="${n(o.by)}" r="50"/><rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" rx="32"/>`;
 			});
 			const puentes = aristas
-				.filter(([a, bb]) => a !== NUCLEO && grupoDe[bb] === g)
+				.filter(([, bb]) => grupoDe[bb] === g)
 				.map(([a, bb]) => `<line x1="${n(P(a).x)}" y1="${n(P(a).y)}" x2="${n(P(bb).x)}" y2="${n(P(bb).y)}"/>`);
 			// Margen del filtro: 3σ del desenfoque, para que la bruma se apague
 			// entera antes del borde de su región y no quede cortada en seco.
@@ -549,6 +580,7 @@ function initGrafo() {
 		inner.style.height = `${alto}px`;
 		inner.style.setProperty('--centro-y', `${sobre}px`);
 		cx = w / 2; cy = sobre;
+		for (const el of capasGuia) el.setAttribute('transform', `translate(${cx} ${cy})`);
 		svg.setAttribute('viewBox', `0 0 ${w} ${alto}`);
 		dibujar();
 	}

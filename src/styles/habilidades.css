@@ -46,7 +46,7 @@
 
 /* Líneas de constelación: finas, tintadas con el color de su categoría
    (--cat-color lo pone el JS en cada tramo), sin halo. Mueren a unos
-   píxeles de cada estrella y los troncos nacen en el borde del logo. */
+   píxeles de cada estrella. */
 .hab-aristas line {
   stroke: color-mix(in srgb, var(--cat-color, #9bb4d0) 40%, rgb(214, 226, 255));
   stroke-linecap: round;
@@ -61,13 +61,6 @@
   stroke-width: 1;
   opacity: 0.38;
   transition: opacity 0.3s ease, stroke-width 0.3s ease;
-}
-
-/* Los troncos que salen del logo, un punto más presentes: se lee que cada
-   constelación cuelga del núcleo. */
-.hab-arista--tronco .hab-trazo {
-  stroke-width: 1.4;
-  opacity: 0.62;
 }
 
 /* El pulso: un guion corto y redondeado que recorre cada tramo de padre a
@@ -264,14 +257,18 @@
   }
 }
 
-/* La alfa de cada constelación (la de menor `orden`): más grande y brillante */
-.hab-nodo--alfa .hab-estrella {
+/* La alfa de cada constelación (la de más progreso) y todo lo que domino:
+   estrella más grande y brillante */
+.hab-nodo--alfa .hab-estrella,
+.hab-nodo:not(.hab-nodo--obra) .hab-estrella {
   width: 8px;
   height: 8px;
 }
 
 .hab-nodo--alfa .hab-estrella::before,
-.hab-nodo--alfa .hab-estrella::after {
+.hab-nodo--alfa .hab-estrella::after,
+.hab-nodo:not(.hab-nodo--obra) .hab-estrella::before,
+.hab-nodo:not(.hab-nodo--obra) .hab-estrella::after {
   width: 30px;
 }
 
@@ -421,6 +418,16 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
 
 .hab-nodo--plana .hab-nodo-label {
   color: rgba(255, 255, 255, 0.74);
+}
+
+/* Lo que domino (progress 100): chip lleno del color de su categoría */
+.hab-nodo:not(.hab-nodo--obra) .hab-nodo-placa {
+  border-color: color-mix(in srgb, var(--cat-color) 62%, rgb(255 255 255 / 0.22));
+  background-color: color-mix(in srgb, var(--cat-color) 16%, rgb(7 11 24 / 0.9));
+}
+
+.hab-nodo:not(.hab-nodo--obra) .hab-nodo-label {
+  color: #fff;
 }
 
 /* "En obras" (progress < 100): borde punteado, rayado diagonal monocromo,
@@ -795,6 +802,21 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   .hab-nodo-label {
     font-size: 0.76rem;
   }
+}
+
+/* El horizonte: la línea que cruza el cielo por el logo, sobre la que van
+   las habilidades que domino, y su rótulo. Fina y quieta: es la escala del
+   mapa, no decoración. */
+.hab-aristas .hab-guia {
+  fill: none;
+  stroke: rgb(214 226 255 / 0.2);
+  stroke-width: 1;
+}
+
+.hab-guia-texto {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  fill: rgb(214 226 255 / 0.66);
 }
 
 /* #endregion */
