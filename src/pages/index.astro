@@ -57,6 +57,17 @@ const habilidades = await Promise.all(
 // si la categoría no está ahí (p. ej. desarrollo-web), de su propio id.
 const nombreConstelacion = (catId: string | undefined) =>
 	catId ? (catById[catId]?.titulo ?? catId.charAt(0).toUpperCase() + catId.slice(1).replaceAll('-', ' ')) : '';
+// Las habilidades agrupadas por categoría, en el orden en que aparece cada
+// una. En móvil cada grupo es una rejilla con su título; en escritorio el
+// grupo no genera caja (display: contents) y el grafo ve las mismas estrellas
+// en el mismo orden dentro de cada constelación.
+const gruposHab: { cat: string; titulo: string; color: string; items: typeof habilidades }[] = [];
+for (const h of habilidades) {
+	const cat = h.categoria ?? '';
+	let g = gruposHab.find((x) => x.cat === cat);
+	if (!g) gruposHab.push((g = { cat, titulo: nombreConstelacion(h.categoria), color: h.color, items: [] }));
+	g.items.push(h);
+}
 
 // Posición, profundidad (parallax) y rotación de cada card del hero.
 // Los proyectos con `destacado: N` en su frontmatter flotan aquí (ordenados
@@ -140,7 +151,12 @@ const rutaEntries = cronologia.map((p, i) => {
 // La cronología (arriba) siempre va por fecha; la rejilla la decide `destacado`
 // (mismo campo que ya sitúa las tarjetas del hero, menor = primero). El resto,
 // sin ese campo, cae detrás manteniendo su orden cronológico (sort estable).
-const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity) - (b.destacado ?? Infinity));
+const rejillaEntries = rutaEntries
+	.filter((p) => !p.experimento)
+	.sort((a, b) => (a.destacado ?? Infinity) - (b.destacado ?? Infinity));
+
+// Experimentos: fuera de la rejilla, en una lista compacta debajo (orden cronológico)
+const experimentos = rutaEntries.filter((p) => p.experimento);
 ---
 
 <Layout>
@@ -177,17 +193,20 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 
 	</div>
 
-	<!-- ?sincarga, volver atrás, o entrada directa por ancla (p. ej.
+	<!-- ?sincarga / ?noload, volver atrás, o entrada directa por ancla (p. ej.
 	     #proyectos-mapa): se quita el preloader antes del primer paint. Sin
 	     esto, el scrollTo(0,0) y el overflow:hidden del preloader pelean con
-	     el salto nativo al fragmento y la posición final queda indeterminista. -->
+	     el salto nativo al fragmento y la posición final queda indeterminista.
+	     ?sincarga es de un solo uso (se autolimpia); ?noload es persistente
+	     (no hace replaceState, sobrevive a recargas y HMR). -->
 	<script is:inline>
 		(function () {
 			var nav = performance.getEntriesByType('navigation')[0];
 			var sinCarga = new URLSearchParams(location.search).has('sincarga');
+			var noLoad = new URLSearchParams(location.search).has('noload');
 			var esVuelta = nav && nav.type === 'back_forward';
 			var conAncla = location.hash.length > 1;
-			if (!sinCarga && !esVuelta && !conAncla) return;
+			if (!sinCarga && !noLoad && !esVuelta && !conAncla) return;
 			var pre = document.getElementById('preloader');
 			if (pre) pre.remove();
 			document.documentElement.style.overflow = '';
@@ -196,7 +215,7 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 		})();
 	</script>
 
-	<main class="main-container">
+	<main class="main-container" data-pausa-fuera>
 		<div class="hero-cards">
 			{featured.map((proyecto, i) => {
 				const l = heroLayout[huecosHero[i] ?? i];
@@ -260,32 +279,12 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 	<div class="scroll-spacer"></div>
 
 	<section class="proyectos-section" id="proyectos">
-		<div class="hab-grafo" id="hab-grafo">
+		<div class="hab-grafo" id="hab-grafo" data-pausa-fuera>
 			<div class="hab-grafo-inner" id="hab-grafo-inner">
+				<div class="hab-nebulosas" id="hab-nebulosas" aria-hidden="true"></div>
 				<svg class="hab-aristas" id="hab-aristas" aria-hidden="true"></svg>
 
-				{habilidades.map((h) => {
-					const Nodo = h.expandible ? 'button' : 'div';
-					return (
-						<Nodo
-							class={`hab-nodo${h.expandible ? '' : ' hab-nodo--plana'}`}
-							style={`--cat-color:${h.color}`}
-							data-cat={h.categoria ?? ''}
-							data-cat-titulo={nombreConstelacion(h.categoria)}
-							{...(h.expandible
-								? { type: 'button', id: `hab-nodo-${h.id}`, 'aria-expanded': 'false', 'aria-controls': `hab-doc-${h.id}` }
-								: { title: h.resumen })}
-						>
-							<span class="hab-estrella" aria-hidden="true"></span>
-							<span class="hab-nodo-placa">
-								{h.marca && <span class="hab-nodo-marca" style={`--marca:url(${h.marca})`} aria-hidden="true"></span>}
-								<span class="hab-nodo-label">{h.titulo}</span>
-								{h.expandible && <span class="hab-nodo-mas" aria-hidden="true"></span>}
-							</span>
-						</Nodo>
-					);
-				})}
-
+				<!-- Núcleo del cielo (JS lo centra); en la rejilla de móvil, cabecera -->
 				<div class="hab-centro">
 					<Image
 						src={logo}
@@ -296,6 +295,35 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 						sizes="(max-width: 768px) 110px, 150px"
 					/>
 				</div>
+
+				{gruposHab.map((g) => (
+					<div class="hab-grupo" style={`--cat-color:${g.color}`}>
+						{g.titulo && <h3 class="hab-grupo-titulo">{g.titulo}</h3>}
+						{g.items.map((h) => {
+							const Nodo = h.expandible ? 'button' : 'div';
+							return (
+								<Nodo
+									class={`hab-nodo${h.expandible ? '' : ' hab-nodo--plana'}${h.progress < 100 ? ' hab-nodo--obra' : ''}`}
+									style={`--cat-color:${h.color}`}
+									data-cat={h.categoria ?? ''}
+									data-cat-titulo={nombreConstelacion(h.categoria)}
+									data-cielo={h.cielo ?? h.progress}
+									{...(h.expandible
+										? { type: 'button', id: `hab-nodo-${h.id}`, 'aria-expanded': 'false', 'aria-controls': `hab-doc-${h.id}` }
+										: { title: h.resumen })}
+								>
+									<span class="hab-estrella" aria-hidden="true"></span>
+									<span class="hab-nodo-placa">
+										{h.marca && <span class="hab-nodo-marca" style={`--marca:url(${h.marca})`} aria-hidden="true"></span>}
+										<span class="hab-nodo-label">{h.titulo}</span>
+										{h.expandible && <span class="hab-nodo-mas" aria-hidden="true"></span>}
+										{h.progress < 100 && <span class="hab-nodo-progreso" style={`--progreso:${h.progress}%`}><span class="sr-only">Dominio: {h.progress}%</span></span>}
+									</span>
+								</Nodo>
+							);
+						})}
+					</div>
+				))}
 			</div>
 
 			<div class="hab-docs">
@@ -351,6 +379,37 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 					/>
 				))}
 			</div>
+
+			{experimentos.length > 0 && (
+				<div class="experimentos">
+					<ul class="exp-lista">
+						{experimentos.map((p) => (
+							<li>
+								<a
+									class={`exp-fila rejilla-item${p.imagen ? '' : ' sin-imagen'}`}
+									href={p.enlaceExterno ?? p.link}
+									target="_blank"
+									rel="noopener noreferrer"
+									data-cats={p.catIds.join(',')}
+									style={`--cat-color:${p.color}`}
+								>
+									<span class="exp-thumb">
+										{p.imagen
+											? <Image src={p.imagen} alt="" width={176} loading="lazy" decoding="async" />
+											: p.cats[0] && <img class="exp-thumb-fallback" src={p.cats[0].logo} alt="" aria-hidden="true" loading="lazy" />}
+									</span>
+									<span class="exp-texto">
+										<strong class="exp-nombre">{p.titulo.trim()}</strong>
+										{p.descripcion && <span class="exp-desc">{p.descripcion}</span>}
+									</span>
+									<span class="exp-año">{String(p.fecha ?? '').slice(0, 4)}</span>
+									<svg class="exp-flecha" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
 
 			<div class="ruta-cuerpo">
 				<!-- Línea de la ruta: se dibuja con el scroll (la traza el JS) -->
@@ -413,7 +472,7 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 
 	<section class="contacto-section" id="contacto">
 		<div class="contacto-wrapper">
-			<div class="contacto-particles">
+			<div class="contacto-particles" data-pausa-fuera>
 				<div class="particle-space"></div>
 				<div class="particle-space"></div>
 				<div class="particle-space"></div>
@@ -663,6 +722,7 @@ const rejillaEntries = [...rutaEntries].sort((a, b) => (a.destacado ?? Infinity)
 		import '../scripts/habilidades-grafo.js';
 		import '../scripts/proyectos-ruta.js';
 		import '../scripts/card-video.js';
+		import '../scripts/pausar-fuera.js';
 	</script>
 
 	<!-- Cloudflare Turnstile: se carga a una pantalla del formulario, no al

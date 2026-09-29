@@ -14,6 +14,9 @@ fechaFin: "2025"                     # Opcional — omitir si sigue activo; "aho
 categorias: [programacion, video]    # OBLIGATORIO — uno o más IDs de categorías.json
 peso: 75                             # Tamaño de card (0–100, defecto 50): ≥75 grande, ≥55 medio, resto pequeño.
                                       # Decide tanto el ancho en la línea de tiempo como el tamaño en la rejilla.
+experimento: true                    # Proyecto pequeño: sale de la rejilla y va a la lista compacta de debajo
+                                      # (miniatura + nombre + descripción). Enlaza a `enlaceExterno` (o a `link`).
+                                      # En la cronología sigue saliendo como tarjeta normal.
 destacado: 2                         # Aparece en el carrusel del hero; entero, menor = primero.
                                       # Además ordena la rejilla: los que tienen este campo van primero
                                       # (por este número), el resto sigue detrás en orden cronológico.
@@ -567,6 +570,8 @@ categoria: programacion              # Opcional — ID de categorias.json; da el
 icono: tailscale                     # Opcional — archivo de public/icons/marcas/<icono>.svg
 resumen: Red privada entre mis máquinas, sin abrir puertos.   # Opcional — ver más abajo
 orden: 10                            # Opcional (por defecto 50) — menor va antes; empata por título
+progress: 60                         # Opcional (0–100, por defecto 100) — cuánto la domino; ver más abajo
+cielo: 60                            # Opcional (0–100, por defecto = progress) — su sitio en el grafo; ver más abajo
 ---
 ```
 
@@ -589,6 +594,23 @@ Una frase corta, opcional. Con cuerpo, aparece como subtítulo bajo el título
 dentro del panel. Sin cuerpo (burbuja no pulsable), aparece como tooltip nativo
 del navegador al pasar el ratón — la única pista extra que tiene ese nodo,
 ya que no hay panel que abrir.
+
+### `progress`
+
+Cuánto domino la habilidad, de 0 a 100. Sin el campo (o con 100) la burbuja se
+ve normal. Por debajo de 100 se pinta "en obras": borde punteado, rayado
+diagonal tenue, nombre e icono algo más grises y una barra fina bajo el nombre
+que se rellena hasta ese porcentaje. El borde, el rayado y el gris son iguales
+para cualquier valor por debajo de 100; solo la barra cambia.
+
+### `cielo`
+
+Dónde va la burbuja en el grafo, de 0 a 100: con 100 se coloca sobre el
+horizonte ("Domino"); por debajo, más lejos de él cuanto menor sea. Sin el
+campo se usa `progress`. Existe para separar las dos cosas: subir `progress` a
+100 cambia el color de la burbuja, pero mientras `cielo` no cambie, el reparto
+del grafo sale idéntico. Todas las habilidades actuales lo llevan fijado; si
+quieres que una pase al horizonte, pon `cielo: 100` (esto sí recoloca el cielo).
 
 ### Iconos de marca
 

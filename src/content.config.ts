@@ -18,6 +18,8 @@ const proyectos = defineCollection({
 			fechaFin: z.coerce.string().optional(),
 			categorias: z.array(z.string()).default([]),
 			peso: z.number().optional(),
+			// Proyecto pequeño: sale de la rejilla y va a la lista compacta de debajo
+			experimento: z.boolean().optional(),
 			// Opcional: sin imagen la tarjeta muestra el icono de su categoría
 			imagen: image().optional(),
 			// Imagen grande de la cabecera de la ficha; si falta se usa `imagen`
@@ -127,6 +129,11 @@ const habilidades = defineCollection({
 		resumen: z.string().optional(),
 		// Menor = antes. Sin este campo va al montón del medio y desempata por título
 		orden: z.number().default(50),
+		// Cuánto la domino (0–100). Por debajo de 100 el chip se pinta "en obras"
+		progress: z.number().min(0).max(100).default(100),
+		// Sitio en el grafo (0–100): 100 sobre el horizonte, menos más lejos.
+		// Sin él manda progress; con él, subir progress solo cambia el color.
+		cielo: z.number().min(0).max(100).optional(),
 	}),
 });
 

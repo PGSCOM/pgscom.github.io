@@ -20,7 +20,7 @@
   position: relative;
   /* Ancho de sobra para que el cielo se abra en horizontal en escritorio
      (el JS lo estira hasta llenar el ancho). */
-  width: 1240px;
+  width: 1560px;
   max-width: 100%;
   /* La altura la fija el JS (ResizeObserver), a partir del radio real que
      ocupan los chips — nada de un cuadro fijo con hueco muerto alrededor.
@@ -46,7 +46,7 @@
 
 /* Líneas de constelación: finas, tintadas con el color de su categoría
    (--cat-color lo pone el JS en cada tramo), sin halo. Mueren a unos
-   píxeles de cada estrella y los troncos nacen en el borde del logo. */
+   píxeles de cada estrella. */
 .hab-aristas line {
   stroke: color-mix(in srgb, var(--cat-color, #9bb4d0) 40%, rgb(214, 226, 255));
   stroke-linecap: round;
@@ -61,13 +61,6 @@
   stroke-width: 1;
   opacity: 0.38;
   transition: opacity 0.3s ease, stroke-width 0.3s ease;
-}
-
-/* Los troncos que salen del logo, un punto más presentes: se lee que cada
-   constelación cuelga del núcleo. */
-.hab-arista--tronco .hab-trazo {
-  stroke-width: 1.4;
-  opacity: 0.62;
 }
 
 /* El pulso: un guion corto y redondeado que recorre cada tramo de padre a
@@ -113,11 +106,50 @@
   opacity: 1;
 }
 
+/* Nebulosas: la bruma de color de cada constelación, bajo las líneas. Cada
+   <svg> mide 1px en el centro del cielo y pinta desbordado (JS), así la
+   bruma no depende del alto del contenedor ni se corta en su borde. Se
+   funde en modo "screen": suma luz a la foto de fondo en vez de taparla. */
+.hab-nebulosas {
+  position: absolute;
+  top: var(--centro-y, 50%);
+  left: 50%;
+  pointer-events: none;
+}
+
+.hab-grafo-inner:not(.listo) .hab-nebulosas {
+  display: none;
+}
+
+.hab-nebulosa {
+  position: absolute;
+  mix-blend-mode: screen;
+  opacity: 0.36;
+  will-change: opacity;
+  transition: opacity 0.45s ease;
+}
+
+.hab-nebulosa svg {
+  display: block;
+}
+
+.hab-nebulosa.activa {
+  opacity: 0.58;
+}
+
+.hab-grafo.abierto .hab-nebulosa {
+  opacity: 0.1;
+}
+
+.hab-grafo.abierto .hab-nebulosa.abierta {
+  opacity: 0.42;
+}
+
 .hab-grafo-inner.listo .hab-nodo,
 .hab-grafo-inner.listo .hab-centro,
 .hab-grafo-inner.listo .hab-constelacion {
   position: absolute;
-  top: 50%;
+  top: var(--centro-y, 50%); /* centro del cielo: lo fija el JS */
   left: 50%;
 }
 
@@ -152,6 +184,26 @@
   color: inherit;
   text-align: left;
   transition: opacity 0.3s ease;
+}
+
+/* El vaivén (JS, solo escritorio con ratón) mueve cada nodo en cada frame:
+   en su propia capa lo desplaza el compositor, sin volver a rasterizar chip,
+   sombra e icono. Donde el cielo está quieto, esas 35 capas sobran. */
+@media (min-width: 1025px) and (pointer: fine) {
+  .hab-nodo {
+    will-change: transform;
+  }
+}
+
+/* Grupo por categoría (markup): en el cielo no genera caja, así que las
+   estrellas se siguen posicionando contra .hab-grafo-inner. Su título solo
+   se ve en la rejilla de móvil. */
+.hab-grupo {
+  display: contents;
+}
+
+.hab-grupo-titulo {
+  display: none;
 }
 
 /* Chip a la izquierda de su estrella (lo decide el JS según el hueco). El
@@ -205,14 +257,18 @@
   }
 }
 
-/* La alfa de cada constelación (la de menor `orden`): más grande y brillante */
-.hab-nodo--alfa .hab-estrella {
+/* La alfa de cada constelación (la de más progreso) y todo lo que domino:
+   estrella más grande y brillante */
+.hab-nodo--alfa .hab-estrella,
+.hab-nodo:not(.hab-nodo--obra) .hab-estrella {
   width: 8px;
   height: 8px;
 }
 
 .hab-nodo--alfa .hab-estrella::before,
-.hab-nodo--alfa .hab-estrella::after {
+.hab-nodo--alfa .hab-estrella::after,
+.hab-nodo:not(.hab-nodo--obra) .hab-estrella::before,
+.hab-nodo:not(.hab-nodo--obra) .hab-estrella::after {
   width: 30px;
 }
 
@@ -229,7 +285,7 @@
   padding: 7px 12px 7px 9px;
   border-radius: 14px 14px 14px 4px;
   background: rgba(7, 11, 24, 0.84);
-  border: 1px solid color-mix(in srgb, var(--cat-color) 26%, rgba(255, 255, 255, 0.14));
+  border: 3px solid color-mix(in srgb, var(--cat-color) 26%, rgba(255, 255, 255, 0.14));
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
   transition: border-color 0.25s ease, background-color 0.25s ease;
 }
@@ -301,7 +357,7 @@ button.hab-nodo[aria-expanded='true'] .hab-estrella {
 
 button.hab-nodo:hover .hab-nodo-placa,
 button.hab-nodo[aria-expanded='true'] .hab-nodo-placa {
-  background: rgba(10, 15, 31, 0.94);
+  background-color: rgba(10, 15, 31, 0.94);
   border-color: color-mix(in srgb, var(--cat-color) 60%, rgba(255, 255, 255, 0.2));
 }
 
@@ -364,6 +420,63 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   color: rgba(255, 255, 255, 0.74);
 }
 
+/* Lo que domino (progress 100): chip lleno del color de su categoría */
+.hab-nodo:not(.hab-nodo--obra) .hab-nodo-placa {
+  border-color: color-mix(in srgb, var(--cat-color) 82%, rgb(255 255 255 / 0.3));
+  background-color: color-mix(in srgb, var(--cat-color) 26%, rgb(7 11 24 / 0.9));
+}
+
+button.hab-nodo:not(.hab-nodo--obra):hover .hab-nodo-placa,
+button.hab-nodo:not(.hab-nodo--obra)[aria-expanded='true'] .hab-nodo-placa {
+  border-color: color-mix(in srgb, var(--cat-color) 90%, #fff);
+  background-color: color-mix(in srgb, var(--cat-color) 34%, rgb(7 11 24 / 0.94));
+}
+
+.hab-nodo:not(.hab-nodo--obra) .hab-nodo-label {
+  color: #fff;
+}
+
+/* "En obras" (progress < 100): borde punteado, rayado diagonal monocromo,
+   nombre e icono un paso más grises, y barra con el porcentaje (--progreso). */
+.hab-nodo--obra .hab-nodo-placa {
+  position: relative;
+  padding-bottom: 10px;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--cat-color) 40%, rgba(255, 255, 255, 0.32));
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(255 255 255 / 0.08) 0 5px,
+    transparent 5px 11px
+  );
+}
+
+.hab-nodo--obra .hab-nodo-label {
+  color: #c3c7ce;
+}
+
+.hab-nodo--obra .hab-nodo-marca {
+  background: #c3c7ce;
+}
+
+.hab-nodo-progreso {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.hab-nodo-progreso::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--progreso);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--cat-color) 45%, #fff);
+}
+
 /* Nombre de cada constelación, como en una carta celeste: tenue, espaciado,
    teñido de su color. Decorativo (aria-hidden): sin JS no se pinta. */
 .hab-constelacion {
@@ -393,6 +506,17 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   }
   .hab-pulso {
     display: none;
+  }
+}
+
+/* Móvil (la misma media query que deja quieto el cielo en el JS): 68
+   destellos animados son un recálculo de estilo por frame que la CPU de un
+   teléfono no se puede permitir. Las cruces se quedan en reposo; el pulso de
+   las líneas sí sigue. */
+@media (max-width: 1024px), (pointer: coarse) {
+  .hab-estrella::before,
+  .hab-estrella::after {
+    animation: none;
   }
 }
 
@@ -610,16 +734,50 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   }
 }
 
+/* ≤768px: sin cielo. Las mismas tarjetas que en escritorio, en una rejilla
+   por categoría con su nombre encima; el panel de cada una se abre debajo de
+   su fila (JS), no al final de la lista. */
 @media (max-width: 768px) {
-  .hab-centro {
-    width: 84px;
-    height: 84px;
+  .hab-grafo-inner {
+    display: block;
+    min-height: 0;
   }
+  .hab-nebulosas,
+  .hab-aristas,
+  .hab-estrella {
+    display: none;
+  }
+  /* El logo, núcleo del cielo, encabeza la rejilla */
+  .hab-centro {
+    margin: 0 auto 28px;
+  }
+  .hab-grupo {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .hab-grupo + .hab-grupo {
+    margin-top: 30px;
+  }
+  /* El nombre de la constelación, con la misma voz que en el cielo */
+  .hab-grupo-titulo {
+    display: block;
+    grid-column: 1 / -1;
+    margin: 0 0 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: color-mix(in srgb, var(--cat-color) 45%, rgb(220, 228, 245));
+  }
+  /* Tarjetas de una fila, a la misma altura; el "+" siempre en el borde */
   .hab-nodo {
-    max-width: 200px;
-    gap: 6px;
+    max-width: none;
+    align-items: stretch;
+    padding: 0;
   }
   .hab-nodo-placa {
+    flex: 1;
     gap: 7px;
     padding: 6px 10px 6px 8px;
   }
@@ -630,19 +788,41 @@ button.hab-nodo:focus-visible .hab-nodo-placa {
   .hab-nodo-label {
     font-size: 0.8rem;
   }
+  .hab-nodo-mas {
+    margin-left: auto;
+  }
+  .hab-grupo > .hab-doc {
+    grid-column: 1 / -1;
+  }
+  /* En la lista no se atenúa el resto: se tiene que poder elegir otra. Y el
+     panel ya cuelga de su tarjeta, que hace de título. */
+  .hab-grafo.abierto .hab-nodo:not([aria-expanded='true']) {
+    opacity: 1;
+  }
+  .hab-doc-titulo {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
-  .hab-centro {
-    width: 72px;
-    height: 72px;
-  }
-  .hab-nodo {
-    max-width: 176px;
-  }
   .hab-nodo-label {
     font-size: 0.76rem;
   }
+}
+
+/* El horizonte: la línea que cruza el cielo por el logo, sobre la que van
+   las habilidades que domino, y su rótulo. Fina y quieta: es la escala del
+   mapa, no decoración. */
+.hab-aristas .hab-guia {
+  fill: none;
+  stroke: rgb(214 226 255 / 0.2);
+  stroke-width: 1;
+}
+
+.hab-guia-texto {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  fill: rgb(214 226 255 / 0.66);
 }
 
 /* #endregion */

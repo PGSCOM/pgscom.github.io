@@ -19,7 +19,7 @@ Y en cuanto al almacenamiento, usaba Samba para compartir los archivos de [Flame
 ## Raspberry Pi
 
 ### Carcasa
-Diseñé esta carcasa en FreeCAD y la imprimí en 3D.
+Diseñé esta carcasa en SolidWorks y la imprimí en 3D.
 
 <iframe title="Carcasa pantalla rpi4 5''" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="100%" height="450" src="https://sketchfab.com/models/a03612f7b3c34259a1534b39a76d5e55/embed?autostart=1&annotations_visible=0&preload=1&annotation_cycle=4&dnt=1"> </iframe>
 
