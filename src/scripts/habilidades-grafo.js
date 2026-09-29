@@ -7,9 +7,9 @@ import lenis from './smooth-scroll.js';
 // propio sector del cielo alrededor del logo, sus estrellas unidas por el
 // árbol de líneas más corto que las conecta con el logo (como en una carta
 // celeste, pero todas colgando del núcleo) y su nombre cerca. Un pulso de
-// luz sale del logo y recorre cada árbol hacia fuera, tramo a tramo. La
-// primera de cada categoría —la de menor `orden`— es su estrella alfa, la
-// más brillante.
+// luz sale del logo y recorre cada árbol hacia fuera, tramo a tramo. Cuanto
+// más progreso tiene una habilidad, más cerca del logo cae; la de más
+// progreso de cada categoría es su estrella alfa, la más brillante.
 //
 // El reparto es una búsqueda con semilla fija (el cielo sale igual en cada
 // visita): cada estrella prueba posiciones al azar dentro de su sector y se
@@ -64,6 +64,9 @@ function initGrafo() {
 	// CPU de un teléfono, y 2px de deriva en esa pantalla ni se ven. Misma
 	// media query que apaga los destellos en habilidades.css.
 	const HUECO = 8;
+	// Aire entre etiquetas al repartir: con solo HUECO el cielo se lee como un
+	// bloque apelotonado.
+	const AIRE = 24;
 	const AMP = window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 1024px), (pointer: coarse)').matches ? 0 : 3;
 	// Separación entre estrellas de una misma constelación: nunca menos de
 	// DMIN (la línea que las une tiene que verse), idealmente unos IDEAL px.
@@ -78,8 +81,14 @@ function initGrafo() {
 	const NUCLEO = nodos.length;
 	let radioLogo = 0;
 
-	// ── Constelaciones: una por categoría, en el orden en que aparecen (los
-	// nodos ya llegan ordenados por `orden`, así que el primero es la alfa).
+	// Cuánto domino cada habilidad (0–100): marca a qué distancia del logo va
+	const progreso = nodos.map((n) => Number(n.dataset.progreso ?? 100));
+	// Orden de colocación: primero las más dominadas (se quedan el sitio junto
+	// al núcleo), a igualdad, el de `orden` con que llegan los nodos.
+	const porProgreso = [...nodos.keys()].sort((a, b) => progreso[b] - progreso[a] || a - b);
+
+	// ── Constelaciones: una por categoría, en el orden en que aparecen. Su
+	// alfa es la estrella con más progreso.
 	const grupos = [];
 	const grupoDe = nodos.map((nodo, i) => {
 		const cat = nodo.dataset.cat ?? '';
@@ -87,7 +96,6 @@ function initGrafo() {
 		if (!g) {
 			g = { cat, miembros: [], nombre: null };
 			grupos.push(g);
-			nodo.classList.add('hab-nodo--alfa');
 			if (nodo.dataset.catTitulo) {
 				g.nombre = document.createElement('span');
 				g.nombre.className = 'hab-constelacion';
@@ -103,6 +111,7 @@ function initGrafo() {
 		nodo.style.setProperty('--retardo', `${-Math.random() * 6}s`);
 		return g;
 	});
+	for (const g of grupos) nodos[porProgreso.find((i) => grupoDe[i] === g)].classList.add('hab-nodo--alfa');
 
 	// Reposo de cada estrella (bx, by), lado de su etiqueta (izq), medidas
 	// de su nodo (ancho, so: de su borde izquierdo al centro de la estrella)
@@ -201,6 +210,19 @@ function initGrafo() {
 		return { l, r: l + m.ancho, t: y - m.alto / 2, b: y + m.alto / 2 };
 	}
 	const pisa = (a, b, h) => a.l < b.r + h && b.l < a.r + h && a.t < b.b + h && b.t < a.b + h;
+	// ¿El segmento A–B atraviesa la caja k (agrandada m px)? Recorte de
+	// Liang–Barsky: se estrecha el tramo [t0, t1] contra cada lado.
+	function corta(A, B, k, m) {
+		const dx = B.x - A.x, dy = B.y - A.y;
+		let t0 = 0, t1 = 1;
+		for (const [p, q] of [[-dx, A.x - k.l + m], [dx, k.r + m - A.x], [-dy, A.y - k.t + m], [dy, k.b + m - A.y]]) {
+			if (p === 0) { if (q < 0) return false; continue; }
+			const r = q / p;
+			if (p < 0) { if (r > t1) return false; t0 = Math.max(t0, r); }
+			else { if (r < t0) return false; t1 = Math.min(t1, r); }
+		}
+		return true;
+	}
 
 	function repartir(w) {
 		const med = nodos.map((el) => {
@@ -219,8 +241,8 @@ function initGrafo() {
 		// cielo, no un puzle apretado), estirado en horizontal hasta el ancho.
 		// En pantallas estrechas no puede ensancharse, así que cada píxel de
 		// holgura se paga en scroll: ahí va más apretado.
-		const holgura = w < 640 ? 1.2 : 1.75;
-		const area = med.reduce((s, m) => s + (m.ancho + 2 * HUECO) * (m.alto + 2 * HUECO), 0) * holgura;
+		const holgura = w < 1000 ? 1.6 : 2.2;
+		const area = med.reduce((s, m) => s + (m.ancho + AIRE) * (m.alto + AIRE), 0) * holgura;
 		const sx = Math.min(2.4, Math.max(0.55, topeX / Math.sqrt(area / Math.PI + rMin * rMin)));
 		let rMax = Math.sqrt(area / (Math.PI * sx) + rMin * rMin);
 
@@ -232,57 +254,79 @@ function initGrafo() {
 			g.a0 = a; g.a1 = a + span; a += span;
 		});
 
+		// Radio al que aspira cada estrella: la de más progreso junto al logo, la
+		// de menos en el borde del cielo. Con raíz: lo proporcional a lo que le
+		// falta es el área que queda por dentro de su radio, no el radio; si no,
+		// las muchas que rondan el 80–100% se amontonarían junto al logo.
+		const pMax = Math.max(...progreso), pMin = Math.min(...progreso);
+		const lejania = (i) => (pMax === pMin ? 0.2 : Math.sqrt((pMax - progreso[i]) / (pMax - pMin)));
+
 		let puestos;
 		for (let intento = 0; ; intento++) {
 			const rnd = azar(0x5eed + n);
 			puestos = new Array(n);
 			const cajas = [zonaLogo];
+			// Líneas ya trazadas (aprox.: cada estrella a su vecina más cercana
+			// de la constelación, o al logo), para no tachar etiquetas con ellas.
+			const lineas = [];
+			const nucleo = { x: 0, y: 0, k: zonaLogo };
+			const propiosDe = new Map(grupos.map((g) => [g, []]));
 			let cabe = true;
-			for (const g of grupos) {
-				const propios = [];
-				// La alfa arranca cerca del núcleo: el tronco que la une al logo
-				// queda corto y la constelación crece desde ahí hacia fuera.
-				const aMed = (g.a0 + g.a1) / 2, rMed = rMin + (rMax - rMin) * 0.2;
-				const objetivo = { x: Math.cos(aMed) * rMed * sx, y: Math.sin(aMed) * rMed };
-				for (const i of g.miembros) {
-					let mejor = null;
-					for (let c = 0; c < 140; c++) {
-						const ang = g.a0 + (g.a1 - g.a0) * (0.05 + 0.9 * rnd());
-						const r = rMin + (rMax - rMin) * Math.sqrt(rnd());
-						const x0 = Math.cos(ang) * r * sx, y = Math.sin(ang) * r;
-						for (const izq of [false, true]) {
-							// Si el chip se sale por un lado, la estrella se desliza hacia
-							// dentro en vez de descartar el sitio: si no, en pantallas
-							// estrechas los sectores que miran a los lados solo tendrían
-							// hueco junto al logo y el cielo crecería sin llegar a caber.
-							const k0 = caja(med[i], x0, y, izq);
-							const x = x0 + Math.max(0, -topeX - k0.l) - Math.max(0, k0.r - topeX);
-							const k = x === x0 ? k0 : caja(med[i], x, y, izq);
-							if (k.l < -topeX || k.r > topeX) continue; // chip más ancho que el cielo
-							if (cajas.some((o) => pisa(k, o, HUECO))) continue;
-							let puntos;
-							if (propios.length) {
-								let dmin = Infinity, gx = 0, gy = 0;
-								for (const p of propios) {
-									dmin = Math.min(dmin, Math.hypot(p.x - x, p.y - y));
-									gx += p.x; gy += p.y;
-								}
-								if (dmin < DMIN) continue;
-								gx /= propios.length; gy /= propios.length;
-								puntos = Math.abs(dmin - IDEAL) + 0.2 * Math.hypot(x - gx, y - gy);
-							} else {
-								puntos = Math.hypot(x - objetivo.x, y - objetivo.y);
+			for (const i of porProgreso) {
+				const g = grupoDe[i], propios = propiosDe.get(g);
+				const rObj = rMin + (rMax - rMin) * (0.05 + 0.9 * lejania(i));
+				// La alfa (la primera de su constelación en colocarse) apunta al
+				// centro de su sector; las demás crecen desde ella hacia fuera.
+				const aMed = (g.a0 + g.a1) / 2;
+				const objetivo = { x: Math.cos(aMed) * rObj * sx, y: Math.sin(aMed) * rObj };
+				let mejor = null;
+				for (let c = 0; c < 160; c++) {
+					const ang = g.a0 + (g.a1 - g.a0) * (0.05 + 0.9 * rnd());
+					const r = rMin + (rMax - rMin) * rnd();
+					const x0 = Math.cos(ang) * r * sx, y = Math.sin(ang) * r;
+					for (const izq of [false, true]) {
+						// Si el chip se sale por un lado, la estrella se desliza hacia
+						// dentro en vez de descartar el sitio: si no, en pantallas
+						// estrechas los sectores que miran a los lados solo tendrían
+						// hueco junto al logo y el cielo crecería sin llegar a caber.
+						const k0 = caja(med[i], x0, y, izq);
+						const x = x0 + Math.max(0, -topeX - k0.l) - Math.max(0, k0.r - topeX);
+						const k = x === x0 ? k0 : caja(med[i], x, y, izq);
+						if (k.l < -topeX || k.r > topeX) continue; // chip más ancho que el cielo
+						if (cajas.some((o) => pisa(k, o, AIRE))) continue;
+						let puntos;
+						let padre = nucleo;
+						if (propios.length) {
+							let dmin = Infinity, gx = 0, gy = 0;
+							for (const p of propios) {
+								const d = Math.hypot(p.x - x, p.y - y);
+								if (d < dmin) { dmin = d; padre = p; }
+								gx += p.x; gy += p.y;
 							}
-							const p = puntos + (izq ? 10 : 0);
-							if (!mejor || p < mejor.p) mejor = { x, y, izq, k, p };
+							if (Math.hypot(x, y) < dmin) padre = nucleo;
+							if (dmin < DMIN) continue;
+							gx /= propios.length; gy /= propios.length;
+							// El radio manda: una estrella poco dominada se va lejos
+							// aunque la línea hasta su vecina quede larga.
+							puntos = Math.abs(dmin - IDEAL) + 0.2 * Math.hypot(x - gx, y - gy) + 1.5 * Math.abs(Math.hypot(x / sx, y) - rObj);
+						} else {
+							puntos = Math.hypot(x - objetivo.x, y - objetivo.y);
 						}
+						let p = puntos + (izq ? 10 : 0);
+						if (mejor && p >= mejor.p) continue;
+						// Cada etiqueta tachada por una línea (la suya nueva sobre
+						// otras, o las ya trazadas sobre la suya) cuesta mucho.
+						const yo = { x, y };
+						for (const o of cajas) if (o !== padre.k && corta(padre, yo, o, 6)) p += 250;
+						for (const [A, B] of lineas) if (corta(A, B, k, 6)) p += 250;
+						if (!mejor || p < mejor.p) mejor = { x, y, izq, k, p, padre };
 					}
-					if (!mejor) { cabe = false; break; }
-					puestos[i] = mejor;
-					propios.push(mejor);
-					cajas.push(mejor.k);
 				}
-				if (!cabe) break;
+				if (!mejor) { cabe = false; break; }
+				puestos[i] = mejor;
+				propios.push(mejor);
+				cajas.push(mejor.k);
+				lineas.push([mejor.padre, mejor]);
 			}
 			if (cabe) break;
 			rMax *= 1.12;
@@ -321,12 +365,12 @@ function initGrafo() {
 		// cajas de más de 12px de alto), sin contar los primeros 26px junto a
 		// cada estrella: ahí la línea nace, dentro de la caja de su propio nodo
 		// (medio alto de caja + margen), y eso no es tachar nada.
-		const cruzaLinea = (k) => aristas.some(([a, b]) => {
+		const cruzaLinea = (k, m = 4) => aristas.some(([a, b]) => {
 			const A = P(a), B = P(b);
 			const d = Math.hypot(B.x - A.x, B.y - A.y);
 			for (let j = 26; j <= d - 26; j += 6) {
 				const x = A.x + ((B.x - A.x) * j) / d, y = A.y + ((B.y - A.y) * j) / d;
-				if (x > k.l - 4 && x < k.r + 4 && y > k.t - 4 && y < k.b + 4) return true;
+				if (x > k.l - m && x < k.r + m && y > k.t - m && y < k.b + m) return true;
 			}
 			return false;
 		});
@@ -403,7 +447,8 @@ function initGrafo() {
 					const k = { l: x - hw, r: x + hw, t: y - hh, b: y + hh };
 					if (k.l < -topeX || k.r > topeX) continue;
 					// Doble hueco: el nombre flota en su constelación, no pegado a una estrella
-					if (!ocupadas.some((o) => pisa(k, o, 2 * HUECO)) && !cruzaLinea(k)) sitio = { x, y, k };
+					// y ninguna línea rozándolo: a menos de 12px parece tacharlo
+					if (!ocupadas.some((o) => pisa(k, o, 2 * HUECO)) && !cruzaLinea(k, 12)) sitio = { x, y, k };
 				}
 			}
 			g.nombre.hidden = !sitio;

@@ -20,7 +20,7 @@
   position: relative;
   /* Ancho de sobra para que el cielo se abra en horizontal en escritorio
      (el JS lo estira hasta llenar el ancho). */
-  width: 1240px;
+  width: 1560px;
   max-width: 100%;
   /* La altura la fija el JS (ResizeObserver), a partir del radio real que
      ocupan los chips — nada de un cuadro fijo con hueco muerto alrededor.

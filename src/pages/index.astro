@@ -307,6 +307,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 									style={`--cat-color:${h.color}`}
 									data-cat={h.categoria ?? ''}
 									data-cat-titulo={nombreConstelacion(h.categoria)}
+									data-progreso={h.progress}
 									{...(h.expandible
 										? { type: 'button', id: `hab-nodo-${h.id}`, 'aria-expanded': 'false', 'aria-controls': `hab-doc-${h.id}` }
 										: { title: h.resumen })}
