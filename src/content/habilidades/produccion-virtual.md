@@ -4,6 +4,7 @@ categoria: vfx
 orden: 120
 resumen: Cámara real y cámara virtual moviéndose a la vez en tiempo real.
 progress: 70
+cielo: 70
 ---
 - Tracking con un iPhone y **Unreal VCam** (ARKit) conectado por Live Link.
 - Timecode compartido con la app Blackmagic Camera.

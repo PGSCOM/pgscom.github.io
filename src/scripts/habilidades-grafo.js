@@ -5,7 +5,7 @@ import lenis from './smooth-scroll.js';
 // Cada habilidad es una estrella (un punto con destellos) con su chip de
 // icono y nombre pegado al lado, y cada categoría una constelación. Cruza el
 // cielo un horizonte que pasa por el logo: sobre él van las habilidades que
-// domino (progress 100); las que estoy aprendiendo cuelgan por encima o por
+// domino (cielo 100); las que estoy aprendiendo cuelgan por encima o por
 // debajo, más lejos cuanto menos llevo. Cada categoría tiene su columna, sus
 // estrellas unidas por el árbol de líneas más corto que parte de su alfa (la
 // de más progreso, la más brillante), como en una carta celeste, y su nombre
@@ -78,8 +78,9 @@ function initGrafo() {
 	// Lo que tarda el pulso de luz en recorrer cada tramo (ver .hab-pulso)
 	const PASO = 0.7;
 
-	// Cuánto domino cada habilidad (0–100): marca a qué distancia de la línea va
-	const progreso = nodos.map((n) => Number(n.dataset.progreso ?? 100));
+	// Sitio de cada habilidad en el cielo (0–100, `cielo` o si no `progress`):
+	// marca a qué distancia de la línea va
+	const progreso = nodos.map((n) => Number(n.dataset.cielo ?? 100));
 	// Orden de colocación: primero las más dominadas (se quedan el sitio en la
 	// línea), a igualdad, el de `orden` con que llegan los nodos.
 	const porProgreso = [...nodos.keys()].sort((a, b) => progreso[b] - progreso[a] || a - b);

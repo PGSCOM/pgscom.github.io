@@ -5,6 +5,7 @@ icono: docker
 resumen: Todos mis servicios propios viven en contenedores, definidos en Compose.
 orden: 20
 progress: 90
+cielo: 90
 ---
 
 Cada servicio del servidor es un `docker-compose.yml` versionado: se levanta,

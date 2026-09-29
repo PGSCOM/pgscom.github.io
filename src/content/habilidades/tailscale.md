@@ -5,6 +5,7 @@ icono: tailscale
 resumen: Red privada entre mis máquinas, sin abrir puertos ni montar una VPN clásica.
 orden: 10
 progress: 75
+cielo: 75
 ---
 
 Tengo montada una **tailnet** para llegar al servidor de casa desde cualquier sitio sin

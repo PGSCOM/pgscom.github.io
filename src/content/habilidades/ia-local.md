@@ -4,6 +4,7 @@ categoria: programacion
 orden: 320
 resumen: Modelos de lenguaje ejecutándose en mis propios dispositivos.
 progress: 55
+cielo: 55
 ---
 - **MLX** en Apple Silicon (iOS) con modelos de Hugging Face ([Faro](/proyectos/mlxchat)).
 - Servidor Ollama

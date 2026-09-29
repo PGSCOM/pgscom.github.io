@@ -571,6 +571,7 @@ icono: tailscale                     # Opcional — archivo de public/icons/marc
 resumen: Red privada entre mis máquinas, sin abrir puertos.   # Opcional — ver más abajo
 orden: 10                            # Opcional (por defecto 50) — menor va antes; empata por título
 progress: 60                         # Opcional (0–100, por defecto 100) — cuánto la domino; ver más abajo
+cielo: 60                            # Opcional (0–100, por defecto = progress) — su sitio en el grafo; ver más abajo
 ---
 ```
 
@@ -601,6 +602,15 @@ ve normal. Por debajo de 100 se pinta "en obras": borde punteado, rayado
 diagonal tenue, nombre e icono algo más grises y una barra fina bajo el nombre
 que se rellena hasta ese porcentaje. El borde, el rayado y el gris son iguales
 para cualquier valor por debajo de 100; solo la barra cambia.
+
+### `cielo`
+
+Dónde va la burbuja en el grafo, de 0 a 100: con 100 se coloca sobre el
+horizonte ("Domino"); por debajo, más lejos de él cuanto menor sea. Sin el
+campo se usa `progress`. Existe para separar las dos cosas: subir `progress` a
+100 cambia el color de la burbuja, pero mientras `cielo` no cambie, el reparto
+del grafo sale idéntico. Todas las habilidades actuales lo llevan fijado; si
+quieres que una pase al horizonte, pon `cielo: 100` (esto sí recoloca el cielo).
 
 ### Iconos de marca
 

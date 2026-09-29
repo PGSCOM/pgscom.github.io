@@ -131,6 +131,9 @@ const habilidades = defineCollection({
 		orden: z.number().default(50),
 		// Cuánto la domino (0–100). Por debajo de 100 el chip se pinta "en obras"
 		progress: z.number().min(0).max(100).default(100),
+		// Sitio en el grafo (0–100): 100 sobre el horizonte, menos más lejos.
+		// Sin él manda progress; con él, subir progress solo cambia el color.
+		cielo: z.number().min(0).max(100).optional(),
 	}),
 });
 
