@@ -9,3 +9,4 @@ progress: 88
 - Esta web y mi blog en **Cloudflare Pages**.
 - Formulario de contacto con **Pages Functions**, **Turnstile** y aviso por Telegram.
 - Vídeo HLS servido desde Pages.
+- **Cloudflare Tunnel** para exponer un servidor de Minecraft (junto a [Modflared](https://modrinth.com/mod/modflared))
