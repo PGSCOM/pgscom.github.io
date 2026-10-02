@@ -223,6 +223,12 @@ video.pd-hero-media.is-playing {
   color: rgba(255, 255, 255, 0.85);
 }
 
+.pd-meta-item--ia {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .pd-tagline {
   font-size: 1.05rem;
   font-style: italic;
@@ -291,6 +297,25 @@ video.pd-hero-media.is-playing {
 /* ── Cuerpo ──────────────────────────────────────────── */
 .pd-body {
   position: relative;
+}
+
+/* ── Aviso de IA (`textoIA`): en la columna del texto, justo encima de
+   la línea que abre el contenido. ───────────────────────────────── */
+.pd-ia {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  max-width: 620px;
+  margin-bottom: 28px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pd-ia p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* ── Contenido HTML ──────────────────────────────────── */
@@ -788,6 +813,12 @@ video.pd-hero-media.is-playing {
   padding-top: var(--pd-fundido);
 }
 
+/* Con nota de IA, la nota ocupa el tramo final (ya claro) del fundido en
+   vez de sumar su alto debajo de él. */
+.pd-page[data-theme="claro"] .pd-wrapper:has(.pd-ia) {
+  padding-top: calc(var(--pd-fundido) - 72px);
+}
+
 /* Los dos botones flotantes son fijos: pasan la mayor parte del scroll
    sobre el cuerpo, así que en claro se les da la vuelta al cristal
    (tinta oscura sobre vidrio claro). Sobre la cabecera oscura, en lo alto
@@ -805,6 +836,14 @@ video.pd-hero-media.is-playing {
 .pd-page[data-theme="claro"] .pd-tema:hover {
   background: rgba(255, 255, 255, 0.92);
   border-color: rgba(28, 79, 194, 0.45);
+}
+
+.pd-page[data-theme="claro"] .pd-ia {
+  color: var(--pd-claro-ink);
+}
+
+.pd-page[data-theme="claro"] .pd-ia p {
+  color: rgba(16, 24, 43, 0.74);
 }
 
 .pd-page[data-theme="claro"] .pd-contenido {

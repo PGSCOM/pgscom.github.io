@@ -72,6 +72,12 @@ const proyectos = defineCollection({
 			// Multiplicador del tamaño del título en la tarjeta (el degradado
 			// necesita tamaño para leerse). 1 = como ahora.
 			tituloEscala: z.number().min(0.5).max(3).optional(),
+			// Aviso de IA. Sin `estadoIA` no se pinta ninguna señal, aunque
+			// existan los textos. `textoIA` es la nota encima del texto de la ficha;
+			// `textotarjetaIA` sustituye a la línea por defecto de la tarjeta.
+			estadoIA: z.enum(['asistido', 'generado']).optional(),
+			textoIA: z.string().optional(),
+			textotarjetaIA: z.string().optional(),
 			sub: z
 				.array(
 					z.object({

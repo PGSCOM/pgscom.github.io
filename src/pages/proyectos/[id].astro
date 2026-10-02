@@ -2,12 +2,14 @@
 import Layout from '../../layouts/Layout.astro';
 import ProyectoHero from '../../components/ProyectoHero.astro';
 import TemaToggle from '../../components/TemaToggle.astro';
+import IaTrazo from '../../components/IaTrazo.astro';
 import '../../styles/proyecto-detalle.css';
 import '../../styles/titulo-proyecto.css';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import categoriasData from '../../data/categorias.json';
 import { formatRangoFecha } from '../../utils/fechas.js';
+import { etiquetaIA } from '../../utils/ia.js';
 
 // Genera una ruta estática por cada .md de src/content/proyectos/.
 // Cada página es HTML real y rastreable por los bots de Google.
@@ -125,10 +127,19 @@ const breadcrumbLd = {
 			trailer={proyecto.trailer}
 			logoFallback={aptitud.logo}
 			tituloDegradado={proyecto.tituloDegradado}
+			estadoIA={proyecto.estadoIA}
 		/>
 
 		<article class="pd-wrapper">
 			<div class="pd-body">
+				{/* Aviso de IA en la columna, encima del texto */}
+				{proyecto.estadoIA && proyecto.textoIA && (
+					<aside class="pd-ia">
+						<IaTrazo ancho={34} />
+						<strong>{etiquetaIA[proyecto.estadoIA]}</strong>
+						<p>{proyecto.textoIA}</p>
+					</aside>
+				)}
 
 				<section class="pd-contenido">
 					<Content />

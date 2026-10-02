@@ -13,6 +13,8 @@
 // de la misma fila en vez de cerrar la pila.
 import { Image, getImage } from 'astro:assets';
 import { palabrasLetras } from '../utils/titulo.js';
+import { etiquetaIA } from '../utils/ia.js';
+import IaTrazo from './IaTrazo.astro';
 
 interface Props {
 	titulo: string;
@@ -28,9 +30,11 @@ interface Props {
 	// Degradado letra a letra del título (ver src/styles/titulo-proyecto.css).
 	// `true` usa los colores por defecto; un par de colores los sustituye.
 	tituloDegradado?: boolean | string[];
+	// Aviso de IA junto a la fecha; sin él no se pinta nada
+	estadoIA?: 'asistido' | 'generado';
 }
 
-const { titulo, breadcrumbActual, descripcion, fechaTexto, premio, link, txtboton, portada, trailer, logoFallback, tituloDegradado } = Astro.props;
+const { titulo, breadcrumbActual, descripcion, fechaTexto, premio, link, txtboton, portada, trailer, logoFallback, tituloDegradado, estadoIA } = Astro.props;
 const [gradA, gradB] = Array.isArray(tituloDegradado) ? tituloDegradado : [];
 
 // Póster del trailer: webp optimizado (el atributo `poster` no pasa por
@@ -107,6 +111,12 @@ const posterTrailer = trailer && portada
 				<div class="pd-meta">
 					{fechaTexto && <span class="pd-meta-item">{fechaTexto}</span>}
 					{premio && <span class="pd-meta-item pd-meta-item--premio">{premio}</span>}
+					{estadoIA && (
+						<span class="pd-meta-item pd-meta-item--ia">
+							<IaTrazo ancho={28} />
+							{etiquetaIA[estadoIA]}
+						</span>
+					)}
 				</div>
 
 				{descripcion && <p class="pd-tagline">{descripcion}</p>}

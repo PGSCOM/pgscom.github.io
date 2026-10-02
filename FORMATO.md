@@ -31,6 +31,13 @@ enlaceExterno: https://...           # La card enlaza fuera en vez de a la ficha
 urlvideopage: https://cdn/master.m3u8 # Genera /proyectos/<id>/video (página solo con el vídeo, Video.js)
 ocultarFecha: true                   # Oculta el rango de fechas en la card
 premio: "Mejor cortometraje"         # Badge dorado en el hero (🏆)
+estadoIA: asistido                   # Aviso de IA: "asistido" o "generado". Sin este campo NO sale
+                                      # ninguna señal (ni en la tarjeta ni en la ficha), aunque haya textos.
+                                      # Con él: línea bajo el título de la tarjeta (también en la lista de
+                                      # proyectos pequeños) y "Asistido por IA"/"Generado con IA" junto a la fecha.
+textoIA: "La IA ayudó con el código." # Nota en la ficha, encima del texto. Sin ella, solo
+                                      # sale el aviso junto a la fecha.
+textotarjetaIA: "Código con ayuda de IA" # Texto de la línea de la tarjeta; sin él, "Asistido por IA"/"Generado con IA"
 sub:                                 # Sub-items anidados en la línea de tiempo
   - titulo: Sub-proyecto
     descripcion: Texto breve

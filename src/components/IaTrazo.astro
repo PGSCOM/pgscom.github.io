@@ -1,0 +1,35 @@
+---
+// Marca del aviso de IA: "IA" dibujada a trazo con una chispa rellena arriba
+// a la derecha. Siempre va junto a un texto que dice lo mismo (y el nivel),
+// así que es decorativa para los lectores de pantalla. El lienzo se ciñe al
+// dibujo para que se alinee con el texto sin margen fantasma a los lados.
+interface Props {
+	ancho?: number;
+}
+
+const { ancho = 24 } = Astro.props;
+---
+
+<svg class="ia-trazo" viewBox="0 0 22.5 12" width={ancho} height={(ancho * 12) / 22.5} aria-hidden="true">
+	<path class="ia-letras" d="M0.9 0.75 V11.25 M4.4 11.25 L8.9 0.75 L13.4 11.25 M6.1 7.25 H11.7" />
+	<path class="ia-chispa" d="M18.8 0.2 C19.14 2.69 19.71 3.26 22.2 3.6 C19.71 3.94 19.14 4.51 18.8 7 C18.46 4.51 17.89 3.94 15.4 3.6 C17.89 3.26 18.46 2.69 18.8 0.2 Z" />
+</svg>
+
+<style>
+	.ia-trazo {
+		flex-shrink: 0;
+		overflow: visible;
+	}
+
+	.ia-letras {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.8;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.ia-chispa {
+		fill: currentColor;
+	}
+</style>

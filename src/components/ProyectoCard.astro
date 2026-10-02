@@ -9,8 +9,13 @@
 // (como el logo de un juego en la biblioteca de Steam) o un tratamiento de
 // texto con degradado letra a letra (`tituloDegradado`), compartido con la
 // cabecera de la ficha vía src/styles/titulo-proyecto.css.
+//
+// Con `estadoIA`, bajo el título va una línea con el aviso de IA
+// (`textotarjetaIA` o el texto por defecto de src/utils/ia.js).
 import { Image } from 'astro:assets';
 import { palabrasLetras } from '../utils/titulo.js';
+import { etiquetaIA } from '../utils/ia.js';
+import IaTrazo from './IaTrazo.astro';
 
 const COLOR_NEUTRO = '#9bb4d0';
 
@@ -113,6 +118,12 @@ const tituloEstilo = proyecto.tituloDegradado
 				) : (
 					<h4 class="ruta-titulo">{proyecto.titulo.trim()}</h4>
 				)}
+			{proyecto.estadoIA && (
+				<span class="ruta-ia">
+					<IaTrazo ancho={28} />
+					{proyecto.textotarjetaIA ?? etiquetaIA[proyecto.estadoIA]}
+				</span>
+			)}
 			{proyecto.descExterior
 				? <p class="ruta-desc ruta-desc--fija">{proyecto.descExterior}</p>
 				: proyecto.descripcion && <p class="ruta-desc">{proyecto.descripcion}</p>}

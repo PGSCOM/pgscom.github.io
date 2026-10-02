@@ -312,6 +312,20 @@
   overflow: hidden;
 }
 
+.exp-ia {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.exp-ia .ia-trazo {
+  color: rgba(255, 255, 255, 0.92);
+}
+
 .exp-año {
   font-family: 'Chakra Petch', sans-serif;
   font-size: 0.8rem;
@@ -733,6 +747,21 @@
 
 .ruta-logo-capa .ruta-logo {
   object-position: center;
+}
+
+/* Aviso de IA bajo el título (`estadoIA`): siempre visible. El texto va
+   tonal y la marca en blanco pleno, para que se distinga sobre el arte. */
+.ruta-ia {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.ruta-ia .ia-trazo {
+  color: #fff;
 }
 
 .ruta-desc {
