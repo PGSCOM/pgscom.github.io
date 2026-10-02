@@ -33,10 +33,24 @@
   font-family: 'PGSText', sans-serif;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
-  color: white;
+  /* degradado cian, más intenso que .contacto-titulo: del azul eléctrico al hielo */
+  background: linear-gradient(135deg, #0098ff 0%, #00b4d8 25%, #48cae4 50%, #caf0f8 75%, #0098ff 100%);
+  background-size: 200% 100%;
+  animation: proyectos-brillo 9s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0 0 12px 0;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   letter-spacing: -0.01em;
+}
+
+/* el degradado empieza y acaba en el mismo azul, así el bucle no tiene salto */
+@keyframes proyectos-brillo {
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proyectos-titulo-seccion { animation: none; }
 }
 
 .proyectos-subtitulo-seccion {
