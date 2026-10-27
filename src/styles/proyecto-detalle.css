@@ -441,8 +441,13 @@ video.pd-hero-media.is-playing {
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* La negrita se distingue del enlace por tono, no por color de marca: los
+   dos compartían el azul (--pd-azul) y en el cuerpo no se distinguía un
+   término destacado de un enlace, salvo por el subrayado. El enlace se
+   queda el azul de siempre; la negrita sube a blanco pleno (tinta en el
+   modo claro), que es cómo ya se resuelve en el panel de habilidades. */
 .pd-contenido strong {
-  color: var(--pd-azul);
+  color: #fff;
   font-weight: 600;
 }
 
@@ -874,7 +879,8 @@ video.pd-hero-media.is-playing {
 }
 
 .pd-page[data-theme="claro"] .pd-contenido strong {
-  color: var(--pd-claro-accento);
+  color: var(--pd-claro-ink);
+  font-weight: 600;
 }
 
 .pd-page[data-theme="claro"] .pd-tabs {

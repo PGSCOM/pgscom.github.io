@@ -78,7 +78,7 @@ El `<h1>` lo genera la página automáticamente con `titulo`. En el cuerpo usa d
 ```markdown
 Párrafo normal.
 
-**Negrita** → texto en azul claro (#93c5fd)
+**Negrita** → texto en blanco pleno (tinta oscura en modo claro)
 *Cursiva* o _cursiva_
 ~~Tachado~~
 ```
