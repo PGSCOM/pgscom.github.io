@@ -270,7 +270,8 @@ video.pd-hero-media.is-playing {
   transition: transform 0.25s ease;
 }
 
-.pd-btn-primary:hover .pd-btn-primary-icon {
+/* Un logo no "avanza" como una flecha: se queda quieto */
+.pd-btn-primary:hover .pd-btn-primary-icon:not(.pd-btn-primary-icon--marca) {
   transform: translateX(3px);
 }
 
