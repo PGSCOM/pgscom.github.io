@@ -177,6 +177,18 @@
   background: white;
 }
 
+/* Selector de vista: icono en vez de texto, con la misma altura que los botones de texto */
+.vista-btn[data-vista] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vista-btn[data-vista] svg {
+  width: 1.33em;
+  height: 1.33em;
+}
+
 /* Cabecera del grupo: pastilla gris, misma forma que los botones */
 .ia-marca {
   display: inline-flex;
