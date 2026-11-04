@@ -246,13 +246,22 @@ function initRuta() {
   const filtros = mapa.querySelectorAll('.ruta-filtro');
   const entries = cuerpo.querySelectorAll('.ruta-entry');
   const rejillaItems = mapa.querySelectorAll('.rejilla-item');
+  const filtrosIA = mapa.querySelectorAll('.ia-btn');
   let filtroActual = 'all';
+  let iaActual = 'all';
 
-  function setFiltro(cat) {
+  // Uso de IA (`data-ia`: sin / asistido / generado). Se combina con la
+  // disciplina; las subtarjetas heredan el de su proyecto.
+  function setFiltro(cat = filtroActual, ia = iaActual) {
     filtroActual = cat;
+    iaActual = ia;
     const aplicarFuera = (datosEl, targetEl) => {
       const cats = (datosEl.dataset.cats || '').split(',');
-      targetEl.classList.toggle('fuera', cat !== 'all' && !cats.includes(cat));
+      const iaEl = datosEl.closest('[data-ia]')?.dataset.ia;
+      targetEl.classList.toggle(
+        'fuera',
+        (cat !== 'all' && !cats.includes(cat)) || (ia !== 'all' && iaEl !== ia),
+      );
     };
     entries.forEach((entry) => {
       const item = entry.querySelector('.ruta-item');
@@ -265,6 +274,11 @@ function initRuta() {
       f.classList.toggle('act', act);
       f.setAttribute('aria-pressed', act ? 'true' : 'false');
     });
+    filtrosIA.forEach((f) => {
+      const act = f.dataset.ia === ia;
+      f.classList.toggle('act', act);
+      f.setAttribute('aria-pressed', act ? 'true' : 'false');
+    });
   }
 
   filtros.forEach((f) => {
@@ -273,9 +287,15 @@ function initRuta() {
       setFiltro(cat !== 'all' && filtroActual === cat ? 'all' : cat);
     });
   });
+  filtrosIA.forEach((f) => {
+    f.addEventListener('click', () => {
+      const ia = f.dataset.ia;
+      setFiltro(filtroActual, ia !== 'all' && iaActual === ia ? 'all' : ia);
+    });
+  });
 
   // ── Selector de vista: Rejilla ↔ Cronología ──
-  const vistaBtns = mapa.querySelectorAll('.vista-btn');
+  const vistaBtns = mapa.querySelectorAll('.vista-btn[data-vista]');
   function setVista(v) {
     mapa.dataset.vista = v;
     vistaBtns.forEach((b) => {

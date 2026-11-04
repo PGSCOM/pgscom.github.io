@@ -362,6 +362,15 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 					))}
 				</div>
 
+				<!-- Uso de IA (`estadoIA`): se combina con la disciplina -->
+				<!-- La marca, en un tramo oscuro, hace de cabecera; sin "Todo": se vuelve a pulsar la activa -->
+				<div class="vista-toggle ia-filtro" role="group" aria-label="Filtrar proyectos por uso de IA">
+					<span class="ia-marca"><IaTrazo ancho={20} /></span>
+					<button type="button" class="vista-btn ia-btn" data-ia="sin" aria-pressed="false" >Sin IA</button>
+					<button type="button" class="vista-btn ia-btn" data-ia="asistido" aria-pressed="false" title="Asistido por IA">Asistido</button>
+					<button type="button" class="vista-btn ia-btn" data-ia="generado" aria-pressed="false" title="Generado con IA">Generado</button>
+				</div>
+
 				<!-- Rejilla = escaneo rápido de todo; Cronología = la misma ruta de siempre -->
 				<div class="vista-toggle" role="group" aria-label="Forma de ver los proyectos">
 					<button type="button" class="vista-btn act" data-vista="rejilla" aria-pressed="true">Rejilla</button>
@@ -377,6 +386,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 						fecha={false}
 						class={`rejilla-item rejilla-item--${proyecto.escala}`}
 						data-cats={proyecto.catIds.join(',')}
+						data-ia={proyecto.estadoIA ?? 'sin'}
 						style={`--cat-color:${proyecto.color}`}
 					/>
 				))}
@@ -393,6 +403,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 									target="_blank"
 									rel="noopener noreferrer"
 									data-cats={p.catIds.join(',')}
+									data-ia={p.estadoIA ?? 'sin'}
 									style={`--cat-color:${p.color}`}
 								>
 									<span class="exp-thumb">
@@ -435,6 +446,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 						<div
 							class={`ruta-entry ruta-entry--${proyecto.lado}`}
 							data-cats={proyecto.catIds.join(',')}
+							data-ia={proyecto.estadoIA ?? 'sin'}
 							style={`--cat-color:${proyecto.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
 						>
 							<ProyectoCard proyecto={proyecto} poster={postersVideo.get(proyecto.id)} />

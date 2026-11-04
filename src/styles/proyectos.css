@@ -177,6 +177,17 @@
   background: white;
 }
 
+/* Cabecera del grupo: pastilla gris, misma forma que los botones */
+.ia-marca {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
 /* ============================================
    REJILLA — vista por defecto: todos los
    proyectos, tres tamaños fijos según `peso`
@@ -1135,7 +1146,8 @@
     gap: 6px;
   }
 
-  .ruta-filtro {
+  .ruta-filtro,
+  .vista-btn {
     padding: 6px 10px;
     font-size: 0.72rem;
   }
