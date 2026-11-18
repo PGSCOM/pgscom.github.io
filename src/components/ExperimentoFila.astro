@@ -25,7 +25,7 @@ const { proyecto: p } = Astro.props;
 	<span class="exp-thumb">
 		{p.imagen
 			? <Image src={p.imagen} alt="" width={176} loading="lazy" decoding="async" />
-			: p.cats[0] && <img class="exp-thumb-fallback" src={p.cats[0].logo} alt="" aria-hidden="true" loading="lazy" />}
+			: (p.icono || p.cats[0]) && <img class="exp-thumb-fallback" src={p.icono ? `/icons/${p.icono}.svg` : p.cats[0].logo} alt="" aria-hidden="true" loading="lazy" />}
 	</span>
 	<span class="exp-texto">
 		<strong class="exp-nombre">{p.titulo.trim()}</strong>

@@ -26,6 +26,8 @@ const proyectos = defineCollection({
 			draft: z.boolean().optional(),
 			// Opcional: sin imagen la tarjeta muestra el icono de su categoría
 			imagen: image().optional(),
+			// Opcional: archivo (sin .svg) de public/icons/ que sustituye al icono de la categoría cuando no hay imagen
+			icono: z.string().optional(),
 			// Imagen grande de la cabecera de la ficha; si falta se usa `imagen`
 			portada: image().optional(),
 			// Vídeo "trailer" (mp4/webm) para la cabecera; sustituye a la portada
