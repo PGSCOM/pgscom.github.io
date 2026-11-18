@@ -125,7 +125,7 @@ const breadcrumbLd = {
 			txtboton={proyecto.txtboton}
 			portada={portada}
 			trailer={proyecto.trailer}
-			logoFallback={aptitud.logo}
+			logoFallback={proyecto.icono ? `/icons/${proyecto.icono}.svg` : aptitud.logo}
 			tituloDegradado={proyecto.tituloDegradado}
 			estadoIA={proyecto.estadoIA}
 		/>
@@ -273,7 +273,7 @@ const breadcrumbLd = {
 										{rel.imagen ? (
 											<Image src={rel.imagen} alt={rel.titulo.trim()} loading="lazy" />
 										) : (
-											<img src={aptitud.logo} alt="" aria-hidden="true" loading="lazy" />
+											<img src={rel.icono ? `/icons/${rel.icono}.svg` : aptitud.logo} alt="" aria-hidden="true" loading="lazy" />
 										)}
 									</div>
 									<div class="pd-rel-info">

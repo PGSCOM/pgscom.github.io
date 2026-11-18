@@ -8,4 +8,4 @@ progress: 5
 cielo: 5
 ---
 - [Fix de IPv6](/proyectos/github-contributions) aceptado en go-ios.
-- [ios-tunnel-stream](/proyectos/ipad-tunnel), CLI de túneles al iPad.
+- [ios-tunnel-stream](/proyectos/scripts-de-bolsillo#ipad-por-cable), CLI de túneles al iPad.
