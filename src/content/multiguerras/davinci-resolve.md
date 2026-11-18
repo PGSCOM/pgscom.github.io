@@ -18,6 +18,8 @@ Y también, gracias al metadato del objetivo sabía qué cámara había que conf
 ### Composición
 Con los metadatos extraídos desde Unreal a CSV (proceso explicado [aquí](#emparejamiento-de-tomas-reales-y-virtuales)) metía las dos tomas con el mismo metadato de escena en una secuencia multicámara y luego la copiaba a una timeline donde se aplicaba la pantalla verde, corrección de color y VFX que necesitara esa escena.
 
+También llegué a preparar [MatAnyone 4K](/proyectos/matanyone-improved), rotoscopia con IA para recortar a los actores sin depender del chroma, aunque al final no se usó en el corto.
+
 ![Captura Workflow Composición](../../assets/proyectos/multiguerras/resolvecomposicion.png)
 
 #### Montaje:
