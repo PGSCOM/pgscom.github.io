@@ -5,25 +5,20 @@ fechaFin: "2026-06"
 categorias: [programacion]
 peso: 60
 # imagen: ../../assets/proyectos/TODO.png   # TODO: captura para la card
-descripcion: Buscador único para discos externos y nubes, aunque el disco esté desconectado.
-tecnologias: [Python, FastAPI, PostgreSQL, pgvector, CLIP, Meilisearch, React, Electron, Docker]
-link: https://github.com/PGSCOM/Cold-Searcher
+descripcion: Proyecto programación II en Java, indexador offline para carpetas con búsqueda potenciada con IA.
+tecnologias: [Java]
+link: https://github.com/PGSCOM/coldsearcher
 txtboton: Ver en GitHub
+experimento: true
+paginaPropia: true
 ---
 
 <!-- TODO: el problema real (cuántos discos tienes, qué buscabas y no encontrabas) -->
 
 ## Qué hace
 
-Indexa discos externos y almacenamiento en la nube (Google Drive, Dropbox, OneDrive, S3) en **un solo índice persistente**, así que puedes saber dónde está un archivo aunque el disco esté en un cajón.
+Indexa una carpeta en un índice independiente a ella. Así se podría saber dónde está un archivo aunque el disco de la carpeta esté en un cajón.
 
-- **Búsqueda semántica** con embeddings CLIP: "fotos de playa al atardecer".
-- **Búsqueda de texto completo** con Meilisearch.
+A parte de esto, el programa genera con IA una serie de etiquetas para cada archivo que se guardan en el índice para posteriormente buscar los archivos.
 
-## Arquitectura
-
-1. **Frontend**: React + Electron + TanStack Query + Tailwind.
-2. **API**: FastAPI con SQLAlchemy asíncrono.
-3. **Datos**: PostgreSQL con pgvector para los vectores.
-
-Todo se levanta con Docker Compose.
+Todas las dependencias externas se pueden levantar con un Docker Compose.
