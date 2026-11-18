@@ -9,15 +9,11 @@ descripcion: Servidor de Minecraft entre amigos, con modpack e infraestructura e
 tecnologias: [Docker, Packwiz, NeoForge, Tailscale, Cloudflare Pages]
 link: https://github.com/ComplicatedCraft
 enlaceExterno: https://github.com/ComplicatedCraft
+imagen: ../../assets/proyectos/LogoCardWebComplicatedcraft.png
 experimento: true
 txtboton: Ver en GitHub
 ---
 
-<!-- TODO: qué es el servidor, cuánta gente, tu papel -->
+Stack de tecnologías para hacer un servidor con Docker que se conecta a Cloudflare Tunnels (Cloudflared). El servidor es portable, se puede coordinar varias instancias de él y cualquier persona puede hostear el servidor mediante Cloudflared.
 
-Mis aportaciones al servidor:
-
-- **Docker-Server**: proxy con playit.gg para entrar sin abrir puertos.
-- **Modpack** (Packwiz): Sodium y un arreglo para las entidades de Create, que se veían oscuras.
-- **Modscale**: mod de NeoForge 1.21.1 con **Tailscale** integrado para unirse a la red privada desde el propio juego.
-- Configuración de despliegue en Cloudflare Pages para la web del servidor.
+Para el modpack, se usó **Packwiz** para crear el modpack y packwiz-installer para instalarlo en el cliente automáticamente.
