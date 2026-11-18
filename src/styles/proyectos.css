@@ -457,19 +457,53 @@
   display: flex;
   align-items: center;
   gap: 34px;
-  margin-bottom: 14vh;
+  margin-bottom: 6vh;
   transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+/* Con ancho para dos columnas, cada tarjeta sube hasta el hueco de la anterior;
+   no antes de un año o de unas filas, ni tras una entrada a todo el ancho */
+@media (min-width: 1240px) {
+  .ruta-entry {
+    margin-bottom: -120px;
+  }
+
+  .ruta-entry:has(.ruta-subs),
+  .ruta-entry:last-child,
+  .ruta-entry:has(+ .ruta-filas) {
+    margin-bottom: 8vh;
+  }
+}
+
+.ruta-entry:has(.ruta-subs) {
+  justify-content: center;
 }
 
 .ruta-entry--izq {
   justify-content: flex-start;
-  padding-left: var(--inset, 0%);
 }
 
 .ruta-entry--der {
   flex-direction: row-reverse;
   justify-content: flex-start;
-  padding-right: var(--inset, 0%);
+}
+
+/* Experimentos de cada año, en filas: el panel oculta la línea al pasar */
+.ruta-filas {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 9vh;
+  padding: 12px;
+  border-radius: 20px;
+  background: rgba(6, 9, 20, 0.84);
+}
+
+.ruta-filas .exp-fila {
+  height: 100%;
+}
+
+.ruta-filas li:only-child {
+  grid-column: 1 / -1;
 }
 
 /* Filtrado: fuera de la disciplina elegida → gris y atenuado */
@@ -723,7 +757,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--cat-color, #93c5fd);
+  color: color-mix(in srgb, var(--cat-color, #93c5fd) 50%, white);
   padding: 3px 9px;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--cat-color, #93c5fd) 45%, transparent);
@@ -750,6 +784,9 @@
    base es el de la tarjeta, no el de la cabecera, así que necesita su
    propio multiplicador (`tituloEscala`) para leerse a este tamaño. */
 .ruta-titulo.titulo-degradado {
+  /* Más claros que los de la ficha: aquí van sobre el velo oscuro de la tarjeta */
+  --titulo-grad-a: hsl(262, 70%, 80%);
+  --titulo-grad-b: #d4e1ff;
   font-family: 'Open Sans', sans-serif;
   font-weight: 800;
   line-height: 1.15;
@@ -1194,9 +1231,6 @@
     flex-direction: column;
     align-items: stretch;
     gap: 18px;
-    padding-left: 0;
-    padding-right: 0;
-    margin-bottom: 9vh;
   }
 
   .ruta-item {
@@ -1261,6 +1295,38 @@
       transparent 0%,
       rgba(2, 8, 23, 0.72) 32%,
       rgba(2, 8, 23, 0.95) 100%);
+  }
+
+  /* La imagen ocupa solo la parte de arriba y la info empieza donde se
+     funde: así los chips nunca tapan el motivo de la imagen. */
+  .ruta-img,
+  .ruta-video,
+  .ruta-video-poster,
+  .ruta-logo-capa {
+    bottom: auto;
+    height: 46vw;
+  }
+
+  .ruta-img,
+  .ruta-video,
+  .ruta-video-poster {
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, rgba(0, 0, 0, 0.72) 74%, rgba(0, 0, 0, 0.32) 88%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 62%, rgba(0, 0, 0, 0.72) 74%, rgba(0, 0, 0, 0.32) 88%, transparent 100%);
+  }
+
+  .ruta-item:not(.sin-imagen) .ruta-info {
+    margin-top: calc(46vw - 44px);
+  }
+
+  /* Sin imagen, el icono entra en el flujo y empuja la info hacia abajo */
+  .ruta-item.sin-imagen .ruta-fallback {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    flex: none;
+    width: 72px;
+    margin: 22px auto 0;
   }
 }
 

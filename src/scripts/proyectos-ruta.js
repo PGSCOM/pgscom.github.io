@@ -76,7 +76,7 @@ function initRuta() {
 
   function construirMascara() {
     recortes.replaceChildren();
-    cuerpo.querySelectorAll('.ruta-item').forEach((el) => {
+    cuerpo.querySelectorAll('.ruta-item, .ruta-filas').forEach((el) => {
       const b = rectLayout(el);
       const pad = 22;
       const r = document.createElementNS(NS, 'rect');
@@ -170,10 +170,11 @@ function initRuta() {
     rutaLista = true;
 
     // Un único ScrollTrigger por marcador de año: entrada animada y "encendido"
-    // del punto cuando la ruta pasa por él (se apaga al volver hacia arriba)
+    // del punto cuando la ruta pasa por él (se apaga al volver hacia arriba).
+    // Las entradas solo mueven: sin opacidad, el contenido se ve aunque no se
+    // dispare el ScrollTrigger.
     gsap.utils.toArray('.ruta-año', cuerpo).forEach((el) => {
       gsap.from(el, {
-        autoAlpha: 0,
         scale: 0.7,
         duration: 0.6,
         ease: 'back.out(1.6)',
@@ -197,7 +198,6 @@ function initRuta() {
         scrollTrigger: { trigger: entry, start: 'top 84%' },
       });
       tlEntry.from(item, {
-        autoAlpha: 0,
         y: 56,
         rotation: der ? 1.4 : -1.4,
         duration: 0.9,
@@ -205,7 +205,6 @@ function initRuta() {
       });
       if (subs.length) {
         tlEntry.from(subs, {
-          autoAlpha: 0,
           x: der ? 36 : -36,
           duration: 0.7,
           ease: 'power3.out',
@@ -242,7 +241,8 @@ function initRuta() {
 
   // ── Filtro por disciplina: atenúa y desatura, no oculta ──
   // Vale para las dos vistas: cada tarjeta principal lleva su propio
-  // `data-cats` (la rejilla en sí misma; la cronología en `.ruta-entry`).
+  // `data-cats` (la rejilla en sí misma; la cronología en `.ruta-entry`). Las
+  // filas de experimentos son `.rejilla-item` también dentro de la cronología.
   const filtros = mapa.querySelectorAll('.ruta-filtro');
   const entries = cuerpo.querySelectorAll('.ruta-entry');
   const rejillaItems = mapa.querySelectorAll('.rejilla-item');

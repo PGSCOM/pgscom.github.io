@@ -9,12 +9,12 @@ import { Image, getImage } from 'astro:assets';
 import logo from '../assets/logo.png';
 import ProyectoCard from '../components/ProyectoCard.astro';
 import IaTrazo from '../components/IaTrazo.astro';
+import ExperimentoFila from '../components/ExperimentoFila.astro';
 
 import { getCollection, render } from 'astro:content';
 import categoriasData from '../data/categorias.json';
 import contactoData from '../data/contacto.json';
 import { formatFecha, formatRangoFecha, esEnCurso } from '../utils/fechas.js';
-import { etiquetaIA } from '../utils/ia.js';
 
 // Forma de la P extraída de public/assets/animlogo/carga.svg (viewBox 600x600)
 const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.19165 c 66.88974,0 121.11609,-54.22597 121.11609,-121.11609 0,-66.88986 -54.22635,-121.114324 -121.11609,-121.114324 v -0.004 z';
@@ -107,33 +107,34 @@ for (const p of proyectos) {
 // ── Ruta cronológica (formato currículum: lo más reciente arriba) ──
 // Las categorías son etiquetas del proyecto (puede tener varias) y las
 // subtarjetas (`sub`) muestran trabajos concretos dentro del proyecto.
-// Los proyectos en curso (fechaFin: "ahora") van arriba del todo.
+// Los proyectos en curso (fechaFin: "ahora") van arriba del todo, los más
+// importantes (`peso`) primero: entre ellos la fecha no dice cuál sigue vivo.
 const claveOrden = (p: { fecha?: string; fechaFin?: string }) =>
 	esEnCurso(p.fechaFin) ? '9999' : String(p.fecha ?? '');
 const cronologia = [...proyectos].sort((a, b) =>
 	claveOrden(b).localeCompare(claveOrden(a))
+	|| (esEnCurso(a.fechaFin) ? (b.peso ?? 50) - (a.peso ?? 50) : 0)
 );
 
-let añoAnterior: string | null = null;
-const rutaEntries = cronologia.map((p, i) => {
+// Solo las tarjetas alternan de lado: los experimentos van en filas (ver gruposRuta)
+let tarjetasPrevias = 0;
+const rutaEntries = cronologia.map((p) => {
 	const año = esEnCurso(p.fechaFin) ? 'Ahora' : (String(p.fecha ?? '').slice(0, 4) || 'Otros');
-	const nuevoAño = año !== añoAnterior;
-	añoAnterior = año;
 	const peso = p.peso ?? 50;
 	const catsProyecto = p.categorias ?? [];
-	const subs = (p.sub ?? []).map((s) => ({
-		...s,
-		cat: s.categoria ? catById[s.categoria] : null,
-		color: s.categoria ? colorDe(s.categoria) : null,
-		fechaTexto: formatFecha(s.fecha),
-	}));
+	const subs = [...(p.sub ?? [])]
+		.sort((a, b) => String(b.fecha ?? '').localeCompare(String(a.fecha ?? '')))
+		.map((s) => ({
+			...s,
+			cat: s.categoria ? catById[s.categoria] : null,
+			color: s.categoria ? colorDe(s.categoria) : null,
+			fechaTexto: formatFecha(s.fecha),
+		}));
 	return {
 		...p,
 		año,
-		nuevoAño,
 		fechaTexto: p.ocultarFecha ? null : formatRangoFecha(p.fecha, p.fechaFin),
-		lado: i % 2 === 0 ? 'izq' : 'der',
-		inset: ['0%', '5%', '2%'][i % 3],
+		lado: !p.experimento && tarjetasPrevias++ % 2 === 1 ? 'der' : 'izq',
 		w: peso >= 75 ? 580 : peso >= 55 ? 500 : 430,
 		// Tamaño en la rejilla: mismo umbral que el ancho de la cronología
 		escala: peso >= 75 ? 'grande' : peso >= 55 ? 'medio' : 'pequeño',
@@ -147,6 +148,12 @@ const rutaEntries = cronologia.map((p, i) => {
 			: typeof p.descripcionexterior === 'string' ? p.descripcionexterior
 			: null,
 	};
+});
+
+// Cada año de la cronología: las tarjetas y, al final, sus experimentos en filas
+const gruposRuta = [...new Set(rutaEntries.map((p) => p.año))].map((año) => {
+	const delAño = rutaEntries.filter((p) => p.año === año);
+	return { año, tarjetas: delAño.filter((p) => !p.experimento), filas: delAño.filter((p) => p.experimento) };
 });
 
 // ── Rejilla: orden manual ──
@@ -409,37 +416,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 			{experimentos.length > 0 && (
 				<div class="experimentos">
 					<ul class="exp-lista">
-						{experimentos.map((p) => (
-							<li>
-								<a
-									class={`exp-fila rejilla-item${p.imagen ? '' : ' sin-imagen'}`}
-									href={p.enlaceExterno ?? p.link}
-									target="_blank"
-									rel="noopener noreferrer"
-									data-cats={p.catIds.join(',')}
-									data-ia={p.estadoIA ?? 'sin'}
-									style={`--cat-color:${p.color}`}
-								>
-									<span class="exp-thumb">
-										{p.imagen
-											? <Image src={p.imagen} alt="" width={176} loading="lazy" decoding="async" />
-											: p.cats[0] && <img class="exp-thumb-fallback" src={p.cats[0].logo} alt="" aria-hidden="true" loading="lazy" />}
-									</span>
-									<span class="exp-texto">
-										<strong class="exp-nombre">{p.titulo.trim()}</strong>
-										{p.descripcion && <span class="exp-desc">{p.descripcion}</span>}
-										{p.estadoIA && (
-											<span class="exp-ia">
-												<IaTrazo ancho={24} />
-												{p.textotarjetaIA ?? etiquetaIA[p.estadoIA]}
-											</span>
-										)}
-									</span>
-									<span class="exp-año">{String(p.fecha ?? '').slice(0, 4)}</span>
-									<svg class="exp-flecha" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-								</a>
-							</li>
-						))}
+						{experimentos.map((p) => <li><ExperimentoFila proyecto={p} /></li>)}
 					</ul>
 				</div>
 			)}
@@ -448,55 +425,63 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 				<!-- Línea de la ruta: se dibuja con el scroll (la traza el JS) -->
 				<svg class="ruta-linea" aria-hidden="true"></svg>
 
-				{rutaEntries.map((proyecto) => (
-					<Fragment>
-						{proyecto.nuevoAño && (
-							<div class="ruta-año">
-								<span class="ruta-año-dot" aria-hidden="true"></span>
-								<span class="ruta-año-num">{proyecto.año}</span>
+				{gruposRuta.map((grupo) => (
+					<div class="ruta-grupo">
+						<div class="ruta-año">
+							<span class="ruta-año-dot" aria-hidden="true"></span>
+							<span class="ruta-año-num">{grupo.año}</span>
+						</div>
+
+						{grupo.tarjetas.map((proyecto) => (
+							<div
+								class={`ruta-entry ruta-entry--${proyecto.lado}`}
+								data-cats={proyecto.catIds.join(',')}
+								data-ia={proyecto.estadoIA ?? 'sin'}
+								style={`--cat-color:${proyecto.color};--w:${proyecto.w}px`}
+							>
+								<ProyectoCard proyecto={proyecto} poster={postersVideo.get(proyecto.id)} />
+
+								{proyecto.subs.length > 0 && (
+									<div class="ruta-subs">
+										{proyecto.subs.map((s) => {
+											const Tag = s.link ? 'a' : 'div';
+											return (
+												<Tag
+													class="ruta-sub"
+													data-cats={s.categoria || undefined}
+													style={s.color ? `--cat-color:${s.color}` : undefined}
+													{...(s.link ? { href: s.link } : {})}
+												>
+													<div class="ruta-sub-media">
+														{s.cat && <img class="ruta-sub-fallback" src={s.cat.logo} alt="" aria-hidden="true" loading="lazy" />}
+														{s.imagen && <Image class="ruta-sub-img" src={s.imagen} alt="" loading="lazy" decoding="async" />}
+														{s.imagen && s.cat && (
+															<span class="ruta-sub-cat" title={s.cat.titulo}>
+																<img src={s.cat.logo} alt={s.cat.titulo} />
+															</span>
+														)}
+													</div>
+													<div class="ruta-sub-body">
+														{s.fechaTexto && <span class="ruta-sub-fecha">{s.fechaTexto}</span>}
+														<strong class="ruta-sub-titulo">{s.titulo}</strong>
+														{s.descripcion && <p class="ruta-sub-desc">{s.descripcion}</p>}
+													</div>
+												</Tag>
+											);
+										})}
+									</div>
+								)}
+							</div>
+						))}
+
+						{grupo.filas.length > 0 && (
+							<div class="ruta-filas">
+								<ul class="exp-lista">
+									{grupo.filas.map((p) => <li><ExperimentoFila proyecto={p} /></li>)}
+								</ul>
 							</div>
 						)}
-
-						<div
-							class={`ruta-entry ruta-entry--${proyecto.lado}`}
-							data-cats={proyecto.catIds.join(',')}
-							data-ia={proyecto.estadoIA ?? 'sin'}
-							style={`--cat-color:${proyecto.color};--w:${proyecto.w}px;--inset:${proyecto.inset}`}
-						>
-							<ProyectoCard proyecto={proyecto} poster={postersVideo.get(proyecto.id)} />
-
-							{proyecto.subs.length > 0 && (
-								<div class="ruta-subs">
-									{proyecto.subs.map((s) => {
-										const Tag = s.link ? 'a' : 'div';
-										return (
-											<Tag
-												class="ruta-sub"
-												data-cats={s.categoria || undefined}
-												style={s.color ? `--cat-color:${s.color}` : undefined}
-												{...(s.link ? { href: s.link } : {})}
-											>
-												<div class="ruta-sub-media">
-													{s.cat && <img class="ruta-sub-fallback" src={s.cat.logo} alt="" aria-hidden="true" loading="lazy" />}
-													{s.imagen && <Image class="ruta-sub-img" src={s.imagen} alt="" loading="lazy" decoding="async" />}
-													{s.imagen && s.cat && (
-														<span class="ruta-sub-cat" title={s.cat.titulo}>
-															<img src={s.cat.logo} alt={s.cat.titulo} />
-														</span>
-													)}
-												</div>
-												<div class="ruta-sub-body">
-													{s.fechaTexto && <span class="ruta-sub-fecha">{s.fechaTexto}</span>}
-													<strong class="ruta-sub-titulo">{s.titulo}</strong>
-													{s.descripcion && <p class="ruta-sub-desc">{s.descripcion}</p>}
-												</div>
-											</Tag>
-										);
-									})}
-								</div>
-							)}
-						</div>
-					</Fragment>
+					</div>
 				))}
 			</div>
 		</div>
