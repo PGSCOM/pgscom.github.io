@@ -15,7 +15,7 @@ import { etiquetaIA } from '../../utils/ia.js';
 // Cada página es HTML real y rastreable por los bots de Google.
 export async function getStaticPaths() {
 	const cats = categoriasData.categorias;
-	const todasLasEntradas = await getCollection('proyectos');
+	const todasLasEntradas = await getCollection('proyectos', ({ data }) => !data.draft);
 	const proyectos = todasLasEntradas.map((e) => ({ id: e.id, ...e.data }));
 	// "multiguerras" tiene su propio micrositio a medida en
 	// src/pages/proyectos/multiguerras.astro (demasiados subproyectos para

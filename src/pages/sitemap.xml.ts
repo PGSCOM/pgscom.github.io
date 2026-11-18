@@ -7,7 +7,7 @@ export const GET: APIRoute = async ({ site }) => {
 	const base = (site?.href ?? 'https://pgscom.es/').replace(/\/$/, '');
 	const ahora = new Date().toISOString().slice(0, 10);
 
-	const proyectos = await getCollection('proyectos');
+	const proyectos = await getCollection('proyectos', ({ data }) => !data.draft);
 
 	const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

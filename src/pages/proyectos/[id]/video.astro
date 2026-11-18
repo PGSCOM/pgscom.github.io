@@ -7,7 +7,7 @@ import '../../../styles/video-page.css';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-	const entradas = await getCollection('proyectos');
+	const entradas = await getCollection('proyectos', ({ data }) => !data.draft);
 	return entradas
 		.filter((e) => e.data.urlvideopage)
 		.map((entrada) => ({

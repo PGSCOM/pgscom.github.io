@@ -22,7 +22,7 @@ const pPath = 'M 185.06066,92.957646 V 214.07196 456.30058 H 306.17677 V 335.191
 const categorias = categoriasData.categorias;
 // Cada proyecto vive en src/content/proyectos/<id>.md; aquí solo se usan
 // los metadatos del frontmatter (el cuerpo markdown se renderiza en su ficha)
-const proyectos = (await getCollection('proyectos')).map((e) => ({ id: e.id, ...e.data }));
+const proyectos = (await getCollection('proyectos', ({ data }) => !data.draft)).map((e) => ({ id: e.id, ...e.data }));
 const catById = Object.fromEntries(categorias.map((c) => [c.id, c]));
 // Color cuando un proyecto no tiene categoría (o esta no existe en el JSON)
 const COLOR_NEUTRO = '#9bb4d0';
