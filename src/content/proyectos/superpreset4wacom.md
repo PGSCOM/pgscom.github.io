@@ -10,6 +10,7 @@ link: https://pgscom.github.io/SuperPreset4Wacom/
 enlaceExterno: https://pgscom.github.io/SuperPreset4Wacom/
 experimento: true
 txtboton: Abrir la herramienta
+estadoIA: generado
 ---
 
 El software de Wacom solo exporta un `.wacomprefs` por configuración. Esta web los **fusiona** en uno, funcionando 100% en el navegador, sin servidor.

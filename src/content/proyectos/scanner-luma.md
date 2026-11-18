@@ -9,6 +9,7 @@ link: https://github.com/PGSCOM/3D-Scanner-to-Luma-AI
 enlaceExterno: https://github.com/PGSCOM/3D-Scanner-to-Luma-AI
 experimento: true
 txtboton: Ver en GitHub
+estadoIA: generado
 ---
 
 La app **3D Scanner** de iOS guarda la posición de cada fotograma por separado. Este script las agrupa en un único `transforms.json` con el formato que pide Luma AI, para reconstruir la escena con las posiciones de cámara reales.

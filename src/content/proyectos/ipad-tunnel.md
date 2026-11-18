@@ -11,6 +11,7 @@ link: https://github.com/PGSCOM/ios-tunnel-stream
 enlaceExterno: https://github.com/PGSCOM/ios-tunnel-stream
 experimento: true
 txtboton: Ver en GitHub
+estadoIA: generado
 ---
 
 Dos herramientas para conectar un iPad al PC por cable.

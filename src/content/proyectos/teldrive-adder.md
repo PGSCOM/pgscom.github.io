@@ -10,6 +10,7 @@ link: https://github.com/PGSCOM/Teldrive-adder
 enlaceExterno: https://github.com/PGSCOM/Teldrive-adder
 experimento: true
 txtboton: Ver en GitHub
+estadoIA: generado
 ---
 
 [Teldrive](https://github.com/tgdrive/teldrive) es una unidad self-hosted que guarda los archivos en Telegram. Estos scripts con **Telethon** traen a Teldrive lo que ya estaba subido a un canal:
