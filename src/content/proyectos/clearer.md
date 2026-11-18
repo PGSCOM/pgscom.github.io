@@ -11,12 +11,11 @@ link: https://github.com/PGSCOM/Clearer
 enlaceExterno: https://github.com/PGSCOM/Clearer
 experimento: true
 txtboton: Ver en GitHub
+estadoIA: generado
+paginapropia: true
 ---
 
-Prototipo desarrollado con ayuda de IA para vaciar la galería de fotos sin volverse loco.
+Prototipo de app para ayudar a vaciar la galería de fotos con ayuda de Vision Framework de Apple.
 
-- Usa el **Vision Framework** de Apple para clasificar las imágenes de Fotos **on-device**.
-- No descarga los originales de iCloud para analizarlas: trabaja con las versiones ligeras.
-- Pensada para revisar catálogos de **10.000 fotos**: zoom, descarga del original solo cuando hace falta.
-
-<!-- TODO: qué criterios usa para proponer borrar (duplicadas, capturas, borrosas…) y resultados -->
+- Usa el **Vision Framework** para clasificar las imágenes de Fotos **on-device**
+- No descarga los originales de iCloud para analizarlas (Por defecto)
