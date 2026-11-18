@@ -7,14 +7,14 @@ peso: 75
 # imagen: ../../assets/proyectos/TODO.png   # TODO: captura para la card
 descripcion: Alternativa open source a Immersed - tus monitores del PC dentro de unas gafas de realidad virtual.
 tecnologias: [Godot 4, OpenXR, C++, DXGI, NVENC, WebXR, Node.js]
-link: https://pgscom.github.io/Immersive/
+link: https://github.com/PGSCOM/Immersive
 ---
 
 <!-- TODO: motivación (qué gafas tienes, por qué no te valía Immersed) -->
 
 ## Qué hace
 
-Un programa en el PC captura las pantallas y las envía por Wi-Fi a unas gafas (Quest, Pico 4), donde aparecen como hasta **3 paneles flotantes**.
+Programa en el PC que captura las pantallas y las envía por Wi-Fi a unas gafas (Quest, Pico 4), donde aparecen monitores flotantes. También admite crear monitores virtuales. Es una alternativa open source a [Immersed](https://immersed.com/).
 
 - Teclado virtual QWERTY dentro de la VR.
 - Foveated rendering con eye-tracking, hand tracking (pinch) y passthrough.
