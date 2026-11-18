@@ -20,6 +20,8 @@ const proyectos = defineCollection({
 			peso: z.number().optional(),
 			// Proyecto pequeño: sale de la rejilla y va a la lista compacta de debajo
 			experimento: z.boolean().optional(),
+			// Solo para experimentos: la fila enlaza a su ficha en vez de a `link`
+			paginaPropia: z.boolean().optional(),
 			// Borrador: no se publica (ni tarjeta, ni ficha, ni sitemap)
 			draft: z.boolean().optional(),
 			// Opcional: sin imagen la tarjeta muestra el icono de su categoría

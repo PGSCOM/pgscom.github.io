@@ -17,6 +17,7 @@ peso: 75                             # Tamaño de card (0–100, defecto 50): �
 experimento: true                    # Proyecto pequeño: sale de la rejilla y va a la lista compacta de debajo
                                       # (miniatura + nombre + descripción). Enlaza a `enlaceExterno` (o a `link`).
                                       # En la cronología sigue saliendo como tarjeta normal.
+paginaPropia: true                   # Solo con `experimento`: la fila enlaza a la ficha /proyectos/<slug>
 draft: true                          # Borrador: no se publica en ningún sitio
 destacado: 2                         # Aparece en el carrusel del hero; entero, menor = primero.
                                       # Además ordena la rejilla: los que tienen este campo van primero
