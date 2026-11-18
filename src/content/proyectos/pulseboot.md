@@ -8,6 +8,7 @@ descripcion: Un ESP32 que sustituye el botón de encendido del PC y lo conecta a
 tecnologias: [ESP32-C6, ESP-IDF, PlatformIO, Matter, ESPHome, MQTT, Home Assistant]
 link: https://github.com/PGSCOM/PulseBoot
 txtboton: Ver en GitHub
+draft: true
 ---
 
 <!-- TODO: foto del montaje dentro de la torre -->
