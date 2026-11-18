@@ -12,6 +12,7 @@ link: https://github.com/PGSCOM/Blender-Cotracker3
 txtboton: Ver en GitHub
 estadoIA: generado
 experimento: true
+paginaPropia: true
 ---
 
 A partir del workflow alternativo que se tuvo que usar en el [Periodo de Multiguerras](/proyectos/multiguerras), donde usé un [space con CoTracker3](https://huggingface.co/spaces/PGSCOM/cotracker) para recuperar tomas en las que el tracking falló, cree un addon para Blender que reemplaza el tracking nativo por el de [CoTracker3](https://cotracker3.github.io/).
