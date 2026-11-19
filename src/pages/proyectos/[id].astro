@@ -6,7 +6,7 @@ import IaTrazo from '../../components/IaTrazo.astro';
 import '../../styles/proyecto-detalle.css';
 import '../../styles/titulo-proyecto.css';
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
+import Imagen from '../../components/Imagen.astro';
 import categoriasData from '../../data/categorias.json';
 import { formatRangoFecha } from '../../utils/fechas.js';
 import { etiquetaIA } from '../../utils/ia.js';
@@ -46,8 +46,9 @@ const fechaTexto = formatRangoFecha(proyecto.fecha, proyecto.fechaFin);
 // como respaldo. Sin ninguna, se muestra el icono de la categoría.
 const portada = proyecto.portada || proyecto.imagen;
 // og:image y JSON-LD necesitan una URL string: .src es la ruta del asset
-// optimizado; si el proyecto no tiene imagen, cae al logo (SVG) de la categoría.
-const ogImagen = proyecto.imagen?.src ?? aptitud.logo;
+// optimizado (o la URL, si `imagen` es remota); sin imagen, cae al logo (SVG)
+// de la categoría.
+const ogImagen = (typeof proyecto.imagen === 'string' ? proyecto.imagen : proyecto.imagen?.src) ?? aptitud.logo;
 
 const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
 const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;
@@ -271,7 +272,7 @@ const breadcrumbLd = {
 								<a class="pd-rel-card" href={`/proyectos/${rel.id}`}>
 									<div class="pd-rel-image">
 										{rel.imagen ? (
-											<Image src={rel.imagen} alt={rel.titulo.trim()} loading="lazy" />
+											<Imagen src={rel.imagen} alt={rel.titulo.trim()} loading="lazy" />
 										) : (
 											<img src={rel.icono ? `/icons/${rel.icono}.svg` : aptitud.logo} alt="" aria-hidden="true" loading="lazy" />
 										)}

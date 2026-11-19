@@ -11,7 +11,8 @@
 // proyecto-detalle.css) — no es la pila centrada por defecto. La pista de
 // scroll pasa a la esquina opuesta, abajo a la derecha, como segunda pieza
 // de la misma fila en vez de cerrar la pila.
-import { Image, getImage } from 'astro:assets';
+import { getImage } from 'astro:assets';
+import Imagen from './Imagen.astro';
 import { palabrasLetras } from '../utils/titulo.js';
 import { etiquetaIA } from '../utils/ia.js';
 import IaTrazo from './IaTrazo.astro';
@@ -24,7 +25,7 @@ interface Props {
 	premio?: string;
 	link?: string;
 	txtboton?: string;
-	portada?: ImageMetadata;
+	portada?: ImageMetadata | string;
 	trailer?: string;
 	logoFallback: string;
 	// Degradado letra a letra del título (ver src/styles/titulo-proyecto.css).
@@ -40,7 +41,7 @@ const [gradA, gradB] = Array.isArray(tituloDegradado) ? tituloDegradado : [];
 // Póster del trailer: webp optimizado (el atributo `poster` no pasa por
 // <Image>, así que con `.src` directo cargaría el asset original completo).
 const posterTrailer = trailer && portada
-	? (await getImage({ src: portada, format: 'webp', width: 1600 })).src
+	? typeof portada === 'string' ? portada : (await getImage({ src: portada, format: 'webp', width: 1600 })).src
 	: undefined;
 ---
 
@@ -55,7 +56,7 @@ const posterTrailer = trailer && portada
 			aria-hidden="true"
 		></video>
 	) : portada ? (
-		<Image
+		<Imagen
 			class="pd-hero-media"
 			src={portada}
 			alt={titulo}

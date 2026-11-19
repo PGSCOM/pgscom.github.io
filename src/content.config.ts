@@ -24,8 +24,9 @@ const proyectos = defineCollection({
 			paginaPropia: z.boolean().optional(),
 			// Borrador: no se publica (ni tarjeta, ni ficha, ni sitemap)
 			draft: z.boolean().optional(),
-			// Opcional: sin imagen la tarjeta muestra el icono de su categoría
-			imagen: image().optional(),
+			// Opcional: sin imagen la tarjeta muestra el icono de su categoría.
+			// También admite una URL remota, que se sirve sin optimizar (ver Imagen.astro).
+			imagen: z.union([image(), z.url()]).optional(),
 			// Opcional: archivo (sin .svg) de public/icons/ que sustituye al icono de la categoría cuando no hay imagen
 			icono: z.string().optional(),
 			// Imagen grande de la cabecera de la ficha; si falta se usa `imagen`

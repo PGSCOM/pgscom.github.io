@@ -1,0 +1,18 @@
+---
+// <Image> de Astro, salvo que `src` sea una URL remota: entonces un <img> tal
+// cual, sin optimizar, para que se vea siempre la versión que esté publicada.
+// Es el caso de "Portfolio de cine", cuya imagen (https://cine.pgscom.es/muro.webp)
+// regenera aquella web en cada despliegue.
+import { Image } from 'astro:assets';
+
+interface Props {
+	src: ImageMetadata | string;
+	[atributo: string]: any;
+}
+
+const { src, ...resto } = Astro.props;
+// Opciones de optimización que un <img> no entiende
+const { widths, sizes, format, quality, ...atributos } = resto;
+---
+
+{typeof src === 'string' ? <img src={src} {...atributos} /> : <Image src={src} {...(resto as any)} />}

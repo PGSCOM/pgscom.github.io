@@ -13,6 +13,7 @@
 // Con `estadoIA`, bajo el título va una línea con el aviso de IA
 // (`textotarjetaIA` o el texto por defecto de src/utils/ia.js).
 import { Image } from 'astro:assets';
+import Imagen from './Imagen.astro';
 import { palabrasLetras } from '../utils/titulo.js';
 import { etiquetaIA } from '../utils/ia.js';
 import IaTrazo from './IaTrazo.astro';
@@ -78,7 +79,7 @@ const tituloEstilo = proyecto.tituloDegradado
 				    desvanecerlo sobre el vídeo (ver .is-playing en proyectos.css). */}
 				<img class="ruta-video-poster" src={poster} alt="" aria-hidden="true" loading="lazy" />
 			</Fragment>
-			: proyecto.imagen && <Image class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
+			: proyecto.imagen && <Imagen class="ruta-img" src={proyecto.imagen} alt={proyecto.titulo.trim()} loading="lazy" decoding="async" />}
 		<img class="ruta-fallback" src={proyecto.cats[0]?.logo} alt="" aria-hidden="true" loading="lazy" />
 		{proyecto.premio && <span class="ruta-premio">🏆 {proyecto.premio}</span>}
 		{proyecto.enlaceExterno && (

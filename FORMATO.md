@@ -22,7 +22,9 @@ draft: true                          # Borrador: no se publica en ningún sitio
 destacado: 2                         # Aparece en el carrusel del hero; entero, menor = primero.
                                       # Además ordena la rejilla: los que tienen este campo van primero
                                       # (por este número), el resto sigue detrás en orden cronológico.
-imagen: ../../assets/proyectos/x.png # Imagen de la card y og:image
+imagen: ../../assets/proyectos/x.png # Imagen de la card y og:image. También vale una URL
+                                      # (https://...): se sirve tal cual, sin optimizar, y se ve
+                                      # siempre la versión publicada (p. ej. portfolio-cine.md)
 portada: ../../assets/proyectos/x.png # Portada en el hero de la ficha (si difiere de imagen)
 trailer: /videos/mi-trailer.mp4      # Vídeo en el hero (reemplaza a portada)
 descripcion: "Frase breve"           # Subtítulo en el hero y og:description

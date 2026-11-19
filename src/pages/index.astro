@@ -6,6 +6,7 @@ import '../styles/proyectos.css';
 import '../styles/habilidades.css';
 import '../styles/contacto.css';
 import { Image, getImage } from 'astro:assets';
+import Imagen from '../components/Imagen.astro';
 import logo from '../assets/logo.png';
 import ProyectoCard from '../components/ProyectoCard.astro';
 import IaTrazo from '../components/IaTrazo.astro';
@@ -100,7 +101,7 @@ const huecosHero = huecosPorCantidad[featured.length] ?? featured.map((_, i) => 
 const postersVideo = new Map();
 for (const p of proyectos) {
 	if (p.video && p.imagen) {
-		postersVideo.set(p.id, (await getImage({ src: p.imagen, format: 'webp', width: 960 })).src);
+		postersVideo.set(p.id, typeof p.imagen === 'string' ? p.imagen : (await getImage({ src: p.imagen, format: 'webp', width: 960 })).src);
 	}
 }
 
@@ -241,7 +242,7 @@ const experimentos = rutaEntries.filter((p) => p.experimento);
 					>
 						<span class="hero-card-tilt">
 							<span class="hero-card-media">
-								<Image src={proyecto.imagen!} alt={proyecto.titulo} loading="eager" decoding="async" />
+								<Imagen src={proyecto.imagen!} alt={proyecto.titulo} loading="eager" decoding="async" />
 								{proyecto.enlaceExterno && (
 									<span class="card-externo-icono" aria-hidden="true">
 										<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>

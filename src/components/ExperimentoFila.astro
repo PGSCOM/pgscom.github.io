@@ -2,7 +2,7 @@
 // Fila compacta de un proyecto con `experimento: true`, compartida por la lista
 // bajo la Rejilla y por el final de cada año de la Cronología. Lleva
 // `rejilla-item` para que el filtro por disciplina la atenúe en las dos vistas.
-import { Image } from 'astro:assets';
+import Imagen from './Imagen.astro';
 import IaTrazo from './IaTrazo.astro';
 import { etiquetaIA } from '../utils/ia.js';
 
@@ -24,7 +24,7 @@ const { proyecto: p } = Astro.props;
 >
 	<span class="exp-thumb">
 		{p.imagen
-			? <Image src={p.imagen} alt="" width={176} loading="lazy" decoding="async" />
+			? <Imagen src={p.imagen} alt="" width={176} loading="lazy" decoding="async" />
 			: (p.icono || p.cats[0]) && <img class="exp-thumb-fallback" src={p.icono ? `/icons/${p.icono}.svg` : p.cats[0].logo} alt="" aria-hidden="true" loading="lazy" />}
 	</span>
 	<span class="exp-texto">

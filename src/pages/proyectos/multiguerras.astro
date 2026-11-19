@@ -45,7 +45,7 @@ const capitulosRenderizados = await Promise.all(
 // og:image y JSON-LD necesitan una URL string: .src es la ruta del asset
 // optimizado; si no hay imagen, cae al logo (SVG) de la categoría, igual
 // que en [id].astro.
-const ogImagen = proyecto.imagen?.src ?? aptitud.logo;
+const ogImagen = (typeof proyecto.imagen === 'string' ? proyecto.imagen : proyecto.imagen?.src) ?? aptitud.logo;
 
 const tituloPagina = `${proyecto.titulo.trim()} · ${aptitud.titulo} — PGSCOM`;
 const descripcionPagina = proyecto.descripcion || `${proyecto.titulo} — proyecto de ${aptitud.titulo} de Pablo García Santamaría.`;
