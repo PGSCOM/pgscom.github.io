@@ -10,6 +10,7 @@ descripcion: Gala de premios de cortometrajes escolares
 tecnologias: [Blender, OBS Studio, App Inventor, Firebase, Web]
 ocultarFecha: true
 link: https://premiosmacula.es
+txtboton: "Ver página web"
 sub:
   - titulo: Sistema de entradas
     descripcion: Sistema de generación y validación de entradas con QR.
@@ -42,6 +43,8 @@ Los Premios Mácula son una gala de premios de cortometrajes hechos por los alum
 <br/>
 
 Laura Madrigal, Jorge Herrán, Javier Galván y demás personas encargadas de este proyecto en el Colegio San Agustín de Santander, gracias por dejarnos ayudar en este proyecto.
+
+[Instagram de los premios →](https://www.instagram.com/premios_macula/)
 
 <h2 data-tab="video">Streaming</h2>
 
