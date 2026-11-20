@@ -9,6 +9,8 @@ imagen: ../../assets/proyectos/Macula.png
 descripcion: Gala de premios de cortometrajes escolares
 tecnologias: [Blender, OBS Studio, App Inventor, Firebase, Web]
 ocultarFecha: true
+trailer: /proyvid/macula/trailer.mp4
+video: /proyvid/macula/trailer.mp4
 link: https://premiosmacula.es
 txtboton: "Ver página web"
 sub:
