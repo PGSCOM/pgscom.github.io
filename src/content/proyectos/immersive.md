@@ -4,7 +4,9 @@ fecha: "2026-02"
 fechaFin: ahora
 categorias: [programacion]
 peso: 75
-# imagen: ../../assets/proyectos/TODO.png   # TODO: captura para la card
+imagen: ../../assets/proyectos/immersive.webp
+video: /proyvid/immersive-vr.mp4
+trailer: /proyvid/immersive-vr.mp4
 descripcion: Alternativa open source a Immersed - tus monitores del PC dentro de unas gafas de realidad virtual.
 tecnologias: [Godot 4, OpenXR, C++, DXGI, NVENC, WebXR, Node.js]
 link: https://github.com/PGSCOM/Immersive
@@ -33,4 +35,7 @@ Captura con **DXGI Desktop Duplication** y codifica por software (MJPEG) o por h
 
 Hecho en **Godot 4 + OpenXR**. La arquitectura y el protocolo están documentados en el repo (`ARCHITECTURE.md`, `PROTOCOL.md`) y hay CI en GitHub Actions para el host y el export de Godot.
 
-<!-- TODO: vídeo grabado desde las gafas -->
+
+## Demo
+
+<video src="/proyvid/immersive-vr.mp4" width="1920" height="1080" controls preload="none"></video>
