@@ -4,6 +4,7 @@ fecha: "2026-02"
 fechaFin: ahora
 categorias: [programacion]
 peso: 75
+destacado: 3
 imagen: ../../assets/proyectos/immersive.webp
 video: /proyvid/immersive-vr.mp4
 trailer: /proyvid/immersive-vr.mp4

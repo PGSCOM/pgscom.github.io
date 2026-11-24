@@ -3,6 +3,7 @@ titulo: Faro
 fecha: "2026-09"
 categorias: [programacion]
 peso: 75
+destacado: 4
 imagen: ../../assets/proyectos/faromlx.webp
 video: /proyvid/faromlx.mp4
 trailer: /proyvid/faromlx.mp4

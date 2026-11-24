@@ -4,6 +4,7 @@ fecha: "2024"
 fechaFin: ahora
 categorias: [video, desarrollo-web]
 peso: 55
+destacado: 5
 imagen: https://cine.pgscom.es/muro.webp # la regenera cine.pgscom.es en cada build
 descripcion: Mi web de cine, con estética de plataforma de streaming, para mis cortometrajes, el largo y los making-of.
 tecnologias: [Astro, JSON, HTML, CSS]
