@@ -4,7 +4,7 @@ categoria: vfx
 icono: pytorch
 orden: 140
 resumen: Modelos de IA en local para tracking y rotoscopia.
-progress: 50
+progress: 40
 cielo: 50
 ---
 - **CoTracker3** (Meta) para seguir puntos donde el tracker clásico falla: [addon para Blender](/proyectos/blender-cotracker3).

@@ -9,3 +9,4 @@ cielo: 75
 ---
 - Carcasa de la Raspberry Pi de la infraestructura de Multiguerras (Hecha con FreeCAD).
 - Rueda sustituta de Resolve Speed Editor (En progreso...).
+- Diseño de mi logo con moldes de resina y tintes (En progreso...).

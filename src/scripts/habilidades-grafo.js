@@ -476,7 +476,7 @@ function initGrafo() {
 		// Rótulo del horizonte: sobre la propia línea (que se corta a su paso),
 		// en el primer hueco libre desde la izquierda.
 		const rotulo = crear('text', { class: 'hab-guia-texto', 'text-anchor': 'middle', 'dominant-baseline': 'central' });
-		rotulo.textContent = 'Domino';
+		rotulo.textContent = '';
 		rotulos.append(rotulo);
 		const hw = rotulo.getComputedTextLength() / 2 + 6, hh = 8;
 		const libre = Array.from({ length: 60 }, (_, s) => -topeX + 40 + s * 20)
