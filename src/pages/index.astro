@@ -101,7 +101,7 @@ const huecosHero = huecosPorCantidad[featured.length] ?? featured.map((_, i) => 
 const postersVideo = new Map();
 for (const p of proyectos) {
 	if (p.video && p.imagen) {
-		postersVideo.set(p.id, typeof p.imagen === 'string' ? p.imagen : (await getImage({ src: p.imagen, format: 'webp', width: 960 })).src);
+		postersVideo.set(p.id, typeof p.imagen === 'string' ? p.imagen : (await getImage({ src: p.imagen, format: 'webp', width: 1920 })).src);
 	}
 }
 

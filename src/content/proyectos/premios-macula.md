@@ -5,7 +5,7 @@ fechaFin: ahora
 categorias: [programacion, video, vfx]
 peso: 80
 destacado: 2
-imagen: ../../assets/proyectos/Macula.png
+imagen: ../../assets/proyectos/macula/portada.webp
 descripcion: Gala de premios de cortometrajes escolares
 tecnologias: [Blender, OBS Studio, App Inventor, Firebase, Web]
 ocultarFecha: true
